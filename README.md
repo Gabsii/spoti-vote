@@ -7,13 +7,14 @@ Web application to vote the next Song in Spotify Queue
 
 # TODO:
 
-- learn how to write .md files
+- setup
 
 # Dependencies:
 - Atom
 - Git
 - Node
-- Bulma
+- ReactJS
+- [Bulma](https://bulma.io/)
 
 Useful links:
 
@@ -21,3 +22,4 @@ Useful links:
 *   [SpotifyTut](https://developer.spotify.com/web-api/tutorial/) - Check the tutorial on their page.
 * [SpotifyDoc](https://beta.developer.spotify.com/console/) - DOCUMENTATION
 * [SpotifySEO](https://beta.developer.spotify.com/dashboard/applications) - SEO is Key
+* [SpotifyApiNode](https://github.com/thelinmichael/spotify-web-api-node) - Web API for NodeJS

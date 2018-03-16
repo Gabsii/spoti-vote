@@ -1,13 +1,31 @@
 {
-  "author": "Spotify",
-  "name": "web-api-auth-examples",
-  "description": "Basic examples of the Spotify authorization flows through OAuth 2",
-  "version": "0.0.2",
+  "name": "spoti-vote",
+  "version": "1.0.0",
+  "description": "Vote for Spotify Queue",
+  "main": "index.js",
   "dependencies": {
-    "bulma-start": "0.0.2",
-    "cookie-parser": "1.3.2",
-    "express": "~4.16.0",
-    "querystring": "~0.2.0",
-    "request": "~2.83.0"
-  }
+    "bulma": "^0.6.2",
+    "create-react-app": "^1.5.2",
+    "spotify-web-api-node": "^3.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gabsii/spoti-vote.git"
+  },
+  "keywords": [
+    "spotify",
+    "vote",
+    "nodejs",
+    "reactjs"
+  ],
+  "author": "Gabsii",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Gabsii/spoti-vote/issues"
+  },
+  "homepage": "https://github.com/Gabsii/spoti-vote#readme"
 }
