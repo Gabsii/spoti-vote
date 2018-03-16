@@ -7,12 +7,19 @@ Web application to vote the next Song in Spotify Queue
 
 # TODO:
 
-- setup
+- Implement Spotify Authentification
+- Get Spotify Playlists
+- Manipulate Spotify Player
+- Add vote functionality
+- Add custom Queue
+- Assign DJ
 
-# Dependencies:
+# Requirements:
+- Node
+
+# Frameworks/Tools
 - Atom
 - Git
-- Node
 - ReactJS
 - [Bulma](https://bulma.io/)
 
