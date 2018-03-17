@@ -1,0 +1,15 @@
+.header {
+    background-color: #191414;
+    height: 100px;
+    margin-bottom: 25px;
+}
+
+.imageContainer {
+    height: 100px;
+    width: 100px;
+}
+
+.imageContainer img {
+    max-width: 100%;
+    max-height: 100%;
+}
