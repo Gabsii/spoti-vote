@@ -28,7 +28,7 @@ To use my webpage, you first want to download [NodeJS](https://nodejs.org/en/).
 Then clone my repository using:
 `git clone https://github.com/Gabsii/spoti-vote.git`
 
-After you successfully cloned my repository, you want to startup a commandline in this folder and run:
+After successfully cloning the repository, you want to startup a commandline in its folder and run:
 `npm install`
 `npm start`
 
@@ -37,8 +37,6 @@ Congratulations! You now are able to use my webpage.
 # Tasks
 
 This lowkey acts as my Kanban board.
-Cool stuff.
-
 
 ## TODO:
 Workflow:
@@ -63,7 +61,7 @@ Appearence:
 
 # Credits
 
-Lukas Gabsi, me, who did everything.
+None
 
 ## Frameworks/Tools
 * Atom
