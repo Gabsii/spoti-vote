@@ -1,5 +1,5 @@
 # spoti-vote
-Web application to vote the next Song in Spotify Queue
+Web application to vote for the next song in Spotify Queue
 
 - [Project Description:](#project-description)
 	- [Requirements:](#requirements)
@@ -14,9 +14,9 @@ Web application to vote the next Song in Spotify Queue
 
 # Project Description:
 
-The idea for this project resulted as we have a spotify class playlist with songs we listen to in our breaks.
-The problem with it was, that the shuffling Spotify did wouldn't make anyone happy.
-To solve this problem I thought about inventing a Website where users could choose between four to eight songs (depending on settings). The song with the most votes would be added to the queue as next song.
+The idea for this project resulted as we have a Spotify class playlist with great songs we listen to in our breaks.
+The problem with it was that Spotify's shuffling feature didn't please the majority of the class.
+To solve this problem I thought about creating a website where users could choose between four to eight songs (depending on the settings). The song with the most votes would be added to the queue as next song.
 
 ## Requirements:
 * [Node v6.0 and higher](https://nodejs.org/en/)
@@ -24,20 +24,19 @@ To solve this problem I thought about inventing a Website where users could choo
 
 ## Usage
 
-To use my webpage, you want to first download [NodeJS](https://nodejs.org/en/).
+To use my webpage, you first want to download [NodeJS](https://nodejs.org/en/).
 Then clone my repository using:
 `git clone https://github.com/Gabsii/spoti-vote.git`
 
-After you successfully cloned my repository, you want to startup **cmd** in this folder and run:
+After successfully cloning the repository, you want to startup a commandline in its folder and run:
 `npm install`
 `npm start`
 
-Congratulations! You now are able to see my webpage.
+Congratulations! You now are able to use my webpage.
 
 # Tasks
 
 This lowkey acts as my Kanban board.
-
 
 ## TODO:
 Workflow:
@@ -61,6 +60,8 @@ Appearence:
 * implement "sticky title"
 
 # Credits
+
+None
 
 ## Frameworks/Tools
 * Atom
