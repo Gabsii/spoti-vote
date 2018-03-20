@@ -14,15 +14,9 @@ Web application to vote for the next song in Spotify Queue
 
 # Project Description:
 
-<<<<<<< HEAD
-The idea for this project resulted as we have a spotify class playlist with songs we listen to in our breaks.  
-The problem with it was, that the shuffling Spotify did wouldn't make anyone happy.  
-To solve this problem I thought about inventing a Website where users could choose between four to eight songs (depending on settings). The song with the most votes would be added to the queue as next song.
-=======
 The idea for this project resulted as we have a Spotify class playlist with great songs we listen to in our breaks.
 The problem with it was that Spotify's shuffling feature didn't please the majority of the class.
 To solve this problem I thought about creating a website where users could choose between four to eight songs (depending on the settings). The song with the most votes would be added to the queue as next song.
->>>>>>> 628518a953254715c4a3e2852528dc0fdac0658c
 
 ## Requirements:
 * [Node v6.0 and higher](https://nodejs.org/en/)
