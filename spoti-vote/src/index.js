@@ -8,6 +8,11 @@ import './css/index.css';
 import ReallySmoothScroll from 'really-smooth-scroll';
 import registerServiceWorker from './registerServiceWorker';
 
+import { Route } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App.js';
+
+
 ReallySmoothScroll.shim();
 
 // const colors = {
@@ -20,5 +25,13 @@ ReallySmoothScroll.shim();
 // 	font: "#FFFFFF"
 // }
 
-ReactDOM.render(<Login/>, document.getElementById('root'));
+ReactDOM.render((
+    <BrowserRouter>
+        <div>
+            <Route exact path="/" component={Login}/>
+            <Route path="/App" component={App}/>
+        </div>
+    </BrowserRouter>
+    ),document.getElementById('root')
+);
 registerServiceWorker();
