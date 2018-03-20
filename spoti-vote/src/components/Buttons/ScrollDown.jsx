@@ -13,15 +13,19 @@ class ScrollDown extends Component {
 
 	handleClick(e) {
 		// To be implemented
-		// let target = document.getElementById("down");
-		// let targetx = target.offsetLeft;
-		// let targety = target.offsetTop;
-		// window.scrollTo(targetx, targety);
+
+	 	let target = document.getElementById("down");
+		let targetx = target.offsetLeft;
+		let targety = target.offsetTop;
+		window.scrollTo(targetx, targety);
 	}
 
-	componentDidMount() {}
+	componentDidMount() {
+		console.log(document);
+	}
 
 	render() {
+		
 		return (<div style={defaultStyle}>
 			<a href="#down" className="scroll" onClick={this.handleClick.bind(this)}>
 				<FontAwesomeIcon icon={faAngleDown} size="7x" className=""/>
