@@ -1,51 +1,39 @@
 import React, {Component} from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import {faAngleDown} from '@fortawesome/fontawesome-free-solid';
 import '../css/parallax.css';
+import FullscreenImage from './FullscreenImage.jsx';
+import LoginButton from './Buttons/LoginButton.jsx';
+import ScrollDown from './Buttons/ScrollDown.jsx';
+import LoginTitle from './LoginTitle.jsx';
 import Header from './Header.jsx';
+import pictureOne from '../img/austin-neill-247237-unsplash.jpg';
+import pictureTwo from '../img/andre-benz-276974-unsplash.jpg';
+
+let pictures = {
+	One: {
+		uri: pictureOne
+	},
+	Two: {
+		uri: pictureTwo
+	}
+};
 
 class Login extends Component {
 
-	handleClick(e) {
-		var target = document.getElementById("down");
-		var targetx = target.offsetLeft;
-		var targety = target.offsetTop;
-		window.scrollTo(targetx, targety);
-	}
-
 	render() {
-		return (<section className="">
-			<div className="centerparent fullheight background" id="parallax">
-				<div className="">
-					<button id="loginbutton" className="sticky">
-						Login
-					</button>
-				</div>
-				<div className="introduction front center centerparent columns">
-					<div>
-						<h1 className="title" id="scroller">Spoti Vote</h1>
-					</div>
-					<div>
-						Kahoot x Spotify Collabs
-					</div>
-				</div>
-				<div className="bcenter black">
-					<a href="#down" className="scroll" onClick={this.handleClick.bind(this)}>
-						<FontAwesomeIcon icon={faAngleDown} size="7x" className=""/>
-					</a>
-				</div>
-			</div>
-			<div className="fullheight background2" id="down">
+		return (<section>
+			<FullscreenImage id="parallax" source={pictures.One}>
+				<LoginButton/>
+				<LoginTitle/>
+				<ScrollDown/>
+			</FullscreenImage>
+			<FullscreenImage id="down" source={pictures.Two}>
 				<Header></Header>
-				<div className="container">
+				<div className="center container">
 					<p>
 						Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
 					</p>
 				</div>
-			</div>
-			<script>
-				this.a();
-			</script>
+			</FullscreenImage>
 		</section>);
 	}
 }

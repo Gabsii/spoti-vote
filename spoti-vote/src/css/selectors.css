@@ -1,0 +1,14 @@
+#loginbutton:hover {
+    background-color: #1ed760;
+    text-decoration: none;
+}
+
+#loginbutton:focus {
+    background-color: #1aa34a;
+}
+
+@media only screen and (max-device-width: 1366px) {
+    img {
+        background-attachment: scroll;
+    }
+}

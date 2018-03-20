@@ -4,10 +4,6 @@
 -white
 -black: #191414 */
 
-.black {
-    color: #191414;
-}
-
 /* elements */
 
 a {
@@ -15,33 +11,7 @@ a {
     text-decoration: none;
 }
 
-.title {
-    font-size: 2em;
-    margin-top: 0;
-    font-family: 'Circular Medium';
-}
-
 /* parallax */
-
-.background {
-    background-image: url("../img/austin-neill-247237-unsplash.jpg");
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    z-index: 0;
-    height: 100vh;
-    overflow: hidden;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-}
-
-@media only screen and (max-device-width: 1366px) {
-    .background {
-        background-attachment: scroll;
-    }
-}
 
 .background2 {
     height: auto;
@@ -62,10 +32,6 @@ a {
     min-height: 100vh !important;
 }
 
-.front {
-    z-index: 10;
-}
-
 /* centering */
 
 .centerparent {
@@ -81,16 +47,6 @@ a {
     align-items: center;
 }
 
-.bcenter {
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: auto;
-}
-
-.columns {
-    flex-direction: column;
-}
-
 .sticky {
     display: block;
     position: fixed;
@@ -98,52 +54,6 @@ a {
 }
 
 /* misc */
-
-#loginbutton {
-    padding: 17px 48px;
-    font-size: 14px;
-    line-height: 1;
-    border-radius: 500px;
-    border-width: 0;
-    letter-spacing: 2px;
-    min-width: 160px;
-    max-height: 50px;
-    text-transform: uppercase;
-    white-space: normal;
-    background-color: #1db954;
-    margin-top: 1.5em;
-    margin-right: 2em;
-    right: 0;
-}
-
-#loginbutton:hover {
-    background-color: #1ed760;
-    text-decoration: none;
-}
-
-#loginbutton:focus {
-    background-color: #1aa34a;
-}
-
-.introduction {
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
-    width: 20em;
-    height: 5em;
-    position: relative;
-    margin: auto;
-    padding: 1em;
-    overflow: hidden;
-    border: none;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    color: #1DB954;
-    text-align: center;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    background: rgba(25, 20, 20, 0.25);
-}
 
 .container {
     box-sizing: border-box;
