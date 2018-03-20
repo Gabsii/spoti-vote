@@ -25,13 +25,15 @@ To solve this problem I thought about creating a website where users could choos
 ## Usage
 
 To use my webpage, you first want to download [NodeJS](https://nodejs.org/en/).
-Then clone my repository using:
+Then clone my repository using:\
 `git clone https://github.com/Gabsii/spoti-vote.git`
 
-After successfully cloning the repository, you want to startup a commandline in its folder and run:
-`npm install`
-`npm start`
-
+After successfully cloning the repository, you want to startup a commandline in its folder and run:\
+\
+`cd spoti-vote`\
+`npm install`\
+`npm start` \
+\
 Congratulations! You now are able to use my webpage.
 
 # Tasks
