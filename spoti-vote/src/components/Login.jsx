@@ -18,7 +18,6 @@ let pictures = {
 };
 
 class Login extends Component {
-
 	render() {
 		return (<section>
 			<FullscreenImage id="parallax" source={pictures.One}>
