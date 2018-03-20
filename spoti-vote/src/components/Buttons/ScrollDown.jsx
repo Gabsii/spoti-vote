@@ -20,12 +20,10 @@ class ScrollDown extends Component {
 		window.scrollTo(targetx, targety);
 	}
 
-	componentDidMount() {
-		console.log(document);
-	}
+	componentDidMount() {}
 
 	render() {
-		
+
 		return (<div style={defaultStyle}>
 			<a href="#down" className="scroll" onClick={this.handleClick.bind(this)}>
 				<FontAwesomeIcon icon={faAngleDown} size="7x" className=""/>
