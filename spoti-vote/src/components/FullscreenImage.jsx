@@ -36,7 +36,7 @@ class FullscreenImage extends Component {
 		// 	return React.cloneElement(child, {mounted: this.state.childrenMounted})
 		// });
 
-		return (<div style={{
+		return (<div id={this.props.id} style={{
 				...defaultStyle,
 				backgroundImage: 'url(' + this.state.background + ')'
 			}}>
