@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import logo from '../img/sbahn.png'
+import logo from '../img/sbahn.png';
+let color = require('../css/colors.js');
 
-let backgroundColor = '#191414';
+let backgroundColor = color.background;
 let height = "100px";
 let width = "100px";
 let defaultDimensions = {
