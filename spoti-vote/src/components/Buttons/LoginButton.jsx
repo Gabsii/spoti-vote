@@ -14,7 +14,7 @@ let defaultStyle = {
 	maxHeight: "50px",
 	textTransform: "uppercase",
 	whiteSpace: "normal",
-	backgroundColor: color.backgroundColor,
+	backgroundColor: color.green,
 	marginTop: "1.5em",
 	marginRight: "2em",
 	right: 0
