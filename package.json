@@ -8,10 +8,8 @@
     "@fortawesome/fontawesome-free-solid": "^5.0.8",
     "@fortawesome/react-fontawesome": "0.0.17",
     "create-react-app": "^1.5.2",
-    "jquery": "^3.3.1",
     "react-router-dom": "^4.2.2",
     "really-smooth-scroll": "^2.1.1",
-    "spotify-web-api-node": "^3.0.0"
   },
   "devDependencies": {},
   "scripts": {

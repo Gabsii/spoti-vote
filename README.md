@@ -20,7 +20,7 @@ To solve this problem I thought about creating a website where users could choos
 
 ## Requirements:
 * [Node v6.0 and higher](https://nodejs.org/en/)
-* [Spotify Account](https://www.spotify.com/at/)
+* [Spotify Premium Account](https://www.spotify.com/at/) for the DJ or normal Spotify Account for the User
 
 ## Usage
 
@@ -34,6 +34,17 @@ After successfully cloning the repository, you want to startup a commandline in 
 `npm install`\
 `npm start` \
 \
+open a second commandline and run the following code:\
+\
+`cd spoti-vote-backend`\
+`npm install`\
+`SET SPOTIFY_CLIENT_ID=FOO`\
+`SET SPOTIFY_CLIENT_SECRET=BAR`\
+`npm start`\
+
+If you are using a MAC replace `SET` with `EXPORT`.
+Thanks to [MPJ](https://github.com/mpj/oauth-bridge-template) for providing a framework for the backend-logic.
+
 Congratulations! You now are able to use my webpage.
 
 # Tasks
