@@ -22,9 +22,11 @@ let defaultStyle = {
 class LoginButton extends Component {
 
 	render() {
-		return (<button id="loginbutton" style={defaultStyle} className="sticky">
-			Login
-		</button>);
+		return (<a href="http://localhost:8888/login">
+			<button id="loginbutton" style={defaultStyle} className="sticky">
+				Login
+			</button>
+		</a>);
 	}
 }
 export default LoginButton;
