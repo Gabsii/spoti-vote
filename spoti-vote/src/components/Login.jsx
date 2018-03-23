@@ -23,6 +23,7 @@ class Login extends Component {
 			<FullscreenImage id="parallax" source={pictures.One}>
 				<LoginButton/>
 				<LoginTitle/>
+				<ScrollDown/>
 			</FullscreenImage>
 			<FullscreenImage id="down" source={pictures.Two}>
 				<Header></Header>

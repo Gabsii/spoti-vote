@@ -14,13 +14,11 @@ class ScrollDown extends Component {
 	handleClick(e) {
 		// To be implemented
 
-	 	let target = document.getElementById("down");
+		let target = document.getElementById("down");
 		let targetx = target.offsetLeft;
 		let targety = target.offsetTop;
 		window.scrollTo(targetx, targety);
 	}
-
-	componentDidMount() {}
 
 	render() {
 

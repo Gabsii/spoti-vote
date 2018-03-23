@@ -14,7 +14,7 @@ ReallySmoothScroll.shim();
 
 ReactDOM.render((<BrowserRouter>
 	<div>
-		<Route exact="exact" path="/" component={Login}/>
+		<Route exact="true" path="/" component={Login}/>
 		<Route path="/app" component={App}/>
 	</div>
 </BrowserRouter>), document.getElementById('root'));
