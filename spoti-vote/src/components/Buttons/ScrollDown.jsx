@@ -6,9 +6,6 @@ let color = require('../../css/colors.js');
 let defaultStyle = {
 	position: 'absolute',
 	bottom: '0',
-	marginLeft: 'auto',
-	marginRight: 'auto',
-	marginTop: 'auto',
 	color: color.background
 }
 
