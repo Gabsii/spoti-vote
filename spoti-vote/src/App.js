@@ -15,7 +15,9 @@ class App extends Component {
 
 	componentDidMount() {}
 
-	render() {}
+	render() {
+		return;
+	}
 }
 
 export default App;
