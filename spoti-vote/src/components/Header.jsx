@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import logo from '../img/sbahn.png';
+import logo from '../img/spotiLogo.png';
 let color = require('../css/colors.js');
 
 let backgroundColor = color.background;
