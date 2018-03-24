@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import '../../css/selectors.css';
 
+let color = require('../../css/colors.js');
+
 let defaultStyle = {
 	padding: "17px 48px",
 	fontSize: "0.9em",
@@ -12,7 +14,7 @@ let defaultStyle = {
 	maxHeight: "50px",
 	textTransform: "uppercase",
 	whiteSpace: "normal",
-	backgroundColor: "#1db954",
+	backgroundColor: color.green,
 	marginTop: "1.5em",
 	marginRight: "2em",
 	right: 0

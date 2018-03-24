@@ -6,6 +6,7 @@ let color = require('../css/colors.js');
 
 class App extends Component {
 	render() {
+
 		return (<section style={{
 				backgroundColor: color.background,
 				height: '100vh',
