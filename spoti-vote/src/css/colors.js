@@ -1,5 +1,6 @@
 module.exports = {
 	background: "#191414",
+	backgroundLite: "#282828",
 	green: "#1DB954",
 	greenCard: "#F1C40F",
 	blueCard: "#3498DB",

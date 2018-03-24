@@ -5,6 +5,7 @@
 
 #loginbutton:focus {
     background-color: #1aa34a;
+    text-decoration: none;
 }
 
 @media only screen and (max-device-width: 1366px) {
