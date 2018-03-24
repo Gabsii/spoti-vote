@@ -17,12 +17,9 @@ let defaultStyle = {
 
 let sliderStyle = {
 	width: '50%',
-	height: '25px',
-	background: '#d3d3d3',
-	outline: 'none',
 	display: 'inline-block',
-	marginLeft: '8px',
-	marginRight: '8px'
+	marginLeft: '10px',
+	marginRight: '10px'
 }
 
 class VolumeBar extends Component {
