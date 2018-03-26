@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+let color = require('../css/colors.js');
 
 let defaultContainer = {
 	flexDirection: 'column',
@@ -15,7 +16,7 @@ let defaultContainer = {
 	overflow: 'hidden',
 	border: 'none',
 	borderRadius: '10px',
-	color: '#1DB954',
+	color: color.green,
 	textAlign: 'center',
 	textOverflow: 'ellipsis',
 	background: 'rgba(25, 20, 20, 0.25)',
