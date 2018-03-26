@@ -20,7 +20,6 @@ let titleStyle = {
 let containerStyle = {
 	heigth: '100px',
 	display: 'block'
-	// overflowY: 'auto'
 }
 
 class UserContainer extends Component {
@@ -29,7 +28,7 @@ class UserContainer extends Component {
 			<div className="progressbar" style={titleStyle}>Users</div>
 			<div style={containerStyle}>
 				<User voteColor={color.greenCard}/>
-				<User voteColor={color.greenCard}/>
+				<User voteColor='null'/>
 				<User voteColor={color.redCard}/>
 				<User voteColor={color.blueCard}/>
 				<User voteColor={color.greenCard}/>

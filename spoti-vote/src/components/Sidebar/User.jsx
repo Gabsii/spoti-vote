@@ -17,6 +17,16 @@ let imgStyle = {
 }
 
 class User extends Component {
+	constructor() {
+		super();
+		this.state = {
+			voteColor: '#ffffff'
+		}
+	}
+	componentDidMount() {
+		this.setState({voteColor: this.props.voteColor});
+	}
+
 	render() {
 		return (<div style={defaultStyle}>
 			<img alt="icon" src={logo} style={imgStyle}/>
@@ -31,7 +41,8 @@ class User extends Component {
 					height: '24px',
 					borderRadius: '20px',
 					margin: '10px',
-					backgroundColor: this.props.voteColor
+					border: '1px solid black',
+					backgroundColor: this.state.voteColor
 				}}></div>
 		</div>);
 	}
