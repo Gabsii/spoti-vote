@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Footer from './Footer.jsx';
-import Sidebar from './Sidebar/Sidebar.jsx'
+import Sidebar from './Sidebar/Sidebar.jsx';
+import CardContainer from './Cards/CardContainer.jsx';
 
 let color = require('../css/colors.js');
 
@@ -12,6 +13,7 @@ class App extends Component {
 				width: '100vw'
 			}}>
 			<Sidebar/>
+			<CardContainer/>
 			<Footer/>
 		</section>);
 	}

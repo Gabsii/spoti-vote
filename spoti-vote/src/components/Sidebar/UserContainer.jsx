@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import logo from "../../img/sbahn.png";
 import User from './User.jsx';
 
 let color = require('../../css/colors.js');

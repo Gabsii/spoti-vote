@@ -2,7 +2,7 @@ module.exports = {
 	background: "#191414",
 	backgroundLite: "#282828",
 	green: "#1DB954",
-	greenCard: "#F1C40F",
+	greenCard: "#2ECC71",
 	blueCard: "#3498DB",
 	redCard: "#E74C3C",
 	yellowCard: "#F1C40F",
