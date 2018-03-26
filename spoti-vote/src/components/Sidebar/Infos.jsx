@@ -8,8 +8,7 @@ let defaultStyle = {
 	height: '300px',
 	width: '250px',
 	position: 'absolute',
-	top: 0,
-	backgroundColor: color.green
+	top: 0
 }
 
 let imgStyle = {

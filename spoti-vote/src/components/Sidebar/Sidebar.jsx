@@ -9,6 +9,7 @@ let defaultStyle = {
 	position: 'absolute',
 	top: 0,
 	right: 0,
+	color: 'white',
 	backgroundColor: color.backgroundLite
 }
 

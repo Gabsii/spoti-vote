@@ -1,8 +1,6 @@
 # spoti-vote
 Web application to vote for the next song in Spotify Queue
 
-[![Build Status](https://semaphoreci.com/api/v1/gabsii/spoti-vote/branches/master/badge.svg)](https://semaphoreci.com/gabsii/spoti-vote)
-
 - [Project Description:](#project-description)
 	- [Requirements:](#requirements)
 	- [Usage](#usage)

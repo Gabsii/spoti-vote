@@ -16,7 +16,7 @@ let defaultStyle = {
 class Footer extends Component {
 	render() {
 		return (<footer style={defaultStyle}>
-			<SongIcon/>
+			<SongIcon background='https://picsum.photos/75'/>
 			<SongAggregation/>
 			<VolumeBar/>
 		</footer>);

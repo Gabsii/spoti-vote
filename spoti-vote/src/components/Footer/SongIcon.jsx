@@ -6,13 +6,12 @@ let defaultStyle = {
 	width: '75px',
 	position: 'absolute',
 	bottom: 0,
-	left: 0,
-	backgroundColor: color.green
+	left: 0
 }
 
 class SongIcon extends Component {
 	render() {
-		return (<img style={defaultStyle} alt="Album Art"></img>);
+		return (<img style={defaultStyle} src={this.props.background} alt="Album Art"></img>);
 	}
 }
 export default SongIcon;

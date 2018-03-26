@@ -4,8 +4,7 @@ import User from './User.jsx';
 let color = require('../../css/colors.js');
 let defaultStyle = {
 	height: 'calc(100% - 300px)',
-	marginTop: '300px',
-	backgroundColor: color.yellowCard
+	marginTop: '300px'
 }
 
 let titleStyle = {
