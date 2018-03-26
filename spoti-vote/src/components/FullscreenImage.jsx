@@ -23,19 +23,10 @@ class FullscreenImage extends Component {
 	}
 
 	componentDidMount() {
-		this.setState({background: this.props.source.uri, childrenMounted: true}); // works
-		let children = React.Children.map(this.props.children, (child) => {
-			return React.cloneElement(child, {mounted: this.state.childrenMounted})
-		});
-
+		this.setState({background: this.props.source.uri});
 	}
 
 	render() {
-		// console.log(this.state);
-		// let children = React.Children.map(this.props.children, function(child) {
-		// 	return React.cloneElement(child, {mounted: this.state.childrenMounted})
-		// });
-
 		return (<div id={this.props.id} style={{
 				...defaultStyle,
 				backgroundImage: 'url(' + this.state.background + ')'

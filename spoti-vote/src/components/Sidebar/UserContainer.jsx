@@ -29,14 +29,14 @@ class UserContainer extends Component {
 		return (<div style={defaultStyle}>
 			<div className="progressbar" style={titleStyle}>Users</div>
 			<div style={containerStyle}>
-				<User/>
-				<User/>
-				<User/>
-				<User/>
-				<User/>
-				<User/>
-				<User/>
-				<User/>
+				<User voteColor={color.greenCard}/>
+				<User voteColor={color.greenCard}/>
+				<User voteColor={color.redCard}/>
+				<User voteColor={color.blueCard}/>
+				<User voteColor={color.greenCard}/>
+				<User voteColor={color.greenCard}/>
+				<User voteColor={color.yellowCard}/>
+				<User voteColor={color.blueCard}/>
 			</div>
 		</div>);
 	}

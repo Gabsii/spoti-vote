@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faHeadphones} from '@fortawesome/fontawesome-free-solid';
-import logo from "../../img/sbahn.png";
 
-let color = require('../../css/colors.js');
 let defaultStyle = {
 	height: '300px',
 	width: '250px',
@@ -48,7 +46,7 @@ class Infos extends Component {
 					...centerContainer,
 					fontSize: '14px'
 				}}>PLAYLIST</div>
-			<img alt="USERPROFILE" src={logo} style={{
+			<img alt="USERPROFILE" src='https://picsum.photos/650' style={{
 					...imgStyle,
 					display: 'flex',
 					alignItems: 'center',

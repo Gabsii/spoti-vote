@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 
-let color = require('../../css/colors.js');
 let defaultStyle = {
 	height: '75px',
 	width: '75px',
