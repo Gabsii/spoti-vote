@@ -19,7 +19,6 @@ let titleStyle = {
 
 let containerStyle = {
 	heigth: '100px',
-	border: '1px solid black',
 	display: 'block'
 	// overflowY: 'auto'
 }

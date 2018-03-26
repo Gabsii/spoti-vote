@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import logo from "../../img/sbahn.png";
 
 let defaultStyle = {
-	border: '1px solid black',
 	display: 'flex',
 	alignItems: 'center',
-	justifyContent: 'space-between'
+	justifyContent: 'space-between',
+	padding: '5px'
 }
 let imgStyle = {
 	height: '32px',
@@ -14,7 +14,6 @@ let imgStyle = {
 	marginRight: '20px',
 	marginTop: '5px',
 	marginBottom: '5px'
-	// border: '1px solid black'
 }
 
 class User extends Component {
@@ -30,7 +29,7 @@ class User extends Component {
 			<div className="vote" style={{
 					width: '24px',
 					height: '24px',
-					borderRadius: '2px',
+					borderRadius: '20px',
 					margin: '10px',
 					backgroundColor: this.props.voteColor
 				}}></div>
