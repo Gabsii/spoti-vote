@@ -16,7 +16,7 @@ let defaultStyle = {
 class Sidebar extends Component {
 	render() {
 		return (<div style={defaultStyle}>
-			<Infos/>
+			<Infos token={this.props.token}/>
 			<UserContainer token={this.props.token}/>
 		</div>);
 	}

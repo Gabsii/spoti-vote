@@ -16,7 +16,7 @@ let defaultStyle = {
 
 class Menu extends Component {
 	render() {
-		return (<div style={defaultStyle}><Home/><Rooms/></div>);
+		return (<div style={defaultStyle}><Home token={this.props.token}/><Rooms/></div>);
 	}
 }
 export default Menu;

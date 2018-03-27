@@ -39,6 +39,27 @@ let defaultStyle = {
 }
 
 class CardContainer extends Component {
+	// constructor() {
+	// 	super();
+	// 	this.state = {
+	// 		userData: {
+	// 			user: {
+	// 				name: '',
+	// 				id: '',
+	// 				image: '',
+	// 				profileUrl: ''
+	// 			}
+	// 		}
+	// 	}
+	// }
+	componentDidMount() {
+		let access_token = this.props.token;
+		fetch("https://api.spotify.com/v1/me/playlists", {
+			headers: {
+				"Authorization": "Bearer " + access_token
+			}
+		}).then((response) => response.json().then(data => console.log(data)))
+	}
 
 	render() {
 		return (<div style={defaultStyle}>
