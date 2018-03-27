@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import Infos from './Infos.jsx';
-import UserContainer from './UserContainer.jsx';
+import Infos from './Sidebar/Infos.jsx';
+import UserContainer from './Sidebar/UserContainer.jsx';
 
-let color = require('../../css/colors.js');
+let color = require('../css/colors.js');
 let defaultStyle = {
 	height: 'calc(100vh - 75px)',
 	width: '250px',
@@ -15,7 +15,10 @@ let defaultStyle = {
 
 class Sidebar extends Component {
 	render() {
-		return (<div style={defaultStyle}><Infos/><UserContainer/></div>);
+		return (<div style={defaultStyle}>
+			<Infos/>
+			<UserContainer token={this.props.token}/>
+		</div>);
 	}
 }
 export default Sidebar;

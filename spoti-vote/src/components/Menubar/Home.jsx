@@ -1,20 +1,21 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import {faUsers} from '@fortawesome/fontawesome-free-solid';
+import {faHome} from '@fortawesome/fontawesome-free-solid';
 
 let color = require('../../css/colors.js');
 let defaultStyle = {
 	width: '75px',
 	height: '75px',
 	boxSizing: 'border-box',
-	padding: '10px'
+	padding: '10px',
+	paddingTop: '25px'
 };
 
-class Rooms extends Component {
+class Home extends Component {
 	render() {
 		return (<div style={defaultStyle}>
-			<FontAwesomeIcon icon={faUsers} size="2x"/>
+			<FontAwesomeIcon icon={faHome} size="2x" className=""/>
 		</div>);
 	}
 }
-export default Rooms;
+export default Home;

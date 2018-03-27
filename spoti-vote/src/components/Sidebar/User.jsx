@@ -29,12 +29,11 @@ class User extends Component {
 
 	render() {
 		return (<div style={defaultStyle}>
-			<img alt="icon" src={logo} style={imgStyle}/>
+			<img alt="icon" src={this.props.image} style={imgStyle}/>
 			<div style={{
 					marginRight: 'auto'
 				}}>
-				<div>First</div>
-				<div>Last</div>
+				<div>{this.props.name || this.props.id}</div>
 			</div>
 			<div className="vote" style={{
 					width: '24px',

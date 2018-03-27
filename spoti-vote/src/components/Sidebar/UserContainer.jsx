@@ -23,11 +23,42 @@ let containerStyle = {
 }
 
 class UserContainer extends Component {
+	constructor() {
+		super();
+		this.state = {
+			userData: {
+				user: {
+					name: '',
+					id: '',
+					image: '',
+					profileUrl: ''
+				}
+			}
+		}
+	}
+	componentDidMount() {
+		let access_token = this.props.token;
+		fetch("https://api.spotify.com/v1/me", {
+			headers: {
+				"Authorization": "Bearer " + access_token
+			}
+		}).then((response) => response.json().then(data => this.setState({
+			userData: {
+				user: {
+					name: data.display_name,
+					id: data.id,
+					image: data.images[0].url,
+					profileUrl: data.external_urls.spotify
+				}
+			}
+		})))
+	}
+
 	render() {
 		return (<div style={defaultStyle}>
 			<div className="progressbar" style={titleStyle}>Users</div>
 			<div style={containerStyle}>
-				<User voteColor={color.greenCard}/>
+				<User voteColor={color.greenCard} name={this.state.userData.user.name} id={this.state.userData.user.id} image={this.state.userData.user.image} profileUrl={this.state.userData.user.profileUrl} me={true}/>
 				<User voteColor='null'/>
 				<User voteColor={color.redCard}/>
 				<User voteColor={color.blueCard}/>

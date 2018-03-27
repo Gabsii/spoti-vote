@@ -26,10 +26,10 @@ let fakeServer = {
 
 let defaultStyle = {
 	height: 'calc(100vh - 125px)',
-	width: 'calc(100vw - 300px)',
-	positon: 'absolute',
+	width: 'calc(100vw - 375px)',
+	position: 'absolute',
 	top: 0,
-	left: 0,
+	left: '75px',
 	display: 'flex',
 	flexWrap: 'wrap',
 	flexDirection: 'row',
