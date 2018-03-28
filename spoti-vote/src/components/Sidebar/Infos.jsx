@@ -48,7 +48,11 @@ class Infos extends Component {
 					image: '',
 					profileUrl: ''
 				}
+			},
+			playlistData: {
+				playlists: []
 			}
+
 		}
 	}
 	componentDidMount() {
@@ -66,10 +70,21 @@ class Infos extends Component {
 					profileUrl: data.external_urls.spotify
 				}
 			}
+		})));
+		fetch("https://api.spotify.com/v1/me/playlists?limit=50", {
+			headers: {
+				"Authorization": "Bearer " + access_token
+			}
+		}).then((response) => response.json().then(data => this.setState({
+			playlistData: {
+				playlists: data.items
+			}
 		})))
 	}
 
 	render() {
+		// TODO: add playlist url instead of dj profile @<a>
+		console.log(this.props);
 		return (<div style={defaultStyle}>
 			<div style={{
 					...centerContainer,
@@ -79,9 +94,15 @@ class Infos extends Component {
 			<div style={{
 					...centerContainer,
 					fontSize: '14px'
-				}}>PLAYLIST</div>
+				}}>
+				<select style={{
+						width: '200px'
+					}} onChange={this.props.handler}>
+					{this.state.playlistData.playlists.map((playlist) => <option id={playlist.id} key={playlist.id} img={playlist.images[0].url}>{playlist.name}</option>)}
+				</select>
+			</div>
 			<a href={this.state.userData.user.profileUrl}>
-				<img alt="USERPROFILE" src={this.state.userData.user.image} style={{
+				<img alt="Current Playlist" src={this.props.playlistCover || 'http://via.placeholder.com/152x152'} style={{
 						...imgStyle,
 						display: 'flex',
 						alignItems: 'center',

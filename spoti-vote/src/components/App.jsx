@@ -11,7 +11,12 @@ class App extends Component {
 	constructor() {
 		super();
 		this.state = {
-			access_token: ""
+			access_token: "",
+			selectedPlaylist: {
+				name: '',
+				id: '',
+				img: ''
+			}
 		}
 	}
 	componentDidMount() {
@@ -22,17 +27,28 @@ class App extends Component {
 		}
 
 	}
+
+	selectPlaylist(event) {
+		this.setState({
+			selectedPlaylist: {
+				name: event.target.value,
+				img: event.target.options[event.target.selectedIndex].getAttribute('img'),
+				id: event.target.options[event.target.selectedIndex].getAttribute('id')
+			}
+		});
+	}
+
 	render() {
 		let access_token = queryString.parse(window.location.search).access_token;
-
+		console.log(this.state);
 		return (<section style={{
 				backgroundColor: color.background,
 				height: '100vh',
 				width: '100vw'
 			}}>
 			<Menu token={access_token}/>
-			<Sidebar token={access_token}/>
-			<CardContainer token={access_token}/>
+			<Sidebar token={access_token} playlistHandler={this.selectPlaylist.bind(this)} playlistCover={this.state.selectedPlaylist.img}/>
+			<CardContainer token={access_token} playlist={this.state.selectedPlaylist}/>
 			<Footer token={access_token}/>
 		</section>);
 	}
