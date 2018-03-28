@@ -33,7 +33,8 @@ class App extends Component {
 			selectedPlaylist: {
 				name: event.target.value,
 				img: event.target.options[event.target.selectedIndex].getAttribute('img'),
-				id: event.target.options[event.target.selectedIndex].getAttribute('id')
+				id: event.target.options[event.target.selectedIndex].getAttribute('id'),
+				url: event.target.options[event.target.selectedIndex].getAttribute('url')
 			}
 		});
 	}
@@ -47,7 +48,7 @@ class App extends Component {
 				width: '100vw'
 			}}>
 			<Menu token={access_token}/>
-			<Sidebar token={access_token} playlistHandler={this.selectPlaylist.bind(this)} playlistCover={this.state.selectedPlaylist.img}/>
+			<Sidebar token={access_token} playlistHandler={this.selectPlaylist.bind(this)} playlistCover={this.state.selectedPlaylist.img} playlistUrl={this.state.selectedPlaylist.url}/>
 			<CardContainer token={access_token} playlist={this.state.selectedPlaylist}/>
 			<Footer token={access_token}/>
 		</section>);

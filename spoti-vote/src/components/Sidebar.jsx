@@ -18,7 +18,7 @@ class Sidebar extends Component {
 	render() {
 		console.log(this.props);
 		return (<div style={defaultStyle}>
-			<Infos token={this.props.token} handler={this.props.playlistHandler} playlistCover={this.props.playlistCover}/>
+			<Infos token={this.props.token} handler={this.props.playlistHandler} playlistCover={this.props.playlistCover} playlistUrl={this.props.playlistUrl}/>
 			<UserContainer token={this.props.token}/>
 		</div>);
 	}

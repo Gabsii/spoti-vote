@@ -98,10 +98,10 @@ class Infos extends Component {
 				<select style={{
 						width: '200px'
 					}} onChange={this.props.handler}>
-					{this.state.playlistData.playlists.map((playlist) => <option id={playlist.id} key={playlist.id} img={playlist.images[0].url}>{playlist.name}</option>)}
+					{this.state.playlistData.playlists.map((playlist) => <option id={playlist.id} key={playlist.id} img={playlist.images[0].url} url={playlist.external_urls.spotify}>{playlist.name}</option>)}
 				</select>
 			</div>
-			<a href={this.state.userData.user.profileUrl}>
+			<a href={this.props.playlistUrl || window.location.href}>
 				<img alt="Current Playlist" src={this.props.playlistCover || 'http://via.placeholder.com/152x152'} style={{
 						...imgStyle,
 						display: 'flex',

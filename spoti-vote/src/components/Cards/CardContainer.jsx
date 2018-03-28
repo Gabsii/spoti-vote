@@ -52,9 +52,17 @@ class CardContainer extends Component {
 
 	componentDidMount() {
 		let access_token = this.props.token;
+		console.log(this.props);
+		this.setState({
+			selectedPlaylist: {
+				name: this.props.playlist.name,
+				id: this.props.playlist.id
+			}
+		});
 	}
 
 	render() {
+		console.log(this.state);
 		return (<div style={defaultStyle}>
 			<Card background={fakeServer.pictures[0].background} song="FAT32" artists="Linux, Windows, Macintosh" votes="1" color={color.redCard}/>
 			<Card background={fakeServer.pictures[1].background} song="NTFS" artists="Windows, Macintosh" votes="-" color={color.blueCard}/>
