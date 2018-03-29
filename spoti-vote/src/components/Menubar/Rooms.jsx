@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faUsers} from '@fortawesome/fontawesome-free-solid';
 
-let color = require('../../css/colors.js');
 let defaultStyle = {
 	width: '75px',
 	height: '75px',

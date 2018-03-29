@@ -32,7 +32,7 @@ After successfully cloning the repository, you want to startup a commandline in 
 \
 `cd spoti-vote`\
 `npm install`\
-`npm start` \
+`npm start`\
 \
 open a second commandline and run the following code:\
 \
@@ -53,15 +53,11 @@ This lowkey acts as my Kanban board.
 
 ## TODO:
 Workflow:
-* Implement Spotify Authentification
-* Get Spotify Playlists
 * Manipulate Spotify Player
-* Add vote functionality
 * Add custom Queue
 * Assign DJ
 
 Appearence:
-* Logo
 * Name
 * Contents
 * Description
@@ -69,8 +65,16 @@ Appearence:
 
 ## WIP:
 
+* Add vote functionality
+
+## Done:
+
+* Get Tracks from Playlist
+* Get Spotify Playlists
+* Implement Spotify Authentification
 * Login Parallax
 	* implement "sticky title"
+* Logo
 
 # Credits
 
@@ -89,9 +93,9 @@ None
 * [SpotifyBranding](https://beta.developer.spotify.com/branding-guidelines/) - Don't do anything Spotify wouldn't do
 * [SpotifyDoc](https://beta.developer.spotify.com/console/) - DOCUMENTATION
 * [SpotifySEO](https://beta.developer.spotify.com/dashboard/applications) - SEO is Key
-* [SpotifyApiNode](https://github.com/thelinmichael/spotify-web-api-node) - Web API for NodeJS
 
 ## Images
 
 * Credits to Austin Neill for his picture (found on [Unsplash](https://unsplash.com))
 * Credits to Andre Benz for his picture (found on [Unsplash](https://unsplash.com))
+* Credits to [Michiocre](https://github.com/Michiocre) for the Logo and Button Animation

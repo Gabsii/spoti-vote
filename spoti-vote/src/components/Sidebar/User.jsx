@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import logo from "../../img/sbahn.png";
+import logo from "../../img/spotiLogo.png";
 
 let defaultStyle = {
 	display: 'flex',
@@ -29,7 +29,7 @@ class User extends Component {
 
 	render() {
 		return (<div style={defaultStyle}>
-			<img alt="icon" src={this.props.image} style={imgStyle}/>
+			<img alt="icon" src={this.props.image || logo} style={imgStyle}/>
 			<div style={{
 					marginRight: 'auto'
 				}}>

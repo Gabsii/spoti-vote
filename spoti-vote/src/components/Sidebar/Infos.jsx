@@ -84,7 +84,6 @@ class Infos extends Component {
 
 	render() {
 		// TODO: add playlist url instead of dj profile @<a>
-		console.log(this.props);
 		return (<div style={defaultStyle}>
 			<div style={{
 					...centerContainer,
@@ -97,8 +96,9 @@ class Infos extends Component {
 				}}>
 				<select style={{
 						width: '200px'
-					}} onChange={this.props.handler}>
-					{this.state.playlistData.playlists.map((playlist) => <option id={playlist.id} key={playlist.id} img={playlist.images[0].url} url={playlist.external_urls.spotify}>{playlist.name}</option>)}
+					}} onChange={this.props.playlistHandler}>
+					<option>Select a Playlist</option>
+					{this.state.playlistData.playlists.map((playlist) => <option key={playlist.id} id={playlist.id} img={playlist.images[0].url} url={playlist.external_urls.spotify} href={playlist.href}>{playlist.name}</option>)}
 				</select>
 			</div>
 			<a href={this.props.playlistUrl || window.location.href}>

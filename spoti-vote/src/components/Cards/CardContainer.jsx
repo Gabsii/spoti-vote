@@ -45,24 +45,47 @@ class CardContainer extends Component {
 			selectedPlaylist: {
 				name: '',
 				id: '',
-				img: ''
-			}
+				href: ''
+			},
+			next: '',
+			tracks: []
 		}
 	}
 
-	componentDidMount() {
+	componentDidUpdate() {
 		let access_token = this.props.token;
-		console.log(this.props);
-		this.setState({
-			selectedPlaylist: {
-				name: this.props.playlist.name,
-				id: this.props.playlist.id
+		if (this.props.playlist.name !== '' && this.props.playlist.id !== '' && this.props.playlist.href !== '') {
+			if (this.props.playlist.name !== this.state.selectedPlaylist.name && this.props.playlist.id !== this.state.selectedPlaylist.id) {
+				this.setState({
+					selectedPlaylist: {
+						name: this.props.playlist.name,
+						id: this.props.playlist.id
+					},
+					next: this.props.playlist.href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal',
+					tracks: []
+				});
 			}
-		});
+		}
+		if (this.state.selectedPlaylist.id !== '' && this.state.selectedPlaylist.id === this.props.playlist.id) {
+			while (this.state.next !== null) {
+				fetch(this.state.next, {
+					headers: {
+						"Authorization": "Bearer " + access_token
+					}
+				}).then((response) => response.json().then(data => {
+					this.setState({
+						next: data.next,
+						tracks: this.state.tracks.concat(data.items)
+
+					})
+				}));
+				break;
+			}
+		}
 	}
+	/*this.setState({tracks: Object.assign({}, this.state.tracks, data.items), next: data.next})*/
 
 	render() {
-		console.log(this.state);
 		return (<div style={defaultStyle}>
 			<Card background={fakeServer.pictures[0].background} song="FAT32" artists="Linux, Windows, Macintosh" votes="1" color={color.redCard}/>
 			<Card background={fakeServer.pictures[1].background} song="NTFS" artists="Windows, Macintosh" votes="-" color={color.blueCard}/>

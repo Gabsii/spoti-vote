@@ -15,10 +15,12 @@ class App extends Component {
 			selectedPlaylist: {
 				name: '',
 				id: '',
-				img: ''
+				img: '',
+				href: ''
 			}
 		}
 	}
+
 	componentDidMount() {
 		let access_token = queryString.parse(window.location.search).access_token;
 		this.setState({access_token});
@@ -34,14 +36,14 @@ class App extends Component {
 				name: event.target.value,
 				img: event.target.options[event.target.selectedIndex].getAttribute('img'),
 				id: event.target.options[event.target.selectedIndex].getAttribute('id'),
-				url: event.target.options[event.target.selectedIndex].getAttribute('url')
+				url: event.target.options[event.target.selectedIndex].getAttribute('url'),
+				href: event.target.options[event.target.selectedIndex].getAttribute('href')
 			}
 		});
 	}
 
 	render() {
 		let access_token = queryString.parse(window.location.search).access_token;
-		console.log(this.state);
 		return (<section style={{
 				backgroundColor: color.background,
 				height: '100vh',
