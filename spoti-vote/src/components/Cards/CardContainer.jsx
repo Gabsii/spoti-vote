@@ -82,15 +82,40 @@ class CardContainer extends Component {
 				break;
 			}
 		}
+
 	}
-	/*this.setState({tracks: Object.assign({}, this.state.tracks, data.items), next: data.next})*/
+
+	getRandomTrack() {
+		if (this.state.next === null && this.state.tracks.length > 0 && this.state.selectedPlaylist.id === this.props.playlist.id) {
+			let random = Math.floor(Math.random() * this.state.tracks.length); //gets random song number for tracksarray
+			return this.state.tracks[random].track;
+			// let song = this.state.tracks[random].track.name;
+			// let id = this.state.tracks[random].track.id;
+			// let artists = [];
+			// artists.push(this.state.tracks[random].track.artists.map((artist) => artist.name));
+			// let albumCover = this.state.tracks[random].track.album.images[0].url;
+		} else {
+			return {
+				name: '',
+				id: '',
+				artists: [],
+				album: {
+					images: [
+						{
+							url: ''
+						}
+					]
+				}
+			};
+		}
+	}
 
 	render() {
 		return (<div style={defaultStyle}>
-			<Card background={fakeServer.pictures[0].background} song="FAT32" artists="Linux, Windows, Macintosh" votes="1" color={color.redCard}/>
-			<Card background={fakeServer.pictures[1].background} song="NTFS" artists="Windows, Macintosh" votes="-" color={color.blueCard}/>
-			<Card background={fakeServer.pictures[2].background} song="EX-FAT32" artists="Macintosh" votes="5" color={color.greenCard}/>
-			<Card background={fakeServer.pictures[3].background} song="HDD" artists="everybody" votes="100" color={color.yellowCard}/>
+			<Card randomTrack={this.getRandomTrack()} votes="1" color={color.redCard}/>
+			<Card randomTrack={this.getRandomTrack()} votes="-" color={color.blueCard}/>
+			<Card randomTrack={this.getRandomTrack()} votes="5" color={color.greenCard}/>
+			<Card randomTrack={this.getRandomTrack()} votes="100" color={color.yellowCard}/>
 		</div>);
 	}
 }

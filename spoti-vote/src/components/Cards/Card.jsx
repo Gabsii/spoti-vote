@@ -37,8 +37,8 @@ class Card extends Component {
 		const tint = this.hexToRgb(this.props.color);
 		return (<div style={{
 				...defaultStyle,
-				backgroundImage: 'url(' + this.props.background + ')'
-			}}>
+				backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url || '' + ')'
+			}} id={this.props.randomTrack.id}>
 			<div style={{
 					...imgStyle,
 					backgroundColor: 'rgba(' + tint.r + ',' + tint.g + ',' + tint.b + ',' + 0.5 + ')'
@@ -46,12 +46,12 @@ class Card extends Component {
 				<div style={{
 
 						fontSize: '2em'
-					}}>{this.props.song}</div>
-				<div>{this.props.artists}</div>
+					}}>{this.props.randomTrack.name || '-'}</div>
+				<div>{this.props.randomTrack.artists.map((artist) => artist.name) || '-'}</div>
 				<div style={{
 
 						fontSize: '1.25em'
-					}}>{this.props.votes + " Votes"}</div>
+					}}>{this.props.votes || '-' + " Votes"}</div>
 			</div>
 		</div>);
 	}
