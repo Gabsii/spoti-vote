@@ -22,6 +22,33 @@ let imgStyle = {
 
 class Card extends Component {
 
+	constructor() {
+		super();
+		this.state = {
+			randomTrack: {},
+			votes: 0,
+			hover: false
+		}
+	}
+
+	componentDidUpdate() {
+		if (this.state.randomTrack !== this.props.randomTrack) {
+			this.setState({randomTrack: this.props.randomTrack, votes: 0});
+		}
+	}
+
+	toggleHover() {
+		this.setState({
+			hover: !this.state.hover
+		})
+	}
+
+	vote() {
+		this.setState({
+			votes: this.state.votes + 1
+		})
+	}
+
 	hexToRgb(hex) {
 		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 		return result
@@ -35,8 +62,23 @@ class Card extends Component {
 
 	render() {
 		const tint = this.hexToRgb(this.props.color);
-		return (<div style={{
+		console.log(this.state);
+		let linkStyle;
+		if (this.state.hover) {
+			console.log("ok");
+			linkStyle = {
+				cursor: 'pointer'
+			}
+		} else {
+			linkStyle = {
+				cursor: 'context-menu'
+			}
+		}
+		return (<div onClick={this.props.randomTrack.id !== ''
+				? this.vote.bind(this)
+				: console.log("no id")} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} style={{
 				...defaultStyle,
+				...linkStyle,
 				backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url || '' + ')'
 			}} id={this.props.randomTrack.id}>
 			<div style={{
@@ -44,14 +86,14 @@ class Card extends Component {
 					backgroundColor: 'rgba(' + tint.r + ',' + tint.g + ',' + tint.b + ',' + 0.5 + ')'
 				}}>
 				<div style={{
-
-						fontSize: '2em'
+						fontSize: '2em',
+						textAlign: 'center'
 					}}>{this.props.randomTrack.name || '-'}</div>
 				<div>{this.props.randomTrack.artists.map((artist) => artist.name) || '-'}</div>
 				<div style={{
 
 						fontSize: '1.25em'
-					}}>{this.props.votes || '-' + " Votes"}</div>
+					}}>{this.state.votes || '-' + " Votes"}</div>
 			</div>
 		</div>);
 	}

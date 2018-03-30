@@ -2,27 +2,6 @@ import React, {Component} from 'react';
 import Card from './Card.jsx';
 
 let color = require('../../css/colors.js');
-let fakeServer = {
-	pictures: [
-		{
-			song: 'NTFS',
-			artists: 'Linux, Windows, Macintosh',
-			background: 'https://picsum.photos/650'
-		}, {
-			song: 'NTFS',
-			artists: 'Linux, Windows, Macintosh',
-			background: 'https://picsum.photos/550'
-		}, {
-			song: 'NTFS',
-			artists: 'Linux, Windows, Macintosh',
-			background: 'https://picsum.photos/500'
-		}, {
-			song: 'NTFS',
-			artists: 'Linux, Windows, Macintosh',
-			background: 'https://picsum.photos/600'
-		}
-	]
-}
 
 let defaultStyle = {
 	height: 'calc(100vh - 125px)',
@@ -112,10 +91,10 @@ class CardContainer extends Component {
 
 	render() {
 		return (<div style={defaultStyle}>
-			<Card randomTrack={this.getRandomTrack()} votes="1" color={color.redCard}/>
-			<Card randomTrack={this.getRandomTrack()} votes="-" color={color.blueCard}/>
-			<Card randomTrack={this.getRandomTrack()} votes="5" color={color.greenCard}/>
-			<Card randomTrack={this.getRandomTrack()} votes="100" color={color.yellowCard}/>
+			<Card randomTrack={this.getRandomTrack()} color={color.redCard}/>
+			<Card randomTrack={this.getRandomTrack()} color={color.blueCard}/>
+			<Card randomTrack={this.getRandomTrack()} color={color.greenCard}/>
+			<Card randomTrack={this.getRandomTrack()} color={color.yellowCard}/>
 		</div>);
 	}
 }
