@@ -27,7 +27,8 @@ class CardContainer extends Component {
 				href: ''
 			},
 			next: '',
-			tracks: []
+			tracks: [],
+			disableVote: false
 		}
 	}
 
@@ -66,13 +67,8 @@ class CardContainer extends Component {
 
 	getRandomTrack() {
 		if (this.state.next === null && this.state.tracks.length > 0 && this.state.selectedPlaylist.id === this.props.playlist.id) {
-			let random = Math.floor(Math.random() * this.state.tracks.length); //gets random song number for tracksarray
+			let random = Math.floor(Math.random() * this.state.tracks.length);
 			return this.state.tracks[random].track;
-			// let song = this.state.tracks[random].track.name;
-			// let id = this.state.tracks[random].track.id;
-			// let artists = [];
-			// artists.push(this.state.tracks[random].track.artists.map((artist) => artist.name));
-			// let albumCover = this.state.tracks[random].track.album.images[0].url;
 		} else {
 			return {
 				name: '',
@@ -89,12 +85,17 @@ class CardContainer extends Component {
 		}
 	}
 
+	voteHandler() {
+		console.log(this);
+		this.setState({disableVote: true})
+	}
+
 	render() {
 		return (<div style={defaultStyle}>
-			<Card randomTrack={this.getRandomTrack()} color={color.redCard}/>
-			<Card randomTrack={this.getRandomTrack()} color={color.blueCard}/>
-			<Card randomTrack={this.getRandomTrack()} color={color.greenCard}/>
-			<Card randomTrack={this.getRandomTrack()} color={color.yellowCard}/>
+			<Card randomTrack={this.getRandomTrack()} color={color.redCard} disableVote={this.state.disableVote} voteHandler={this.voteHandler.bind(this)}/>
+			<Card randomTrack={this.getRandomTrack()} color={color.blueCard} disableVote={this.state.disableVote} voteHandler={this.voteHandler.bind(this)}/>
+			<Card randomTrack={this.getRandomTrack()} color={color.greenCard} disableVote={this.state.disableVote} voteHandler={this.voteHandler.bind(this)}/>
+			<Card randomTrack={this.getRandomTrack()} color={color.yellowCard} disableVote={this.state.disableVote} voteHandler={this.voteHandler.bind(this)}/>
 		</div>);
 	}
 }

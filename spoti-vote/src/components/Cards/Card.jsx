@@ -5,6 +5,8 @@ let color = require('../../css/colors.js');
 let defaultStyle = {
 	flexBasis: 'calc(50% - 40px)',
 	margin: '20px',
+	userSelect: 'none',
+	MozUserSelect: 'none',
 	backgroundPosition: 'center',
 	backgroundRepeat: 'no-repeat',
 	backgroundSize: 'cover',
@@ -44,9 +46,11 @@ class Card extends Component {
 	}
 
 	vote() {
-		this.setState({
-			votes: this.state.votes + 1
-		})
+		if (this.props.randomTrack.id !== '') {
+			this.setState({
+				votes: this.state.votes + 1
+			});
+		}
 	}
 
 	hexToRgb(hex) {
@@ -62,10 +66,8 @@ class Card extends Component {
 
 	render() {
 		const tint = this.hexToRgb(this.props.color);
-		console.log(this.state);
 		let linkStyle;
 		if (this.state.hover) {
-			console.log("ok");
 			linkStyle = {
 				cursor: 'pointer'
 			}
@@ -74,9 +76,7 @@ class Card extends Component {
 				cursor: 'context-menu'
 			}
 		}
-		return (<div onClick={this.props.randomTrack.id !== ''
-				? this.vote.bind(this)
-				: console.log("no id")} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} style={{
+		return (<div onClick={this.vote.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} style={{
 				...defaultStyle,
 				...linkStyle,
 				backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url || '' + ')'

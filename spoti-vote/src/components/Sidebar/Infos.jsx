@@ -41,36 +41,16 @@ class Infos extends Component {
 	constructor() {
 		super();
 		this.state = {
-			userData: {
-				user: {
-					name: '',
-					id: '',
-					image: '',
-					profileUrl: ''
-				}
-			},
 			playlistData: {
 				playlists: []
 			}
 
 		}
 	}
+
 	componentDidMount() {
 		let access_token = this.props.token;
-		fetch("https://api.spotify.com/v1/me", {
-			headers: {
-				"Authorization": "Bearer " + access_token
-			}
-		}).then((response) => response.json().then(data => this.setState({
-			userData: {
-				user: {
-					name: data.display_name,
-					id: data.id,
-					image: data.images[0].url,
-					profileUrl: data.external_urls.spotify
-				}
-			}
-		})));
+
 		fetch("https://api.spotify.com/v1/me/playlists?limit=50", {
 			headers: {
 				"Authorization": "Bearer " + access_token
@@ -83,7 +63,6 @@ class Infos extends Component {
 	}
 
 	render() {
-		// TODO: add playlist url instead of dj profile @<a>
 		return (<div style={defaultStyle}>
 			<div style={{
 					...centerContainer,
@@ -114,7 +93,7 @@ class Infos extends Component {
 				<div style={{
 						marginLeft: '10px'
 					}}>
-					{this.state.userData.user.name || this.state.userData.user.id}
+					{this.props.users.name || this.props.users.id}
 				</div>
 			</div>
 		</div>);
