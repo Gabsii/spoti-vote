@@ -1,57 +1,15 @@
 "use strict";
-let express = require('express');
-let request = require('request');
-let querystring = require('querystring');
+
+const express = require('express');
+const request = require('request');
+const querystring = require('querystring');
 
 let app = express();
 
+let ServerInstance = require('./src/ServerInstance');
+
 let redirect_uri = process.env.REDIRECT_URI || 'http://localhost:8888/callback';
-
 let serverInstances = [];
-
-function makeid() {
-  var text = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-  for (var i = 0; i < 5; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  return text;
-}
-
-function ServerInstance(token) {
-	let counter = 1;
-	this.id = makeid();
-
-	while (counter > 0) {
-		counter = 0;
-		for (var i = 0; i < serverInstances.length; i++) {
-			if (serverInstances[i].id == this.id) {
-				counter++;
-			}
-		}
-		if (counter > 0) {
-			this.id = makeid();
-		}
-	}
-
-	this.playlist = null;
-	this.currentVotes = [];
-	this.votingSongs = [];
-	this.currentSong = [];
-	this.userToken = null;
-	this.token = token;
-
-	this.currentState = null;
-
-	this.getPlaylist = function() {
-
-	}
-
-	this.getPlaylists = function() {
-
-	}
-}
 
 app.get('/login', function(req, res) {
 	res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state playlist-read-collaborative', redirect_uri}));
@@ -77,18 +35,49 @@ app.get('/callback', function(req, res) {
 		var access_token = body.access_token;
 		let uri = process.env.FRONTEND_URI || 'http://localhost:3000/app';
 
-		let instance = new ServerInstance(access_token);
+		let instance = new ServerInstance(access_token, serverInstances);
+		instance.fetchData();
 		serverInstances.push(instance);
 		//res.send(instance.id);
 
-		res.redirect(uri + '/' + instance.id);
+		console.log(instance);
 
-		console.log(serverInstances);
+		res.redirect(uri + '/' + instance.id);
 
 		//res.redirect(uri + '?access_token=' + access_token);
 	});
 });
 
+app.get('/instance/playlists', function(req, res) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	let instanceId = req.query.id;
+	let instance = null;
+	for (var i = 0; i < serverInstances.length; i++) {
+		if (serverInstances[i].id == instanceId)
+			instance = serverInstances[i];
+	}
+	console.log(instance);
+	if (instance != null) {
+		res.send(instance.getPlaylists());
+	} else {
+		res.send("Not found");
+	}
+});
+
+app.get('/instance/host', function(req, res) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	let instanceId = req.query.id;
+	let instance = null;
+	for (var i = 0; i < serverInstances.length; i++) {
+		if (serverInstances[i].id == instanceId)
+			instance = serverInstances[i];
+	}
+	if (instance != null) {
+		res.send(instance.getHostInfo());
+	} else {
+		res.send("Not found");
+	}
+});
 
 
 let port = process.env.PORT || 8888;

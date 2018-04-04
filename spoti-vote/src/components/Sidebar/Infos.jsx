@@ -51,15 +51,16 @@ class Infos extends Component {
 	componentDidMount() {
 		let access_token = this.props.token;
 
-		fetch("https://api.spotify.com/v1/me/playlists?limit=50", {
-			headers: {
-				"Authorization": "Bearer " + access_token
-			}
-		}).then((response) => response.json().then(data => this.setState({
-			playlistData: {
-				playlists: data.items
-			}
-		})))
+		fetch('http://localhost:8888/instance/playlists?id='+window.location.pathname.split('/')[2], {
+	    }).then((response) => response.json().then(data => {
+			this.setState({
+				playlistData: {
+					playlists: data
+				}
+			});
+	    })).catch(function() {
+			window.location.reload;
+		});
 	}
 
 	render() {

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import Infos from './Sidebar/Infos.jsx';
 import UserContainer from './Sidebar/UserContainer.jsx';
-import userIcon from '../img/abstract-user-flat-1.svg';
 
 let color = require('../css/colors.js');
 let defaultStyle = {
@@ -25,35 +24,17 @@ class Sidebar extends Component {
 
 	componentDidMount() {
 		let access_token = this.props.token;
-		fetch("https://api.spotify.com/v1/me", {
-			headers: {
-				"Authorization": "Bearer " + access_token
+		fetch('http://localhost:8888/instance/host?id='+window.location.pathname.split('/')[2], {
+		}).then((response) => response.json().then(data => this.setState({
+			userData: {
+				user: {
+					name: data.name,
+					id: data.id,
+					image: data.image,
+					profileUrl: data.profileUrl
+				}
 			}
-		}).then((response) => response.json().then(data => {
-			if (data.images.length > 0) {
-				this.setState({
-					userData: {
-						user: {
-							name: data.display_name,
-							id: data.id,
-							image: data.images[0].url,
-							profileUrl: data.external_urls.spotify
-						}
-					}
-				});
-			} else {
-				this.setState({
-					userData: {
-						user: {
-							name: data.display_name,
-							id: data.id,
-							image: userIcon,
-							profileUrl: data.external_urls.spotify
-						}
-					}
-				})
-			}
-		}));
+		})));
 	}
 	render() {
 		return (<div style={defaultStyle}>
