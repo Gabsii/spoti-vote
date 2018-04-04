@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import User from './User.jsx';
+import userIcon from '../../img/abstract-user-flat-1.svg';
 
 let color = require('../../css/colors.js');
 let defaultStyle = {
@@ -42,16 +43,31 @@ class UserContainer extends Component {
 			headers: {
 				"Authorization": "Bearer " + access_token
 			}
-		}).then((response) => response.json().then(data => this.setState({
-			userData: {
-				user: {
-					name: data.display_name,
-					id: data.id,
-					image: data.images[0].url,
-					profileUrl: data.external_urls.spotify
-				}
+		}).then((response) => response.json().then(data => {
+			if (data.images.length > 0) {
+				this.setState({
+					userData: {
+						user: {
+							name: data.display_name,
+							id: data.id,
+							image: data.images[0].url,
+							profileUrl: data.external_urls.spotify
+						}
+					}
+				});
+			} else {
+				this.setState({
+					userData: {
+						user: {
+							name: data.display_name,
+							id: data.id,
+							image: userIcon,
+							profileUrl: data.external_urls.spotify
+						}
+					}
+				})
 			}
-		})))
+		}))
 	}
 
 	render() {

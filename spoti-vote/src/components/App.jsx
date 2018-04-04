@@ -24,9 +24,9 @@ class App extends Component {
 	componentDidMount() {
 		let access_token = queryString.parse(window.location.search).access_token;
 		this.setState({access_token});
-		if (!access_token) {
-			window.location = "http://localhost:3000/";
-		}
+		// if (!access_token) {
+		// 	window.location = "http://localhost:3000/";
+		// }
 
 	}
 

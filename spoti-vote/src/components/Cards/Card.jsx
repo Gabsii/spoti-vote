@@ -50,6 +50,10 @@ class Card extends Component {
 			this.setState({
 				votes: this.state.votes + 1
 			});
+
+			fetch("http://localhost:8888/vote", {
+
+			}).then((response) => response.json().then());
 		}
 	}
 
