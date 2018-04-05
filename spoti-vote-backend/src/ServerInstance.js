@@ -33,6 +33,7 @@ function ServerInstance(token, serverInstances) {
     //Gets the hosts data from Spotify
     this.host = {};
 	this.host.token = token;
+    console.log('New ServerInstance ' + this.id + ' created.');
 }
 
 method.fetchData = async function() {
@@ -68,14 +69,8 @@ method.fetchData = async function() {
     for (var i = 0; i < this.playlists.length; i++) {
         this.playlists[i].tracks = await this.loadSongs(this.playlists[i].id);
     }
-    console.log(this.playlists);
 
-    this.currentVotes = [];
-    this.votingSongs = [];
-    this.currentSong = [];
-
-    this.user = [];
-    this.currentState = 'vote';
+    console.log('User ' + this.host.id + ' logged in all data was fetched.');
 }
 
 method.getHostInfo = function() {
@@ -122,9 +117,29 @@ method.getRandomTracks = async function(playlistId) {
     let playlist = this.getPlaylistById(playlistId);
     let indexi = [];
 
-    for (var i = 0; i < 4; i++) {
-        indexi[i] = Math.random(playlist.tracks.lenght);
+    if (playlist.tracks.lenght < 4) {
+        return 'Your playlist is to small';
     }
+
+    for (var i = 0; i < 4; i++) {
+        let counter;
+        do {
+            counter = 0;
+            indexi[i] = Math.floor(Math.random() * playlist.tracks.length);
+            for (var j = 1; j < indexi.length; j++) {
+                if (indexi[j-1] == indexi[j]) {
+                    counter++;
+                }
+            }
+        } while (counter > 0);
+    }
+
+    let selectedTracks = [];
+    for (var i = 0; i < indexi.length; i++) {
+        selectedTracks[i] = playlist.tracks[indexi[i]].track;
+    }
+    return selectedTracks;
+}
 
 method.getVotedSong = function() {
 

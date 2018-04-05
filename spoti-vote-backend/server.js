@@ -81,7 +81,7 @@ app.get('/instance/getTracks', async function(req, res) {
 	let instance = getInstanceById(req.query.id);
 
 	if (instance != null) {
-		res.send(instance.getRandomTracks(playlistId));
+		res.send(await instance.getRandomTracks(playlistId));
 	} else {
 		res.send("Not found");
 	}
