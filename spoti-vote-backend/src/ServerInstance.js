@@ -126,13 +126,15 @@ method.getRandomTracks = async function(playlistId) {
         do {
             counter = 0;
             indexi[i] = Math.floor(Math.random() * playlist.tracks.length);
-            for (var j = 1; j < indexi.length; j++) {
-                if (indexi[j-1] == indexi[j]) {
+            for (var j = 0; j < indexi.length; j++) {
+                if (indexi[j] == indexi[i] && i != j) {
                     counter++;
                 }
             }
         } while (counter > 0);
     }
+
+    console.log(indexi);
 
     let selectedTracks = [];
     for (var i = 0; i < indexi.length; i++) {
