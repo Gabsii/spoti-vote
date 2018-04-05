@@ -1,6 +1,6 @@
 # OAuth bridge template
 
-This service logs in to Spotify and redirects the user to a given frontend application with a valid access_token as a parameter in the url.
+This service is responsible for handling the logic which affects multiple users.
 
 ## Development mode
 
@@ -19,7 +19,7 @@ export SPOTIFY_CLIENT_SECRET=YYYY
 npm start
 ```
 
-Then go to http://localhost:8888/login in your browser. This will initiate the login flow and finally redirect to http://localhost:3000?access_token=ZZZZZ where ZZZZZ is a valid access token that you can use to do operations in the Spotify API.
+Then go to http://localhost:3000/ in your browser and hit the login button. This will initiate the login flow and finally redirect to the Spotify login page where you can authorize this application to access your data. The Spotify API will provide a token, which will be stored on the server.
 
 ## Deploying to production
 
