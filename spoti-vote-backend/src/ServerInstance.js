@@ -57,6 +57,9 @@ method.fetchData = function() {
         }
     }).then((response) => response.json().then(data => {
         this.playlists = data.items;
+        for (var i = 0; i < this.playlists.length; i++) {
+            this.playlists[i].tracks = this.loadSongs(this.playlists[i].id);
+        }
     }));
 
     this.currentVotes = [];
@@ -75,8 +78,9 @@ method.getPlaylists = function() {
     return this.playlists;
 }
 
-method.getNewSongs = function() {
-    this.currentVotes = [];
+method.loadSongs = function(playlistId) {
+    tracks = [];
+    next = this.props.playlist.href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal';
 }
 
 method.getVotedSong = function() {

@@ -62,7 +62,6 @@ class CardContainer extends Component {
 				break;
 			}
 		}
-
 	}
 
 	getRandomTrack() {
