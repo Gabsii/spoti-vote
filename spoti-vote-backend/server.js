@@ -41,17 +41,13 @@ app.get('/callback', async function(req, res) {
 		json: true
 	};
 	request.post(authOptions, async function(error, response, body) {
-		var access_token = body.access_token;
 		let uri = process.env.FRONTEND_URI || 'http://localhost:3000/app';
 
-		let instance = new ServerInstance(access_token, serverInstances);
+		let instance = new ServerInstance(body.access_token, serverInstances);
 		await instance.fetchData();
 		serverInstances.push(instance);
-		//res.send(instance.id);
 
 		res.redirect(uri + '/' + instance.id);
-
-		//res.redirect(uri + '?access_token=' + access_token);
 	});
 });
 
