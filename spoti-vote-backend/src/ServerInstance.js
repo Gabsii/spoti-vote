@@ -124,6 +124,8 @@ method.getRandomTracks = async function(playlistId) {
 
     for (var i = 0; i < 4; i++) {
         indexi[i] = Math.random(playlist.tracks.lenght);
+
+        
     }
 
 method.getVotedSong = function() {
