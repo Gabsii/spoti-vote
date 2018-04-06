@@ -77,19 +77,7 @@ class CardContainer extends Component {
 		}
 	}
 
-	componentDidUpdate() {
-		if (this.props.playlist.id !== '' && this.props.playlist.id !== this.state.playlist.id) {
-			fetch('http://localhost:8888/instance/getTracks?id='+window.location.pathname.split('/')[2]+'&playlist='+this.props.playlist.id, {
-			}).then((response) => response.json().then(data => {
-				this.setState({
-					tracks: data,
-					playlist: {
-						id: this.props.playlist.id
-					}
-				})
-			}));
-		}
-	}
+	componentDidUpdate() {}
 
 	voteHandler() {
 		console.log(this);

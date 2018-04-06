@@ -142,13 +142,14 @@ method.getRandomTracks = async function(playlistId) {
         selectedTracks[i] = playlist.tracks[indexi[i]].track;
     }
     this.activeTracks = selectedTracks;
-    return selectedTracks;
+    return true;
 }
 
 method.update = async function() {
     let state = {
         activePlaylist: this.activePlaylist,
-        activeTracks: this.activeTracks
+        activeTracks: this.activeTracks,
+        numPlaylists: this.playlists.length
     }
     return state;
 }

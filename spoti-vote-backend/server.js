@@ -58,7 +58,7 @@ app.get('/instance/playlists', async function(req, res) {
 	if (instance != null) {
 		res.send(instance.getPlaylists());
 	} else {
-		res.send("Not found");
+		res.send({response: 'This room was not found'});
 	}
 });
 
@@ -68,19 +68,23 @@ app.get('/instance/host', function(req, res) {
 	if (instance != null) {
 		res.send(instance.getHostInfo());
 	} else {
-		res.send("Not found");
+		res.send({response: 'This room was not found'});
 	}
 });
 
-app.get('/instance/getTracks', async function(req, res) {
+app.get('/instance/newTracks', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let playlistId = req.query.playlist;
 	let instance = getInstanceById(req.query.id);
 
 	if (instance != null) {
-		res.send(await instance.getRandomTracks(playlistId));
+		if (await instance.getRandomTracks(playlistId) == true) {
+			res.send({response: 'New tracks were generated'});
+		} else {
+			res.send({response: 'Failed to generate new tracks'})
+		}
 	} else {
-		res.send("Not found");
+		res.send({response: 'This room was not found'});
 	}
 });
 
@@ -91,7 +95,7 @@ app.get('/instance/update', async function(req, res) {
 	if (instance != null) {
 		res.send(await instance.update());
 	} else {
-		res.send("Not found");
+		res.send({response: 'This room was not found'});
 	}
 });
 
@@ -102,7 +106,7 @@ app.get('/instance/checkToken', async function(req, res) {
 	if (instance != null) {
 		res.send(await instance.checkToken(req.query.token));
 	} else {
-		res.send("Not found");
+		res.send({response: 'This room was not found'});
 	}
 });
 

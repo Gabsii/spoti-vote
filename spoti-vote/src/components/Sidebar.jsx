@@ -36,7 +36,7 @@ class Sidebar extends Component {
 
 	render() {
 		return (<div style={defaultStyle}>
-			<Infos loggedIn={this.props.loggedIn} user={this.state.user} playlistHandler={this.props.playlistHandler} playlistCover={this.props.playlistCover} playlistUrl={this.props.playlistUrl}/>
+			<Infos loggedIn={this.props.loggedIn} update={this.props.update} user={this.state.user} playlistHandler={this.props.playlistHandler} playlistData={this.props.playlistData}/>
 			<UserContainer loggedIn={this.props.loggedIn} user={this.state.user}/>
 		</div>);
 	}

@@ -7,8 +7,6 @@ import queryString from 'query-string';
 
 let color = require('../css/colors.js');
 
-let ip = '10.51.51.33';
-
 class App extends Component {
 	constructor() {
 		super();
@@ -19,7 +17,8 @@ class App extends Component {
 				id: '',
 				img: '',
 				href: ''
-			}
+			},
+			update: {}
 		}
 	}
 
@@ -36,12 +35,33 @@ class App extends Component {
 		});
 	}
 
+	componentDidUpdate() {
+		fetch('http://localhost:8888/instance/update?id='+window.location.pathname.split('/')[2]+'&loggedIn='+this.state.loggedIn, {
+		}).then((response) => response.json().then(data => {
+			if (data.activePlaylist != undefined) {
+				setTimeout(function() {
+					this.setState({
+						update: data
+					});
+				}.bind(this), 3000);
+			}
+
+		})).catch(function() {
+			window.location.reload;
+		});
+	}
+
 	selectPlaylist(event) {
+		let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
+		fetch('http://localhost:8888/instance/newTracks?id='+window.location.pathname.split('/')[2]+'&playlist='+playlistId, {
+		}).then((response) => response.json().then(data => {
+
+		}));
 		this.setState({
 			selectedPlaylist: {
 				name: event.target.value,
 				img: event.target.options[event.target.selectedIndex].getAttribute('img'),
-				id: event.target.options[event.target.selectedIndex].getAttribute('id'),
+				id: playlistId,
 				url: event.target.options[event.target.selectedIndex].getAttribute('url'),
 				href: event.target.options[event.target.selectedIndex].getAttribute('href')
 			}
@@ -49,13 +69,14 @@ class App extends Component {
 	}
 
 	render() {
+
 		return (<section style={{
 				backgroundColor: color.background,
 				height: '100vh',
 				width: '100vw'
 			}}>
 			<Menu loggedIn={this.state.loggedIn}/>
-			<Sidebar loggedIn={this.state.loggedIn} playlistHandler={this.selectPlaylist.bind(this)} playlistCover={this.state.selectedPlaylist.img} playlistUrl={this.state.selectedPlaylist.url}/>
+			<Sidebar loggedIn={this.state.loggedIn} update={this.state.update} playlistHandler={this.selectPlaylist.bind(this)} playlistData={this.state.selectedPlaylist}/>
 			<CardContainer loggedIn={this.state.loggedIn} playlist={this.state.selectedPlaylist}/>
 			<Footer loggedIn={this.state.loggedIn}/>
 		</section>);
