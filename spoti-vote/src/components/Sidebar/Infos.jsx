@@ -48,7 +48,7 @@ class Infos extends Component {
 	componentDidUpdate() {
 		//This is only run, when the update request reports a different amount of playlists then the current numbers of playlists
 		//It will fetch all the playlists again. (Do we need this)
-		if (this.props.loggedIn === true && this.props.update.numPlaylists != this.state.playlists.length) {
+		if (this.props.loggedIn === true && this.props.numPlaylists != this.state.playlists.length) {
 			fetch('http://localhost:8888/instance/playlists?id='+window.location.pathname.split('/')[2], {
 		    }).then((response) => response.json().then(data => {
 				if (this.state.playlists.length != data.length) {
@@ -64,15 +64,10 @@ class Infos extends Component {
 
 	render() {
 		let option = '';
-		let image = '';
 		let imageUrl = 'http://via.placeholder.com/152x152';
 		let linkUrl = window.location.href;
-		if (this.props.playlistData.id='') {
-			imageUrl = this.props.playlistData.img;
-			linkUrl = this.props.playlistData.url;
-		}
 
-		if (this.props.loggedIn) {
+		if (this.props.loggedIn == true) {
 			option = <select style={{
 					width: '200px'
 				}} onChange={this.props.playlistHandler}>
@@ -80,39 +75,21 @@ class Infos extends Component {
 				<option>Select a Playlist</option>
 				{this.state.playlists.map((playlist) => <option key={playlist.id} id={playlist.id} img={playlist.images[0].url} url={playlist.external_urls.spotify} href={playlist.href}>{playlist.name}</option>)}
 			</select>;
-
-			image = <a href={linkUrl}>
-				<img alt="Current Playlist" src={imageUrl} style={{
-						...imgStyle,
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center'
-					}}/>
-			</a>
 		} else {
-			if (this.props.update.activePlaylist != undefined) {
-				option = <div>{this.props.update.activePlaylist.name}</div>
-				image = <a href={this.props.update.activePlaylist.url}>
-					<img alt="Current Playlist" src={this.props.update.activePlaylist.images[0].url} style={{
-							...imgStyle,
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'center'
-						}}/>
-				</a>
+			if (this.props.activePlaylist != undefined) {
+				option = <div>{this.props.activePlaylist .name || 'Host is changing the playlist'}</div>;
 			} else {
-				option = <div>{'Host is changing the Playlist'}</div>
-				image = <a href={linkUrl}>
-					<img alt="Current Playlist" src={imageUrl} style={{
-							...imgStyle,
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'center'
-						}}/>
-				</a>
+				option = <div>{'Host is changing the playlist'}</div>;
 			}
 
 		}
+		if (this.props.activePlaylist != undefined) {
+			if (this.props.activePlaylist.external_urls != undefined) {
+				linkUrl = this.props.activePlaylist.external_urls.spotify;
+				imageUrl = this.props.activePlaylist.images[0].url;
+			}
+		}
+
 
 		return (<div style={defaultStyle}>
 			<div style={{
@@ -126,7 +103,14 @@ class Infos extends Component {
 				}}>
 				{option}
 			</div>
-			{image}
+			<a href={linkUrl}>
+				<img alt="Current Playlist" src={imageUrl} style={{
+						...imgStyle,
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center'
+					}}/>
+			</a>
 			<div style={nameContainer}>
 				<FontAwesomeIcon icon={faHeadphones} size="2x"/>
 				<div style={{

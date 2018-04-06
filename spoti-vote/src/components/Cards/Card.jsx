@@ -33,11 +33,7 @@ class Card extends Component {
 		}
 	}
 
-	componentDidUpdate() {
-		if (this.state.randomTrack !== this.props.randomTrack) {
-			this.setState({randomTrack: this.props.randomTrack, votes: 0});
-		}
-	}
+	componentDidUpdate() {}
 
 	toggleHover() {
 		this.setState({
@@ -45,17 +41,7 @@ class Card extends Component {
 		})
 	}
 
-	vote() {
-		if (this.props.randomTrack.id !== '') {
-			this.setState({
-				votes: this.state.votes + 1
-			});
-
-			fetch("http://localhost:8888/vote", {
-
-			}).then((response) => response.json().then());
-		}
-	}
+	vote() {}
 
 	hexToRgb(hex) {
 		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -69,37 +55,41 @@ class Card extends Component {
 	}
 
 	render() {
-		const tint = this.hexToRgb(this.props.color);
-		let linkStyle;
-		if (this.state.hover) {
-			linkStyle = {
-				cursor: 'pointer'
+		if (this.props.randomTrack != undefined) {
+			const tint = this.hexToRgb(this.props.color);
+			let linkStyle;
+			if (this.state.hover) {
+				linkStyle = {
+					cursor: 'pointer'
+				}
+			} else {
+				linkStyle = {
+					cursor: 'context-menu'
+				}
 			}
-		} else {
-			linkStyle = {
-				cursor: 'context-menu'
-			}
-		}
-		return (<div onClick={this.vote.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} style={{
-				...defaultStyle,
-				...linkStyle,
-				backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url || '' + ')'
-			}} id={this.props.randomTrack.id}>
-			<div style={{
-					...imgStyle,
-					backgroundColor: 'rgba(' + tint.r + ',' + tint.g + ',' + tint.b + ',' + 0.5 + ')'
-				}}>
+			return (<div onClick={this.vote.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} style={{
+					...defaultStyle,
+					...linkStyle,
+					backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url || '' + ')'
+				}} id={this.props.randomTrack.id}>
 				<div style={{
-						fontSize: '2em',
-						textAlign: 'center'
-					}}>{this.props.randomTrack.name || '-'}</div>
-				<div>{this.props.randomTrack.artists.map((artist) => artist.name) || '-'}</div>
-				<div style={{
+						...imgStyle,
+						backgroundColor: 'rgba(' + tint.r + ',' + tint.g + ',' + tint.b + ',' + 0.5 + ')'
+					}}>
+					<div style={{
+							fontSize: '2em',
+							textAlign: 'center'
+						}}>{this.props.randomTrack.name || '-'}</div>
+					<div>{this.props.randomTrack.artists.map((artist) => artist.name) || '-'}</div>
+					<div style={{
 
-						fontSize: '1.25em'
-					}}>{this.state.votes || '-' + " Votes"}</div>
-			</div>
-		</div>);
+							fontSize: '1.25em'
+						}}>{this.state.votes || '-' + " Votes"}</div>
+				</div>
+			</div>);
+		} else {
+			return (<div></div>);
+		}
 	}
 }
 export default Card;

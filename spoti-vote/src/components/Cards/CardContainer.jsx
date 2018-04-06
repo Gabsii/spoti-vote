@@ -20,61 +20,7 @@ let defaultStyle = {
 class CardContainer extends Component {
 	constructor() {
 		super();
-		this.state = {
-			playlist: {
-				id: ''
-			},
-			tracks: [
-				{
-					name: '',
-					id: '',
-					artists: [],
-					album: {
-						images: [
-							{
-								url: ''
-							}
-						]
-					}
-				},
-				{
-					name: '',
-					id: '',
-					artists: [],
-					album: {
-						images: [
-							{
-								url: ''
-							}
-						]
-					}
-				},
-				{
-					name: '',
-					id: '',
-					artists: [],
-					album: {
-						images: [
-							{
-								url: ''
-							}
-						]
-					}
-				},
-				{
-					name: '',
-					id: '',
-					artists: [],
-					album: {
-						images: [
-							{
-								url: ''
-							}
-						]
-					}
-				},
-			]
-		}
+		this.state = {}
 	}
 
 	componentDidUpdate() {}
@@ -86,10 +32,10 @@ class CardContainer extends Component {
 
 	render() {
 		return (<div style={defaultStyle}>
-			<Card randomTrack={this.state.tracks[0]} color={color.redCard} disableVote={this.state.disableVote} voteHandler={this.voteHandler.bind(this)}/>
-			<Card randomTrack={this.state.tracks[1]} color={color.blueCard} disableVote={this.state.disableVote} voteHandler={this.voteHandler.bind(this)}/>
-			<Card randomTrack={this.state.tracks[2]} color={color.greenCard} disableVote={this.state.disableVote} voteHandler={this.voteHandler.bind(this)}/>
-			<Card randomTrack={this.state.tracks[3]} color={color.yellowCard} disableVote={this.state.disableVote} voteHandler={this.voteHandler.bind(this)}/>
+			<Card randomTrack={this.props.activeTracks[0]} color={color.redCard} disableVote={this.state.disableVote} voteHandler={this.voteHandler.bind(this)}/>
+			<Card randomTrack={this.props.activeTracks[1]} color={color.blueCard} disableVote={this.state.disableVote} voteHandler={this.voteHandler.bind(this)}/>
+			<Card randomTrack={this.props.activeTracks[2]} color={color.greenCard} disableVote={this.state.disableVote} voteHandler={this.voteHandler.bind(this)}/>
+			<Card randomTrack={this.props.activeTracks[3]} color={color.yellowCard} disableVote={this.state.disableVote} voteHandler={this.voteHandler.bind(this)}/>
 		</div>);
 	}
 }

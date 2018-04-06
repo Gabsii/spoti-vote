@@ -12,13 +12,11 @@ class App extends Component {
 		super();
 		this.state = {
 			loggedIn: null,
-			selectedPlaylist: {
-				name: '',
-				id: '',
-				img: '',
-				href: ''
-			},
-			update: {}
+			activePlaylist: {},
+			activeTracks: {},
+			numPlaylists: 0,
+			user: {},
+			update: true
 		}
 	}
 
@@ -33,19 +31,29 @@ class App extends Component {
 		})).catch(function() {
 			window.location.reload;
 		});
+
+		fetch('http://localhost:8888/instance/host?id='+window.location.pathname.split('/')[2], {
+		}).then((response) => response.json().then(data => this.setState({
+			user: data
+		})));
 	}
 
 	componentDidUpdate() {
 		fetch('http://localhost:8888/instance/update?id='+window.location.pathname.split('/')[2]+'&loggedIn='+this.state.loggedIn, {
 		}).then((response) => response.json().then(data => {
-			if (data.activePlaylist != undefined) {
-				setTimeout(function() {
+			setTimeout(function() {
+				if (this.state.activeTracks != data.activeTracks || this.state.numPlaylists != data.numPlaylists || this.state.activePlaylist != data.activePlaylist) {
 					this.setState({
-						update: data
+						activePlaylist: data.activePlaylist,
+						activeTracks: data.activeTracks,
+						numPlaylists: data.numPlaylists
 					});
-				}.bind(this), 3000);
-			}
+				}
 
+			}.bind(this), 500);
+			if (data.activePlaylist != undefined) {
+
+			}
 		})).catch(function() {
 			window.location.reload;
 		});
@@ -54,31 +62,19 @@ class App extends Component {
 	selectPlaylist(event) {
 		let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
 		fetch('http://localhost:8888/instance/newTracks?id='+window.location.pathname.split('/')[2]+'&playlist='+playlistId, {
-		}).then((response) => response.json().then(data => {
-
-		}));
-		this.setState({
-			selectedPlaylist: {
-				name: event.target.value,
-				img: event.target.options[event.target.selectedIndex].getAttribute('img'),
-				id: playlistId,
-				url: event.target.options[event.target.selectedIndex].getAttribute('url'),
-				href: event.target.options[event.target.selectedIndex].getAttribute('href')
-			}
-		});
+		}).then((response) => response.json().then(data => {}));
 	}
 
 	render() {
-
 		return (<section style={{
 				backgroundColor: color.background,
 				height: '100vh',
 				width: '100vw'
 			}}>
-			<Menu loggedIn={this.state.loggedIn}/>
-			<Sidebar loggedIn={this.state.loggedIn} update={this.state.update} playlistHandler={this.selectPlaylist.bind(this)} playlistData={this.state.selectedPlaylist}/>
-			<CardContainer loggedIn={this.state.loggedIn} playlist={this.state.selectedPlaylist}/>
-			<Footer loggedIn={this.state.loggedIn}/>
+			<Menu/>
+			<Sidebar loggedIn={this.state.loggedIn} user={this.state.user} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} numPlaylists={this.state.numPlaylists}/>
+			<CardContainer activeTracks={this.state.activeTracks}/>
+			<Footer/>
 		</section>);
 	}
 }

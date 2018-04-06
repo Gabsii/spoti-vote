@@ -17,27 +17,13 @@ class Sidebar extends Component {
 
 	constructor() {
 		super();
-		this.state = {
-			user: {}
-		}
-	}
-
-	componentDidMount() {
-		fetch('http://localhost:8888/instance/host?id='+window.location.pathname.split('/')[2], {
-		}).then((response) => response.json().then(data => this.setState({
-			user: {
-				name: data.name,
-				id: data.id,
-				image: data.image,
-				profileUrl: data.profileUrl
-			}
-		})));
+		this.state = {}
 	}
 
 	render() {
 		return (<div style={defaultStyle}>
-			<Infos loggedIn={this.props.loggedIn} update={this.props.update} user={this.state.user} playlistHandler={this.props.playlistHandler} playlistData={this.props.playlistData}/>
-			<UserContainer loggedIn={this.props.loggedIn} user={this.state.user}/>
+			<Infos loggedIn={this.props.loggedIn} user={this.props.user} playlistHandler={this.props.playlistHandler} activePlaylist={this.props.activePlaylist} numPlaylists={this.props.numPlaylists}/>
+			<UserContainer loggedIn={this.props.loggedIn} user={this.props.user}/>
 		</div>);
 	}
 }
