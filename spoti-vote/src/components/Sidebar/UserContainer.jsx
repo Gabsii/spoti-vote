@@ -26,36 +26,15 @@ let containerStyle = {
 class UserContainer extends Component {
 	constructor() {
 		super();
-		this.state = {
-			userData: {
-				user: {
-					name: '',
-					id: '',
-					image: '',
-					profileUrl: ''
-				}
-			}
-		}
+		this.state = {}
 	}
-	componentDidMount() {
-		fetch('http://localhost:8888/instance/host?id='+window.location.pathname.split('/')[2], {
-		}).then((response) => response.json().then(data => this.setState({
-			userData: {
-				user: {
-					name: data.name,
-					id: data.id,
-					image: data.image,
-					profileUrl: data.profileUrl
-				}
-			}
-		})));
-	}
+	componentDidMount() {}
 
 	render() {
 		return (<div style={defaultStyle}>
 			<div className="progressbar" style={titleStyle}>Users</div>
 			<div style={containerStyle}>
-				<User voteColor={color.greenCard} name={this.state.userData.user.name} id={this.state.userData.user.id} image={this.state.userData.user.image} profileUrl={this.state.userData.user.profileUrl} me={true}/>
+				<User voteColor={color.greenCard} name={this.props.user.name} id={this.props.user.id} image={this.props.user.image} profileUrl={this.props.user.profileUrl} me={true}/>
 				<User voteColor='null'/>
 				<User voteColor={color.redCard}/>
 				<User voteColor={color.blueCard}/>

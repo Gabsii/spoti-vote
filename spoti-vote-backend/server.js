@@ -6,6 +6,7 @@ const querystring = require('querystring');
 
 let app = express();
 
+
 let ServerInstance = require('./src/ServerInstance');
 
 let redirect_uri = process.env.REDIRECT_URI || 'http://localhost:8888/callback';
@@ -47,7 +48,7 @@ app.get('/callback', async function(req, res) {
 		await instance.fetchData();
 		serverInstances.push(instance);
 
-		res.redirect(uri + '/' + instance.id);
+		res.redirect(uri + '/' + instance.id + '?token=' + body.access_token);
 	});
 });
 
@@ -78,6 +79,28 @@ app.get('/instance/getTracks', async function(req, res) {
 
 	if (instance != null) {
 		res.send(await instance.getRandomTracks(playlistId));
+	} else {
+		res.send("Not found");
+	}
+});
+
+app.get('/instance/update', async function(req, res) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	let instance = getInstanceById(req.query.id);
+
+	if (instance != null) {
+		res.send(await instance.update());
+	} else {
+		res.send("Not found");
+	}
+});
+
+app.get('/instance/checkToken', async function(req, res) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	let instance = getInstanceById(req.query.id);
+
+	if (instance != null) {
+		res.send(await instance.checkToken(req.query.token));
 	} else {
 		res.send("Not found");
 	}

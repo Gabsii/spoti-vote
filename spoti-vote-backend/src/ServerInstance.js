@@ -33,6 +33,8 @@ function ServerInstance(token, serverInstances) {
     //Gets the hosts data from Spotify
     this.host = {};
 	this.host.token = token;
+    this.activeTracks = {};
+    this.activePlaylist = {};
     console.log('New ServerInstance ' + this.id + ' created.');
 }
 
@@ -115,6 +117,7 @@ method.loadOneBatch = async function(next) {
 
 method.getRandomTracks = async function(playlistId) {
     let playlist = this.getPlaylistById(playlistId);
+    this.activePlaylist = playlist;
     let indexi = [];
 
     if (playlist.tracks.lenght < 4) {
@@ -134,21 +137,24 @@ method.getRandomTracks = async function(playlistId) {
         } while (counter > 0);
     }
 
-    console.log(indexi);
-
     let selectedTracks = [];
     for (var i = 0; i < indexi.length; i++) {
         selectedTracks[i] = playlist.tracks[indexi[i]].track;
     }
+    this.activeTracks = selectedTracks;
     return selectedTracks;
 }
 
-method.getVotedSong = function() {
-
+method.update = async function() {
+    let state = {
+        activePlaylist: this.activePlaylist,
+        activeTracks: this.activeTracks
+    }
+    return state;
 }
 
-method.vote = function() {
-
+method.checkToken = async function(token) {
+    return token == this.host.token;
 }
 
 module.exports = ServerInstance;

@@ -17,6 +17,8 @@ let pictures = {
 	}
 };
 
+
+
 class Login extends Component {
 	render() {
 		return (<section>

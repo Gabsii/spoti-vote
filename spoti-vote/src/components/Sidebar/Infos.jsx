@@ -48,20 +48,58 @@ class Infos extends Component {
 		}
 	}
 
-	componentDidMount() {
-		fetch('http://localhost:8888/instance/playlists?id='+window.location.pathname.split('/')[2], {
-	    }).then((response) => response.json().then(data => {
-			this.setState({
-				playlistData: {
-					playlists: data
+	componentDidUpdate() {
+		if (this.props.loggedIn === true) {
+			fetch('http://localhost:8888/instance/playlists?id='+window.location.pathname.split('/')[2], {
+		    }).then((response) => response.json().then(data => {
+				if (this.state.playlistData.playlists.length != data.length) {
+					this.setState({
+						playlistData: {
+							playlists: data
+						}
+					});
 				}
+		    })).catch(function() {
+				window.location.reload;
 			});
-	    })).catch(function() {
-			window.location.reload;
-		});
+		} else if(this.props.loggedIn === false) {
+			fetch('http://localhost:8888/instance/update?id='+window.location.pathname.split('/')[2], {
+		    }).then((response) => response.json().then(data => {
+				setTimeout(function() {
+					this.setState({
+						playlistData: {
+							playlists: [data.activePlaylist]
+						}
+					});
+				}.bind(this), 3000);
+		    })).catch(function() {
+				window.location.reload;
+			});
+		}
+
 	}
 
 	render() {
+
+		let option = '';
+
+		if (this.props.loggedIn) {
+			option = <select style={{
+					width: '200px'
+				}} onChange={this.props.playlistHandler}>
+
+				<option>Select a Playlist</option>
+				{this.state.playlistData.playlists.map((playlist) => <option key={playlist.id} id={playlist.id} img={playlist.images[0].url} url={playlist.external_urls.spotify} href={playlist.href}>{playlist.name}</option>)}
+			</select>;
+		} else {
+			if (this.state.playlistData.playlists.length > 0) {
+				option = <div>{this.state.playlistData.playlists[0].name}</div>
+			} else {
+				option = <div>{'Host is changing the Playlist'}</div>
+			}
+
+		}
+
 		return (<div style={defaultStyle}>
 			<div style={{
 					...centerContainer,
@@ -72,12 +110,7 @@ class Infos extends Component {
 					...centerContainer,
 					fontSize: '14px'
 				}}>
-				<select style={{
-						width: '200px'
-					}} onChange={this.props.playlistHandler}>
-					<option>Select a Playlist</option>
-					{this.state.playlistData.playlists.map((playlist) => <option key={playlist.id} id={playlist.id} img={playlist.images[0].url} url={playlist.external_urls.spotify} href={playlist.href}>{playlist.name}</option>)}
-				</select>
+				{option}
 			</div>
 			<a href={this.props.playlistUrl || window.location.href}>
 				<img alt="Current Playlist" src={this.props.playlistCover || 'http://via.placeholder.com/152x152'} style={{
@@ -92,7 +125,7 @@ class Infos extends Component {
 				<div style={{
 						marginLeft: '10px'
 					}}>
-					{this.props.users.name || this.props.users.id}
+					{this.props.user.name || this.props.user.id}
 				</div>
 			</div>
 		</div>);
