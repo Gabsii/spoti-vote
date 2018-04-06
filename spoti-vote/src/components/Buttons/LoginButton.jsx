@@ -22,7 +22,7 @@ let defaultStyle = {
 class LoginButton extends Component {
 
 	render() {
-		return (<a href="http://localhost:8888/login">
+		return (<a href={'http://localhost:8888/login'}>
 			<button id="loginbutton" style={defaultStyle} className="sticky">
 				Login
 			</button>

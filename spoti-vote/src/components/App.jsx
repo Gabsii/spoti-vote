@@ -7,10 +7,13 @@ import queryString from 'query-string';
 
 let color = require('../css/colors.js');
 
+let ip = '10.51.51.33';
+
 class App extends Component {
 	constructor() {
 		super();
 		this.state = {
+			loggedIn: null,
 			selectedPlaylist: {
 				name: '',
 				id: '',
@@ -20,7 +23,18 @@ class App extends Component {
 		}
 	}
 
-	componentDidMount() {}
+	componentDidMount() {
+		let token = queryString.parse(window.location.search).token;
+
+		fetch('http://localhost:8888/instance/checkToken?id='+window.location.pathname.split('/')[2] + '&token=' + token, {
+		}).then((response) => response.json().then(data => {
+			this.setState({
+				loggedIn: data
+			});
+		})).catch(function() {
+			window.location.reload;
+		});
+	}
 
 	selectPlaylist(event) {
 		this.setState({
@@ -40,10 +54,10 @@ class App extends Component {
 				height: '100vh',
 				width: '100vw'
 			}}>
-			<Menu/>
-			<Sidebar playlistHandler={this.selectPlaylist.bind(this)} playlistCover={this.state.selectedPlaylist.img} playlistUrl={this.state.selectedPlaylist.url}/>
-			<CardContainer playlist={this.state.selectedPlaylist}/>
-			<Footer/>
+			<Menu loggedIn={this.state.loggedIn}/>
+			<Sidebar loggedIn={this.state.loggedIn} playlistHandler={this.selectPlaylist.bind(this)} playlistCover={this.state.selectedPlaylist.img} playlistUrl={this.state.selectedPlaylist.url}/>
+			<CardContainer loggedIn={this.state.loggedIn} playlist={this.state.selectedPlaylist}/>
+			<Footer loggedIn={this.state.loggedIn}/>
 		</section>);
 	}
 }
