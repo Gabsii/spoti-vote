@@ -11,7 +11,6 @@ class App extends Component {
 	constructor() {
 		super();
 		this.state = {
-			access_token: "",
 			selectedPlaylist: {
 				name: '',
 				id: '',
@@ -21,14 +20,7 @@ class App extends Component {
 		}
 	}
 
-	componentDidMount() {
-		let access_token = queryString.parse(window.location.search).access_token;
-		this.setState({access_token});
-		// if (!access_token) {
-		// 	window.location = "http://localhost:3000/";
-		// }
-
-	}
+	componentDidMount() {}
 
 	selectPlaylist(event) {
 		this.setState({
@@ -43,16 +35,15 @@ class App extends Component {
 	}
 
 	render() {
-		let access_token = queryString.parse(window.location.search).access_token;
 		return (<section style={{
 				backgroundColor: color.background,
 				height: '100vh',
 				width: '100vw'
 			}}>
-			<Menu token={access_token}/>
-			<Sidebar token={access_token} playlistHandler={this.selectPlaylist.bind(this)} playlistCover={this.state.selectedPlaylist.img} playlistUrl={this.state.selectedPlaylist.url}/>
-			<CardContainer token={access_token} playlist={this.state.selectedPlaylist}/>
-			<Footer token={access_token}/>
+			<Menu/>
+			<Sidebar playlistHandler={this.selectPlaylist.bind(this)} playlistCover={this.state.selectedPlaylist.img} playlistUrl={this.state.selectedPlaylist.url}/>
+			<CardContainer playlist={this.state.selectedPlaylist}/>
+			<Footer/>
 		</section>);
 	}
 }

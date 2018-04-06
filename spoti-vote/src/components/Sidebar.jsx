@@ -23,7 +23,6 @@ class Sidebar extends Component {
 	}
 
 	componentDidMount() {
-		let access_token = this.props.token;
 		fetch('http://localhost:8888/instance/host?id='+window.location.pathname.split('/')[2], {
 		}).then((response) => response.json().then(data => this.setState({
 			userData: {
@@ -38,8 +37,8 @@ class Sidebar extends Component {
 	}
 	render() {
 		return (<div style={defaultStyle}>
-			<Infos token={this.props.token} users={this.state.currentUser} playlistHandler={this.props.playlistHandler} playlistCover={this.props.playlistCover} playlistUrl={this.props.playlistUrl}/>
-			<UserContainer token={this.props.token} users={this.state.currentUser}/>
+			<Infos users={this.state.currentUser} playlistHandler={this.props.playlistHandler} playlistCover={this.props.playlistCover} playlistUrl={this.props.playlistUrl}/>
+			<UserContainer users={this.state.currentUser}/>
 		</div>);
 	}
 }

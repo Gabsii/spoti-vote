@@ -49,8 +49,6 @@ class Infos extends Component {
 	}
 
 	componentDidMount() {
-		let access_token = this.props.token;
-
 		fetch('http://localhost:8888/instance/playlists?id='+window.location.pathname.split('/')[2], {
 	    }).then((response) => response.json().then(data => {
 			this.setState({
