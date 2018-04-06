@@ -73,20 +73,20 @@ class Infos extends Component {
 				}} onChange={this.props.playlistHandler}>
 
 				<option>Select a Playlist</option>
-				{this.state.playlists.map((playlist) => <option key={playlist.id} id={playlist.id} img={playlist.images[0].url} url={playlist.external_urls.spotify} href={playlist.href}>{playlist.name}</option>)}
+				{this.state.playlists.map((playlist) => <option key={playlist.id} id={playlist.id} img={playlist.img} url={playlist.url} href={playlist.href}>{playlist.name}</option>)}
 			</select>;
 		} else {
 			if (this.props.activePlaylist != undefined) {
-				option = <div>{this.props.activePlaylist .name || 'Host is changing the playlist'}</div>;
+				option = <div>{this.props.activePlaylist.name || 'Host is changing the playlist'}</div>;
 			} else {
 				option = <div>{'Host is changing the playlist'}</div>;
 			}
 
 		}
 		if (this.props.activePlaylist != undefined) {
-			if (this.props.activePlaylist.external_urls != undefined) {
-				linkUrl = this.props.activePlaylist.external_urls.spotify;
-				imageUrl = this.props.activePlaylist.images[0].url;
+			if (this.props.activePlaylist.url != undefined) {
+				linkUrl = this.props.activePlaylist.url;
+				imageUrl = this.props.activePlaylist.img;
 			}
 		}
 

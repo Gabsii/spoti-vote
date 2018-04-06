@@ -79,8 +79,17 @@ method.getHostInfo = function() {
     return this.host;
 }
 
-method.getPlaylists = function() {
-    return this.playlists;
+method.getPlaylists = async function() {
+    let returnPlaylists = [];
+    for (var i = 0; i < this.playlists.length; i++) {
+        returnPlaylists[i] = {};
+        returnPlaylists[i].id = this.playlists[i].id;
+        returnPlaylists[i].name = this.playlists[i].name;
+        returnPlaylists[i].img = this.playlists[i].images[0].url;
+        returnPlaylists[i].url = this.playlists[i].external_urls.spotify;
+        returnPlaylists[i].href = this.playlists[i].href;
+    }
+    return returnPlaylists;
 }
 
 method.getPlaylistById = function(playlistId) {
@@ -146,11 +155,31 @@ method.getRandomTracks = async function(playlistId) {
 }
 
 method.update = async function() {
-    let state = {
-        activePlaylist: this.activePlaylist,
-        activeTracks: this.activeTracks,
-        numPlaylists: this.playlists.length
+    let state = {};
+    if (this.activePlaylist.id != undefined) {
+        state = {
+            activePlaylist: {
+                name: this.activePlaylist.name,
+                id: this.activePlaylist.id,
+                url: this.activePlaylist.external_urls.spotify,
+                img: this.activePlaylist.images[0].url
+            },
+            activeTracks: this.activeTracks,
+            numPlaylists: this.playlists.length
+        }
+    } else {
+        state = {
+            activePlaylist: {
+                name: 'Host is choosing new Playlist',
+                id: '',
+                url: '',
+                img: 'http://via.placeholder.com/152x152'
+            },
+            activeTracks: this.activeTracks,
+            numPlaylists: this.playlists.length
+        }
     }
+
     return state;
 }
 

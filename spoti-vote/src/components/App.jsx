@@ -61,6 +61,9 @@ class App extends Component {
 
 	selectPlaylist(event) {
 		let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
+		if (playlistId == null) {
+			playlistId = 'none';
+		}
 		fetch('http://localhost:8888/instance/newTracks?id='+window.location.pathname.split('/')[2]+'&playlist='+playlistId, {
 		}).then((response) => response.json().then(data => {}));
 	}

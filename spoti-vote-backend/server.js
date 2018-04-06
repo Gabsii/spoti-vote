@@ -56,7 +56,7 @@ app.get('/instance/playlists', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let instance = getInstanceById(req.query.id);
 	if (instance != null) {
-		res.send(instance.getPlaylists());
+		res.send(await instance.getPlaylists());
 	} else {
 		res.send({response: 'This room was not found'});
 	}
@@ -78,10 +78,14 @@ app.get('/instance/newTracks', async function(req, res) {
 	let instance = getInstanceById(req.query.id);
 
 	if (instance != null) {
-		if (await instance.getRandomTracks(playlistId) == true) {
-			res.send({response: 'New tracks were generated'});
+		if (playlistId != 'none') {
+			if (await instance.getRandomTracks(playlistId) == true) {
+				res.send({response: 'New tracks were generated'});
+			} else {
+				res.send({response: 'Failed to generate new tracks'})
+			}
 		} else {
-			res.send({response: 'Failed to generate new tracks'})
+			res.send({response: 'You cant pick no playlist'})
 		}
 	} else {
 		res.send({response: 'This room was not found'});
