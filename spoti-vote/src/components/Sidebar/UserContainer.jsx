@@ -34,14 +34,9 @@ class UserContainer extends Component {
 		return (<div style={defaultStyle}>
 			<div className="progressbar" style={titleStyle}>Users</div>
 			<div style={containerStyle}>
-				<User voteColor={color.greenCard} name={this.props.user.name} id={this.props.user.id} image={this.props.user.image} profileUrl={this.props.user.profileUrl} me={true}/>
-				<User voteColor='null'/>
-				<User voteColor={color.redCard}/>
-				<User voteColor={color.blueCard}/>
-				<User voteColor={color.greenCard}/>
-				<User voteColor={color.greenCard}/>
-				<User voteColor={color.yellowCard}/>
-				<User voteColor={color.blueCard}/>
+				{this.props.connectedUser.map(function(user, index){
+					return <User voteColor={color.iterateCardColors(index)} key={index} name={user}/>
+				})}
 			</div>
 		</div>);
 	}

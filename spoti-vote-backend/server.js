@@ -4,6 +4,19 @@ const express = require('express');
 const request = require('request');
 const querystring = require('querystring');
 
+/*
+Response Codes
+
+
+200 -> No Error,
+400 -> ,
+410 -> Room not found,
+500 -> Dont know what else to use
+
+*/
+const SUCCESS = 200;
+const ROOMNOTFOUND = 410;
+
 let app = express();
 
 
@@ -58,7 +71,7 @@ app.get('/instance/playlists', async function(req, res) {
 	if (instance != null) {
 		res.send(await instance.getPlaylists());
 	} else {
-		res.send({response: 'This room was not found'});
+		res.send({response: 'This room was not found', responseCode: ROOMNOTFOUND});
 	}
 });
 
@@ -68,7 +81,7 @@ app.get('/instance/host', function(req, res) {
 	if (instance != null) {
 		res.send(instance.getHostInfo());
 	} else {
-		res.send({response: 'This room was not found'});
+		res.send({response: 'This room was not found', responseCode: ROOMNOTFOUND});
 	}
 });
 
@@ -88,7 +101,7 @@ app.get('/instance/newTracks', async function(req, res) {
 			res.send({response: 'You cant pick no playlist'})
 		}
 	} else {
-		res.send({response: 'This room was not found'});
+		res.send({response: 'This room was not found', responseCode: ROOMNOTFOUND});
 	}
 });
 
@@ -97,9 +110,9 @@ app.get('/instance/update', async function(req, res) {
 	let instance = getInstanceById(req.query.id);
 
 	if (instance != null) {
-		res.send(await instance.update());
+		res.send(await instance.update(req.query.loggedIn));
 	} else {
-		res.send({response: 'This room was not found'});
+		res.send({response: 'This room was not found', responseCode: ROOMNOTFOUND});
 	}
 });
 
@@ -110,7 +123,20 @@ app.get('/instance/checkToken', async function(req, res) {
 	if (instance != null) {
 		res.send(await instance.checkToken(req.query.token));
 	} else {
-		res.send({response: 'This room was not found'});
+		res.send({response: 'This room was not found', responseCode: ROOMNOTFOUND});
+	}
+});
+
+app.get('/instance/connect', async function(req, res) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	let instance = getInstanceById(req.query.id);
+
+	console.log(instance.connectedUser);
+
+	if (instance != null) {
+		res.send(await instance.connect(req.query.name));
+	} else {
+		res.send({response: 'This room was not found', responseCode: ROOMNOTFOUND});
 	}
 });
 

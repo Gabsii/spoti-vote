@@ -55,7 +55,7 @@ class Card extends Component {
 	}
 
 	render() {
-		if (this.props.randomTrack != undefined) {
+		if (this.props.randomTrack !== undefined) {
 			const tint = this.hexToRgb(this.props.color);
 			let linkStyle;
 			if (this.state.hover) {
@@ -70,7 +70,7 @@ class Card extends Component {
 			return (<div onClick={this.vote.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} style={{
 					...defaultStyle,
 					...linkStyle,
-					backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url || '' + ')'
+					backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url + ')'
 				}} id={this.props.randomTrack.id}>
 				<div style={{
 						...imgStyle,
@@ -84,7 +84,7 @@ class Card extends Component {
 					<div style={{
 
 							fontSize: '1.25em'
-						}}>{this.state.votes || '-' + " Votes"}</div>
+						}}>{this.state.votes || ('-' + ' Votes')}</div>
 				</div>
 			</div>);
 		} else {

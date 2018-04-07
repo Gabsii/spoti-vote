@@ -24,7 +24,7 @@ class ScrollDown extends Component {
 		let animationTarget = document.getElementById('scrollDownButton');
 		let start = Date.now(); // remember start time
 
-		let timer = setInterval(function() {
+		setInterval(function() {
 			// how much time passed from the start?
 			let timePassed = Date.now() - start;
 

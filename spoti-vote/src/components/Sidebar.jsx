@@ -21,9 +21,14 @@ class Sidebar extends Component {
 	}
 
 	render() {
+		let userContainer = <div></div>;
+
+		if (this.props.loggedIn === true) {
+			userContainer = <UserContainer loggedIn={this.props.loggedIn} user={this.props.user} connectedUser={this.props.connectedUser}/>;
+		}
 		return (<div style={defaultStyle}>
 			<Infos loggedIn={this.props.loggedIn} user={this.props.user} playlistHandler={this.props.playlistHandler} activePlaylist={this.props.activePlaylist} numPlaylists={this.props.numPlaylists}/>
-			<UserContainer loggedIn={this.props.loggedIn} user={this.props.user}/>
+			{userContainer}
 		</div>);
 	}
 }

@@ -48,16 +48,16 @@ class Infos extends Component {
 	componentDidUpdate() {
 		//This is only run, when the update request reports a different amount of playlists then the current numbers of playlists
 		//It will fetch all the playlists again. (Do we need this)
-		if (this.props.loggedIn === true && this.props.numPlaylists != this.state.playlists.length) {
+		if (this.props.loggedIn === true && this.props.numPlaylists !== this.state.playlists.length) {
 			fetch('http://localhost:8888/instance/playlists?id='+window.location.pathname.split('/')[2], {
 		    }).then((response) => response.json().then(data => {
-				if (this.state.playlists.length != data.length) {
+				if (this.state.playlists.length !== data.length) {
 					this.setState({
 						playlists: data
 					});
 				}
 		    })).catch(function() {
-				window.location.reload;
+				window.location.reload();
 			});
 		}
 	}
@@ -67,7 +67,7 @@ class Infos extends Component {
 		let imageUrl = 'http://via.placeholder.com/152x152';
 		let linkUrl = window.location.href;
 
-		if (this.props.loggedIn == true) {
+		if (this.props.loggedIn === true) {
 			option = <select style={{
 					width: '200px'
 				}} onChange={this.props.playlistHandler}>
@@ -76,15 +76,15 @@ class Infos extends Component {
 				{this.state.playlists.map((playlist) => <option key={playlist.id} id={playlist.id} img={playlist.img} url={playlist.url} href={playlist.href}>{playlist.name}</option>)}
 			</select>;
 		} else {
-			if (this.props.activePlaylist != undefined) {
+			if (this.props.activePlaylist !== undefined) {
 				option = <div>{this.props.activePlaylist.name || 'Host is changing the playlist'}</div>;
 			} else {
 				option = <div>{'Host is changing the playlist'}</div>;
 			}
 
 		}
-		if (this.props.activePlaylist != undefined) {
-			if (this.props.activePlaylist.url != undefined) {
+		if (this.props.activePlaylist !== undefined) {
+			if (this.props.activePlaylist.url !== undefined) {
 				linkUrl = this.props.activePlaylist.url;
 				imageUrl = this.props.activePlaylist.img;
 			}

@@ -15,6 +15,7 @@ class App extends Component {
 			activePlaylist: {},
 			activeTracks: {},
 			numPlaylists: 0,
+			connectedUser: [],
 			user: {},
 			update: true
 		}
@@ -22,15 +23,28 @@ class App extends Component {
 
 	componentDidMount() {
 		let token = queryString.parse(window.location.search).token;
+		let name = queryString.parse(window.location.search).name;
+		console.log(window.location);
 
-		fetch('http://localhost:8888/instance/checkToken?id='+window.location.pathname.split('/')[2] + '&token=' + token, {
-		}).then((response) => response.json().then(data => {
-			this.setState({
-				loggedIn: data
+		if (token !== undefined) {
+			fetch('http://localhost:8888/instance/checkToken?id='+window.location.pathname.split('/')[2] + '&token=' + token, {
+			}).then((response) => response.json().then(data => {
+				this.setState({
+					loggedIn: data
+				});
+			})).catch(function() {
+				window.location.reload();
 			});
-		})).catch(function() {
-			window.location.reload;
-		});
+		} else if (name !== undefined){
+			fetch('http://localhost:8888/instance/connect?id='+window.location.pathname.split('/')[2] + '&name=' + name, {
+			}).then((response) => response.json().then(data => {})).catch(function() {
+				window.location.reload();
+			});
+		} else {
+			window.location.pathname = '/';
+		}
+
+
 
 		fetch('http://localhost:8888/instance/host?id='+window.location.pathname.split('/')[2], {
 		}).then((response) => response.json().then(data => this.setState({
@@ -42,20 +56,22 @@ class App extends Component {
 		fetch('http://localhost:8888/instance/update?id='+window.location.pathname.split('/')[2]+'&loggedIn='+this.state.loggedIn, {
 		}).then((response) => response.json().then(data => {
 			setTimeout(function() {
-				if (this.state.activeTracks != data.activeTracks || this.state.numPlaylists != data.numPlaylists || this.state.activePlaylist != data.activePlaylist) {
+				if (data.responseCode === 410) {
+					window.location.pathname = '/';
+				} else {
 					this.setState({
 						activePlaylist: data.activePlaylist,
 						activeTracks: data.activeTracks,
-						numPlaylists: data.numPlaylists
+						numPlaylists: data.numPlaylists,
+						connectedUser: data.connectedUser
 					});
 				}
-
 			}.bind(this), 500);
-			if (data.activePlaylist != undefined) {
+			if (data.activePlaylist !== undefined) {
 
 			}
 		})).catch(function() {
-			window.location.reload;
+			window.location.reload();
 		});
 	}
 
@@ -75,7 +91,7 @@ class App extends Component {
 				width: '100vw'
 			}}>
 			<Menu/>
-			<Sidebar loggedIn={this.state.loggedIn} user={this.state.user} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} numPlaylists={this.state.numPlaylists}/>
+			<Sidebar loggedIn={this.state.loggedIn} connectedUser={this.state.connectedUser} user={this.state.user} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} numPlaylists={this.state.numPlaylists}/>
 			<CardContainer activeTracks={this.state.activeTracks}/>
 			<Footer/>
 		</section>);

@@ -35,6 +35,9 @@ function ServerInstance(token, serverInstances) {
 	this.host.token = token;
     this.activeTracks = {};
     this.activePlaylist = {};
+    this.connectedUser = [];
+
+    this.connectedUser.push('Michi');
     console.log('New ServerInstance ' + this.id + ' created.');
 }
 
@@ -154,30 +157,33 @@ method.getRandomTracks = async function(playlistId) {
     return true;
 }
 
-method.update = async function() {
+method.update = async function(loggedIn) {
     let state = {};
+    let playlistPlaceholder = {
+        name: 'Host is choosing new Playlist',
+        id: '',
+        url: '',
+        img: 'http://via.placeholder.com/152x152'
+    }
+
     if (this.activePlaylist.id != undefined) {
-        state = {
-            activePlaylist: {
-                name: this.activePlaylist.name,
-                id: this.activePlaylist.id,
-                url: this.activePlaylist.external_urls.spotify,
-                img: this.activePlaylist.images[0].url
-            },
-            activeTracks: this.activeTracks,
-            numPlaylists: this.playlists.length
+        playlistPlaceholder = {
+            name: this.activePlaylist.name,
+            id: this.activePlaylist.id,
+            url: this.activePlaylist.external_urls.spotify,
+            img: this.activePlaylist.images[0].url
         }
-    } else {
-        state = {
-            activePlaylist: {
-                name: 'Host is choosing new Playlist',
-                id: '',
-                url: '',
-                img: 'http://via.placeholder.com/152x152'
-            },
-            activeTracks: this.activeTracks,
-            numPlaylists: this.playlists.length
-        }
+    }
+
+    state = {
+        activePlaylist: playlistPlaceholder,
+        activeTracks: this.activeTracks,
+
+    }
+
+    if (loggedIn == 'true') {
+        state.numPlaylists = this.playlists.length;
+        state.connectedUser = this.connectedUser;
     }
 
     return state;
@@ -185,6 +191,12 @@ method.update = async function() {
 
 method.checkToken = async function(token) {
     return token == this.host.token;
+}
+
+method.connect = async function(name) {
+    this.connectedUser.push(name);
+    console.log('New User: ' + name + ' connected');
+    return {response: 'Added User'};
 }
 
 module.exports = ServerInstance;
