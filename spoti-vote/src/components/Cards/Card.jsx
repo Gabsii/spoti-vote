@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-let color = require('../../css/colors.js');
+let constants = require('../../js/constants.js');
 
 let defaultStyle = {
 	flexBasis: 'calc(50% - 40px)',
@@ -10,7 +10,7 @@ let defaultStyle = {
 	backgroundPosition: 'center',
 	backgroundRepeat: 'no-repeat',
 	backgroundSize: 'cover',
-	backgroundColor: color.blueCard
+	backgroundColor: constants.colors.blueCard
 }
 
 let imgStyle = {
@@ -33,24 +33,10 @@ class Card extends Component {
 		}
 	}
 
-	componentDidUpdate() {
-		if (this.state.randomTrack !== this.props.randomTrack) {
-			this.setState({randomTrack: this.props.randomTrack, votes: 0});
-		}
-	}
-
 	toggleHover() {
 		this.setState({
 			hover: !this.state.hover
 		})
-	}
-
-	vote() {
-		if (this.props.randomTrack.id !== '') {
-			this.setState({
-				votes: this.state.votes + 1
-			});
-		}
 	}
 
 	hexToRgb(hex) {
@@ -76,10 +62,10 @@ class Card extends Component {
 				cursor: 'context-menu'
 			}
 		}
-		return (<div onClick={this.vote.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} style={{
+		return (<div onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} style={{
 				...defaultStyle,
 				...linkStyle,
-				backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url || '' + ')'
+				backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url + ')'
 			}} id={this.props.randomTrack.id}>
 			<div style={{
 					...imgStyle,
@@ -93,7 +79,7 @@ class Card extends Component {
 				<div style={{
 
 						fontSize: '1.25em'
-					}}>{this.state.votes || '-' + " Votes"}</div>
+					}}>{this.state.votes || ('-' + ' Votes')}</div>
 			</div>
 		</div>);
 	}

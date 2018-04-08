@@ -41,28 +41,49 @@ class Infos extends Component {
 	constructor() {
 		super();
 		this.state = {
-			playlistData: {
-				playlists: []
-			}
-
+			playlists: []
 		}
 	}
 
-	componentDidMount() {
-		let access_token = this.props.token;
+	componentDidUpdate() {
+		//This is only run, when the update request reports a different amount of playlists then the current numbers of playlists
+		//It will fetch all the playlists again. (Do we need this)
+		if (this.props.loggedIn === true && this.props.numPlaylists !== this.state.playlists.length) {
+			fetch('http://localhost:8888/room/playlists?id='+window.location.pathname.split('/')[2], {
+		    }).then((response) => response.json().then(data => {
+				switch (data.responseCode) {
+					case 200:
+					if (this.state.playlists.length !== data.content.length) {
+						this.setState({
+							playlists: data.content
+						});
+					}
+						break;
+					default:
+						window.location.pathname = '/';
+						break;
+				}
 
-		fetch("https://api.spotify.com/v1/me/playlists?limit=50", {
-			headers: {
-				"Authorization": "Bearer " + access_token
-			}
-		}).then((response) => response.json().then(data => this.setState({
-			playlistData: {
-				playlists: data.items
-			}
-		})))
+		    })).catch(function() {
+				window.location.reload();
+			});
+		}
 	}
 
 	render() {
+		let option = <div>{this.props.activePlaylist.name}</div>;
+
+		if (this.props.loggedIn === true) {
+			option = <select style={{
+					width: '200px'
+				}} onChange={this.props.playlistHandler}>
+
+				<option>Select a Playlist</option>
+				{this.state.playlists.map((playlist) => <option key={playlist.id} id={playlist.id} img={playlist.img} url={playlist.url} href={playlist.href}>{playlist.name}</option>)}
+			</select>;
+		}
+
+
 		return (<div style={defaultStyle}>
 			<div style={{
 					...centerContainer,
@@ -73,15 +94,10 @@ class Infos extends Component {
 					...centerContainer,
 					fontSize: '14px'
 				}}>
-				<select style={{
-						width: '200px'
-					}} onChange={this.props.playlistHandler}>
-					<option>Select a Playlist</option>
-					{this.state.playlistData.playlists.map((playlist) => <option key={playlist.id} id={playlist.id} img={playlist.images[0].url} url={playlist.external_urls.spotify} href={playlist.href}>{playlist.name}</option>)}
-				</select>
+				{option}
 			</div>
-			<a href={this.props.playlistUrl || window.location.href}>
-				<img alt="Current Playlist" src={this.props.playlistCover || 'http://via.placeholder.com/152x152'} style={{
+			<a href={this.props.activePlaylist.url}>
+				<img alt="Current Playlist" src={this.props.activePlaylist.img} style={{
 						...imgStyle,
 						display: 'flex',
 						alignItems: 'center',
@@ -93,7 +109,7 @@ class Infos extends Component {
 				<div style={{
 						marginLeft: '10px'
 					}}>
-					{this.props.users.name || this.props.users.id}
+					{this.props.user.name || this.props.user.id}
 				</div>
 			</div>
 		</div>);

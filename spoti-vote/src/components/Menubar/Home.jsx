@@ -12,7 +12,7 @@ let defaultStyle = {
 
 class Home extends Component {
 	render() {
-		return (<a href={"http://localhost:3000/app?access_token=" + this.props.token}>
+		return (<a href={"http://localhost:3000"}>
 			<div style={defaultStyle}>
 				<FontAwesomeIcon icon={faHome} size="2x" className=""/>
 			</div>

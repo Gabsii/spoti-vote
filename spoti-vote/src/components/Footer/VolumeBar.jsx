@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faVolumeDown, faVolumeUp} from '@fortawesome/fontawesome-free-solid';
 
-let color = require('../../css/colors.js');
+let constants = require('../../js/constants.js');
 let defaultStyle = {
 	width: '250px',
 	height: '75px',
@@ -12,7 +12,7 @@ let defaultStyle = {
 	alignItems: 'center',
 	justifyContent: 'center',
 	marginRigth: '15px',
-	backgroundColor: color.redCard
+	backgroundColor: constants.colors.redCard
 };
 
 let sliderStyle = {

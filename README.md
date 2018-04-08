@@ -99,3 +99,4 @@ None
 * Credits to Austin Neill for his picture (found on [Unsplash](https://unsplash.com))
 * Credits to Andre Benz for his picture (found on [Unsplash](https://unsplash.com))
 * Credits to [Michiocre](https://github.com/Michiocre) for the Logo and Button Animation
+* Credits to Treer for his icon (found on [openclipart](https://openclipart.org/detail/247324/abstract-user-icon-1))

@@ -17,7 +17,16 @@ let pictures = {
 	}
 };
 
+
+
+
 class Login extends Component {
+	componentDidMount() {
+		if (window.location.search !== '') {
+			window.location.search = '';
+		}
+	}
+
 	render() {
 		return (<section>
 			<FullscreenImage id="parallax" source={pictures.One}>

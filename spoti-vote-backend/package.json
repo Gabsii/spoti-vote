@@ -7,9 +7,13 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.15.4",
+    "ip": "^1.1.5",
+    "node-fetch": "^2.1.2",
     "npm": "^5.8.0",
     "querystring": "^0.2.0",
     "request": "^2.81.0"
-  }
+  },
+  "devDependencies": {}
 }
