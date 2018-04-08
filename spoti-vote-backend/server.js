@@ -4,7 +4,7 @@ const express = require('express');
 const request = require('request');
 const querystring = require('querystring');
 
-let ServerInstance = require('./src/ServerInstance');
+let Room = require('./src/Room');
 let constants = require('./src/constants');
 
 
@@ -12,30 +12,36 @@ let app = express();
 
 let redirect_uri = process.env.REDIRECT_URI || 'http://localhost:8888/callback';
 
-let serverInstances = [];
+let rooms = [];
 
 /**
-* Return the instance with the specified id
+* Return the room with the specified id
 *
 * @author: Michiocre
-* @param {string} instanceId The id that identifies the instance (One instance is one room)
-* @return {ServerInstance} The instance object with the id of the parameter
+* @param {string} roomId The id that identifies the room
+* @return {Room} The room object with the id of the parameter
 */
-function getInstanceById(instanceId) {
-	let instance = null;
-	for (var i = 0; i < serverInstances.length; i++) {
-		if (serverInstances[i].id == instanceId)
-			instance = serverInstances[i];
+function getRoomById(roomId) {
+	let room = null;
+	for (var i = 0; i < rooms.length; i++) {
+		if (rooms[i].id == roomId)
+			room = rooms[i];
 	}
-	return instance;
+	return room;
 }
 
 
-//Dont know if i should also make this in the jsdocs format since technicly not functions
+/**
+* Login using the Spotify API (This is only a Redirect)
+*/
 app.get('/login', function(req, res) {
 	res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state playlist-read-collaborative', redirect_uri}));
 });
 
+/**
+* The callback that will be called when the Login with the Spotify API is completed
+* Will redirect the user to the newly created room
+*/
 app.get('/callback', async function(req, res) {
 	let code = req.query.code || null;
 	let authOptions = {
@@ -55,22 +61,30 @@ app.get('/callback', async function(req, res) {
 	request.post(authOptions, async function(error, response, body) {
 		let uri = process.env.FRONTEND_URI || 'http://localhost:3000/app';
 
-		let instance = new ServerInstance(body.access_token, serverInstances);
-		await instance.fetchData();
-		serverInstances.push(instance);
+		let room = new Room(body.access_token, rooms);
+		await room.fetchData();
+		rooms.push(room);
 
-		res.redirect(uri + '/' + instance.id + '?token=' + body.access_token);
+		res.redirect(uri + '/' + room.id + '?token=' + body.access_token);
 	});
 });
 
-app.get('/instance/playlists', async function(req, res) {
+/**
+* Get a list of all playlists of this room
+*
+* @PathParameter id  The id of the room
+* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
+* @Returns responseMessage with error message in case of error
+* @Returns content Array of all the playlists
+*/
+app.get('/room/playlists', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
-	let instance = getInstanceById(req.query.id);
-	if (instance != null) {
+	let room = getRoomById(req.query.id);
+	if (room != null) {
 		res.send({
 			responseCode: constants.codes.SUCCESS,
 			responseMessage: '',
-			content: await instance.getPlaylists()
+			content: await room.getPlaylists()
 		});
 	} else {
 		res.send({
@@ -80,14 +94,22 @@ app.get('/instance/playlists', async function(req, res) {
 	}
 });
 
-app.get('/instance/host', async function(req, res) {
+/**
+* Get the hosts user data of this room
+*
+* @PathParameter id  The id of the room
+* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
+* @Returns responseMessage with error message in case of error
+* @Returns content Object with the user data
+*/
+app.get('/room/host', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
-	let instance = getInstanceById(req.query.id);
-	if (instance != null) {
+	let room = getRoomById(req.query.id);
+	if (room != null) {
 		res.send({
 			responseCode: constants.codes.SUCCESS,
 			responseMessage: '',
-			content: await instance.getHostInfo()
+			content: await room.getHostInfo()
 		});
 	} else {
 		res.send({
@@ -97,14 +119,22 @@ app.get('/instance/host', async function(req, res) {
 	}
 });
 
-app.get('/instance/newTracks', async function(req, res) {
+/**
+* Selects a new set of active tracks
+*
+* @PathParameter id  The id of the room
+* @PathParameter playlist  The id of the playlist
+* @Returns ResponseCode of either 200 or 404 or 414 or 500 based on if the room-id and the playlist-id exists or if the playlist is to small
+* @Returns responseMessage with error message in case of error
+*/
+app.get('/room/newTracks', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let playlistId = req.query.playlist;
-	let instance = getInstanceById(req.query.id);
+	let room = getRoomById(req.query.id);
 
-	if (instance != null) {
+	if (room != null) {
 		if (playlistId != 'none') {
-			if (await instance.getRandomTracks(playlistId) == true) {
+			if (await room.getRandomTracks(playlistId) == true) {
 				res.send({
 					responseCode: constants.codes.SUCCESS,
 					responseMessage: 'New tracks were generated'
@@ -112,7 +142,7 @@ app.get('/instance/newTracks', async function(req, res) {
 			} else {
 				res.send({
 					responseCode: constants.codes.ERROR,
-					responseMessage: 'Failed to generate new tracks'
+					responseMessage: 'The playlist is to small'
 				})
 			}
 		} else {
@@ -129,15 +159,25 @@ app.get('/instance/newTracks', async function(req, res) {
 	}
 });
 
-app.get('/instance/update', async function(req, res) {
+/**
+* Gets the current set of active playlist, tracks, connected users, num of playlists,...
+* All the data that is needed to keep the frontend synced
+*
+* @PathParameter id  The id of the room
+* @PathParameter loggedIn Boolean if the user is host or not
+* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
+* @Returns responseMessage with error message in case of error
+* @Returns content Object with the data
+*/
+app.get('/room/update', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
-	let instance = getInstanceById(req.query.id);
+	let room = getRoomById(req.query.id);
 
-	if (instance != null) {
+	if (room != null) {
 		res.send({
 			responseCode: constants.codes.SUCCESS,
 			responseMessage: '',
-			content: await instance.update(req.query.loggedIn)
+			content: await room.update(req.query.loggedIn)
 		});
 	} else {
 		res.send({
@@ -147,15 +187,24 @@ app.get('/instance/update', async function(req, res) {
 	}
 });
 
-app.get('/instance/checkToken', async function(req, res) {
+/**
+* Checks if a given token is the same one that was returned by the Spotify API
+*
+* @PathParameter id  The id of the room
+* @PathParametert token The token that will be checked
+* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
+* @Returns responseMessage with error message in case of error
+* @Returns content Boolean true if the token match
+*/
+app.get('/room/checkToken', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
-	let instance = getInstanceById(req.query.id);
+	let room = getRoomById(req.query.id);
 
-	if (instance != null) {
+	if (room != null) {
 		res.send({
 			responseCode: constants.codes.SUCCESS,
 			responseMessage: '',
-			content: await instance.checkToken(req.query.token)
+			content: await room.checkToken(req.query.token)
 		});
 	} else {
 		res.send({
@@ -165,15 +214,23 @@ app.get('/instance/checkToken', async function(req, res) {
 	}
 });
 
-app.get('/instance/connect', async function(req, res) {
+/**
+* Adds a user to the list of connected users
+*
+* @PathParameter id  The id of the room
+* @PathParametert name of the user that will be added
+* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
+* @Returns responseMessage with error message in case of error
+*/
+app.get('/room/connect', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
-	let instance = getInstanceById(req.query.id);
+	let room = getRoomById(req.query.id);
 
-	if (instance != null) {
+	if (room != null) {
+		await room.connect(req.query.name);
 		res.send({
 			responseCode: constants.codes.SUCCESS,
-			responseMessage: '',
-			content: await instance.connect(req.query.name)
+			responseMessage: ''
 		});
 	} else {
 		res.send({

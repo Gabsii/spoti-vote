@@ -49,7 +49,7 @@ class Infos extends Component {
 		//This is only run, when the update request reports a different amount of playlists then the current numbers of playlists
 		//It will fetch all the playlists again. (Do we need this)
 		if (this.props.loggedIn === true && this.props.numPlaylists !== this.state.playlists.length) {
-			fetch('http://localhost:8888/instance/playlists?id='+window.location.pathname.split('/')[2], {
+			fetch('http://localhost:8888/room/playlists?id='+window.location.pathname.split('/')[2], {
 		    }).then((response) => response.json().then(data => {
 				switch (data.responseCode) {
 					case 200:
@@ -72,7 +72,7 @@ class Infos extends Component {
 
 	render() {
 		let option = <div>{this.props.activePlaylist.name}</div>;
-		
+
 		if (this.props.loggedIn === true) {
 			option = <select style={{
 					width: '200px'

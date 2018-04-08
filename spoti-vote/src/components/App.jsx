@@ -5,7 +5,7 @@ import Menu from './Menubar/Menu.jsx';
 import CardContainer from './Cards/CardContainer.jsx';
 import queryString from 'query-string';
 
-let constants = require('../constants.js');
+let constants = require('../js/constants.js');
 
 class App extends Component {
 	constructor() {
@@ -25,7 +25,7 @@ class App extends Component {
 		let token = queryString.parse(window.location.search).token;
 		let name = queryString.parse(window.location.search).name;
 		if (token !== undefined) {
-			fetch('http://localhost:8888/instance/checkToken?id='+window.location.pathname.split('/')[2] + '&token=' + token, {
+			fetch('http://localhost:8888/room/checkToken?id='+window.location.pathname.split('/')[2] + '&token=' + token, {
 			}).then((response) => response.json().then(data => {
 				switch (data.responseCode) {
 					case 200:
@@ -41,7 +41,7 @@ class App extends Component {
 				//window.location.reload();
 			});
 		} else if (name !== undefined){
-			fetch('http://localhost:8888/instance/connect?id='+window.location.pathname.split('/')[2] + '&name=' + name, {
+			fetch('http://localhost:8888/room/connect?id='+window.location.pathname.split('/')[2] + '&name=' + name, {
 			}).then((response) => response.json().then(data => {})).catch(function() {
 				//window.location.reload();
 			});
@@ -49,7 +49,7 @@ class App extends Component {
 			window.location.pathname = '/';
 		}
 
-		fetch('http://localhost:8888/instance/host?id='+window.location.pathname.split('/')[2], {
+		fetch('http://localhost:8888/room/host?id='+window.location.pathname.split('/')[2], {
 		}).then((response) => response.json().then(data => {
 			switch (data.responseCode) {
 				case 200:
@@ -65,7 +65,7 @@ class App extends Component {
 	}
 
 	componentDidUpdate() {
-		fetch('http://localhost:8888/instance/update?id='+window.location.pathname.split('/')[2]+'&loggedIn='+this.state.loggedIn, {
+		fetch('http://localhost:8888/room/update?id='+window.location.pathname.split('/')[2]+'&loggedIn='+this.state.loggedIn, {
 		}).then((response) => response.json().then(data => {
 			setTimeout(function() {
 				switch (data.responseCode) {
@@ -92,7 +92,7 @@ class App extends Component {
 		if (playlistId == null) {
 			playlistId = 'none';
 		}
-		fetch('http://localhost:8888/instance/newTracks?id='+window.location.pathname.split('/')[2]+'&playlist='+playlistId, {
+		fetch('http://localhost:8888/room/newTracks?id='+window.location.pathname.split('/')[2]+'&playlist='+playlistId, {
 		}).then((response) => response.json().then(data => {}));
 	}
 

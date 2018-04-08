@@ -1,4 +1,4 @@
-let method = ServerInstance.prototype; //This is used when programming object oriented in js to make everything a bit more organised
+let method = Room.prototype; //This is used when programming object oriented in js to make everything a bit more organised
 
 const request = require('request');
 const fetch = require('node-fetch');
@@ -26,15 +26,16 @@ function makeid(length) {
 }
 
 /**
-* Constructor for a new server instance / room
+* Constructor for a new / room
 *
 * @author: Michiocre
 * @constructor
 * @param {string} token The access token needed to connect to the spotify API
-* @param {string} serverInstances The list of all server instances, to make sure no duplicate id
-* @return {ServerInstance} The new ServerInstance
+* @param {string} rooms The list of all rooms, to make sure no duplicate id
+* @return {Room} The new room
 */
-function ServerInstance(token, serverInstances) {
+function Room(token, rooms) {
+    //The host object
     this.host = {
         token: token,
         name: '',
@@ -52,8 +53,8 @@ function ServerInstance(token, serverInstances) {
 	let counter;
 	while (counter > 0) {
 		counter = 0;
-		for (var i = 0; i < serverInstances.length; i++) {
-			if (serverInstances[i].id == this.id) {
+		for (var i = 0; i < rooms.length; i++) {
+			if (rooms[i].id == this.id) {
 				counter++;
 			}
 		}
@@ -61,7 +62,7 @@ function ServerInstance(token, serverInstances) {
 			this.id = makeid(5);
 		}
 	}
-    console.log('New ServerInstance ' + this.id + ' created.');
+    console.log('New Room ' + this.id + ' created.');
 }
 
 /**
@@ -195,20 +196,20 @@ method.loadOneBatch = async function(next) {
 method.getRandomTracks = async function(playlistId) {
     let playlist = this.getPlaylistById(playlistId);
     this.activePlaylist = playlist;
-    let indexi = [];
+    let indexes = [];
 
     if (playlist.tracks.lenght < 4) {
-        return 'Your playlist is to small';
+        return false;
     }
 
-    //To make sure all the indexi are different
+    //To make sure all the indexes are different
     for (var i = 0; i < 4; i++) {
         let counter;
         do {
             counter = 0;
-            indexi[i] = Math.floor(Math.random() * playlist.tracks.length);
-            for (var j = 0; j < indexi.length; j++) {
-                if (indexi[j] == indexi[i] && i != j) {
+            indexes[i] = Math.floor(Math.random() * playlist.tracks.length);
+            for (var j = 0; j < indexes.length; j++) {
+                if (indexes[j] == indexes[i] && i != j) {
                     counter++;
                 }
             }
@@ -216,8 +217,8 @@ method.getRandomTracks = async function(playlistId) {
     }
 
     let selectedTracks = [];
-    for (var i = 0; i < indexi.length; i++) {
-        selectedTracks[i] = playlist.tracks[indexi[i]].track;
+    for (var i = 0; i < indexes.length; i++) {
+        selectedTracks[i] = playlist.tracks[indexes[i]].track;
     }
     this.activeTracks = selectedTracks;
     return true;
@@ -254,7 +255,7 @@ method.update = async function(loggedIn) {
 }
 
 /**
-* Checks if a given token is the one that was provided by spotify for this instance
+* Checks if a given token is the one that was provided by spotify for this room
 *
 * @author: Michiocre
 * @param {string} token The token that gets sent over from the frontend
@@ -275,7 +276,6 @@ method.checkToken = async function(token) {
 method.connect = async function(name) {
     this.connectedUser.push(name);
     console.log('New User: ' + name + ' connected');
-    return {response: 'Added User'};
 }
 
-module.exports = ServerInstance;
+module.exports = Room;

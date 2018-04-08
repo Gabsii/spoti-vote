@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faVolumeDown, faVolumeUp} from '@fortawesome/fontawesome-free-solid';
 
-let constants = require('../../constants.js');
+let constants = require('../../js/constants.js');
 let defaultStyle = {
 	width: '250px',
 	height: '75px',

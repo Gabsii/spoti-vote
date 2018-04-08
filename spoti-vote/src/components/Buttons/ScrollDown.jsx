@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faAngleDown} from '@fortawesome/fontawesome-free-solid';
-let constants = require('../../constants.js');
+let constants = require('../../js/constants.js');
 
 let defaultStyle = {
 	position: 'absolute',

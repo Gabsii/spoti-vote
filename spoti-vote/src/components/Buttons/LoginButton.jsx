@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import '../../css/selectors.css';
 
-let constants = require('../../constants.js');
+let constants = require('../../js/constants.js');
 
 let defaultStyle = {
 	padding: "17px 48px",
