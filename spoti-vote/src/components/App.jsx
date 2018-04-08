@@ -5,13 +5,13 @@ import Menu from './Menubar/Menu.jsx';
 import CardContainer from './Cards/CardContainer.jsx';
 import queryString from 'query-string';
 
-let color = require('../css/colors.js');
+let constants = require('../constants.js');
 
 class App extends Component {
 	constructor() {
 		super();
 		this.state = {
-			loggedIn: null,
+			loggedIn: false,
 			activePlaylist: {},
 			activeTracks: {},
 			numPlaylists: 0,
@@ -24,52 +24,64 @@ class App extends Component {
 	componentDidMount() {
 		let token = queryString.parse(window.location.search).token;
 		let name = queryString.parse(window.location.search).name;
-		console.log(window.location);
-
 		if (token !== undefined) {
 			fetch('http://localhost:8888/instance/checkToken?id='+window.location.pathname.split('/')[2] + '&token=' + token, {
 			}).then((response) => response.json().then(data => {
-				this.setState({
-					loggedIn: data
-				});
+				switch (data.responseCode) {
+					case 200:
+						this.setState({
+							loggedIn: data.content
+						});
+						break;
+					default:
+						window.location.pathname = '/';
+						break;
+				}
 			})).catch(function() {
-				window.location.reload();
+				//window.location.reload();
 			});
 		} else if (name !== undefined){
 			fetch('http://localhost:8888/instance/connect?id='+window.location.pathname.split('/')[2] + '&name=' + name, {
 			}).then((response) => response.json().then(data => {})).catch(function() {
-				window.location.reload();
+				//window.location.reload();
 			});
 		} else {
 			window.location.pathname = '/';
 		}
 
-
-
 		fetch('http://localhost:8888/instance/host?id='+window.location.pathname.split('/')[2], {
-		}).then((response) => response.json().then(data => this.setState({
-			user: data
-		})));
+		}).then((response) => response.json().then(data => {
+			switch (data.responseCode) {
+				case 200:
+					this.setState({
+						user: data.content,
+					});
+					break;
+				default:
+					window.location.pathname = '/';
+					break;
+			}
+		}));
 	}
 
 	componentDidUpdate() {
 		fetch('http://localhost:8888/instance/update?id='+window.location.pathname.split('/')[2]+'&loggedIn='+this.state.loggedIn, {
 		}).then((response) => response.json().then(data => {
 			setTimeout(function() {
-				if (data.responseCode === 410) {
-					window.location.pathname = '/';
-				} else {
-					this.setState({
-						activePlaylist: data.activePlaylist,
-						activeTracks: data.activeTracks,
-						numPlaylists: data.numPlaylists,
-						connectedUser: data.connectedUser
-					});
+				switch (data.responseCode) {
+					case 200:
+						this.setState({
+							activePlaylist: data.content.activePlaylist,
+						 	activeTracks: data.content.activeTracks,
+						 	numPlaylists: data.content.numPlaylists,
+						 	connectedUser: data.content.connectedUser
+						});
+						break;
+					default:
+						window.location.pathname = '/';
+						break;
 				}
 			}.bind(this), 500);
-			if (data.activePlaylist !== undefined) {
-
-			}
 		})).catch(function() {
 			window.location.reload();
 		});
@@ -86,7 +98,7 @@ class App extends Component {
 
 	render() {
 		return (<section style={{
-				backgroundColor: color.background,
+				backgroundColor: constants.colors.background,
 				height: '100vh',
 				width: '100vw'
 			}}>

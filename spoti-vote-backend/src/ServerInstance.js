@@ -1,24 +1,55 @@
-let method = ServerInstance.prototype;
+let method = ServerInstance.prototype; //This is used when programming object oriented in js to make everything a bit more organised
+
 const request = require('request');
 const fetch = require('node-fetch');
 
-let batchState = false;
+const emptyPlaylist = {
+    name: 'Host is changing the playlist',
+    img: 'http://via.placeholder.com/152x152'
+}
 
-function makeid() {
+/**
+* Return a randomly generated string with a specified lenght, based on the possible symbols
+*
+* @author: agustinhaller
+* @param {int} length The lenght of the string
+* @return {string} The random string
+*/
+function makeid(length) {
     var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //ALl possible symbols
 
-    for (var i = 0; i < 5; i++)
-        text += possible.charAt(Math.round(Math.random() * possible.length));
+    for (var i = 0; i < length; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
 
     return text;
 }
 
+/**
+* Constructor for a new server instance / room
+*
+* @author: Michiocre
+* @constructor
+* @param {string} token The access token needed to connect to the spotify API
+* @param {string} serverInstances The list of all server instances, to make sure no duplicate id
+* @return {ServerInstance} The new ServerInstance
+*/
 function ServerInstance(token, serverInstances) {
-    //Gets a Unique ID
-	let counter = 1;
-	this.id = makeid();
+    this.host = {
+        token: token,
+        name: '',
+        id: '',
+        profileUrl: '',
+        image: 'https://openclipart.org/image/2400px/svg_to_png/247324/abstract-user-flat-1.png'
+    };
+    this.activeTracks = [];
+    this.activePlaylist = [];
+    this.connectedUser = [];
+    this.id = makeid(5);
 
+
+    //Makes sure the id is unique
+	let counter;
 	while (counter > 0) {
 		counter = 0;
 		for (var i = 0; i < serverInstances.length; i++) {
@@ -27,22 +58,18 @@ function ServerInstance(token, serverInstances) {
 			}
 		}
 		if (counter > 0) {
-			this.id = makeid();
+			this.id = makeid(5);
 		}
 	}
-    //Gets the hosts data from Spotify
-    this.host = {};
-	this.host.token = token;
-    this.activeTracks = {};
-    this.activePlaylist = {};
-    this.connectedUser = [];
-
-    this.connectedUser.push('Michi');
     console.log('New ServerInstance ' + this.id + ' created.');
 }
 
+/**
+* Fetches the data of the host, and all his playlists
+*
+* @author: Michiocre
+*/
 method.fetchData = async function() {
-
     let hostRequest = await fetch('https://api.spotify.com/v1/me', {
 		headers: {
 			"Authorization": "Bearer " + this.host.token
@@ -56,12 +83,9 @@ method.fetchData = async function() {
 
     if (hostRequestData.images.length > 0) {
         this.host.image = hostRequestData.images[0].url;
-    } else {
-        this.host.image = 'https://openclipart.org/image/2400px/svg_to_png/247324/abstract-user-flat-1.png';
     }
 
-    //Gets all the hosts playlists
-
+    //Gets all the hosts playlists TODO: This should probably loop (now max 50 playlists will be returned)
     let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
         headers: {
             "Authorization": "Bearer " + this.host.token
@@ -78,37 +102,71 @@ method.fetchData = async function() {
     console.log('User ' + this.host.id + ' logged in all data was fetched.');
 }
 
+/**
+* Returns the host data
+*
+* @author: Michiocre
+* @return {object} The host object
+*/
 method.getHostInfo = function() {
     return this.host;
 }
 
+/**
+* Returns all the playlists of the host
+*
+* @author: Michiocre
+* @return {array} Array of all the playlist objects
+*/
 method.getPlaylists = async function() {
     let returnPlaylists = [];
     for (var i = 0; i < this.playlists.length; i++) {
-        returnPlaylists[i] = {};
-        returnPlaylists[i].id = this.playlists[i].id;
-        returnPlaylists[i].name = this.playlists[i].name;
-        returnPlaylists[i].img = this.playlists[i].images[0].url;
-        returnPlaylists[i].url = this.playlists[i].external_urls.spotify;
-        returnPlaylists[i].href = this.playlists[i].href;
+        returnPlaylists[i] = {
+            id: this.playlists[i].id,
+            name: this.playlists[i].name,
+            img: this.playlists[i].images[0].url,
+            url: this.playlists[i].external_urls.spotify,
+            href: this.playlists[i].href
+        };
     }
     return returnPlaylists;
 }
 
+/**
+* Returns the playlist object that corresponse to the given id
+*
+* @author: Michiocre
+* @param {string} playlistId The id that identifies the playlist
+* @return {object} The playlist object
+*/
 method.getPlaylistById = function(playlistId) {
     for (var i = 0; i < this.playlists.length; i++) {
         if (this.playlists[i].id == playlistId)
             return this.playlists[i];
     }
-    return null;
+    return emptyPlaylist;
 }
 
+/**
+* Returns all tracks of a playlist
+*
+* @author: Michiocre
+* @param {string} playlistId The id that identifies the playlist
+* @return {array} Array of all the track objects
+*/
 method.loadSongs = async function(playlistId) {
     let next = this.getPlaylistById(playlistId).href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal';
-    let tracks = await this.loadOneBatch(next);
-    return tracks;
+    return this.loadOneBatch(next);
 }
 
+/**
+* Recursive function, in each iteration it will get up to 100 tracks of the playlist, and if there are more to get it will also return the url for the next batch of up to 100 tracks
+* Each iteration will return these tracks, and concat the array of tracks with the array of tracks from the next batch. In the end it will return all tracks in the playlist
+*
+* @author: Michiocre
+* @param {string} next URL to the spotify API to get Tracks from a playlist
+* @return {array} Array of all the track objects
+*/
 method.loadOneBatch = async function(next) {
     let request = await fetch(next, {
         headers: {
@@ -127,6 +185,13 @@ method.loadOneBatch = async function(next) {
     return tracks;
 }
 
+/**
+* Sets the internal varible activeTracks to 4 random selected tracks from a playlist
+*
+* @author: Michiocre
+* @param {string} playlistId The id that identifies the playlist
+* @return {boolean} True if completed
+*/
 method.getRandomTracks = async function(playlistId) {
     let playlist = this.getPlaylistById(playlistId);
     this.activePlaylist = playlist;
@@ -136,6 +201,7 @@ method.getRandomTracks = async function(playlistId) {
         return 'Your playlist is to small';
     }
 
+    //To make sure all the indexi are different
     for (var i = 0; i < 4; i++) {
         let counter;
         do {
@@ -157,16 +223,18 @@ method.getRandomTracks = async function(playlistId) {
     return true;
 }
 
+/**
+* Returns the necessary data to update the frontend
+*
+* @author: Michiocre
+* @param {boolean} loggedIn True if the user is the host
+* @return {object} Object filled with the data
+*/
 method.update = async function(loggedIn) {
     let state = {};
-    let playlistPlaceholder = {
-        name: 'Host is choosing new Playlist',
-        id: '',
-        url: '',
-        img: 'http://via.placeholder.com/152x152'
-    }
+    let playlistPlaceholder = emptyPlaylist;
 
-    if (this.activePlaylist.id != undefined) {
+    if (this.activePlaylist.id !== undefined) {
         playlistPlaceholder = {
             name: this.activePlaylist.name,
             id: this.activePlaylist.id,
@@ -178,21 +246,32 @@ method.update = async function(loggedIn) {
     state = {
         activePlaylist: playlistPlaceholder,
         activeTracks: this.activeTracks,
-
-    }
-
-    if (loggedIn == 'true') {
-        state.numPlaylists = this.playlists.length;
-        state.connectedUser = this.connectedUser;
+        numPlaylists: this.playlists.length,
+        connectedUser: this.connectedUser
     }
 
     return state;
 }
 
+/**
+* Checks if a given token is the one that was provided by spotify for this instance
+*
+* @author: Michiocre
+* @param {string} token The token that gets sent over from the frontend
+* @return {boolean} True if the token match
+*/
 method.checkToken = async function(token) {
     return token == this.host.token;
 }
 
+
+/**
+* Adds a username to the list of connected users
+*
+* @author: Michiocre
+* @param {string} name The username that wants to be added
+* @return {object} An object filled with a response
+*/
 method.connect = async function(name) {
     this.connectedUser.push(name);
     console.log('New User: ' + name + ' connected');

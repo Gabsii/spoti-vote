@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-let color = require('../css/colors.js');
+let constants = require('../constants.js');
 
 let defaultContainer = {
 	flexDirection: 'column',
@@ -16,7 +16,7 @@ let defaultContainer = {
 	overflow: 'hidden',
 	border: 'none',
 	borderRadius: '10px',
-	color: color.green,
+	color: constants.colors.green,
 	textAlign: 'center',
 	textOverflow: 'ellipsis',
 	background: 'rgba(25, 20, 20, 0.25)',

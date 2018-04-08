@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import logo from '../img/spotiLogo.svg';
-let color = require('../css/colors.js');
+let constants = require('../constants.js');
 
-let backgroundColor = color.background;
+let backgroundColor = constants.colors.background;
 let height = "100px";
 let width = "100px";
 let defaultDimensions = {

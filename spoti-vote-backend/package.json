@@ -15,7 +15,5 @@
     "querystring": "^0.2.0",
     "request": "^2.81.0"
   },
-  "devDependencies": {
-    "inline-svg-register": "^1.0.0"
-  }
+  "devDependencies": {}
 }

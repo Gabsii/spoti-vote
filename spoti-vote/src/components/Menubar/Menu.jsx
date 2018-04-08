@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Home from '../Menubar/Home.jsx';
 import Rooms from '../Menubar/Rooms.jsx';
 
-let color = require('../../css/colors.js');
+let constants = require('../../constants.js');
 let defaultStyle = {
 	width: '75px',
 	height: 'calc(100vh - 75px)',
@@ -11,7 +11,7 @@ let defaultStyle = {
 	left: 0,
 	textAlign: 'center',
 	color: '#ffffff',
-	backgroundColor: color.backgroundLite
+	backgroundColor: constants.colors.backgroundLite
 };
 
 class Menu extends Component {

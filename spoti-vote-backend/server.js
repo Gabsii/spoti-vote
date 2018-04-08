@@ -1,30 +1,26 @@
-"use strict";
+"use strict"; //Places the server in a strict enviroment (More exeptions, catches coding blooper, prevents unsafe actions, disables some features)
 
 const express = require('express');
 const request = require('request');
 const querystring = require('querystring');
 
-/*
-Response Codes
+let ServerInstance = require('./src/ServerInstance');
+let constants = require('./src/constants');
 
-
-200 -> No Error,
-400 -> ,
-410 -> Room not found,
-500 -> Dont know what else to use
-
-*/
-const SUCCESS = 200;
-const ROOMNOTFOUND = 410;
 
 let app = express();
 
-
-let ServerInstance = require('./src/ServerInstance');
-
 let redirect_uri = process.env.REDIRECT_URI || 'http://localhost:8888/callback';
+
 let serverInstances = [];
 
+/**
+* Return the instance with the specified id
+*
+* @author: Michiocre
+* @param {string} instanceId The id that identifies the instance (One instance is one room)
+* @return {ServerInstance} The instance object with the id of the parameter
+*/
 function getInstanceById(instanceId) {
 	let instance = null;
 	for (var i = 0; i < serverInstances.length; i++) {
@@ -34,6 +30,8 @@ function getInstanceById(instanceId) {
 	return instance;
 }
 
+
+//Dont know if i should also make this in the jsdocs format since technicly not functions
 app.get('/login', function(req, res) {
 	res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state playlist-read-collaborative', redirect_uri}));
 });
@@ -69,19 +67,33 @@ app.get('/instance/playlists', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let instance = getInstanceById(req.query.id);
 	if (instance != null) {
-		res.send(await instance.getPlaylists());
+		res.send({
+			responseCode: constants.codes.SUCCESS,
+			responseMessage: '',
+			content: await instance.getPlaylists()
+		});
 	} else {
-		res.send({response: 'This room was not found', responseCode: ROOMNOTFOUND});
+		res.send({
+			responseCode: constants.codes.NOTFOUND,
+			responseMessage: 'This room was not found'
+		});
 	}
 });
 
-app.get('/instance/host', function(req, res) {
+app.get('/instance/host', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let instance = getInstanceById(req.query.id);
 	if (instance != null) {
-		res.send(instance.getHostInfo());
+		res.send({
+			responseCode: constants.codes.SUCCESS,
+			responseMessage: '',
+			content: await instance.getHostInfo()
+		});
 	} else {
-		res.send({response: 'This room was not found', responseCode: ROOMNOTFOUND});
+		res.send({
+			responseCode: constants.codes.ROOMNOTFOUND,
+			response: 'This room was not found'
+		});
 	}
 });
 
@@ -93,15 +105,27 @@ app.get('/instance/newTracks', async function(req, res) {
 	if (instance != null) {
 		if (playlistId != 'none') {
 			if (await instance.getRandomTracks(playlistId) == true) {
-				res.send({response: 'New tracks were generated'});
+				res.send({
+					responseCode: constants.codes.SUCCESS,
+					responseMessage: 'New tracks were generated'
+				});
 			} else {
-				res.send({response: 'Failed to generate new tracks'})
+				res.send({
+					responseCode: constants.codes.ERROR,
+					responseMessage: 'Failed to generate new tracks'
+				})
 			}
 		} else {
-			res.send({response: 'You cant pick no playlist'})
+			res.send({
+				responseCode: constants.codes.PLNOTFOUND,
+				responseMessage: 'You cant pick no playlist'
+			})
 		}
 	} else {
-		res.send({response: 'This room was not found', responseCode: ROOMNOTFOUND});
+		res.send({
+			responseCode: constants.codes.ROOMNOTFOUND,
+			responseMessage: 'This room was not found'
+		});
 	}
 });
 
@@ -110,9 +134,16 @@ app.get('/instance/update', async function(req, res) {
 	let instance = getInstanceById(req.query.id);
 
 	if (instance != null) {
-		res.send(await instance.update(req.query.loggedIn));
+		res.send({
+			responseCode: constants.codes.SUCCESS,
+			responseMessage: '',
+			content: await instance.update(req.query.loggedIn)
+		});
 	} else {
-		res.send({response: 'This room was not found', responseCode: ROOMNOTFOUND});
+		res.send({
+			responseCode: constants.codes.ROOMNOTFOUND,
+			responseMessage: 'This room was not found'
+		});
 	}
 });
 
@@ -121,9 +152,16 @@ app.get('/instance/checkToken', async function(req, res) {
 	let instance = getInstanceById(req.query.id);
 
 	if (instance != null) {
-		res.send(await instance.checkToken(req.query.token));
+		res.send({
+			responseCode: constants.codes.SUCCESS,
+			responseMessage: '',
+			content: await instance.checkToken(req.query.token)
+		});
 	} else {
-		res.send({response: 'This room was not found', responseCode: ROOMNOTFOUND});
+		res.send({
+			responseCode: constants.codes.ROOMNOTFOUND,
+			responseMessage: 'This room was not found'
+		});
 	}
 });
 
@@ -131,12 +169,17 @@ app.get('/instance/connect', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let instance = getInstanceById(req.query.id);
 
-	console.log(instance.connectedUser);
-
 	if (instance != null) {
-		res.send(await instance.connect(req.query.name));
+		res.send({
+			responseCode: constants.codes.SUCCESS,
+			responseMessage: '',
+			content: await instance.connect(req.query.name)
+		});
 	} else {
-		res.send({response: 'This room was not found', responseCode: ROOMNOTFOUND});
+		res.send({
+			responseCode: constants.codes.ROOMNOTFOUND,
+			responseMessage: 'This room was not found'
+		});
 	}
 });
 

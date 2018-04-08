@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 
-let color = require('../../css/colors.js');
+let constants = require('../../constants.js');
 let defaultStyle = {
 	height: '75px',
 	width: '150px',
 	position: 'absolute',
 	bottom: 0,
 	left: '75px',
-	backgroundColor: color.blueCard
+	backgroundColor: constants.colors.blueCard
 }
 
 class SongAggregation extends Component {

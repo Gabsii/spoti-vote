@@ -3,13 +3,13 @@ import SongIcon from './Footer/SongIcon.jsx';
 import SongAggregation from './Footer/SongAggregation.jsx';
 import VolumeBar from './Footer/VolumeBar.jsx';
 
-let color = require('../css/colors.js');
+let constants = require('../constants.js');
 let defaultStyle = {
 	height: '75px',
 	width: '100vw',
 	position: 'absolute',
 	bottom: 0,
-	backgroundColor: color.backgroundLite
+	backgroundColor: constants.colors.backgroundLite
 }
 //<PlayButton/>
 

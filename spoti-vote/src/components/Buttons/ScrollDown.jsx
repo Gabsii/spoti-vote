@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faAngleDown} from '@fortawesome/fontawesome-free-solid';
-let color = require('../../css/colors.js');
+let constants = require('../../constants.js');
 
 let defaultStyle = {
 	position: 'absolute',
 	bottom: '0',
-	color: color.background
+	color: constants.colors.background
 }
 
 class ScrollDown extends Component {

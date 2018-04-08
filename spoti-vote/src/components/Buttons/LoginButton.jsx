@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import '../../css/selectors.css';
 
-let color = require('../../css/colors.js');
+let constants = require('../../constants.js');
 
 let defaultStyle = {
 	padding: "17px 48px",
@@ -14,7 +14,7 @@ let defaultStyle = {
 	maxHeight: "50px",
 	textTransform: "uppercase",
 	whiteSpace: "normal",
-	backgroundColor: color.green,
+	backgroundColor: constants.colors.green,
 	marginTop: "1.5em",
 	marginRight: "2em",
 	right: 0
@@ -22,7 +22,7 @@ let defaultStyle = {
 class LoginButton extends Component {
 
 	render() {
-		return (<a href={'http://localhost:8888/login'}>
+		return (<a href='http://localhost:8888/login'>
 			<button id="loginbutton" style={defaultStyle} className="sticky">
 				Login
 			</button>

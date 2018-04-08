@@ -51,11 +51,19 @@ class Infos extends Component {
 		if (this.props.loggedIn === true && this.props.numPlaylists !== this.state.playlists.length) {
 			fetch('http://localhost:8888/instance/playlists?id='+window.location.pathname.split('/')[2], {
 		    }).then((response) => response.json().then(data => {
-				if (this.state.playlists.length !== data.length) {
-					this.setState({
-						playlists: data
-					});
+				switch (data.responseCode) {
+					case 200:
+					if (this.state.playlists.length !== data.content.length) {
+						this.setState({
+							playlists: data.content
+						});
+					}
+						break;
+					default:
+						window.location.pathname = '/';
+						break;
 				}
+
 		    })).catch(function() {
 				window.location.reload();
 			});
@@ -63,10 +71,8 @@ class Infos extends Component {
 	}
 
 	render() {
-		let option = '';
-		let imageUrl = 'http://via.placeholder.com/152x152';
-		let linkUrl = window.location.href;
-
+		let option = <div>{this.props.activePlaylist.name}</div>;
+		
 		if (this.props.loggedIn === true) {
 			option = <select style={{
 					width: '200px'
@@ -75,19 +81,6 @@ class Infos extends Component {
 				<option>Select a Playlist</option>
 				{this.state.playlists.map((playlist) => <option key={playlist.id} id={playlist.id} img={playlist.img} url={playlist.url} href={playlist.href}>{playlist.name}</option>)}
 			</select>;
-		} else {
-			if (this.props.activePlaylist !== undefined) {
-				option = <div>{this.props.activePlaylist.name || 'Host is changing the playlist'}</div>;
-			} else {
-				option = <div>{'Host is changing the playlist'}</div>;
-			}
-
-		}
-		if (this.props.activePlaylist !== undefined) {
-			if (this.props.activePlaylist.url !== undefined) {
-				linkUrl = this.props.activePlaylist.url;
-				imageUrl = this.props.activePlaylist.img;
-			}
 		}
 
 
@@ -103,8 +96,8 @@ class Infos extends Component {
 				}}>
 				{option}
 			</div>
-			<a href={linkUrl}>
-				<img alt="Current Playlist" src={imageUrl} style={{
+			<a href={this.props.activePlaylist.url}>
+				<img alt="Current Playlist" src={this.props.activePlaylist.img} style={{
 						...imgStyle,
 						display: 'flex',
 						alignItems: 'center',
