@@ -210,20 +210,24 @@ method.loadOneBatch = async function(next) {
 * @return {boolean} True if completed
 */
 method.getRandomTracks = async function(playlistId) {
+    let playlist = this.getPlaylistById(playlistId);
 
+    if (playlist.tracks.length < 4) {
+        return false;
+    }
+
+    if (playlist == this.activePlaylist) {
+        return false;
+    }
+
+    //Reset all the votes
     this.host.voted = null;
     for (var i = 0; i < this.connectedUser.length; i++) {
         this.connectedUser[i].voted = null;
     }
 
-
-    let playlist = this.getPlaylistById(playlistId);
     this.activePlaylist = playlist;
     let indexes = [];
-
-    if (playlist.tracks.lenght < 4) {
-        return false;
-    }
 
     //To make sure all the indexes are different
     for (var i = 0; i < 4; i++) {
@@ -350,7 +354,7 @@ method.vote = async function(name, trackId, loggedIn) {
                 oldTrack.votes = 0;
             }
         }
-        console.log(newTrack.votes);
+        
         if (newTrack.votes === undefined) {
             newTrack.votes = 1;
         } else {
