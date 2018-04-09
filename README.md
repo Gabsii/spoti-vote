@@ -4,9 +4,6 @@ Web application to vote for the next song in Spotify Queue
 - [Project Description:](#project-description)
 	- [Requirements:](#requirements)
 	- [Usage](#usage)
-- [Tasks](#tasks)
-	- [WIP:](#wip)
-	- [TODO:](#todo)
 - [Credits](#credits)
 	- [Frameworks/Tools](#frameworkstools)
 	- [Useful links](#useful-links)
@@ -46,35 +43,6 @@ If you are using a MAC replace `SET` with `EXPORT`.
 Thanks to [MPJ](https://github.com/mpj/oauth-bridge-template) for providing a framework for the backend-logic.
 
 Congratulations! You now are able to use my webpage.
-
-# Tasks
-
-This lowkey acts as my Kanban board.
-
-## TODO:
-Workflow:
-* Manipulate Spotify Player
-* Add custom Queue
-* Assign DJ
-
-Appearence:
-* Name
-* Contents
-* Description
-* Screenshots
-
-## WIP:
-
-* Add vote functionality
-
-## Done:
-
-* Get Tracks from Playlist
-* Get Spotify Playlists
-* Implement Spotify Authentification
-* Login Parallax
-	* implement "sticky title"
-* Logo
 
 # Credits
 
