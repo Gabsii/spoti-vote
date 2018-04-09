@@ -24,11 +24,23 @@ let containerStyle = {
 class UserContainer extends Component {
 
 	render() {
+		for (var i = 0; i < this.props.connectedUser.length; i++) {
+			if (this.props.connectedUser[i].voted === null) {
+				this.props.connectedUser[i].color = constants.colors.font;
+			}
+			for (var j = 0; j < this.props.activeTracks.length; j++) {
+
+				if (this.props.activeTracks[j].id == this.props.connectedUser[i].voted) {
+					this.props.connectedUser[i].color = constants.iterateCardColors(j);
+				}
+			}
+		}
+
 		return (<div style={defaultStyle}>
 			<div className="progressbar" style={titleStyle}>Users</div>
 			<div style={containerStyle}>
 				{this.props.connectedUser.map(function(user, index){
-					return <User voteColor={constants.iterateCardColors(index)} key={index} name={user}/>
+					return <User voteColor={user.color} key={index} name={user.name}/>
 				})}
 			</div>
 		</div>);

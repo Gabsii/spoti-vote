@@ -35,7 +35,7 @@ function getRoomById(roomId) {
 * Login using the Spotify API (This is only a Redirect)
 */
 app.get('/login', function(req, res) {
-	res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state playlist-read-collaborative', redirect_uri}));
+	res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state playlist-read-collaborative playlist-read-private', redirect_uri}));
 });
 
 /**
@@ -227,11 +227,17 @@ app.get('/room/connect', async function(req, res) {
 	let room = getRoomById(req.query.id);
 
 	if (room != null) {
-		await room.connect(req.query.name);
-		res.send({
-			responseCode: constants.codes.SUCCESS,
-			responseMessage: ''
-		});
+		if (await room.connect(req.query.name)) {
+			res.send({
+				responseCode: constants.codes.SUCCESS,
+				responseMessage: ''
+			});
+		} else {
+			res.send({
+				responseCode: constants.codes.ERROR,
+				responseMessage: 'Internal Error'
+			});
+		}
 	} else {
 		res.send({
 			responseCode: constants.codes.ROOMNOTFOUND,
@@ -240,6 +246,38 @@ app.get('/room/connect', async function(req, res) {
 	}
 });
 
+/**
+* Adds or changes a vote of an user
+*
+* @PathParameter id  The id of the room
+* @PathParameter loggedIn if the user is the host
+* @PathParametert name of the user whomst will change his vote
+* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
+* @Returns responseMessage with error message in case of error
+*/
+app.get('/room/vote', async function(req, res) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	let room = getRoomById(req.query.id);
+
+	if (room != null) {
+		if (await room.vote(req.query.name, req.query.track, req.query.loggedIn)) {
+			res.send({
+				responseCode: constants.codes.SUCCESS,
+				responseMessage: ''
+			});
+		} else {
+			res.send({
+				responseCode: constants.codes.ERROR,
+				responseMessage: 'Internal error'
+			});
+		}
+	} else {
+		res.send({
+			responseCode: constants.codes.ROOMNOTFOUND,
+			responseMessage: 'This room was not found'
+		});
+	}
+});
 
 let port = process.env.PORT || 8888;
 console.log(`Listening on port ${port}. Go /login to initiate authentication flow.`);

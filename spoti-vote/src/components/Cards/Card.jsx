@@ -27,8 +27,6 @@ class Card extends Component {
 	constructor() {
 		super();
 		this.state = {
-			randomTrack: {},
-			votes: 0,
 			hover: false
 		}
 	}
@@ -62,7 +60,21 @@ class Card extends Component {
 				cursor: 'context-menu'
 			}
 		}
-		return (<div onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} style={{
+
+		let votes = this.props.randomTrack.votes;
+		if (votes === undefined || votes == 0) {
+			votes = '-';
+		}
+
+		let artistString = '';
+		for (var i = 0; i < this.props.randomTrack.artists.length; i++) {
+			artistString += this.props.randomTrack.artists[i].name;
+			if (i < this.props.randomTrack.artists.length-1) {
+				artistString += ' ';
+			}
+		}
+
+		return (<div onClick={this.props.onClick} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} style={{
 				...defaultStyle,
 				...linkStyle,
 				backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url + ')'
@@ -75,11 +87,11 @@ class Card extends Component {
 						fontSize: '2em',
 						textAlign: 'center'
 					}}>{this.props.randomTrack.name || '-'}</div>
-				<div>{this.props.randomTrack.artists.map((artist) => artist.name) || '-'}</div>
+				<div>{artistString || '-'}</div>
 				<div style={{
 
 						fontSize: '1.25em'
-					}}>{this.state.votes || ('-' + ' Votes')}</div>
+					}}>{votes + ' Votes'}</div>
 			</div>
 		</div>);
 	}

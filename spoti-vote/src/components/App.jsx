@@ -16,8 +16,9 @@ class App extends Component {
 			activeTracks: {},
 			numPlaylists: 0,
 			connectedUser: [],
-			user: {},
-			update: true
+			host: {},
+			update: true,
+			name: null
 		}
 	}
 
@@ -41,27 +42,14 @@ class App extends Component {
 				//window.location.reload();
 			});
 		} else if (name !== undefined){
+			this.setState({
+				name: name
+			})
 			fetch('http://localhost:8888/room/connect?id='+window.location.pathname.split('/')[2] + '&name=' + name, {
-			}).then((response) => response.json().then(data => {})).catch(function() {
-				//window.location.reload();
-			});
+			}).then((response) => response.json().then(data => {})).catch(function() {});
 		} else {
 			window.location.pathname = '/';
 		}
-
-		fetch('http://localhost:8888/room/host?id='+window.location.pathname.split('/')[2], {
-		}).then((response) => response.json().then(data => {
-			switch (data.responseCode) {
-				case 200:
-					this.setState({
-						user: data.content,
-					});
-					break;
-				default:
-					window.location.pathname = '/';
-					break;
-			}
-		}));
 	}
 
 	componentDidUpdate() {
@@ -74,7 +62,8 @@ class App extends Component {
 							activePlaylist: data.content.activePlaylist,
 						 	activeTracks: data.content.activeTracks,
 						 	numPlaylists: data.content.numPlaylists,
-						 	connectedUser: data.content.connectedUser
+						 	connectedUser: data.content.connectedUser,
+							host: data.content.host
 						});
 						break;
 					default:
@@ -103,8 +92,8 @@ class App extends Component {
 				width: '100vw'
 			}}>
 			<Menu/>
-			<Sidebar loggedIn={this.state.loggedIn} connectedUser={this.state.connectedUser} user={this.state.user} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} numPlaylists={this.state.numPlaylists}/>
-			<CardContainer activeTracks={this.state.activeTracks}/>
+			<Sidebar loggedIn={this.state.loggedIn} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} numPlaylists={this.state.numPlaylists}/>
+			<CardContainer name={this.state.name} loggedIn={this.state.loggedIn} activeTracks={this.state.activeTracks}/>
 			<Footer/>
 		</section>);
 	}
