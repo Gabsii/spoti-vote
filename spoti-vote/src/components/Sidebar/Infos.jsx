@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faHeadphones} from '@fortawesome/fontawesome-free-solid';
+let constants = require('../../js/constants.js');
 
 let defaultStyle = {
 	height: '300px',
@@ -36,7 +37,6 @@ let centerContainer = {
 	marginTop: '10px',
 	marginBottom: '5px'
 }
-
 class Infos extends Component {
 	constructor() {
 		super();
@@ -83,6 +83,15 @@ class Infos extends Component {
 			</select>;
 		}
 
+		let iconColor = {};
+		if (this.props.host.voted === null) {
+			iconColor.color = constants.colors.font;
+		}
+		for (var j = 0; j < this.props.activeTracks.length; j++) {
+			if (this.props.activeTracks[j].id == this.props.host.voted) {
+				iconColor.color = constants.iterateCardColors(j);
+			}
+		}
 
 		return (<div style={defaultStyle}>
 			<div style={{
@@ -97,7 +106,7 @@ class Infos extends Component {
 				{option}
 			</div>
 			<a href={this.props.activePlaylist.url}>
-				<img alt="Current Playlist" src={this.props.activePlaylist.img} style={{
+				<img alt="Current Playlist" src={this.props.activePlaylist.img || 'http://via.placeholder.com/152x152'} style={{
 						...imgStyle,
 						display: 'flex',
 						alignItems: 'center',
@@ -105,11 +114,11 @@ class Infos extends Component {
 					}}/>
 			</a>
 			<div style={nameContainer}>
-				<FontAwesomeIcon icon={faHeadphones} size="2x"/>
+				<FontAwesomeIcon style={iconColor} icon={faHeadphones} size="2x"/>
 				<div style={{
 						marginLeft: '10px'
 					}}>
-					{this.props.user.name || this.props.user.id}
+					{this.props.host.name || this.props.host.id}
 				</div>
 			</div>
 		</div>);
