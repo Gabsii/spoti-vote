@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import logo from "../../img/spotiLogo.png";
+import icon from "../../img/userIcon.svg";
 
 let defaultStyle = {
 	display: 'flex',
@@ -17,23 +17,15 @@ let imgStyle = {
 }
 
 class User extends Component {
-	constructor() {
-		super();
-		this.state = {
-			voteColor: '#ffffff'
-		}
-	}
-	componentDidMount() {
-		this.setState({voteColor: this.props.voteColor});
-	}
 
 	render() {
+
 		return (<div style={defaultStyle}>
-			<img alt="icon" src={this.props.image || logo} style={imgStyle}/>
+			<img alt="icon" src={icon} style={imgStyle}/>
 			<div style={{
 					marginRight: 'auto'
 				}}>
-				<div>{this.props.name || this.props.id}</div>
+				<div>{this.props.name}</div>
 			</div>
 			<div className="vote" style={{
 					width: '24px',
@@ -41,7 +33,7 @@ class User extends Component {
 					borderRadius: '20px',
 					margin: '10px',
 					border: '1px solid black',
-					backgroundColor: this.state.voteColor
+					backgroundColor: this.props.voteColor
 				}}></div>
 		</div>);
 	}

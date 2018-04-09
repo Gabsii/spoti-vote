@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 
 const emptyPlaylist = {
 	name: 'Host is changing the playlist',
-	img: 'http://via.placeholder.com/152x152'
+	img: null
 }
 
 /**
@@ -41,7 +41,7 @@ function Room(token, rooms) {
 		name: '',
 		id: '',
 		profileUrl: '',
-		image: 'https://openclipart.org/image/2400px/svg_to_png/247324/abstract-user-flat-1.png'
+		voted: null
 	};
 	this.activeTracks = [];
 	this.activePlaylist = [];
@@ -81,10 +81,6 @@ method.fetchData = async function() {
 	this.host.id = hostRequestData.id;
 	this.host.profileUrl = hostRequestData.external_urls.spotify;
 
-	if (hostRequestData.images.length > 0) {
-		this.host.image = hostRequestData.images[0].url;
-	}
-
 	//Gets all the hosts playlists TODO: This should probably loop (now max 50 playlists will be returned)
 	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
 		headers: {
@@ -100,16 +96,6 @@ method.fetchData = async function() {
 	}
 
 	console.log('User ' + this.host.id + ' logged in all data was fetched.');
-}
-
-/**
-* Returns the host data
-*
-* @author: Michiocre
-* @return {object} The host object
-*/
-method.getHostInfo = function() {
-	return this.host;
 }
 
 /**
@@ -145,6 +131,36 @@ method.getPlaylistById = function(playlistId) {
 			return this.playlists[i];
 		}
 	return emptyPlaylist;
+}
+
+/**
+* Returns the user with the given name
+*
+* @author: Michiocre
+* @param {string} name The name that identifies the user
+* @return {object} The user object
+*/
+method.getUserByName = function(name) {
+	for (var i = 0; i < this.connectedUser.length; i++) {
+		if (this.connectedUser[i].name == name) 
+			return this.connectedUser[i];
+		}
+	return null;
+}
+
+/**
+* Returns the track from activeTracks with the given id
+*
+* @author: Michiocre
+* @param {string} id The id that identifies the track
+* @return {object} The track object
+*/
+method.getActiveTrackById = function(id) {
+	for (var i = 0; i < this.activeTracks.length; i++) {
+		if (this.activeTracks[i].id == id) 
+			return this.activeTracks[i];
+		}
+	return null;
 }
 
 /**
@@ -193,6 +209,12 @@ method.loadOneBatch = async function(next) {
 * @return {boolean} True if completed
 */
 method.getRandomTracks = async function(playlistId) {
+
+	this.host.voted = null;
+	for (var i = 0; i < this.connectedUser.length; i++) {
+		this.connectedUser[i].voted = null;
+	}
+
 	let playlist = this.getPlaylistById(playlistId);
 	this.activePlaylist = playlist;
 	let indexes = [];
@@ -247,7 +269,12 @@ method.update = async function(loggedIn) {
 		activePlaylist: playlistPlaceholder,
 		activeTracks: this.activeTracks,
 		numPlaylists: this.playlists.length,
-		connectedUser: this.connectedUser
+		connectedUser: this.connectedUser,
+		host: {
+			name: this.host.name,
+			id: this.host.id,
+			voted: this.host.voted
+		}
 	}
 
 	return state;
@@ -269,11 +296,64 @@ method.checkToken = async function(token) {
 *
 * @author: Michiocre
 * @param {string} name The username that wants to be added
-* @return {object} An object filled with a response
+* @return {boolean} True if the user was added, false if the name already exists
 */
 method.connect = async function(name) {
-	this.connectedUser.push(name);
+	if (this.getUserByName(name) !== null) {
+		return false;
+	}
+
+	let newUser = {
+		name: name,
+		voted: null
+	}
+	this.connectedUser.push(newUser);
 	console.log('New User: ' + name + ' connected');
+	return true;
+}
+
+/**
+* Changes the vote of a user to the specified track
+*
+* @author: Michiocre
+* @param {string} name The username whomst will have his vote changed
+* @param {string} trackId The track whomst the user has voted for
+* @return {boolean} True if the vote was successfully changed
+*/
+method.vote = async function(name, trackId, loggedIn) {
+	let user = this.getUserByName(name);
+
+	if (loggedIn == 'true') {
+		user = this.host;
+	}
+
+	if (user === undefined) {
+		user = null;
+	}
+
+	if (user !== null) {
+		let oldVote = user.voted;
+		user.voted = trackId;
+
+		let oldTrack = this.getActiveTrackById(oldVote);
+		let newTrack = this.getActiveTrackById(trackId);
+
+		if (oldTrack !== null) {
+			if (oldTrack.votes > 0) {
+				oldTrack.votes = oldTrack.votes - 1;
+			} else {
+				oldTrack.votes = 0;
+			}
+		}
+		console.log(newTrack.votes);
+		if (newTrack.votes === undefined) {
+			newTrack.votes = 1;
+		} else {
+			newTrack.votes = newTrack.votes + 1;
+		}
+		return true;
+	}
+	return false;
 }
 
 module.exports = Room;
