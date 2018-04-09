@@ -252,6 +252,7 @@ app.get('/room/connect', async function(req, res) {
 * @PathParameter id  The id of the room
 * @PathParameter loggedIn if the user is the host
 * @PathParametert name of the user whomst will change his vote
+* @PathParametert track id of the track the user voted for
 * @Returns ResponseCode of either 200 or 404 based on if the room-id exists
 * @Returns responseMessage with error message in case of error
 */
@@ -261,6 +262,37 @@ app.get('/room/vote', async function(req, res) {
 
 	if (room != null) {
 		if (await room.vote(req.query.name, req.query.track, req.query.loggedIn)) {
+			res.send({
+				responseCode: constants.codes.SUCCESS,
+				responseMessage: ''
+			});
+		} else {
+			res.send({
+				responseCode: constants.codes.ERROR,
+				responseMessage: 'Internal error'
+			});
+		}
+	} else {
+		res.send({
+			responseCode: constants.codes.ROOMNOTFOUND,
+			responseMessage: 'This room was not found'
+		});
+	}
+});
+
+/**
+* Starts plaing the most voted Song
+*
+* @PathParameter id  The id of the room
+* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
+* @Returns responseMessage with error message in case of error
+*/
+app.get('/room/test/play', async function(req, res) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	let room = getRoomById(req.query.id);
+
+	if (room != null) {
+		if (await room.play()) {
 			res.send({
 				responseCode: constants.codes.SUCCESS,
 				responseMessage: ''

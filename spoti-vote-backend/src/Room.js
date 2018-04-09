@@ -354,7 +354,7 @@ method.vote = async function(name, trackId, loggedIn) {
                 oldTrack.votes = 0;
             }
         }
-        
+
         if (newTrack.votes === undefined) {
             newTrack.votes = 1;
         } else {
@@ -363,6 +363,35 @@ method.vote = async function(name, trackId, loggedIn) {
         return true;
     }
     return false;
+}
+
+/**
+* PLays the most voted track {{ONLY USED FOR TESTING PURPOSES}}
+*
+* @author: Michiocre
+* @return {boolean} True if the request to the spotify API was successfully changed
+*/
+method.play = async function() {
+
+    let track = this.activeTracks[0];
+
+    let payload = {
+        uris: ['spotify:track:' + track.id]
+    };
+
+    console.log(payload);
+
+    let request = await fetch('https://api.spotify.com/v1/me/player/play', {
+        headers: {
+            "Authorization": "Bearer " + this.host.token
+        },
+        method: "PUT",
+        body: JSON.stringify(payload)
+    });
+
+    console.log(fetchData);
+
+    return true;
 }
 
 module.exports = Room;
