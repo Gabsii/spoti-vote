@@ -8,18 +8,6 @@ import Header from './Header.jsx';
 import pictureOne from '../img/austin-neill-247237-unsplash.jpg';
 import pictureTwo from '../img/andre-benz-276974-unsplash.jpg';
 
-let pictures = {
-	One: {
-		uri: pictureOne
-	},
-	Two: {
-		uri: pictureTwo
-	}
-};
-
-
-
-
 class Login extends Component {
 	componentDidMount() {
 		if (window.location.search !== '') {
@@ -29,12 +17,12 @@ class Login extends Component {
 
 	render() {
 		return (<section>
-			<FullscreenImage id="parallax" source={pictures.One}>
+			<FullscreenImage id="parallax" source={pictureOne}>
 				<LoginButton/>
 				<LoginTitle/>
 				<ScrollDown/>
 			</FullscreenImage>
-			<FullscreenImage id="down" source={pictures.Two}>
+			<FullscreenImage id="down" source={pictureTwo}>
 				<Header></Header>
 				<div className="center container">
 					<p>

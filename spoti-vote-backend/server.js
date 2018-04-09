@@ -7,7 +7,6 @@ const querystring = require('querystring');
 let Room = require('./src/Room');
 let constants = require('./src/constants');
 
-
 let app = express();
 
 let redirect_uri = process.env.REDIRECT_URI || 'http://localhost:8888/callback';
@@ -24,17 +23,18 @@ let rooms = [];
 function getRoomById(roomId) {
 	let room = null;
 	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].id == roomId)
+		if (rooms[i].id == roomId) 
 			room = rooms[i];
-	}
+		}
 	return room;
 }
-
 
 /**
 * Login using the Spotify API (This is only a Redirect)
 */
 app.get('/login', function(req, res) {
+	console.log(process.env.SPOTIFY_CLIENT_ID);
+	console.log(process.env.SPOTIFY_CLIENT_SECRET);
 	res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state playlist-read-collaborative', redirect_uri}));
 });
 
@@ -53,8 +53,7 @@ app.get('/callback', async function(req, res) {
 		},
 		headers: {
 			'Authorization': 'Basic ' + (
-				new Buffer(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')
-			)
+			new Buffer(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64'))
 		},
 		json: true
 	};
@@ -81,16 +80,9 @@ app.get('/room/playlists', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let room = getRoomById(req.query.id);
 	if (room != null) {
-		res.send({
-			responseCode: constants.codes.SUCCESS,
-			responseMessage: '',
-			content: await room.getPlaylists()
-		});
+		res.send({responseCode: constants.codes.SUCCESS, responseMessage: '', content: await room.getPlaylists()});
 	} else {
-		res.send({
-			responseCode: constants.codes.NOTFOUND,
-			responseMessage: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.NOTFOUND, responseMessage: 'This room was not found'});
 	}
 });
 
@@ -106,16 +98,9 @@ app.get('/room/host', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let room = getRoomById(req.query.id);
 	if (room != null) {
-		res.send({
-			responseCode: constants.codes.SUCCESS,
-			responseMessage: '',
-			content: await room.getHostInfo()
-		});
+		res.send({responseCode: constants.codes.SUCCESS, responseMessage: '', content: await room.getHostInfo()});
 	} else {
-		res.send({
-			responseCode: constants.codes.ROOMNOTFOUND,
-			response: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, response: 'This room was not found'});
 	}
 });
 
@@ -135,27 +120,15 @@ app.get('/room/newTracks', async function(req, res) {
 	if (room != null) {
 		if (playlistId != 'none') {
 			if (await room.getRandomTracks(playlistId) == true) {
-				res.send({
-					responseCode: constants.codes.SUCCESS,
-					responseMessage: 'New tracks were generated'
-				});
+				res.send({responseCode: constants.codes.SUCCESS, responseMessage: 'New tracks were generated'});
 			} else {
-				res.send({
-					responseCode: constants.codes.ERROR,
-					responseMessage: 'The playlist is to small'
-				})
+				res.send({responseCode: constants.codes.ERROR, responseMessage: 'The playlist is to small'})
 			}
 		} else {
-			res.send({
-				responseCode: constants.codes.PLNOTFOUND,
-				responseMessage: 'You cant pick no playlist'
-			})
+			res.send({responseCode: constants.codes.PLNOTFOUND, responseMessage: 'You cant pick no playlist'})
 		}
 	} else {
-		res.send({
-			responseCode: constants.codes.ROOMNOTFOUND,
-			responseMessage: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
 	}
 });
 
@@ -180,10 +153,7 @@ app.get('/room/update', async function(req, res) {
 			content: await room.update(req.query.loggedIn)
 		});
 	} else {
-		res.send({
-			responseCode: constants.codes.ROOMNOTFOUND,
-			responseMessage: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
 	}
 });
 
@@ -207,10 +177,7 @@ app.get('/room/checkToken', async function(req, res) {
 			content: await room.checkToken(req.query.token)
 		});
 	} else {
-		res.send({
-			responseCode: constants.codes.ROOMNOTFOUND,
-			responseMessage: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
 	}
 });
 
@@ -228,18 +195,11 @@ app.get('/room/connect', async function(req, res) {
 
 	if (room != null) {
 		await room.connect(req.query.name);
-		res.send({
-			responseCode: constants.codes.SUCCESS,
-			responseMessage: ''
-		});
+		res.send({responseCode: constants.codes.SUCCESS, responseMessage: ''});
 	} else {
-		res.send({
-			responseCode: constants.codes.ROOMNOTFOUND,
-			responseMessage: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
 	}
 });
-
 
 let port = process.env.PORT || 8888;
 console.log(`Listening on port ${port}. Go /login to initiate authentication flow.`);

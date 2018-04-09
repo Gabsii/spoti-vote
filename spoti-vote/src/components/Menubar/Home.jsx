@@ -12,11 +12,9 @@ let defaultStyle = {
 
 class Home extends Component {
 	render() {
-		return (<a href={"http://localhost:3000"}>
-			<div style={defaultStyle}>
-				<FontAwesomeIcon icon={faHome} size="2x" className=""/>
-			</div>
-		</a>);
+		return (<div style={defaultStyle}>
+			<FontAwesomeIcon icon={faHome} size="2x" className=""/>
+		</div>);
 	}
 }
 export default Home;
