@@ -88,12 +88,14 @@ method.fetchData = async function() {
             "Authorization": "Bearer " + this.host.token
         }
     });
+    
     let playlistRequestData = await playlistRequest.json();
     next = playlistRequestData.next;
 
     this.playlists = playlistRequestData.items;
+
     for (var i = 0; i < this.playlists.length; i++) {
-        this.playlists[i].tracks = await this.loadSongs(this.playlists[i].id);
+        this.playlists[i].tracks = [];
     }
 
     console.log('User ' + this.host.id + ' logged in all data was fetched.');
@@ -165,18 +167,6 @@ method.getActiveTrackById = function(id) {
 }
 
 /**
-* Returns all tracks of a playlist
-*
-* @author: Michiocre
-* @param {string} playlistId The id that identifies the playlist
-* @return {array} Array of all the track objects
-*/
-method.loadSongs = async function(playlistId) {
-    let next = this.getPlaylistById(playlistId).href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal';
-    return this.loadOneBatch(next);
-}
-
-/**
 * Recursive function, in each iteration it will get up to 100 tracks of the playlist, and if there are more to get it will also return the url for the next batch of up to 100 tracks
 * Each iteration will return these tracks, and concat the array of tracks with the array of tracks from the next batch. In the end it will return all tracks in the playlist
 *
@@ -211,6 +201,12 @@ method.loadOneBatch = async function(next) {
 */
 method.getRandomTracks = async function(playlistId) {
     let playlist = this.getPlaylistById(playlistId);
+
+    if (playlist.tracks.length == 0) {
+        console.log('boi');
+        let nextTracks = playlist.href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal';
+        playlist.tracks = await this.loadOneBatch(nextTracks);
+    }
 
     if (playlist.tracks.length < 4) {
         return false;
