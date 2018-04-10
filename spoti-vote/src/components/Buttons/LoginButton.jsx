@@ -27,7 +27,7 @@ class LoginButton extends Component {
 
 	render() {
 		return (<button id="loginbutton" style={defaultStyle} className="sticky" onClick={this.login.bind(this)} tabIndex="0">
-			Login
+			Host
 		</button>);
 	}
 }

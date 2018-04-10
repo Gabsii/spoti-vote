@@ -17,18 +17,28 @@ let defaultStyle = {
 	whiteSpace: "normal",
 	backgroundColor: constants.colors.green,
 	marginTop: "1.5em",
-	marginRight: "15px"
+	marginRight: "0"
 }
 class LoginCode extends Component {
 
 	submitHandler() {
-		// input hijacking
+		// check for input hijacking
+		// send data to join room
 		console.log(this);
+	}
+
+	checkRoom(event) {
+		if (event.target.value.length === 5) {
+			let str = event.target.value.toUpperCase();
+			console.log(str);
+			// return if room exists
+		}
 	}
 
 	render() {
 		return (<form style={{
-				display: 'inline-block'
+				display: 'inline-block',
+				width: '100%'
 			}}>
 			<input type="text" maxLength="5" placeholder="Room Code" style={{
 					...defaultStyle,
@@ -36,8 +46,8 @@ class LoginCode extends Component {
 					textAlign: "center",
 					backgroundColor: constants.colors.background,
 					color: constants.colors.font
-				}} autoComplete="off"/>
-			<input type="submit" id="loginbutton" value="enter" style={defaultStyle} onSubmit={this.submitHandler.bind(this)}/>
+				}} autoComplete="off" onChange={this.checkRoom.bind(this)} pattern="[A-Za-z]{5}"/>
+			<input type="submit" id="loginbutton" value="join" style={defaultStyle} onSubmit={this.submitHandler.bind(this)}/>
 		</form>);
 	}
 }

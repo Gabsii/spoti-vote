@@ -80,7 +80,7 @@ class App extends Component {
 			{/* <Menu/> */}
 			<Sidebar loggedIn={this.state.loggedIn} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} numPlaylists={this.state.numPlaylists}/>
 			<CardContainer name={this.state.name} loggedIn={this.state.loggedIn} activeTracks={this.state.activeTracks}/>
-			<Footer/>
+			<Footer loggedIn={this.state.loggedIn}/>
 		</section>);
 	}
 }
