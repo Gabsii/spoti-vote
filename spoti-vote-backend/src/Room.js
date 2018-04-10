@@ -19,9 +19,9 @@ function makeid(length) {
 	var text = "";
 	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //ALl possible symbols
 
-	for (var i = 0; i < length; i++) 
+	for (var i = 0; i < length; i++)
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
-	
+
 	return text;
 }
 
@@ -82,49 +82,37 @@ method.fetchData = async function() {
 	this.host.profileUrl = hostRequestData.external_urls.spotify;
 
 	//Gets all the hosts playlists TODO: This should probably loop (now max 50 playlists will be returned)
-	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
-		headers: {
-			"Authorization": "Bearer " + this.host.token
-		}
-	});
-	let hostRequestData = await hostRequest.json();
+   let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
+	   headers: {
+		   "Authorization": "Bearer " + this.host.token
+	   }
+   });
 
-	this.host.name = hostRequestData.display_name;
-	this.host.id = hostRequestData.id;
-	this.host.profileUrl = hostRequestData.external_urls.spotify;
+   let playlistRequestData = await playlistRequest.json();
+   next = playlistRequestData.next;
 
-	//Gets all the hosts playlists TODO: This should probably loop (now max 50 playlists will be returned)
-	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
-		headers: {
-			"Authorization": "Bearer " + this.host.token
-		}
-	});
+   this.playlists = playlistRequestData.items;
 
-	let playlistRequestData = await playlistRequest.json();
-	next = playlistRequestData.next;
+   while (next != null) {
+	   playlistRequest = await fetch(next, {
+		   headers: {
+			   "Authorization": "Bearer " + this.host.token
+		   }
+	   });
 
-	this.playlists = playlistRequestData.items;
+	   playlistRequestData = await playlistRequest.json();
+	   next = playlistRequestData.next;
 
-	while (next != null) {
-		let playlistRequest = await fetch(next, {
-			headers: {
-				"Authorization": "Bearer " + this.host.token
-			}
-		});
+	   this.playlists = this.playlists.concat(playlistRequestData.items);
+   }
 
-		let playlistRequestData = await playlistRequest.json();
-		next = playlistRequestData.next;
+   console.log(this.playlists.length);
 
-		this.playlists = this.playlists.concat(playlistRequestData.items);
-	}
+   for (var i = 0; i < this.playlists.length; i++) {
+	   this.playlists[i].tracks = [];
+   }
 
-	console.log(this.playlists.length);
-
-	for (var i = 0; i < this.playlists.length; i++) {
-		this.playlists[i].tracks = [];
-	}
-
-	console.log('User ' + this.host.id + ' logged in all data was fetched.');
+   console.log('User ' + this.host.id + ' logged in all data was fetched.');
 }
 
 /**
@@ -156,7 +144,7 @@ method.getPlaylists = async function() {
 */
 method.getPlaylistById = function(playlistId) {
 	for (var i = 0; i < this.playlists.length; i++) {
-		if (this.playlists[i].id == playlistId) 
+		if (this.playlists[i].id == playlistId)
 			return this.playlists[i];
 		}
 	return emptyPlaylist;
@@ -171,7 +159,7 @@ method.getPlaylistById = function(playlistId) {
 */
 method.getUserByName = function(name) {
 	for (var i = 0; i < this.connectedUser.length; i++) {
-		if (this.connectedUser[i].name == name) 
+		if (this.connectedUser[i].name == name)
 			return this.connectedUser[i];
 		}
 	return null;
@@ -186,7 +174,7 @@ method.getUserByName = function(name) {
 */
 method.getActiveTrackById = function(id) {
 	for (var i = 0; i < this.activeTracks.length; i++) {
-		if (this.activeTracks[i].id == id) 
+		if (this.activeTracks[i].id == id)
 			return this.activeTracks[i];
 		}
 	return null;
