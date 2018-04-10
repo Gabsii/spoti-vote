@@ -378,6 +378,7 @@ method.vote = async function(name, trackId, loggedIn) {
 
 /**
 * PLays the most voted track {{ONLY USED FOR TESTING PURPOSES}}
+* Use this in combination with Postman or something, since it isnt called from the frontedn
 *
 * @author: Michiocre
 * @return {boolean} True if the request to the spotify API was successfully changed
