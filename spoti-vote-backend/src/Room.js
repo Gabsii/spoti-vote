@@ -88,12 +88,29 @@ method.fetchData = async function() {
             "Authorization": "Bearer " + this.host.token
         }
     });
+
     let playlistRequestData = await playlistRequest.json();
     next = playlistRequestData.next;
 
     this.playlists = playlistRequestData.items;
+
+    while (next != null) {
+        let playlistRequest = await fetch(next, {
+            headers: {
+                "Authorization": "Bearer " + this.host.token
+            }
+        });
+
+        let playlistRequestData = await playlistRequest.json();
+        next = playlistRequestData.next;
+
+        this.playlists = this.playlists.concat(playlistRequestData.items);
+    }
+
+    console.log(this.playlists.length);
+
     for (var i = 0; i < this.playlists.length; i++) {
-        this.playlists[i].tracks = await this.loadSongs(this.playlists[i].id);
+        this.playlists[i].tracks = [];
     }
 
     console.log('User ' + this.host.id + ' logged in all data was fetched.');
@@ -165,18 +182,6 @@ method.getActiveTrackById = function(id) {
 }
 
 /**
-* Returns all tracks of a playlist
-*
-* @author: Michiocre
-* @param {string} playlistId The id that identifies the playlist
-* @return {array} Array of all the track objects
-*/
-method.loadSongs = async function(playlistId) {
-    let next = this.getPlaylistById(playlistId).href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal';
-    return this.loadOneBatch(next);
-}
-
-/**
 * Recursive function, in each iteration it will get up to 100 tracks of the playlist, and if there are more to get it will also return the url for the next batch of up to 100 tracks
 * Each iteration will return these tracks, and concat the array of tracks with the array of tracks from the next batch. In the end it will return all tracks in the playlist
 *
@@ -209,21 +214,30 @@ method.loadOneBatch = async function(next) {
 * @param {string} playlistId The id that identifies the playlist
 * @return {boolean} True if completed
 */
-method.getRandomTracks = async function(playlistId) {
+method.getRandomTracks = async function(playlistId, intern) {
+    let playlist = this.getPlaylistById(playlistId);
 
+    if (playlist.tracks.length == 0) {
+        let nextTracks = playlist.href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal';
+        playlist.tracks = await this.loadOneBatch(nextTracks);
+    }
+
+    if (playlist.tracks.length < 4) {
+        return false;
+    }
+
+    if (playlist == this.activePlaylist && intern == false) {
+        return false;
+    }
+
+    //Reset all the votes
     this.host.voted = null;
     for (var i = 0; i < this.connectedUser.length; i++) {
         this.connectedUser[i].voted = null;
     }
 
-
-    let playlist = this.getPlaylistById(playlistId);
     this.activePlaylist = playlist;
     let indexes = [];
-
-    if (playlist.tracks.lenght < 4) {
-        return false;
-    }
 
     //To make sure all the indexes are different
     for (var i = 0; i < 4; i++) {
@@ -242,6 +256,7 @@ method.getRandomTracks = async function(playlistId) {
     let selectedTracks = [];
     for (var i = 0; i < indexes.length; i++) {
         selectedTracks[i] = playlist.tracks[indexes[i]].track;
+        selectedTracks[i].votes = 0;
     }
     this.activeTracks = selectedTracks;
     return true;
@@ -350,7 +365,7 @@ method.vote = async function(name, trackId, loggedIn) {
                 oldTrack.votes = 0;
             }
         }
-        console.log(newTrack.votes);
+
         if (newTrack.votes === undefined) {
             newTrack.votes = 1;
         } else {
@@ -359,6 +374,50 @@ method.vote = async function(name, trackId, loggedIn) {
         return true;
     }
     return false;
+}
+
+/**
+* PLays the most voted track {{ONLY USED FOR TESTING PURPOSES}}
+* Use this in combination with Postman or something, since it isnt called from the frontedn
+*
+* @author: Michiocre
+* @return {boolean} True if the request to the spotify API was successfully changed
+*/
+method.play = async function() {
+
+    let track = this.activeTracks[0];
+
+    for (var i = 1; i < this.activeTracks.length; i++) {
+        if (this.activeTracks[i].votes > track.votes || (track.votes == null && this.activeTracks[i].votes >= 1)) {
+            track = this.activeTracks[i];
+        }
+    }
+
+    let possibleTracks = [];
+
+    for (var i = 0; i < this.activeTracks.length; i++) {
+        if (this.activeTracks[i].votes == track.votes) {
+            possibleTracks.push(this.activeTracks[i]);
+        }
+    }
+
+    //console.log(possibleTracks);
+
+    track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
+
+    let payload = {
+        uris: ['spotify:track:' + track.id]
+    };
+
+    let request = await fetch('https://api.spotify.com/v1/me/player/play', {
+        headers: {
+            "Authorization": "Bearer " + this.host.token
+        },
+        method: "PUT",
+        body: JSON.stringify(payload)
+    });
+
+    return this.getRandomTracks(this.activePlaylist.id, true);
 }
 
 module.exports = Room;
