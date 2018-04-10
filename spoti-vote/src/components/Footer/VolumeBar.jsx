@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faVolumeDown, faVolumeUp} from '@fortawesome/fontawesome-free-solid';
+import '../../css/Volumebar.css';
 
 let constants = require('../../js/constants');
 let defaultStyle = {
@@ -12,7 +13,7 @@ let defaultStyle = {
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',
-	backgroundColor: constants.colors.redCard
+	backgroundColor: constants.colors.backgroundLite
 };
 
 let sliderStyle = {
@@ -22,11 +23,16 @@ let sliderStyle = {
 }
 
 class VolumeBar extends Component {
+
 	render() { //onChange={this.props.volumeHandler}
 		return (<div style={defaultStyle} id="player">
-			<FontAwesomeIcon icon={faVolumeDown} size="lg"/>
-			<input type="range" min="0" max="100" id="slider" style={sliderStyle}/>
-			<FontAwesomeIcon icon={faVolumeUp} size="lg"/>
+			<FontAwesomeIcon icon={faVolumeDown} style={{
+					color: constants.colors.fontSecondary
+				}} size="lg"/>
+			<input type="range" min="0" max="100" id="volume" style={sliderStyle}/>
+			<FontAwesomeIcon icon={faVolumeUp} style={{
+					color: constants.colors.fontSecondary
+				}} size="lg"/>
 		</div>);
 	}
 }
