@@ -14,11 +14,9 @@ let defaultStyle = {
 
 class Home extends Component {
 	render() {
-		return (<a href={'http://' + config.ipAddress + ':' + config.portFrontend}>
-			<div style={defaultStyle}>
-				<FontAwesomeIcon icon={faHome} size="2x" className=""/>
-			</div>
-		</a>);
+		return (<div style={defaultStyle}>
+			<FontAwesomeIcon icon={faHome} size="2x" className=""/>
+		</div>);
 	}
 }
 export default Home;

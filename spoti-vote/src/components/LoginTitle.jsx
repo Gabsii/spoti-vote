@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import LoginCode from './Buttons/LoginCode.jsx';
+
 let constants = require('../js/constants');
 
 let defaultContainer = {
@@ -8,8 +10,8 @@ let defaultContainer = {
 	justifyContent: 'center',
 	alignItems: 'center',
 	boxSizing: 'content-box',
-	width: '20em',
-	height: '5em',
+	minWidth: '40%',
+	maxWidth: '60%',
 	position: 'relative',
 	margin: 'auto',
 	padding: '1em',
@@ -19,7 +21,8 @@ let defaultContainer = {
 	color: constants.colors.green,
 	textAlign: 'center',
 	textOverflow: 'ellipsis',
-	background: 'rgba(25, 20, 20, 0.25)',
+	textShadow: '2px 2px ' + constants.colors.greenDarker,
+	background: 'rgba(25, 20, 20, 0.5)',
 	WebkitBoxSizing: 'content-box',
 	MozBoxSizing: 'content-box',
 	OTextOverflow: 'ellipsis',
@@ -27,12 +30,10 @@ let defaultContainer = {
 }
 
 let defaultTitle = {
-	fontSize: '2em',
+	fontSize: '5em',
 	marginTop: 0,
 	fontFamily: 'Circular Medium'
 }
-
-// TODO: fix this style
 
 class LoginTitle extends Component {
 	render() {
@@ -41,8 +42,9 @@ class LoginTitle extends Component {
 				<h1 style={defaultTitle} id="scroller">Spoti Vote</h1>
 			</div>
 			<div>
-				Kahoot x Spotify Collabs
+				Kahoot x Spotify Collaboration
 			</div>
+			<LoginCode/>
 		</div>);
 	}
 }

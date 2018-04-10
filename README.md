@@ -4,9 +4,6 @@ Web application to vote for the next song in Spotify Queue
 - [Project Description:](#project-description)
 	- [Requirements:](#requirements)
 	- [Usage](#usage)
-- [Tasks](#tasks)
-	- [WIP:](#wip)
-	- [TODO:](#todo)
 - [Credits](#credits)
 	- [Frameworks/Tools](#frameworkstools)
 	- [Useful links](#useful-links)
@@ -38,8 +35,8 @@ open a second commandline and run the following code:\
 \
 `cd spoti-vote-backend`\
 `npm install`\
-`SET SPOTIFY_CLIENT_ID=FOO`\
-`SET SPOTIFY_CLIENT_SECRET=BAR`\
+`SETX SPOTIFY_CLIENT_ID 'FOO'`\
+`SETX SPOTIFY_CLIENT_SECRET 'BAR'`\
 `npm start`\
 
 If you are using a MAC replace `SET` with `EXPORT`.

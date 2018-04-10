@@ -22,12 +22,14 @@ let defaultStyle = {
 }
 class LoginButton extends Component {
 
+	login() {
+		window.location.href = 'http://' + config.ipAddress + ':' + config.portBackend + '/login';
+	}
+
 	render() {
-		return (<a href={'http://' + config.ipAddress + ':' + config.portBackend + '/login'}>
-			<button id="loginbutton" style={defaultStyle} className="sticky">
-				Login
-			</button>
-		</a>);
+		return (<button id="loginbutton" style={defaultStyle} className="sticky" onClick={this.login.bind(this)} tabIndex="0">
+			Host
+		</button>);
 	}
 }
 export default LoginButton;

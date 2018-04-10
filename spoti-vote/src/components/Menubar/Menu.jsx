@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Home from '../Menubar/Home.jsx';
 import Rooms from '../Menubar/Rooms.jsx';
+import Logout from '../Menubar/Logout.jsx';
 
 let constants = require('../../js/constants');
 let defaultStyle = {
@@ -16,7 +17,11 @@ let defaultStyle = {
 
 class Menu extends Component {
 	render() {
-		return (<div style={defaultStyle}><Home/><Rooms/></div>);
+		return (<div style={defaultStyle}>
+			<Home/>
+			<Rooms/>
+			<Logout/>
+		</div>);
 	}
 }
 export default Menu;

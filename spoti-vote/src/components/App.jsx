@@ -31,9 +31,7 @@ class App extends Component {
 			}).then((response) => response.json().then(data => {
 				switch (data.responseCode) {
 					case 200:
-						this.setState({
-							loggedIn: data.content
-						});
+						this.setState({loggedIn: data.content});
 						break;
 					default:
 						window.location.pathname = '/';
@@ -43,9 +41,7 @@ class App extends Component {
 				//window.location.reload();
 			});
 		} else {
-			this.setState({
-				loggedIn: false
-			});
+			this.setState({loggedIn: false});
 		}
 		// else if (name !== undefined){    -> This has to be moved to the name input
 		// 	this.setState({
@@ -64,13 +60,7 @@ class App extends Component {
 			setTimeout(function() {
 				switch (data.responseCode) {
 					case 200:
-						this.setState({
-							activePlaylist: data.content.activePlaylist,
-						 	activeTracks: data.content.activeTracks,
-						 	numPlaylists: data.content.numPlaylists,
-						 	connectedUser: data.content.connectedUser,
-							host: data.content.host
-						});
+						this.setState({activePlaylist: data.content.activePlaylist, activeTracks: data.content.activeTracks, numPlaylists: data.content.numPlaylists, connectedUser: data.content.connectedUser, host: data.content.host});
 						break;
 					default:
 						window.location.pathname = '/';
@@ -97,10 +87,10 @@ class App extends Component {
 				height: '100vh',
 				width: '100vw'
 			}}>
-			<Menu/>
+			{/* <Menu/> */}
 			<Sidebar loggedIn={this.state.loggedIn} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} numPlaylists={this.state.numPlaylists}/>
 			<CardContainer name={this.state.name} loggedIn={this.state.loggedIn} activeTracks={this.state.activeTracks}/>
-			<Footer/>
+			<Footer loggedIn={this.state.loggedIn}/>
 		</section>);
 	}
 }

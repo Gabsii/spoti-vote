@@ -23,7 +23,7 @@ class FullscreenImage extends Component {
 	}
 
 	componentDidMount() {
-		this.setState({background: this.props.source.uri});
+		this.setState({background: this.props.source});
 	}
 
 	render() {

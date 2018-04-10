@@ -17,8 +17,11 @@ class Footer extends Component {
 	render() {
 		return (<footer style={defaultStyle}>
 			<SongIcon background='https://picsum.photos/75'/>
-			<SongAggregation/>
-			<VolumeBar/>
+			<SongAggregation/> {
+				this.props.loggedIn
+					? <VolumeBar/>
+					: ''
+			}
 		</footer>);
 	}
 }

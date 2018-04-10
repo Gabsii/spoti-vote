@@ -8,7 +8,6 @@ let Room = require('./src/Room');
 let config = require('./src/config');
 let constants = require('./src/constants');
 
-
 let app = express();
 
 let redirect_uri = process.env.REDIRECT_URI || 'http://' + config.ipAddress + ':' + config.portBackend + '/callback';
@@ -27,9 +26,9 @@ let rooms = [];
 function getRoomById(roomId) {
 	let room = null;
 	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].id == roomId)
+		if (rooms[i].id == roomId) 
 			room = rooms[i];
-	}
+		}
 	return room;
 }
 
@@ -47,12 +46,8 @@ app.get('/rooms', async function(req, res) {
 		roomIds.push(rooms[i].id);
 	}
 
-	res.send({
-		responseCode: constants.codes.SUCCESS,
-		content: roomIds
-	});
+	res.send({responseCode: constants.codes.SUCCESS, content: roomIds});
 });
-
 
 /**
 * Login using the Spotify API (This is only a Redirect)
@@ -76,8 +71,7 @@ app.get('/callback', async function(req, res) {
 		},
 		headers: {
 			'Authorization': 'Basic ' + (
-				new Buffer(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')
-			)
+			new Buffer(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64'))
 		},
 		json: true
 	};
@@ -104,15 +98,9 @@ app.get('/room/playlists', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let room = getRoomById(req.query.id);
 	if (room != null) {
-		res.send({
-			responseCode: constants.codes.SUCCESS,
-			content: await room.getPlaylists()
-		});
+		res.send({responseCode: constants.codes.SUCCESS, content: await room.getPlaylists()});
 	} else {
-		res.send({
-			responseCode: constants.codes.NOTFOUND,
-			responseMessage: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.NOTFOUND, responseMessage: 'This room was not found'});
 	}
 });
 
@@ -128,15 +116,9 @@ app.get('/room/host', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let room = getRoomById(req.query.id);
 	if (room != null) {
-		res.send({
-			responseCode: constants.codes.SUCCESS,
-			content: await room.getHostInfo()
-		});
+		res.send({responseCode: constants.codes.SUCCESS, content: await room.getHostInfo()});
 	} else {
-		res.send({
-			responseCode: constants.codes.ROOMNOTFOUND,
-			response: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, response: 'This room was not found'});
 	}
 });
 
@@ -156,26 +138,15 @@ app.get('/room/newTracks', async function(req, res) {
 	if (room != null) {
 		if (playlistId != 'none') {
 			if (await room.getRandomTracks(playlistId, false) == true) {
-				res.send({
-					responseCode: constants.codes.SUCCESS
-				});
+				res.send({responseCode: constants.codes.SUCCESS});
 			} else {
-				res.send({
-					responseCode: constants.codes.ERROR,
-					responseMessage: 'The playlist is to small'
-				})
+				res.send({responseCode: constants.codes.ERROR, responseMessage: 'The playlist is to small'})
 			}
 		} else {
-			res.send({
-				responseCode: constants.codes.PLNOTFOUND,
-				responseMessage: 'You cant pick no playlist'
-			})
+			res.send({responseCode: constants.codes.PLNOTFOUND, responseMessage: 'You cant pick no playlist'})
 		}
 	} else {
-		res.send({
-			responseCode: constants.codes.ROOMNOTFOUND,
-			responseMessage: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
 	}
 });
 
@@ -199,10 +170,7 @@ app.get('/room/update', async function(req, res) {
 			content: await room.update(req.query.loggedIn)
 		});
 	} else {
-		res.send({
-			responseCode: constants.codes.ROOMNOTFOUND,
-			responseMessage: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
 	}
 });
 
@@ -225,10 +193,7 @@ app.get('/room/checkToken', async function(req, res) {
 			content: await room.checkToken(req.query.token)
 		});
 	} else {
-		res.send({
-			responseCode: constants.codes.ROOMNOTFOUND,
-			responseMessage: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
 	}
 });
 
@@ -246,20 +211,12 @@ app.get('/room/connect', async function(req, res) {
 
 	if (room != null) {
 		if (await room.connect(req.query.name)) {
-			res.send({
-				responseCode: constants.codes.SUCCESS
-			});
+			res.send({responseCode: constants.codes.SUCCESS});
 		} else {
-			res.send({
-				responseCode: constants.codes.ERROR,
-				responseMessage: 'Internal Error'
-			});
+			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal Error'});
 		}
 	} else {
-		res.send({
-			responseCode: constants.codes.ROOMNOTFOUND,
-			responseMessage: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
 	}
 });
 
@@ -279,20 +236,12 @@ app.get('/room/vote', async function(req, res) {
 
 	if (room != null) {
 		if (await room.vote(req.query.name, req.query.track, req.query.loggedIn)) {
-			res.send({
-				responseCode: constants.codes.SUCCESS
-			});
+			res.send({responseCode: constants.codes.SUCCESS});
 		} else {
-			res.send({
-				responseCode: constants.codes.ERROR,
-				responseMessage: 'Internal error'
-			});
+			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal error'});
 		}
 	} else {
-		res.send({
-			responseCode: constants.codes.ROOMNOTFOUND,
-			responseMessage: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
 	}
 });
 
@@ -309,20 +258,12 @@ app.get('/room/test/play', async function(req, res) {
 
 	if (room != null) {
 		if (await room.play()) {
-			res.send({
-				responseCode: constants.codes.SUCCESS
-			});
+			res.send({responseCode: constants.codes.SUCCESS});
 		} else {
-			res.send({
-				responseCode: constants.codes.ERROR,
-				responseMessage: 'Internal error'
-			});
+			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal error'});
 		}
 	} else {
-		res.send({
-			responseCode: constants.codes.ROOMNOTFOUND,
-			responseMessage: 'This room was not found'
-		});
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
 	}
 });
 
