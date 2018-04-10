@@ -13,6 +13,13 @@ let iterateCardColors = function(index){
 	}
 };
 
+let codes = {
+	SUCCESS: 200,
+	NOTFOUND: 404,
+	PLNOTFOUND: 414,
+	ERROR: 500
+};
+
 let colors = {
 	background: "#191414",
 	backgroundLite: "#282828",
@@ -24,17 +31,10 @@ let colors = {
 	font: "#FFFFFF"
 }
 
-let codes = {
-	SUCCESS: 200,
-	NOTFOUND: 404,
-	PLNOTFOUND: 414,
-	ERROR: 500
-};
-
 module.exports = {
 	colors: colors,
 	iterateCardColors: iterateCardColors,
-	codes: codes
+    codes: codes
 }
 
 //let color = require('./css/colors.js'); Path to this file color.green == "1DB954"

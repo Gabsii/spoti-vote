@@ -6,5 +6,7 @@ let codes = {
 };
 
 module.exports = {
-	codes: codes
+    codes: codes
 }
+
+//let color = require('./css/colors.js'); Path to this file color.green == "1DB954"

@@ -5,7 +5,8 @@ import Menu from './Menubar/Menu.jsx';
 import CardContainer from './Cards/CardContainer.jsx';
 import queryString from 'query-string';
 
-let constants = require('../js/constants.js');
+let constants = require('../js/constants');
+let config = require('../js/config');
 
 class App extends Component {
 	constructor() {
@@ -26,7 +27,7 @@ class App extends Component {
 		let token = queryString.parse(window.location.search).token;
 		//let name = queryString.parse(window.location.search).name; -> This has to be moved to the name input
 		if (token !== undefined) {
-			fetch('http://localhost:8888/room/checkToken?id='+window.location.pathname.split('/')[2] + '&token=' + token, {
+			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/checkToken?id='+window.location.pathname.split('/')[2] + '&token=' + token, {
 			}).then((response) => response.json().then(data => {
 				switch (data.responseCode) {
 					case 200:
@@ -50,7 +51,7 @@ class App extends Component {
 		// 	this.setState({
 		// 		name: name
 		// 	})
-		// 	fetch('http://localhost:8888/room/connect?id='+window.location.pathname.split('/')[2] + '&name=' + name, {
+		// 	fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/connect?id='+window.location.pathname.split('/')[2] + '&name=' + name, {
 		// 	}).then((response) => response.json().then(data => {})).catch(function() {});
 		// } else {
 		// 	window.location.pathname = '/';
@@ -58,7 +59,7 @@ class App extends Component {
 	}
 
 	componentDidUpdate() {
-		fetch('http://localhost:8888/room/update?id='+window.location.pathname.split('/')[2]+'&loggedIn='+this.state.loggedIn, {
+		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/update?id='+window.location.pathname.split('/')[2]+'&loggedIn='+this.state.loggedIn, {
 		}).then((response) => response.json().then(data => {
 			setTimeout(function() {
 				switch (data.responseCode) {
@@ -86,7 +87,7 @@ class App extends Component {
 		if (playlistId == null) {
 			playlistId = 'none';
 		}
-		fetch('http://localhost:8888/room/newTracks?id='+window.location.pathname.split('/')[2]+'&playlist='+playlistId, {
+		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/newTracks?id='+window.location.pathname.split('/')[2]+'&playlist='+playlistId, {
 		}).then((response) => response.json().then(data => {}));
 	}
 

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Infos from './Sidebar/Infos.jsx';
 import UserContainer from './Sidebar/UserContainer.jsx';
 
-let constants = require('../js/constants.js');
+let constants = require('../js/constants');
 let defaultStyle = {
 	height: 'calc(100vh - 75px)',
 	width: '250px',
