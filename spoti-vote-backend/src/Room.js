@@ -126,8 +126,6 @@ method.fetchData = async function() {
 	   this.playlists = this.playlists.concat(playlistRequestData.items);
    }
 
-   console.log(this.playlists.length);
-
    for (var i = 0; i < this.playlists.length; i++) {
 	   this.playlists[i].tracks = [];
    }
@@ -342,7 +340,6 @@ method.update = async function(loggedIn) {
     }
 
 	if (activePlayer !== null && this.activePlaylist.id !== undefined) {
-		console.log(activePlayer.progress);
 		if (activePlayer.progress > 98) {
 			this.play();
 		}
@@ -428,6 +425,23 @@ method.vote = async function(name, trackId, loggedIn) {
 }
 
 /**
+* Changes the volume of the active audio player
+*
+* @author: Michiocre
+* @param {int} volume The volume percentage
+* @return {boolean} True if the vote was successfully changed
+*/
+method.setVolume = async function(volume) {
+	console.log(volume);
+	let request = fetch('https://api.spotify.com/v1/me/player/volume?volume_percent=' + volume, {
+        headers: {
+            "Authorization": "Bearer " + this.host.token
+        }
+    });
+	return true;
+}
+
+/**
 * PLays the most voted track {{ONLY USED FOR TESTING PURPOSES}}
 * Use this in combination with Postman or something, since it isnt called from the frontedn
 *
@@ -451,8 +465,6 @@ method.play = async function() {
 			possibleTracks.push(this.activeTracks[i]);
 		}
 	}
-
-	//console.log(possibleTracks);
 
 	track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
 

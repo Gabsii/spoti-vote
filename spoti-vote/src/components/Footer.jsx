@@ -19,7 +19,7 @@ class Footer extends Component {
 			<SongIcon background='https://picsum.photos/75'/>
 			<SongAggregation/> {
 				this.props.loggedIn
-					? <VolumeBar/>
+					? <VolumeBar activePlayer={this.props.activePlayer} volumeHandler={this.props.volumeHandler}/>
 					: ''
 			}
 		</footer>);

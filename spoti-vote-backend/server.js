@@ -12,8 +12,6 @@ let app = express();
 
 let redirect_uri = process.env.REDIRECT_URI || 'http://' + config.ipAddress + ':' + config.portBackend + '/callback';
 
-console.log(redirect_uri);
-
 let rooms = [];
 let deleteCounter = 0;
 
@@ -263,6 +261,29 @@ app.get('/room/vote', async function(req, res) {
 
 	if (room != null) {
 		if (await room.vote(req.query.name, req.query.track, req.query.loggedIn)) {
+			res.send({responseCode: constants.codes.SUCCESS});
+		} else {
+			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal error'});
+		}
+	} else {
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
+	}
+});
+
+/**
+* Adds or changes a vote of an user
+*
+* @PathParameter id  The id of the room
+* @PathParameter volume The volume percentage
+* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
+* @Returns responseMessage with error message in case of error
+*/
+app.get('/room/setVolume', async function(req, res) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	let room = getRoomById(req.query.id);
+
+	if (room != null) {
+		if (await room.setVolume(req.query.volume)) {
 			res.send({responseCode: constants.codes.SUCCESS});
 		} else {
 			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal error'});
