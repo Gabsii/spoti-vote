@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import LoginCode from './Buttons/LoginCode.jsx';
-let constants = require('../js/constants.js');
+
+let constants = require('../js/constants');
 
 let defaultContainer = {
 	flexDirection: 'column',

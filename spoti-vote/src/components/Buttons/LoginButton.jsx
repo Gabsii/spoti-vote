@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import '../../css/selectors.css';
 
-let constants = require('../../js/constants.js');
+let constants = require('../../js/constants');
+let config = require('../../js/config');
 
 let defaultStyle = {
 	padding: "17px 48px",
@@ -22,7 +23,7 @@ let defaultStyle = {
 class LoginButton extends Component {
 
 	login() {
-		window.location.href = 'http://localhost:8888/login';
+		window.location.href = 'http://' + config.ipAddress + ':' + config.portBackend + '/login';
 	}
 
 	render() {

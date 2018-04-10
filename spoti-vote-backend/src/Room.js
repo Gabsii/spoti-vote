@@ -281,31 +281,55 @@ method.getRandomTracks = async function(playlistId, intern) {
 * @return {object} Object filled with the data
 */
 method.update = async function(loggedIn) {
-	let state = {};
-	let playlistPlaceholder = emptyPlaylist;
+    let state = {};
+    let playlistPlaceholder = emptyPlaylist;
 
-	if (this.activePlaylist.id !== undefined) {
-		playlistPlaceholder = {
-			name: this.activePlaylist.name,
-			id: this.activePlaylist.id,
-			url: this.activePlaylist.external_urls.spotify,
-			img: this.activePlaylist.images[0].url
-		}
-	}
+    let request = await fetch('https://api.spotify.com/v1/me/player', {
+        headers: {
+            "Authorization": "Bearer " + this.host.token
+        }
+    });
 
-	state = {
-		activePlaylist: playlistPlaceholder,
-		activeTracks: this.activeTracks,
-		numPlaylists: this.playlists.length,
-		connectedUser: this.connectedUser,
-		host: {
-			name: this.host.name,
-			id: this.host.id,
-			voted: this.host.voted
-		}
-	}
+    let fetchData = await request.json();
 
-	return state;
+    let activePlayer = {
+        volume: fetchData.device.volume_percent,
+        progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
+        isPlaying: fetchData.is_playing,
+        track: {
+            album: fetchData.item.album,
+            artists: fetchData.item.artists,
+            href: fetchData.item.href,
+            id: fetchData.item.id,
+            name: fetchData.item.name
+       }
+    }
+
+    if (this.activePlaylist.id !== undefined) {
+        playlistPlaceholder = {
+            name: this.activePlaylist.name,
+            id: this.activePlaylist.id,
+            url: this.activePlaylist.external_urls.spotify,
+            img: this.activePlaylist.images[0].url
+        }
+    }
+
+    state = {
+        activePlaylist: playlistPlaceholder,
+        activeTracks: this.activeTracks,
+        numPlaylists: this.playlists.length,
+        connectedUser: this.connectedUser,
+        host: {
+            name: this.host.name,
+            id: this.host.id,
+            voted: this.host.voted
+        },
+        activePlayer: activePlayer
+    }
+
+    console.log(activePlayer.progress);
+
+    return state
 }
 
 /**

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-let constants = require('../../js/constants.js');
+let constants = require('../../js/constants');
 
 let defaultStyle = {
 	flexBasis: 'calc(50% - 40px)',

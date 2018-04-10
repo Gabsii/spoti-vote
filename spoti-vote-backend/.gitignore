@@ -57,5 +57,4 @@ typings/
 # dotenv environment variables file
 .env
 
-copyToStart.txt
-
+/src/config.js

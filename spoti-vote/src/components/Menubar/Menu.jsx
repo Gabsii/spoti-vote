@@ -3,7 +3,7 @@ import Home from '../Menubar/Home.jsx';
 import Rooms from '../Menubar/Rooms.jsx';
 import Logout from '../Menubar/Logout.jsx';
 
-let constants = require('../../js/constants.js');
+let constants = require('../../js/constants');
 let defaultStyle = {
 	width: '75px',
 	height: 'calc(100vh - 75px)',

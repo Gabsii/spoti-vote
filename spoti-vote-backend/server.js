@@ -5,11 +5,14 @@ const request = require('request');
 const querystring = require('querystring');
 
 let Room = require('./src/Room');
+let config = require('./src/config');
 let constants = require('./src/constants');
 
 let app = express();
 
-let redirect_uri = process.env.REDIRECT_URI || 'http://localhost:8888/callback';
+let redirect_uri = process.env.REDIRECT_URI || 'http://' + config.ipAddress + ':' + config.portBackend + '/callback';
+
+console.log(redirect_uri);
 
 let rooms = [];
 
@@ -73,7 +76,7 @@ app.get('/callback', async function(req, res) {
 		json: true
 	};
 	request.post(authOptions, async function(error, response, body) {
-		let uri = process.env.FRONTEND_URI || 'http://localhost:3000/app';
+		let uri = process.env.FRONTEND_URI || 'http://' + config.ipAddress + ':' + config.portFrontend + '/app';
 
 		let room = new Room(body.access_token, rooms);
 		await room.fetchData();
@@ -264,6 +267,6 @@ app.get('/room/test/play', async function(req, res) {
 	}
 });
 
-let port = process.env.PORT || 8888;
+let port = process.env.PORT || config.portBackend;
 console.log(`Listening on port ${port}. Go /login to initiate authentication flow.`);
 app.listen(port);

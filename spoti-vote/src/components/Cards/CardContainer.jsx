@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import Card from './Card.jsx';
 
-let constants = require('../../js/constants.js');
+let constants = require('../../js/constants');
+let config = require('../../js/config');
 
 let defaultStyle = {
 	height: 'calc(100vh - 125px)',
@@ -31,7 +32,8 @@ class CardContainer extends Component {
 			console.log('Changed from: ' + this.state.voted + ' to: ' + trackId);
 			this.setState({voted: trackId});
 
-			fetch('http://localhost:8888/room/vote?id=' + window.location.pathname.split('/')[2] + '&loggedIn=' + this.props.loggedIn + '&track=' + trackId + '&name=' + this.props.name, {}).then((response) => response.json().then(data => {
+			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/vote?id='+window.location.pathname.split('/')[2] + '&loggedIn=' + this.props.loggedIn + '&track=' + trackId + '&name=' + this.props.name, {
+			}).then((response) => response.json().then(data => {
 				switch (data.responseCode) {
 					case 200:
 						this.setState({loggedIn: data.content});
