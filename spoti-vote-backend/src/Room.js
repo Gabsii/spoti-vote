@@ -88,11 +88,27 @@ method.fetchData = async function() {
             "Authorization": "Bearer " + this.host.token
         }
     });
-    
+
     let playlistRequestData = await playlistRequest.json();
     next = playlistRequestData.next;
 
     this.playlists = playlistRequestData.items;
+
+    console.log(this.playlists.length);
+
+    while (next != null) {
+        let playlistRequest = await fetch(next, {
+            headers: {
+                "Authorization": "Bearer " + this.host.token
+            }
+        });
+
+        let playlistRequestData = await playlistRequest.json();
+        next = playlistRequestData.next;
+
+        this.playlists.concat(playlistRequestData.items);
+    }
+
 
     for (var i = 0; i < this.playlists.length; i++) {
         this.playlists[i].tracks = [];
@@ -199,11 +215,10 @@ method.loadOneBatch = async function(next) {
 * @param {string} playlistId The id that identifies the playlist
 * @return {boolean} True if completed
 */
-method.getRandomTracks = async function(playlistId) {
+method.getRandomTracks = async function(playlistId, intern) {
     let playlist = this.getPlaylistById(playlistId);
 
     if (playlist.tracks.length == 0) {
-        console.log('boi');
         let nextTracks = playlist.href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal';
         playlist.tracks = await this.loadOneBatch(nextTracks);
     }
@@ -212,7 +227,7 @@ method.getRandomTracks = async function(playlistId) {
         return false;
     }
 
-    if (playlist == this.activePlaylist) {
+    if (playlist == this.activePlaylist && intern == false) {
         return false;
     }
 
@@ -242,6 +257,7 @@ method.getRandomTracks = async function(playlistId) {
     let selectedTracks = [];
     for (var i = 0; i < indexes.length; i++) {
         selectedTracks[i] = playlist.tracks[indexes[i]].track;
+        selectedTracks[i].votes = 0;
     }
     this.activeTracks = selectedTracks;
     return true;
@@ -371,11 +387,27 @@ method.play = async function() {
 
     let track = this.activeTracks[0];
 
+    for (var i = 1; i < this.activeTracks.length; i++) {
+        if (this.activeTracks[i].votes > track.votes || (track.votes == null && this.activeTracks[i].votes >= 1)) {
+            track = this.activeTracks[i];
+        }
+    }
+
+    let possibleTracks = [];
+
+    for (var i = 0; i < this.activeTracks.length; i++) {
+        if (this.activeTracks[i].votes == track.votes) {
+            possibleTracks.push(this.activeTracks[i]);
+        }
+    }
+
+    //console.log(possibleTracks);
+
+    track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
+
     let payload = {
         uris: ['spotify:track:' + track.id]
     };
-
-    console.log(payload);
 
     let request = await fetch('https://api.spotify.com/v1/me/player/play', {
         headers: {
@@ -385,9 +417,7 @@ method.play = async function() {
         body: JSON.stringify(payload)
     });
 
-    console.log(fetchData);
-
-    return true;
+    return this.getRandomTracks(this.activePlaylist.id, true);
 }
 
 module.exports = Room;

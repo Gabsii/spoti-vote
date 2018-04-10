@@ -134,7 +134,7 @@ app.get('/room/newTracks', async function(req, res) {
 
 	if (room != null) {
 		if (playlistId != 'none') {
-			if (await room.getRandomTracks(playlistId) == true) {
+			if (await room.getRandomTracks(playlistId, false) == true) {
 				res.send({
 					responseCode: constants.codes.SUCCESS,
 					responseMessage: 'New tracks were generated'
