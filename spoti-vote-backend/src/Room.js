@@ -265,10 +265,9 @@ method.getRandomTracks = async function(playlistId, intern) {
 * Returns the necessary data to update the frontend
 *
 * @author: Michiocre
-* @param {boolean} loggedIn True if the user is the host
 * @return {object} Object filled with the data
 */
-method.update = async function(loggedIn) {
+method.update = async function() {
     let state = {};
     let playlistPlaceholder = emptyPlaylist;
 
@@ -278,20 +277,26 @@ method.update = async function(loggedIn) {
         }
     });
 
-    let fetchData = await request.json();
+	let fetchData;
+	let activePlayer;
 
-    let activePlayer = {
-        volume: fetchData.device.volume_percent,
-        progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
-        isPlaying: fetchData.is_playing,
-        track: {
-            album: fetchData.item.album,
-            artists: fetchData.item.artists,
-            href: fetchData.item.href,
-            id: fetchData.item.id,
-            name: fetchData.item.name
-       }
-    }
+	try {
+		 fetchData = await request.json();
+		 activePlayer = {
+	        volume: fetchData.device.volume_percent,
+	        progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
+	        isPlaying: fetchData.is_playing,
+	        track: {
+	            album: fetchData.item.album,
+	            artists: fetchData.item.artists,
+	            href: fetchData.item.href,
+	            id: fetchData.item.id,
+	            name: fetchData.item.name
+	       }
+	    }
+	} catch (e) {
+		activePlayer = null;
+	}
 
     if (this.activePlaylist.id !== undefined) {
         playlistPlaceholder = {
@@ -315,9 +320,14 @@ method.update = async function(loggedIn) {
         activePlayer: activePlayer
     }
 
-    console.log(activePlayer.progress);
+	if (activePlayer !== null && this.activePlaylist.id !== undefined) {
+		console.log(activePlayer.progress);
+		if (activePlayer.progress > 98) {
+			this.play();
+		}
+	}
 
-    return state
+    return state;
 }
 
 /**

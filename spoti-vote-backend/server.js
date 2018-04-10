@@ -26,7 +26,7 @@ let rooms = [];
 function getRoomById(roomId) {
 	let room = null;
 	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].id == roomId) 
+		if (rooms[i].id == roomId)
 			room = rooms[i];
 		}
 	return room;
@@ -155,7 +155,6 @@ app.get('/room/newTracks', async function(req, res) {
 * All the data that is needed to keep the frontend synced
 *
 * @PathParameter id  The id of the room
-* @PathParameter loggedIn Boolean if the user is host or not
 * @Returns ResponseCode of either 200 or 404 based on if the room-id exists
 * @Returns responseMessage with error message in case of error
 * @Returns content Object with the data
@@ -167,7 +166,7 @@ app.get('/room/update', async function(req, res) {
 	if (room != null) {
 		res.send({
 			responseCode: constants.codes.SUCCESS,
-			content: await room.update(req.query.loggedIn)
+			content: await room.update()
 		});
 	} else {
 		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
