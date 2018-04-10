@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-let constants = require('../js/constants.js');
+let constants = require('../js/constants');
 
 let defaultContainer = {
 	flexDirection: 'column',

@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faHome} from '@fortawesome/fontawesome-free-solid';
 
+let config = require('../../js/config');
+
 let defaultStyle = {
 	width: '75px',
 	height: '75px',
@@ -12,7 +14,7 @@ let defaultStyle = {
 
 class Home extends Component {
 	render() {
-		return (<a href={"http://localhost:3000"}>
+		return (<a href={'http://' + config.ipAddress + ':' + config.portFrontend}>
 			<div style={defaultStyle}>
 				<FontAwesomeIcon icon={faHome} size="2x" className=""/>
 			</div>

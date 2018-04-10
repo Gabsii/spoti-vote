@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import logo from '../img/spotiLogo.svg';
-let constants = require('../js/constants.js');
+let constants = require('../js/constants');
 
 let backgroundColor = constants.colors.background;
 let height = "100px";
