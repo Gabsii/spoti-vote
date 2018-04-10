@@ -21,12 +21,14 @@ let defaultStyle = {
 }
 class LoginButton extends Component {
 
+	login() {
+		window.location.href = 'http://localhost:8888/login';
+	}
+
 	render() {
-		return (<a href='http://localhost:8888/login'>
-			<button id="loginbutton" style={defaultStyle} className="sticky">
-				Login
-			</button>
-		</a>);
+		return (<button id="loginbutton" style={defaultStyle} className="sticky" onClick={this.login.bind(this)} tabIndex="0">
+			Login
+		</button>);
 	}
 }
 export default LoginButton;

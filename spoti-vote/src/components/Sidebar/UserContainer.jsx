@@ -4,7 +4,8 @@ import User from './User.jsx';
 let constants = require('../../js/constants.js');
 let defaultStyle = {
 	height: 'calc(100% - 300px)',
-	marginTop: '300px'
+	marginTop: '300px',
+	flex: '0 0 100%'
 }
 
 let titleStyle = {
@@ -30,7 +31,7 @@ class UserContainer extends Component {
 			}
 			for (var j = 0; j < this.props.activeTracks.length; j++) {
 
-				if (this.props.activeTracks[j].id == this.props.connectedUser[i].voted) {
+				if (this.props.activeTracks[j].id === this.props.connectedUser[i].voted) {
 					this.props.connectedUser[i].color = constants.iterateCardColors(j);
 				}
 			}
@@ -39,9 +40,11 @@ class UserContainer extends Component {
 		return (<div style={defaultStyle}>
 			<div className="progressbar" style={titleStyle}>Users</div>
 			<div style={containerStyle}>
-				{this.props.connectedUser.map(function(user, index){
-					return <User voteColor={user.color} key={index} name={user.name}/>
-				})}
+				{
+					this.props.connectedUser.map(function(user, index) {
+						return <User voteColor={user.color} key={index} name={user.name}/>
+					})
+				}
 			</div>
 		</div>);
 	}

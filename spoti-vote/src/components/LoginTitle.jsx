@@ -9,7 +9,8 @@ let defaultContainer = {
 	justifyContent: 'center',
 	alignItems: 'center',
 	boxSizing: 'content-box',
-	width: '20em',
+	minWidth: '25%',
+	maxWidth: '40%',
 	height: 'auto',
 	position: 'relative',
 	margin: 'auto',
@@ -20,6 +21,7 @@ let defaultContainer = {
 	color: constants.colors.green,
 	textAlign: 'center',
 	textOverflow: 'ellipsis',
+	textShadow: '2px 2px ' + constants.colors.greenDarker,
 	background: 'rgba(25, 20, 20, 0.5)',
 	WebkitBoxSizing: 'content-box',
 	MozBoxSizing: 'content-box',
@@ -28,7 +30,7 @@ let defaultContainer = {
 }
 
 let defaultTitle = {
-	fontSize: '2em',
+	fontSize: '5em',
 	marginTop: 0,
 	fontFamily: 'Circular Medium'
 }

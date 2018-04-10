@@ -4,28 +4,42 @@ import '../../css/selectors.css';
 let constants = require('../../js/constants.js');
 
 let defaultStyle = {
-	padding: "17px 48px",
+	padding: "17px 40px",
 	fontSize: "0.9em",
 	lineHeight: 1,
 	borderRadius: "500px",
 	borderWidth: 0,
 	letterSpacing: "2px",
-	minWidth: "160px",
+	minWidth: "120px",
+	maxWidth: "150px",
 	maxHeight: "50px",
 	textTransform: "uppercase",
 	whiteSpace: "normal",
 	backgroundColor: constants.colors.green,
 	marginTop: "1.5em",
-	marginBottom: "0.75em"
+	marginRight: "15px"
 }
 class LoginCode extends Component {
 
+	submitHandler() {
+		// input hijacking
+		console.log(this);
+	}
+
 	render() {
-		return (<a href='hrefZuRoomViaRoomCode'>
-			<button id="loginbutton" style={defaultStyle}>
-				Enter a Room
-			</button>
-		</a>);
+		return (<form style={{
+				display: 'inline-block'
+			}}>
+			<input type="text" maxLength="5" placeholder="Room Code" style={{
+					...defaultStyle,
+					maxWidth: "100px",
+					textAlign: "center",
+					backgroundColor: constants.colors.background,
+					color: constants.colors.font
+				}} autoComplete="off"/>
+			<input type="submit" id="loginbutton" value="enter" style={defaultStyle} onSubmit={this.submitHandler.bind(this)}/>
+		</form>);
 	}
 }
+
 export default LoginCode;

@@ -26,13 +26,10 @@ class App extends Component {
 		let token = queryString.parse(window.location.search).token;
 		let name = queryString.parse(window.location.search).name;
 		if (token !== undefined) {
-			fetch('http://localhost:8888/room/checkToken?id='+window.location.pathname.split('/')[2] + '&token=' + token, {
-			}).then((response) => response.json().then(data => {
+			fetch('http://localhost:8888/room/checkToken?id=' + window.location.pathname.split('/')[2] + '&token=' + token, {}).then((response) => response.json().then(data => {
 				switch (data.responseCode) {
 					case 200:
-						this.setState({
-							loggedIn: data.content
-						});
+						this.setState({loggedIn: data.content});
 						break;
 					default:
 						window.location.pathname = '/';
@@ -41,30 +38,20 @@ class App extends Component {
 			})).catch(function() {
 				//window.location.reload();
 			});
-		} else if (name !== undefined){
-			this.setState({
-				name: name
-			})
-			fetch('http://localhost:8888/room/connect?id='+window.location.pathname.split('/')[2] + '&name=' + name, {
-			}).then((response) => response.json().then(data => {})).catch(function() {});
+		} else if (name !== undefined) {
+			this.setState({name: name})
+			fetch('http://localhost:8888/room/connect?id=' + window.location.pathname.split('/')[2] + '&name=' + name, {}).then((response) => response.json().then(data => {})).catch(function() {});
 		} else {
 			window.location.pathname = '/';
 		}
 	}
 
 	componentDidUpdate() {
-		fetch('http://localhost:8888/room/update?id='+window.location.pathname.split('/')[2]+'&loggedIn='+this.state.loggedIn, {
-		}).then((response) => response.json().then(data => {
+		fetch('http://localhost:8888/room/update?id=' + window.location.pathname.split('/')[2] + '&loggedIn=' + this.state.loggedIn, {}).then((response) => response.json().then(data => {
 			setTimeout(function() {
 				switch (data.responseCode) {
 					case 200:
-						this.setState({
-							activePlaylist: data.content.activePlaylist,
-						 	activeTracks: data.content.activeTracks,
-						 	numPlaylists: data.content.numPlaylists,
-						 	connectedUser: data.content.connectedUser,
-							host: data.content.host
-						});
+						this.setState({activePlaylist: data.content.activePlaylist, activeTracks: data.content.activeTracks, numPlaylists: data.content.numPlaylists, connectedUser: data.content.connectedUser, host: data.content.host});
 						break;
 					default:
 						window.location.pathname = '/';
@@ -81,8 +68,7 @@ class App extends Component {
 		if (playlistId == null) {
 			playlistId = 'none';
 		}
-		fetch('http://localhost:8888/room/newTracks?id='+window.location.pathname.split('/')[2]+'&playlist='+playlistId, {
-		}).then((response) => response.json().then(data => {}));
+		fetch('http://localhost:8888/room/newTracks?id=' + window.location.pathname.split('/')[2] + '&playlist=' + playlistId, {}).then((response) => response.json().then(data => {}));
 	}
 
 	render() {
@@ -91,7 +77,7 @@ class App extends Component {
 				height: '100vh',
 				width: '100vw'
 			}}>
-			<Menu/>
+			{/* <Menu/> */}
 			<Sidebar loggedIn={this.state.loggedIn} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} numPlaylists={this.state.numPlaylists}/>
 			<CardContainer name={this.state.name} loggedIn={this.state.loggedIn} activeTracks={this.state.activeTracks}/>
 			<Footer/>

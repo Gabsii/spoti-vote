@@ -62,14 +62,14 @@ class Card extends Component {
 		}
 
 		let votes = this.props.randomTrack.votes;
-		if (votes === undefined || votes == 0) {
+		if (votes === undefined || votes === 0) {
 			votes = '-';
 		}
 
 		let artistString = '';
 		for (var i = 0; i < this.props.randomTrack.artists.length; i++) {
 			artistString += this.props.randomTrack.artists[i].name;
-			if (i < this.props.randomTrack.artists.length-1) {
+			if (i < this.props.randomTrack.artists.length - 1) {
 				artistString += ' ';
 			}
 		}

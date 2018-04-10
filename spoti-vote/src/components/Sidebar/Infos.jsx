@@ -5,9 +5,13 @@ let constants = require('../../js/constants.js');
 
 let defaultStyle = {
 	height: '300px',
-	width: '250px',
+	maxWidth: '250px',
 	position: 'absolute',
-	top: 0
+	top: 0,
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	flexFlow: 'column'
 }
 
 let imgStyle = {
@@ -24,7 +28,7 @@ let imgStyle = {
 }
 
 let nameContainer = {
-	marginTop: '10px',
+	marginBottom: '15px',
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center'
@@ -49,22 +53,19 @@ class Infos extends Component {
 		//This is only run, when the update request reports a different amount of playlists then the current numbers of playlists
 		//It will fetch all the playlists again. (Do we need this)
 		if (this.props.loggedIn === true && this.props.numPlaylists !== this.state.playlists.length) {
-			fetch('http://localhost:8888/room/playlists?id='+window.location.pathname.split('/')[2], {
-		    }).then((response) => response.json().then(data => {
+			fetch('http://localhost:8888/room/playlists?id=' + window.location.pathname.split('/')[2], {}).then((response) => response.json().then(data => {
 				switch (data.responseCode) {
 					case 200:
-					if (this.state.playlists.length !== data.content.length) {
-						this.setState({
-							playlists: data.content
-						});
-					}
+						if (this.state.playlists.length !== data.content.length) {
+							this.setState({playlists: data.content});
+						}
 						break;
 					default:
 						window.location.pathname = '/';
 						break;
 				}
 
-		    })).catch(function() {
+			})).catch(function() {
 				window.location.reload();
 			});
 		}
@@ -88,17 +89,19 @@ class Infos extends Component {
 			iconColor.color = constants.colors.font;
 		}
 		for (var j = 0; j < this.props.activeTracks.length; j++) {
-			if (this.props.activeTracks[j].id == this.props.host.voted) {
+			if (this.props.activeTracks[j].id === this.props.host.voted) {
 				iconColor.color = constants.iterateCardColors(j);
 			}
 		}
+
+		let roomName = "Room: " + window.location.pathname.split('/')[2];
 
 		return (<div style={defaultStyle}>
 			<div style={{
 					...centerContainer,
 					fontWeight: 'bold',
 					fontSize: '18px'
-				}}>ROOMNAME</div>
+				}}>{roomName}</div>
 			<div style={{
 					...centerContainer,
 					fontSize: '14px'

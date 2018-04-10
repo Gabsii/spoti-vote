@@ -1,4 +1,4 @@
-let iterateCardColors = function(index){
+let iterateCardColors = function(index) {
 	switch (index % 4) {
 		case 0:
 			return colors.greenCard;
@@ -17,6 +17,7 @@ let colors = {
 	background: "#191414",
 	backgroundLite: "#282828",
 	green: "#1DB954",
+	greenDarker: "#002000",
 	greenCard: "#2ECC71",
 	blueCard: "#3498DB",
 	redCard: "#E74C3C",
