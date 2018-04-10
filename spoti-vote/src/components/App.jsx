@@ -26,7 +26,7 @@ class App extends Component {
 
 	componentDidMount() {
 		let token = queryString.parse(window.location.search).token;
-		//let name = queryString.parse(window.location.search).name; -> This has to be moved to the name input
+		let name = queryString.parse(window.location.search).name;
 		if (token !== undefined) {
 			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/checkToken?id=' + window.location.pathname.split('/')[2] + '&token=' + token, {}).then((response) => response.json().then(data => {
 				switch (data.responseCode) {
@@ -43,15 +43,17 @@ class App extends Component {
 		} else {
 			this.setState({loggedIn: false});
 		}
-		// else if (name !== undefined){    -> This has to be moved to the name input
-		// 	this.setState({
-		// 		name: name
-		// 	})
-		// 	fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/connect?id='+window.location.pathname.split('/')[2] + '&name=' + name, {
-		// 	}).then((response) => response.json().then(data => {})).catch(function() {});
-		// } else {
-		// 	window.location.pathname = '/';
-		// }
+		if (name === undefined && token === undefined && this.state.loggedIn === false) {
+			let username = window.prompt("Set username");
+			if (username !== null || username !== "") {
+				this.setState({name: username});
+				fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/connect?id=' + window.location.pathname.split('/')[2] + '&name=' + name, {}).then((response) => response.json().then(data => {})).catch(function() {});
+			} else {
+				window.location.pathname = 'http://' + config.ipAddress + ':' + config.portFrontend;
+			}
+		} else {
+			this.setState({name: name});
+		}
 	}
 
 	componentDidUpdate() {
