@@ -30,6 +30,23 @@ function getRoomById(roomId) {
 }
 
 /**
+* Get a list of all rooms
+*
+* @Returns ResponseCode of 200
+* @Returns content Array of all the rooms
+*/
+app.get('/rooms', async function(req, res) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+
+	let roomIds = [];
+	for (var i = 0; i < rooms.length; i++) {
+		roomIds.push(rooms[i].id);
+	}
+
+	res.send({responseCode: constants.codes.SUCCESS, content: roomIds});
+});
+
+/**
 * Login using the Spotify API (This is only a Redirect)
 */
 app.get('/login', function(req, res) {
@@ -78,7 +95,7 @@ app.get('/room/playlists', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let room = getRoomById(req.query.id);
 	if (room != null) {
-		res.send({responseCode: constants.codes.SUCCESS, responseMessage: '', content: await room.getPlaylists()});
+		res.send({responseCode: constants.codes.SUCCESS, content: await room.getPlaylists()});
 	} else {
 		res.send({responseCode: constants.codes.NOTFOUND, responseMessage: 'This room was not found'});
 	}
@@ -96,7 +113,7 @@ app.get('/room/host', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let room = getRoomById(req.query.id);
 	if (room != null) {
-		res.send({responseCode: constants.codes.SUCCESS, responseMessage: '', content: await room.getHostInfo()});
+		res.send({responseCode: constants.codes.SUCCESS, content: await room.getHostInfo()});
 	} else {
 		res.send({responseCode: constants.codes.ROOMNOTFOUND, response: 'This room was not found'});
 	}
@@ -117,8 +134,8 @@ app.get('/room/newTracks', async function(req, res) {
 
 	if (room != null) {
 		if (playlistId != 'none') {
-			if (await room.getRandomTracks(playlistId) == true) {
-				res.send({responseCode: constants.codes.SUCCESS, responseMessage: 'New tracks were generated'});
+			if (await room.getRandomTracks(playlistId, false) == true) {
+				res.send({responseCode: constants.codes.SUCCESS});
 			} else {
 				res.send({responseCode: constants.codes.ERROR, responseMessage: 'The playlist is to small'})
 			}
@@ -147,7 +164,6 @@ app.get('/room/update', async function(req, res) {
 	if (room != null) {
 		res.send({
 			responseCode: constants.codes.SUCCESS,
-			responseMessage: '',
 			content: await room.update(req.query.loggedIn)
 		});
 	} else {
@@ -171,7 +187,6 @@ app.get('/room/checkToken', async function(req, res) {
 	if (room != null) {
 		res.send({
 			responseCode: constants.codes.SUCCESS,
-			responseMessage: '',
 			content: await room.checkToken(req.query.token)
 		});
 	} else {
@@ -193,7 +208,7 @@ app.get('/room/connect', async function(req, res) {
 
 	if (room != null) {
 		if (await room.connect(req.query.name)) {
-			res.send({responseCode: constants.codes.SUCCESS, responseMessage: ''});
+			res.send({responseCode: constants.codes.SUCCESS});
 		} else {
 			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal Error'});
 		}
@@ -208,6 +223,7 @@ app.get('/room/connect', async function(req, res) {
 * @PathParameter id  The id of the room
 * @PathParameter loggedIn if the user is the host
 * @PathParametert name of the user whomst will change his vote
+* @PathParametert track id of the track the user voted for
 * @Returns ResponseCode of either 200 or 404 based on if the room-id exists
 * @Returns responseMessage with error message in case of error
 */
@@ -217,7 +233,29 @@ app.get('/room/vote', async function(req, res) {
 
 	if (room != null) {
 		if (await room.vote(req.query.name, req.query.track, req.query.loggedIn)) {
-			res.send({responseCode: constants.codes.SUCCESS, responseMessage: ''});
+			res.send({responseCode: constants.codes.SUCCESS});
+		} else {
+			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal error'});
+		}
+	} else {
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
+	}
+});
+
+/**
+* Starts plaing the most voted Song
+*
+* @PathParameter id  The id of the room
+* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
+* @Returns responseMessage with error message in case of error
+*/
+app.get('/room/test/play', async function(req, res) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	let room = getRoomById(req.query.id);
+
+	if (room != null) {
+		if (await room.play()) {
+			res.send({responseCode: constants.codes.SUCCESS});
 		} else {
 			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal error'});
 		}

@@ -24,7 +24,7 @@ class App extends Component {
 
 	componentDidMount() {
 		let token = queryString.parse(window.location.search).token;
-		let name = queryString.parse(window.location.search).name;
+		//let name = queryString.parse(window.location.search).name; -> This has to be moved to the name input
 		if (token !== undefined) {
 			fetch('http://localhost:8888/room/checkToken?id=' + window.location.pathname.split('/')[2] + '&token=' + token, {}).then((response) => response.json().then(data => {
 				switch (data.responseCode) {
@@ -38,12 +38,18 @@ class App extends Component {
 			})).catch(function() {
 				//window.location.reload();
 			});
-		} else if (name !== undefined) {
-			this.setState({name: name})
-			fetch('http://localhost:8888/room/connect?id=' + window.location.pathname.split('/')[2] + '&name=' + name, {}).then((response) => response.json().then(data => {})).catch(function() {});
 		} else {
-			window.location.pathname = '/';
+			this.setState({loggedIn: false});
 		}
+		// else if (name !== undefined){    -> This has to be moved to the name input
+		// 	this.setState({
+		// 		name: name
+		// 	})
+		// 	fetch('http://localhost:8888/room/connect?id='+window.location.pathname.split('/')[2] + '&name=' + name, {
+		// 	}).then((response) => response.json().then(data => {})).catch(function() {});
+		// } else {
+		// 	window.location.pathname = '/';
+		// }
 	}
 
 	componentDidUpdate() {
