@@ -94,8 +94,6 @@ method.fetchData = async function() {
 
     this.playlists = playlistRequestData.items;
 
-    console.log(this.playlists.length);
-
     while (next != null) {
         let playlistRequest = await fetch(next, {
             headers: {
@@ -106,9 +104,10 @@ method.fetchData = async function() {
         let playlistRequestData = await playlistRequest.json();
         next = playlistRequestData.next;
 
-        this.playlists.concat(playlistRequestData.items);
+        this.playlists = this.playlists.concat(playlistRequestData.items);
     }
 
+    console.log(this.playlists.length);
 
     for (var i = 0; i < this.playlists.length; i++) {
         this.playlists[i].tracks = [];
