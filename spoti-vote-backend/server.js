@@ -12,9 +12,8 @@ let app = express();
 
 let redirect_uri = process.env.REDIRECT_URI || 'http://' + config.ipAddress + ':' + config.portBackend + '/callback';
 
-console.log(redirect_uri);
-
 let rooms = [];
+let deleteCounter = 0;
 
 /**
 * Return the room with the specified id
@@ -26,10 +25,28 @@ let rooms = [];
 function getRoomById(roomId) {
 	let room = null;
 	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].id == roomId) 
+		if (rooms[i].id == roomId)
 			room = rooms[i];
 		}
 	return room;
+}
+
+/**
+* Deletes every room which has not recieved a update in a while
+*
+* @author: Michiocre
+* @return {string} id of the deleted room
+*/
+function deleteEmptyRooms() {
+	let ids = [];
+	for (var i = 0; i < rooms.length; i++) {
+		if (Date.now() - rooms[i].getDate() >= 30000) {
+			ids.push(rooms[i].id);
+			rooms.splice(i,1);
+		}
+	}
+	deleteCounter = 0;
+	return ids;
 }
 
 /**
@@ -155,7 +172,6 @@ app.get('/room/newTracks', async function(req, res) {
 * All the data that is needed to keep the frontend synced
 *
 * @PathParameter id  The id of the room
-* @PathParameter loggedIn Boolean if the user is host or not
 * @Returns ResponseCode of either 200 or 404 based on if the room-id exists
 * @Returns responseMessage with error message in case of error
 * @Returns content Object with the data
@@ -163,14 +179,23 @@ app.get('/room/newTracks', async function(req, res) {
 app.get('/room/update', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let room = getRoomById(req.query.id);
-
 	if (room != null) {
 		res.send({
 			responseCode: constants.codes.SUCCESS,
-			content: await room.update(req.query.loggedIn)
+			content: await room.update()
 		});
 	} else {
 		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
+	}
+
+	deleteCounter += 1;
+	if (deleteCounter == 20) {
+		let ids = deleteEmptyRooms();
+		if (ids.length > 0) {
+			console.log('Rooms deleted: ');
+			console.log(ids);
+			console.log('---------------');
+		}
 	}
 });
 
@@ -236,6 +261,29 @@ app.get('/room/vote', async function(req, res) {
 
 	if (room != null) {
 		if (await room.vote(req.query.name, req.query.track, req.query.loggedIn)) {
+			res.send({responseCode: constants.codes.SUCCESS});
+		} else {
+			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal error'});
+		}
+	} else {
+		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
+	}
+});
+
+/**
+* Adds or changes a vote of an user
+*
+* @PathParameter id  The id of the room
+* @PathParameter volume The volume percentage
+* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
+* @Returns responseMessage with error message in case of error
+*/
+app.get('/room/setVolume', async function(req, res) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	let room = getRoomById(req.query.id);
+
+	if (room != null) {
+		if (await room.setVolume(req.query.volume)) {
 			res.send({responseCode: constants.codes.SUCCESS});
 		} else {
 			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal error'});

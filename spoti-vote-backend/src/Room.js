@@ -9,10 +9,10 @@ const emptyPlaylist = {
 }
 
 /**
-* Return a randomly generated string with a specified lenght, based on the possible symbols
+* Return a randomly generated string with a specified length, based on the possible symbols
 *
 * @author: agustinhaller
-* @param {int} length The lenght of the string
+* @param {int} length The length of the string
 * @return {string} The random string
 */
 function makeid(length) {
@@ -47,6 +47,7 @@ function Room(token, rooms) {
 	this.activePlaylist = [];
 	this.connectedUser = [];
 	this.id = makeid(5);
+	this.lastUpdate = Date.now();
 
 	//Makes sure the id is unique
 	let counter;
@@ -63,6 +64,25 @@ function Room(token, rooms) {
 	}
 	console.log('New Room ' + this.id + ' created.');
 }
+
+/**
+* Sets the last Update date to
+*
+* @author: Michiocre
+*/
+method.setDate = function() {
+	this.lastUpdate = Date.now();
+}
+
+/**
+* Return the time of last update
+*
+* @author: Michiocre
+*/
+method.getDate = function() {
+	return this.lastUpdate;
+}
+
 
 /**
 * Fetches the data of the host, and all his playlists
@@ -105,8 +125,6 @@ method.fetchData = async function() {
 
 	   this.playlists = this.playlists.concat(playlistRequestData.items);
    }
-
-   console.log(this.playlists.length);
 
    for (var i = 0; i < this.playlists.length; i++) {
 	   this.playlists[i].tracks = [];
@@ -265,10 +283,10 @@ method.getRandomTracks = async function(playlistId, intern) {
 * Returns the necessary data to update the frontend
 *
 * @author: Michiocre
-* @param {boolean} loggedIn True if the user is the host
 * @return {object} Object filled with the data
 */
 method.update = async function(loggedIn) {
+	this.setDate();
     let state = {};
     let playlistPlaceholder = emptyPlaylist;
 
@@ -278,20 +296,26 @@ method.update = async function(loggedIn) {
         }
     });
 
-    let fetchData = await request.json();
+	let fetchData;
+	let activePlayer;
 
-    let activePlayer = {
-        volume: fetchData.device.volume_percent,
-        progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
-        isPlaying: fetchData.is_playing,
-        track: {
-            album: fetchData.item.album,
-            artists: fetchData.item.artists,
-            href: fetchData.item.href,
-            id: fetchData.item.id,
-            name: fetchData.item.name
-       }
-    }
+	try {
+		 fetchData = await request.json();
+		 activePlayer = {
+	        volume: fetchData.device.volume_percent,
+	        progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
+	        isPlaying: fetchData.is_playing,
+	        track: {
+	            album: fetchData.item.album,
+	            artists: fetchData.item.artists,
+	            href: fetchData.item.href,
+	            id: fetchData.item.id,
+	            name: fetchData.item.name
+	       }
+	    }
+	} catch (e) {
+		activePlayer = null;
+	}
 
     if (this.activePlaylist.id !== undefined) {
         playlistPlaceholder = {
@@ -315,9 +339,13 @@ method.update = async function(loggedIn) {
         activePlayer: activePlayer
     }
 
-    console.log(activePlayer.progress);
+	if (activePlayer !== null && this.activePlaylist.id !== undefined) {
+		if (activePlayer.progress > 98) {
+			this.play();
+		}
+	}
 
-    return state
+    return state;
 }
 
 /**
@@ -397,6 +425,23 @@ method.vote = async function(name, trackId, loggedIn) {
 }
 
 /**
+* Changes the volume of the active audio player
+*
+* @author: Michiocre
+* @param {int} volume The volume percentage
+* @return {boolean} True if the vote was successfully changed
+*/
+method.setVolume = async function(volume) {
+	console.log(volume);
+	let request = fetch('https://api.spotify.com/v1/me/player/volume?volume_percent=' + volume, {
+        headers: {
+            "Authorization": "Bearer " + this.host.token
+        }
+    });
+	return true;
+}
+
+/**
 * PLays the most voted track {{ONLY USED FOR TESTING PURPOSES}}
 * Use this in combination with Postman or something, since it isnt called from the frontedn
 *
@@ -420,8 +465,6 @@ method.play = async function() {
 			possibleTracks.push(this.activeTracks[i]);
 		}
 	}
-
-	//console.log(possibleTracks);
 
 	track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
 

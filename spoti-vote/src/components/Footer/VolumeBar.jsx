@@ -23,7 +23,7 @@ let sliderStyle = {
 }
 
 class VolumeBar extends Component {
-	render() {
+	render() { 								//onChange={this.props.volumeHandler}
 		return (<div style={defaultStyle} id="player">
 			<FontAwesomeIcon icon={faVolumeDown} size="lg"/>
 			<input type="range" min="0" max="100" id="slider" style={sliderStyle}/>

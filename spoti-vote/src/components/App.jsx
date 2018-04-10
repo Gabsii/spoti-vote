@@ -15,6 +15,7 @@ class App extends Component {
 			loggedIn: false,
 			activePlaylist: {},
 			activeTracks: {},
+			activePlayer: {},
 			numPlaylists: 0,
 			connectedUser: [],
 			host: {},
@@ -55,12 +56,19 @@ class App extends Component {
 	}
 
 	componentDidUpdate() {
-		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/update?id='+window.location.pathname.split('/')[2]+'&loggedIn='+this.state.loggedIn, {
+		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/update?id='+window.location.pathname.split('/')[2], {
 		}).then((response) => response.json().then(data => {
 			setTimeout(function() {
 				switch (data.responseCode) {
 					case 200:
-						this.setState({activePlaylist: data.content.activePlaylist, activeTracks: data.content.activeTracks, numPlaylists: data.content.numPlaylists, connectedUser: data.content.connectedUser, host: data.content.host});
+						this.setState({
+							activePlaylist: data.content.activePlaylist,
+							activeTracks: data.content.activeTracks,
+							numPlaylists: data.content.numPlaylists,
+							connectedUser: data.content.connectedUser,
+							host: data.content.host,
+							activePlayer: data.content.activePlayer
+						});
 						break;
 					default:
 						window.location.pathname = '/';
@@ -81,6 +89,12 @@ class App extends Component {
 		}).then((response) => response.json().then(data => {}));
 	}
 
+	volumeHandler(event) {
+		let volume = event.target.value;
+		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/setVolume?id='+window.location.pathname.split('/')[2]+'&volume='+volume, {
+		}).then((response) => response.json().then(data => {}));
+	}
+
 	render() {
 		return (<section style={{
 				backgroundColor: constants.colors.background,
@@ -90,7 +104,7 @@ class App extends Component {
 			{/* <Menu/> */}
 			<Sidebar loggedIn={this.state.loggedIn} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} numPlaylists={this.state.numPlaylists}/>
 			<CardContainer name={this.state.name} loggedIn={this.state.loggedIn} activeTracks={this.state.activeTracks}/>
-			<Footer loggedIn={this.state.loggedIn}/>
+			<Footer loggedIn={this.state.loggedIn} activePlayer={this.state.activePlayer} volumeHandler={this.volumeHandler.bind(this)}/>
 		</section>);
 	}
 }
