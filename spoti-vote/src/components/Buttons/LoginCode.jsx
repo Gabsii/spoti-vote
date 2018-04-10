@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import '../../css/selectors.css';
 
 let constants = require('../../js/constants.js');
+let config = require('../../js/config');
 
 let defaultStyle = {
 	padding: "17px 40px",
@@ -21,10 +22,20 @@ let defaultStyle = {
 }
 class LoginCode extends Component {
 
-	submitHandler() {
+	constructor() {
+		super();
+		this.state = {
+			room: ''
+		}
+	}
+
+	submitHandler(event) {
+		event.preventDefault();
 		// check for input hijacking
 		// send data to join room
+		window.location.href = 'http://' + config.ipAddress + ':' + config.portFrontend + '/app/' + this.state.room
 		console.log(this);
+		console.log(this.state.room);
 	}
 
 	checkRoom(event) {
@@ -32,6 +43,8 @@ class LoginCode extends Component {
 			let str = event.target.value.toUpperCase();
 			console.log(str);
 			// return if room exists
+			// if room exists set state
+			this.setState({room: str});
 		}
 	}
 
@@ -39,7 +52,7 @@ class LoginCode extends Component {
 		return (<form style={{
 				display: 'inline-block',
 				width: '100%'
-			}}>
+			}} onSubmit={this.submitHandler.bind(this)}>
 			<input type="text" maxLength="5" placeholder="Room Code" style={{
 					...defaultStyle,
 					maxWidth: "100px",
@@ -47,7 +60,7 @@ class LoginCode extends Component {
 					backgroundColor: constants.colors.background,
 					color: constants.colors.font
 				}} autoComplete="off" onChange={this.checkRoom.bind(this)} pattern="[A-Za-z]{5}"/>
-			<input type="submit" id="loginbutton" value="join" style={defaultStyle} onSubmit={this.submitHandler.bind(this)}/>
+			<input type="submit" id="loginbutton" value="join" style={defaultStyle}/>
 		</form>);
 	}
 }
