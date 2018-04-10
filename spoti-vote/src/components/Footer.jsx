@@ -11,7 +11,6 @@ let defaultStyle = {
 	bottom: 0,
 	backgroundColor: constants.colors.backgroundLite
 }
-//<PlayButton/>
 
 class Footer extends Component {
 	render() {
@@ -22,6 +21,7 @@ class Footer extends Component {
 					? <VolumeBar activePlayer={this.props.activePlayer} volumeHandler={this.props.volumeHandler}/>
 					: ''
 			}
+
 		</footer>);
 	}
 }

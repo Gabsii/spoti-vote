@@ -5,7 +5,8 @@ import UserContainer from './Sidebar/UserContainer.jsx';
 let constants = require('../js/constants');
 let defaultStyle = {
 	height: 'calc(100vh - 75px)',
-	width: '250px',
+	maxWidth: '250px',
+	minWidth: '200px',
 	position: 'absolute',
 	top: 0,
 	right: 0,
@@ -23,7 +24,7 @@ class Sidebar extends Component {
 			<Infos loggedIn={this.props.loggedIn} activeTracks={this.props.activeTracks} host={this.props.host} playlistHandler={this.props.playlistHandler} activePlaylist={this.props.activePlaylist} numPlaylists={this.props.numPlaylists}/> {
 				this.props.loggedIn
 					? <UserContainer activeTracks={this.props.activeTracks} loggedIn={this.props.loggedIn} connectedUser={this.props.connectedUser}/>
-					: <div></div>
+					: ''
 			}
 		</div>);
 	}

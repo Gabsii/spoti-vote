@@ -6,7 +6,8 @@ let config = require('../../js/config');
 
 let defaultStyle = {
 	height: 'calc(100vh - 125px)',
-	width: 'calc(100vw - 300px)',
+	maxWidth: 'calc(100vw - 200px)',
+	minWidth: 'calc(100vw - 250px)',
 	position: 'absolute',
 	top: 0,
 	left: 0,
