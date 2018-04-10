@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Footer from './Footer.jsx';
 import Sidebar from './Sidebar.jsx';
-import Menu from './Menubar/Menu.jsx';
+// import Menu from './Menubar/Menu.jsx';
 import CardContainer from './Cards/CardContainer.jsx';
 import queryString from 'query-string';
 
@@ -28,8 +28,7 @@ class App extends Component {
 		let token = queryString.parse(window.location.search).token;
 		//let name = queryString.parse(window.location.search).name; -> This has to be moved to the name input
 		if (token !== undefined) {
-			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/checkToken?id='+window.location.pathname.split('/')[2] + '&token=' + token, {
-			}).then((response) => response.json().then(data => {
+			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/checkToken?id=' + window.location.pathname.split('/')[2] + '&token=' + token, {}).then((response) => response.json().then(data => {
 				switch (data.responseCode) {
 					case 200:
 						this.setState({loggedIn: data.content});
@@ -56,8 +55,7 @@ class App extends Component {
 	}
 
 	componentDidUpdate() {
-		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/update?id='+window.location.pathname.split('/')[2], {
-		}).then((response) => response.json().then(data => {
+		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/update?id=' + window.location.pathname.split('/')[2], {}).then((response) => response.json().then(data => {
 			setTimeout(function() {
 				switch (data.responseCode) {
 					case 200:
@@ -85,14 +83,12 @@ class App extends Component {
 		if (playlistId == null) {
 			playlistId = 'none';
 		}
-		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/newTracks?id='+window.location.pathname.split('/')[2]+'&playlist='+playlistId, {
-		}).then((response) => response.json().then(data => {}));
+		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/newTracks?id=' + window.location.pathname.split('/')[2] + '&playlist=' + playlistId, {}).then((response) => response.json().then(data => {}));
 	}
 
 	volumeHandler(event) {
 		let volume = event.target.value;
-		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/setVolume?id='+window.location.pathname.split('/')[2]+'&volume='+volume, {
-		}).then((response) => response.json().then(data => {}));
+		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/setVolume?id=' + window.location.pathname.split('/')[2] + '&volume=' + volume, {}).then((response) => response.json().then(data => {}));
 	}
 
 	render() {
