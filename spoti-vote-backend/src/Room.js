@@ -9,10 +9,10 @@ const emptyPlaylist = {
 }
 
 /**
-* Return a randomly generated string with a specified lenght, based on the possible symbols
+* Return a randomly generated string with a specified length, based on the possible symbols
 *
 * @author: agustinhaller
-* @param {int} length The lenght of the string
+* @param {int} length The length of the string
 * @return {string} The random string
 */
 function makeid(length) {
@@ -47,6 +47,7 @@ function Room(token, rooms) {
 	this.activePlaylist = [];
 	this.connectedUser = [];
 	this.id = makeid(5);
+	this.lastUpdate = Date.now();
 
 	//Makes sure the id is unique
 	let counter;
@@ -63,6 +64,25 @@ function Room(token, rooms) {
 	}
 	console.log('New Room ' + this.id + ' created.');
 }
+
+/**
+* Sets the last Update date to
+*
+* @author: Michiocre
+*/
+method.setDate = function() {
+	this.lastUpdate = Date.now();
+}
+
+/**
+* Return the time of last update
+*
+* @author: Michiocre
+*/
+method.getDate = function() {
+	return this.lastUpdate;
+}
+
 
 /**
 * Fetches the data of the host, and all his playlists
@@ -267,7 +287,8 @@ method.getRandomTracks = async function(playlistId, intern) {
 * @author: Michiocre
 * @return {object} Object filled with the data
 */
-method.update = async function() {
+method.update = async function(loggedIn) {
+	this.setDate();
     let state = {};
     let playlistPlaceholder = emptyPlaylist;
 

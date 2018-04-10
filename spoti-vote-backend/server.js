@@ -15,6 +15,7 @@ let redirect_uri = process.env.REDIRECT_URI || 'http://' + config.ipAddress + ':
 console.log(redirect_uri);
 
 let rooms = [];
+let deleteCounter = 0;
 
 /**
 * Return the room with the specified id
@@ -30,6 +31,24 @@ function getRoomById(roomId) {
 			room = rooms[i];
 		}
 	return room;
+}
+
+/**
+* Deletes every room which has not recieved a update in a while
+*
+* @author: Michiocre
+* @return {string} id of the deleted room
+*/
+function deleteEmptyRooms() {
+	let ids = [];
+	for (var i = 0; i < rooms.length; i++) {
+		if (Date.now() - rooms[i].getDate() >= 30000) {
+			ids.push(rooms[i].id);
+			rooms.splice(i,1);
+		}
+	}
+	deleteCounter = 0;
+	return ids;
 }
 
 /**
@@ -162,7 +181,6 @@ app.get('/room/newTracks', async function(req, res) {
 app.get('/room/update', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	let room = getRoomById(req.query.id);
-
 	if (room != null) {
 		res.send({
 			responseCode: constants.codes.SUCCESS,
@@ -170,6 +188,16 @@ app.get('/room/update', async function(req, res) {
 		});
 	} else {
 		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
+	}
+
+	deleteCounter += 1;
+	if (deleteCounter == 20) {
+		let ids = deleteEmptyRooms();
+		if (ids.length > 0) {
+			console.log('Rooms deleted: ');
+			console.log(ids);
+			console.log('---------------');
+		}
 	}
 });
 
