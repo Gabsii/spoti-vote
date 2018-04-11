@@ -77,7 +77,7 @@ class Card extends Component {
 		for (var i = 0; i < this.props.randomTrack.artists.length; i++) {
 			artistString += this.props.randomTrack.artists[i].name;
 			if (i < this.props.randomTrack.artists.length - 1) {
-				artistString += ' ';
+				artistString += ', ';
 			}
 		}
 

@@ -13,10 +13,29 @@ let defaultStyle = {
 }
 
 class Footer extends Component {
+
+	constructor() {
+		super();
+		this.state = {
+			image: '',
+			songName: '',
+			artists: ''
+		}
+	}
+
+	componentDidUpdate() {
+		console.log(this.props.activePlayer.track);
+		if (this.props.activePlayer !== null && this.props.activePlayer.track !== undefined) {
+			if (this.state.image !== this.props.activePlayer.track.album.images[0].url) {
+				this.setState({image: this.props.activePlayer.track.album.images[0].url, songName: this.props.activePlayer.track.name, artists: this.props.activePlayer.track.artists});
+			}
+		}
+	}
+
 	render() {
 		return (<footer style={defaultStyle}>
-			<SongIcon background='https://picsum.photos/75'/>
-			<SongAggregation/> {
+			<SongIcon background={this.state.image}/>
+			<SongAggregation songName={this.state.songName} artists={this.state.artists} activePlayer={this.props.activePlayer}/> {
 				this.props.loggedIn
 					? <VolumeBar activePlayer={this.props.activePlayer} volumeHandler={this.props.volumeHandler}/>
 					: ''
