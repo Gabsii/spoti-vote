@@ -8,6 +8,7 @@ let defaultStyle = {
 	height: '75px',
 	maxWidth: '250px',
 	minWidth: '200px',
+	fontFamily: 'Circular Medium',
 	position: 'absolute',
 	right: 0,
 	display: 'flex',

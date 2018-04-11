@@ -7,7 +7,10 @@ let defaultStyle = {
 	position: 'absolute',
 	bottom: 0,
 	left: '75px',
-	backgroundColor: constants.colors.blueCard
+	marginLeft: '10px',
+	display: 'flex',
+	flexDirection: 'column',
+	justifyContent: 'center'
 }
 
 class SongAggregation extends Component {
@@ -21,10 +24,15 @@ class SongAggregation extends Component {
 		}
 		console.log(this.props.artists);
 		return (<div style={defaultStyle}>
-			<div>
+			<div style={{
+					color: constants.colors.font
+				}}>
 				{this.props.songName}
 			</div>
-			<div>
+			<div style={{
+					color: constants.colors.fontSecondary,
+					marginTop: '5px'
+				}}>
 				{artistString}
 			</div>
 		</div>);

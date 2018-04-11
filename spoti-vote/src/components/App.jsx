@@ -43,10 +43,17 @@ class App extends Component {
 		} else {
 			this.setState({loggedIn: false});
 			if (name === undefined && this.state.loggedIn === false) {
-				let username = window.prompt("Set username");
+				let username = window.prompt("Set username.\n\n If this is your second time in this prompt, choose another Username because the old one is taken.");
 				if (username !== null || username !== "") {
-					this.setState({name: username});
-					fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/connect?id=' + window.location.pathname.split('/')[2] + '&name=' + username, {}).then((response) => response.json().then(data => {})).catch(function() {});
+					fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/connect?id=' + window.location.pathname.split('/')[2] + '&name=' + username, {}).then((response) => response.json().then(data => {
+						if (data.responseCode == "500") {
+							console.log(data.responseCode);
+							window.reload();
+						} else {
+							console.log(data.responseCode);
+							this.setState({name: username});
+						}
+					})).catch(function() {});
 				} else {
 					window.location.pathname = 'http://' + config.ipAddress + ':' + config.portFrontend;
 				}
