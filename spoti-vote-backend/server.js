@@ -1,19 +1,22 @@
 "use strict"; //Places the server in a strict enviroment (More exeptions, catches coding blooper, prevents unsafe actions, disables some features)
-
 const express = require('express');
-const request = require('request');
+const http = require('http');
+const socketIo = require('socket.io');
 const querystring = require('querystring');
-
-let Room = require('./src/Room');
+const request = require('request');
+//Import of configs
 let config = require('./src/config');
 let constants = require('./src/constants');
-
+let Room = require('./src/Room');
+//Setup of the server
 let app = express();
+let server = http.createServer(app);
+let io = socketIo(server);
 
+//Global Varibles
 let redirect_uri = process.env.REDIRECT_URI || 'http://' + config.ipAddress + ':' + config.portBackend + '/callback';
-
 let rooms = [];
-let deleteCounter = 0;
+let allClients = [];
 
 /**
 * Return the room with the specified id
@@ -30,40 +33,6 @@ function getRoomById(roomId) {
 		}
 	return room;
 }
-
-/**
-* Deletes every room which has not recieved a update in a while
-*
-* @author: Michiocre
-* @return {string} id of the deleted room
-*/
-function deleteEmptyRooms() {
-	let ids = [];
-	for (var i = 0; i < rooms.length; i++) {
-		if (Date.now() - rooms[i].getDate() >= 900000) {
-			ids.push(rooms[i].id);
-			rooms.splice(i,1);
-		}
-	}
-	return ids;
-}
-
-/**
-* Get a list of all rooms
-*
-* @Returns ResponseCode of 200
-* @Returns content Array of all the rooms
-*/
-app.get('/rooms', async function(req, res) {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-
-	let roomIds = [];
-	for (var i = 0; i < rooms.length; i++) {
-		roomIds.push(rooms[i].id);
-	}
-
-	res.send({responseCode: constants.codes.SUCCESS, content: roomIds});
-});
 
 /**
 * Login using the Spotify API (This is only a Redirect)
@@ -95,6 +64,7 @@ app.get('/callback', async function(req, res) {
 		let uri = process.env.FRONTEND_URI || 'http://' + config.ipAddress + ':' + config.portFrontend + '/app';
 
 		let room = new Room(body.access_token, rooms);
+
 		await room.fetchData();
 		rooms.push(room);
 
@@ -103,222 +73,110 @@ app.get('/callback', async function(req, res) {
 });
 
 /**
-* Get a list of all playlists of this room
+* Get a list of all rooms
 *
-* @PathParameter id  The id of the room
-* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
-* @Returns responseMessage with error message in case of error
-* @Returns content Array of all the playlists
+* @Returns ResponseCode of 200
+* @Returns content Array of all the rooms
 */
-app.get('/room/playlists', async function(req, res) {
+app.get('/rooms', async function(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
-	let room = getRoomById(req.query.id);
-	if (room != null) {
-		res.send({responseCode: constants.codes.SUCCESS, content: await room.getPlaylists()});
-	} else {
-		res.send({responseCode: constants.codes.NOTFOUND, responseMessage: 'This room was not found'});
+
+	let roomIds = [];
+	for (var i = 0; i < rooms.length; i++) {
+		roomIds.push(rooms[i].id);
 	}
+
+	res.send({responseCode: constants.codes.SUCCESS, content: roomIds});
 });
 
-/**
-* Get the hosts user data of this room
-*
-* @PathParameter id  The id of the room
-* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
-* @Returns responseMessage with error message in case of error
-* @Returns content Object with the user data
-*/
-app.get('/room/host', async function(req, res) {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	let room = getRoomById(req.query.id);
-	if (room != null) {
-		res.send({responseCode: constants.codes.SUCCESS, content: await room.getHostInfo()});
-	} else {
-		res.send({responseCode: constants.codes.ROOMNOTFOUND, response: 'This room was not found'});
-	}
-});
 
 /**
-* Selects a new set of active tracks
-*
-* @PathParameter id  The id of the room
-* @PathParameter playlist  The id of the playlist
-* @Returns ResponseCode of either 200 or 404 or 414 or 500 based on if the room-id and the playlist-id exists or if the playlist is to small
-* @Returns responseMessage with error message in case of error
+* Is called when a new client connects to the socket
 */
-app.get('/room/newTracks', async function(req, res) {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	let playlistId = req.query.playlist;
-	let room = getRoomById(req.query.id);
+io.on('connection', function(socket) {
+    let room = null;
+    let isHost = false;
+    let name = null;
 
-	if (room != null) {
-		if (playlistId != 'none') {
-			if (await room.getRandomTracks(playlistId, false) == true) {
-				res.send({responseCode: constants.codes.SUCCESS});
-			} else {
-				res.send({responseCode: constants.codes.ERROR, responseMessage: 'The playlist is to small'})
-			}
-		} else {
-			res.send({responseCode: constants.codes.PLNOTFOUND, responseMessage: 'You cant pick no playlist'})
+	allClients.push(socket);
+
+    socket.emit('roomId');
+    socket.on('roomId', data => {
+        room = getRoomById(data.roomId);
+        if (room !== null) {
+            if (data.token == room.host.token) {
+                isHost = true;
+				socket.emit('initData', {
+					playlists: room.getPlaylists(),
+					hostName: room.getHostName(),
+					isHost: isHost
+				});
+            } else {
+                socket.emit('nameEvent', {
+					userNames: room.getUserNames()
+				});
+            }
+        } else {
+            socket.emit('errorEvent', {message: 'Room does not exist.'})
+        }
+    });
+
+    socket.on('nameEvent', data => {
+        name = data.name
+        if (name !== null) {
+            room.addUser(name);
+			socket.emit('initData', {
+				hostName: room.getHostName()
+			});
+        }
+    });
+
+	socket.on('changePlaylist', data => {
+        room.changePlaylist(data.playlistId);
+    });
+
+	socket.on('vote', data => {
+        room.vote(data.trackId, isHost, name);
+    });
+
+
+    setInterval(
+        () => theUpdateFunction(socket, room),500
+    );
+
+
+    /**
+    * Called when a client disconnects
+    */
+    socket.on('disconnect', function() {
+		if (room != null) {
+			room.removeUser(name);
 		}
-	} else {
-		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
-	}
+		let i = allClients.indexOf(socket);
+		allClients.splice(i,1);
+		if (allClients.length >= 0 && rooms.length > 0) {
+			rooms = [];
+			console.log('All rooms were deleted');
+		}
+    });
 });
 
 /**
-* Gets the current set of active playlist, tracks, connected users, num of playlists,...
-* All the data that is needed to keep the frontend synced
+* This function will be called every interval and is used to update the users
 *
-* @PathParameter id  The id of the room
-* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
-* @Returns responseMessage with error message in case of error
-* @Returns content Object with the data
+* @author: Michiocre
+* @param {socket} socket The socket object passed down from the call
 */
-app.get('/room/update', async function(req, res) {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	let room = getRoomById(req.query.id);
-	if (room != null) {
-		res.send({
-			responseCode: constants.codes.SUCCESS,
-			content: await room.update(req.query.loggedIn, req.query.name)
-		});
-	} else {
-		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
+async function theUpdateFunction(socket, room) {
+	if (room !== null) {
+		room.update();
 	}
-
-	deleteCounter += 1;
-	if (deleteCounter == 50) {
-		let ids = deleteEmptyRooms();
-		if (ids.length > 0) {
-			console.log('Rooms deleted: ');
-			console.log(ids);
-			console.log('---------------');
-		}
-
-		for (var i = 0; i < rooms.length; i++) {
-			rooms[i].deleteAbsentUsers();
-		}
-		deleteCounter = 0;
-	}
-});
+	socket.emit('update', room);
+};
 
 /**
-* Checks if a given token is the same one that was returned by the Spotify API
-*
-* @PathParameter id  The id of the room
-* @PathParametert token The token that will be checked
-* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
-* @Returns responseMessage with error message in case of error
-* @Returns content Boolean true if the token match
+* Starts the server
 */
-app.get('/room/checkToken', async function(req, res) {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	let room = getRoomById(req.query.id);
-
-	if (room != null) {
-		res.send({
-			responseCode: constants.codes.SUCCESS,
-			content: await room.checkToken(req.query.token)
-		});
-	} else {
-		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
-	}
+server.listen(config.portBackend, () => {
+    console.log('Server started on port: ' + server.address().port);
 });
-
-/**
-* Adds a user to the list of connected users
-*
-* @PathParameter id  The id of the room
-* @PathParametert name of the user that will be added
-* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
-* @Returns responseMessage with error message in case of error
-*/
-app.get('/room/connect', async function(req, res) {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	let room = getRoomById(req.query.id);
-
-	if (room != null) {
-		if (await room.connect(req.query.name)) {
-			res.send({responseCode: constants.codes.SUCCESS});
-		} else {
-			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Username Taken'});
-		}
-	} else {
-		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
-	}
-});
-
-/**
-* Adds or changes a vote of an user
-*
-* @PathParameter id  The id of the room
-* @PathParameter loggedIn if the user is the host
-* @PathParametert name of the user whomst will change his vote
-* @PathParametert track id of the track the user voted for
-* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
-* @Returns responseMessage with error message in case of error
-*/
-app.get('/room/vote', async function(req, res) {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	let room = getRoomById(req.query.id);
-
-	if (room != null) {
-		if (await room.vote(req.query.name, req.query.track, req.query.loggedIn)) {
-			res.send({responseCode: constants.codes.SUCCESS});
-		} else {
-			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal error'});
-		}
-	} else {
-		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
-	}
-});
-
-/**
-* Adds or changes a vote of an user
-*
-* @PathParameter id  The id of the room
-* @PathParameter volume The volume percentage
-* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
-* @Returns responseMessage with error message in case of error
-*/
-app.get('/room/setVolume', async function(req, res) {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	let room = getRoomById(req.query.id);
-
-	if (room != null) {
-		if (await room.setVolume(req.query.volume)) {
-			res.send({responseCode: constants.codes.SUCCESS});
-		} else {
-			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal error'});
-		}
-	} else {
-		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
-	}
-});
-
-/**
-* Starts plaing the most voted Song
-*
-* @PathParameter id  The id of the room
-* @Returns ResponseCode of either 200 or 404 based on if the room-id exists
-* @Returns responseMessage with error message in case of error
-*/
-app.get('/room/test/play', async function(req, res) {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	let room = getRoomById(req.query.id);
-
-	if (room != null) {
-		if (await room.play()) {
-			res.send({responseCode: constants.codes.SUCCESS});
-		} else {
-			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal error'});
-		}
-	} else {
-		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
-	}
-});
-
-let port = process.env.PORT || config.portBackend;
-console.log(`Listening on port ${port}. Go /login to initiate authentication flow.`);
-app.listen(port);
