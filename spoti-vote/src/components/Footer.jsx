@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import SongIcon from './Footer/SongIcon.jsx';
 import SongAggregation from './Footer/SongAggregation.jsx';
 import VolumeBar from './Footer/VolumeBar.jsx';
+import Progressbar from './Footer/Progressbar.jsx';
 
 let constants = require('../js/constants');
 let defaultStyle = {
@@ -24,9 +25,9 @@ class Footer extends Component {
 	}
 
 	componentDidUpdate() {
-		console.log(this.props.activePlayer.track);
 		if (this.props.activePlayer !== null && this.props.activePlayer.track !== undefined) {
 			if (this.state.image !== this.props.activePlayer.track.album.images[0].url) {
+				console.log(this.props.activePlayer.track);
 				this.setState({image: this.props.activePlayer.track.album.images[0].url, songName: this.props.activePlayer.track.name, artists: this.props.activePlayer.track.artists});
 			}
 		}
@@ -35,7 +36,8 @@ class Footer extends Component {
 	render() {
 		return (<footer style={defaultStyle}>
 			<SongIcon background={this.state.image}/>
-			<SongAggregation songName={this.state.songName} artists={this.state.artists} activePlayer={this.props.activePlayer}/> {
+			<SongAggregation songName={this.state.songName} artists={this.state.artists}/>
+			<Progressbar/> {
 				this.props.loggedIn
 					? <VolumeBar activePlayer={this.props.activePlayer} volumeHandler={this.props.volumeHandler}/>
 					: ''
