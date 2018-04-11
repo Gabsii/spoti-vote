@@ -40,12 +40,11 @@ function getRoomById(roomId) {
 function deleteEmptyRooms() {
 	let ids = [];
 	for (var i = 0; i < rooms.length; i++) {
-		if (Date.now() - rooms[i].getDate() >= 30000) {
+		if (Date.now() - rooms[i].getDate() >= 900000) {
 			ids.push(rooms[i].id);
 			rooms.splice(i,1);
 		}
 	}
-	deleteCounter = 0;
 	return ids;
 }
 
@@ -182,20 +181,25 @@ app.get('/room/update', async function(req, res) {
 	if (room != null) {
 		res.send({
 			responseCode: constants.codes.SUCCESS,
-			content: await room.update()
+			content: await room.update(req.query.loggedIn, req.query.name)
 		});
 	} else {
 		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});
 	}
 
 	deleteCounter += 1;
-	if (deleteCounter == 20) {
+	if (deleteCounter == 50) {
 		let ids = deleteEmptyRooms();
 		if (ids.length > 0) {
 			console.log('Rooms deleted: ');
 			console.log(ids);
 			console.log('---------------');
 		}
+
+		for (var i = 0; i < rooms.length; i++) {
+			rooms[i].deleteAbsentUsers();
+		}
+		deleteCounter = 0;
 	}
 });
 
@@ -238,7 +242,7 @@ app.get('/room/connect', async function(req, res) {
 		if (await room.connect(req.query.name)) {
 			res.send({responseCode: constants.codes.SUCCESS});
 		} else {
-			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Internal Error'});
+			res.send({responseCode: constants.codes.ERROR, responseMessage: 'Username Taken'});
 		}
 	} else {
 		res.send({responseCode: constants.codes.ROOMNOTFOUND, responseMessage: 'This room was not found'});

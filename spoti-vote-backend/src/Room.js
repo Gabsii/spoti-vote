@@ -83,6 +83,21 @@ method.getDate = function() {
 	return this.lastUpdate;
 }
 
+/**
+* Delete Absend Users
+*
+* @author: Michiocre
+*/
+method.deleteAbsentUsers = function() {
+	for (var i = 0; i < this.connectedUser.length; i++) {
+		if (Date.now() - this.connectedUser[i].lastUpdate > 600000) {
+			console.log('User deleted: ' + this.connectedUser[i].name);
+			this.connectedUser.splice(i,1);
+		}
+	}
+	return this.lastUpdate;
+}
+
 
 /**
 * Fetches the data of the host, and all his playlists
@@ -285,8 +300,11 @@ method.getRandomTracks = async function(playlistId, intern) {
 * @author: Michiocre
 * @return {object} Object filled with the data
 */
-method.update = async function(loggedIn) {
+method.update = async function(loggedIn, name) {
 	this.setDate();
+	if (loggedIn !== "true") {
+		this.getUserByName(name).lastUpdate = Date.now();
+	}
     let state = {};
     let playlistPlaceholder = emptyPlaylist;
 
@@ -367,13 +385,14 @@ method.checkToken = async function(token) {
 * @return {boolean} True if the user was added, false if the name already exists
 */
 method.connect = async function(name) {
-	if (this.getUserByName(name) !== null) {
+	if (this.getUserByName(name) !== null || name === "null") {
 		return false;
 	}
 
 	let newUser = {
 		name: name,
-		voted: null
+		voted: null,
+		lastUpdate: Date.now()
 	}
 	this.connectedUser.push(newUser);
 	console.log('New User: ' + name + ' connected');
