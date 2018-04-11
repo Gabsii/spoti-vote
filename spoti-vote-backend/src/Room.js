@@ -359,7 +359,7 @@ method.update = async function(loggedIn, name) {
 
 	if (activePlayer !== null && this.activePlaylist.id !== undefined) {
 		if (activePlayer.progress > 98) {
-			this.play();
+			await this.play();
 		}
 	}
 
