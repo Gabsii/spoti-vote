@@ -30,7 +30,8 @@ let colors = {
 	redCard: "#E74C3C", // tint for card
 	yellowCard: "#F1C40F", // tint for card
 	font: "#FFFFFF", // all texts
-	fontSecondary: "#B3B3B3" // text color for UI elements
+	fontSecondary: "#B3B3B3", // text color for UI elements
+	barBackground: "#404040" // background color for bar elements
 }
 
 module.exports = {
