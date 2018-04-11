@@ -86,6 +86,7 @@ class LoginCode extends Component {
 					}} autoComplete="off" onChange={this.checkRoom.bind(this)} pattern="[A-Za-z]{5}"/>
 				<input type="submit" id="loginCode" value="join" style={{
 						...defaultStyle,
+						fontFamily: 'Circular Bold',
 						borderTopRightRadius: "500px",
 						borderBottomRightRadius: "500px"
 					}}/>
