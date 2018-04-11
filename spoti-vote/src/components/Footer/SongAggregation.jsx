@@ -22,7 +22,6 @@ class SongAggregation extends Component {
 				artistString += ', ';
 			}
 		}
-		console.log(this.props.artists);
 		return (<div style={defaultStyle}>
 			<div style={{
 					color: constants.colors.font

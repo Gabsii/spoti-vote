@@ -30,20 +30,9 @@ class CardContainer extends Component {
 
 	voteHandler(trackId) {
 		if (this.state.voted !== trackId) {
-			console.log('Changed from: ' + this.state.voted + ' to: ' + trackId);
 			this.setState({voted: trackId});
-
-			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/vote?id=' + window.location.pathname.split('/')[2] + '&loggedIn=' + this.props.loggedIn + '&track=' + trackId + '&name=' + this.props.name, {}).then((response) => response.json().then(data => {
-				switch (data.responseCode) {
-					case 200:
-						this.setState({loggedIn: data.content});
-						break;
-					default:
-						//window.location.pathname = '/';
-						break;
-				}
-			})).catch(function() {
-				//window.location.reload();
+			this.props.socket.emit('vote', {
+				trackId: trackId
 			});
 		}
 	}

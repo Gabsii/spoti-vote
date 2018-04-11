@@ -15,12 +15,8 @@ let defaultStyle = {
 };
 
 class Logout extends Component {
-	fetchServer() {
-		console.log('loggedin + roomid mitgeben');
-	}
-
 	render() {
-		return (<a href={"http://localhost:3000/"} onClick={this.fetchServer.bind(this)}>
+		return (<a href={"http://localhost:3000/"}}>
 			<div style={defaultStyle}>
 				<FontAwesomeIcon icon={faSignOutAlt} size="2x"/>
 			</div>
