@@ -155,7 +155,7 @@ io.on('connection', function(socket) {
 		let i = allClients.indexOf(socket);
 		allClients.splice(i,1);
 		if (allClients.length >= 0 && rooms.length > 0) {
-			rooms = [];
+			//rooms = [];
 			console.log('All rooms were deleted');
 		}
     });
