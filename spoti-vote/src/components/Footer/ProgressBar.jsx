@@ -2,10 +2,29 @@ import React, {Component} from 'react';
 
 let constants = require('../../js/constants');
 
+let borderStyle = {
+	width: '25%',
+	border: '1px solid lightgray',
+	borderRadius: '15px'
+}
+
+let progressStyle = {
+	//width must be manipulated
+	background: 'linear-gradient(to right, #ffff00, #00ff00)',
+	height: '14px',
+	borderStyle: 'solid',
+	borderRadius: '15px',
+	borderColor: '#333',
+	margin: '2px',
+	animation: 'width 3s ease-out infinite'
+}
+
 class Progressbar extends Component {
 
 	render() {
-		return (<div></div>);
+		return (<div style={borderStyle}>
+			<div role="progressbar" style={progressStyle}></div>
+		</div>);
 	}
 }
 export default Progressbar;

@@ -10,7 +10,10 @@ let defaultStyle = {
 	width: '100vw',
 	position: 'absolute',
 	bottom: 0,
-	backgroundColor: constants.colors.backgroundLite
+	backgroundColor: constants.colors.backgroundLite,
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center'
 }
 
 class Footer extends Component {
