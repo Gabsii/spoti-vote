@@ -55,8 +55,7 @@ class Infos extends Component {
 		//This is only run, when the update request reports a different amount of playlists then the current numbers of playlists
 		//It will fetch all the playlists again. (Do we need this)
 		if (this.props.loggedIn === true && this.props.numPlaylists !== this.state.playlists.length) {
-			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/playlists?id='+window.location.pathname.split('/')[2], {
-		    }).then((response) => response.json().then(data => {
+			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/playlists?id=' + window.location.pathname.split('/')[2], {}).then((response) => response.json().then(data => {
 				switch (data.responseCode) {
 					case 200:
 						if (this.state.playlists.length !== data.content.length) {
@@ -79,7 +78,7 @@ class Infos extends Component {
 
 		if (this.props.loggedIn === true) {
 			option = <select style={{
-					width: '200px'
+					width: '175px'
 				}} onChange={this.props.playlistHandler}>
 
 				<option>Select a Playlist</option>
@@ -97,19 +96,20 @@ class Infos extends Component {
 			}
 		}
 
-		let roomName = "Room: " + window.location.pathname.split('/')[2];
+		let roomName = ": " + window.location.pathname.split('/')[2];
 
 		return (<div style={defaultStyle}>
 			<div style={{
 					...centerContainer,
 					fontWeight: 'bold',
 					fontSize: '18px'
-				}}>{roomName}</div>
+				}}>Room
+				<strong>{roomName}</strong>
+			</div>
 			<div style={{
 					...centerContainer,
 					fontSize: '14px'
-				}}>
-				{option}
+				}}>{option}
 			</div>
 			<a href={this.props.activePlaylist.url}>
 				<img alt="Current Playlist" src={this.props.activePlaylist.img || 'http://via.placeholder.com/152x152'} style={{

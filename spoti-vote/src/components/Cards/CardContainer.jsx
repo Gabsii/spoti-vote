@@ -6,7 +6,8 @@ let config = require('../../js/config');
 
 let defaultStyle = {
 	height: 'calc(100vh - 125px)',
-	width: 'calc(100vw - 300px)',
+	maxWidth: 'calc(100vw - 200px)',
+	minWidth: 'calc(100vw - 250px)',
 	position: 'absolute',
 	top: 0,
 	left: 0,
@@ -32,8 +33,7 @@ class CardContainer extends Component {
 			console.log('Changed from: ' + this.state.voted + ' to: ' + trackId);
 			this.setState({voted: trackId});
 
-			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/vote?id='+window.location.pathname.split('/')[2] + '&loggedIn=' + this.props.loggedIn + '&track=' + trackId + '&name=' + this.props.name, {
-			}).then((response) => response.json().then(data => {
+			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/vote?id=' + window.location.pathname.split('/')[2] + '&loggedIn=' + this.props.loggedIn + '&track=' + trackId + '&name=' + this.props.name, {}).then((response) => response.json().then(data => {
 				switch (data.responseCode) {
 					case 200:
 						this.setState({loggedIn: data.content});
@@ -50,15 +50,15 @@ class CardContainer extends Component {
 
 	render() {
 		if (this.props.activeTracks.length > 0) {
-			return (<div style={defaultStyle}>
+			return (<main style={defaultStyle}>
 				{
 					this.props.activeTracks.map((track, index) => {
 						return <Card randomTrack={track} onClick={this.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
 					})
 				}
-			</div>);
+			</main>);
 		} else {
-			return (<div style={defaultStyle}></div>);
+			return (<main style={defaultStyle}></main>);
 		}
 
 	}
