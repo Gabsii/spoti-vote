@@ -42,17 +42,17 @@ class App extends Component {
 			});
 		} else {
 			this.setState({loggedIn: false});
-		}
-		if (name === undefined && token === undefined && this.state.loggedIn === false) {
-			let username = window.prompt("Set username");
-			if (username !== null || username !== "") {
-				this.setState({name: username});
-				fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/connect?id=' + window.location.pathname.split('/')[2] + '&name=' + name, {}).then((response) => response.json().then(data => {})).catch(function() {});
+			if (name === undefined && this.state.loggedIn === false) {
+				let username = window.prompt("Set username");
+				if (username !== null || username !== "") {
+					this.setState({name: username});
+					fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/connect?id=' + window.location.pathname.split('/')[2] + '&name=' + username, {}).then((response) => response.json().then(data => {})).catch(function() {});
+				} else {
+					window.location.pathname = 'http://' + config.ipAddress + ':' + config.portFrontend;
+				}
 			} else {
-				window.location.pathname = 'http://' + config.ipAddress + ':' + config.portFrontend;
+				this.setState({name: name});
 			}
-		} else {
-			this.setState({name: name});
 		}
 	}
 

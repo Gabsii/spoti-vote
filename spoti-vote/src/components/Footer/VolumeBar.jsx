@@ -29,7 +29,7 @@ class VolumeBar extends Component {
 			<FontAwesomeIcon icon={faVolumeDown} style={{
 					color: constants.colors.fontSecondary
 				}} size="lg"/>
-			<input type="range" min="0" max="100" id="volume" style={sliderStyle}/>
+			<input type="range" min="0" max="100" defaultValue="10" id="volume" style={sliderStyle}/>
 			<FontAwesomeIcon icon={faVolumeUp} style={{
 					color: constants.colors.fontSecondary
 				}} size="lg"/>
