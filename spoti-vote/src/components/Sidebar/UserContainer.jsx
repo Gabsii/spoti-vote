@@ -30,7 +30,6 @@ class UserContainer extends Component {
 				this.props.connectedUser[i].color = constants.colors.font;
 			}
 			for (var j = 0; j < this.props.activeTracks.length; j++) {
-
 				if (this.props.activeTracks[j].id === this.props.connectedUser[i].voted) {
 					this.props.connectedUser[i].color = constants.iterateCardColors(j);
 				}
