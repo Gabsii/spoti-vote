@@ -90,7 +90,6 @@ method.getDate = function() {
 */
 method.deleteAbsentUsers = function() {
 	for (var i = 0; i < this.connectedUser.length; i++) {
-		console.log(Date.now() - this.connectedUser[i].lastUpdate);
 		if (Date.now() - this.connectedUser[i].lastUpdate > 600000) {
 			console.log('User deleted: ' + this.connectedUser[i].name);
 			this.connectedUser.splice(i,1);
