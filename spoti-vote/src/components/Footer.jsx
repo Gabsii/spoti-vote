@@ -24,7 +24,6 @@ class Footer extends Component {
 	}
 
 	componentDidUpdate() {
-		console.log(this.props.activePlayer.track);
 		if (this.props.activePlayer !== null && this.props.activePlayer.track !== undefined) {
 			if (this.state.image !== this.props.activePlayer.track.album.images[0].url) {
 				this.setState({image: this.props.activePlayer.track.album.images[0].url, songName: this.props.activePlayer.track.name, artists: this.props.activePlayer.track.artists});

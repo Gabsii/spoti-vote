@@ -57,7 +57,7 @@ class App extends Component {
 	}
 
 	componentDidUpdate() {
-		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/update?id=' + window.location.pathname.split('/')[2], {}).then((response) => response.json().then(data => {
+		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/update?id=' + window.location.pathname.split('/')[2] + '&loggedIn=' + this.state.loggedIn + '&name=' + this.state.name, {}).then((response) => response.json().then(data => {
 			setTimeout(function() {
 				switch (data.responseCode) {
 					case 200:
