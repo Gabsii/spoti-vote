@@ -1,12 +1,6 @@
 let method = Room.prototype; //This is used when programming object oriented in js to make everything a bit more organised
-
 const request = require('request');
 const fetch = require('node-fetch');
-
-const emptyPlaylist = {
-	name: 'Host is changing the playlist',
-	img: null
-}
 
 /**
 * Return a randomly generated string with a specified length, based on the possible symbols
@@ -39,13 +33,13 @@ function Room(token, rooms) {
 	this.host = {
 		token: token,
 		name: '',
-		id: '',
 		profileUrl: '',
 		voted: null
 	};
 	this.activeTracks = [];
-	this.activePlaylist = [];
+	this.activePlaylist = null;
 	this.connectedUser = [];
+	this.activePlayer = {};
 	this.id = makeid(5);
 	this.lastUpdate = Date.now();
 
@@ -62,42 +56,191 @@ function Room(token, rooms) {
 			this.id = makeid(5);
 		}
 	}
-	console.log('New Room ' + this.id + ' created.');
+	console.log(this.id + ' - Was created (ROOM)');
 }
 
 /**
-* Sets the last Update date to
+* Gets the name of the host
 *
 * @author: Michiocre
+* @returns: Array of all the names
 */
-method.setDate = function() {
-	this.lastUpdate = Date.now();
+method.getHostName = function() {
+	return this.host.name;
 }
 
 /**
-* Return the time of last update
+* Gets a list of all usernames
 *
 * @author: Michiocre
+* @returns: Array of all the names
 */
-method.getDate = function() {
-	return this.lastUpdate;
-}
-
-/**
-* Delete Absend Users
-*
-* @author: Michiocre
-*/
-method.deleteAbsentUsers = function() {
+method.getUserNames = function() {
+	let names = [];
+	names.push(this.host.name);
 	for (var i = 0; i < this.connectedUser.length; i++) {
-		if (Date.now() - this.connectedUser[i].lastUpdate > 600000) {
-			console.log('User deleted: ' + this.connectedUser[i].name);
-			this.connectedUser.splice(i,1);
-		}
+		names.push(this.connectedUser[i].name);
 	}
-	return this.lastUpdate;
+	return names;
 }
 
+/**
+* Returns the user with the given name
+*
+* @author: Michiocre
+* @param {string} name The name that identifies the user
+* @return {object} The user object
+*/
+method.getUserByName = function(name) {
+	for (var i = 0; i < this.connectedUser.length; i++) {
+		if (this.connectedUser[i].name == name)
+			return this.connectedUser[i];
+		}
+	return null;
+}
+
+/**
+* Adds a user to the connectedUser list
+*
+* @author: Michiocre
+* @param {string} name The username that wants to be added
+*/
+method.addUser = async function(name) {
+	this.connectedUser.push({
+		name: name,
+		voted: null
+	});
+}
+
+/**
+* Removes a user from the connectedUser list
+*
+* @author: Michiocre
+* @param {string} name The username that wants to be removed
+*/
+method.removeUser = async function(name) {
+	let user = this.getUserByName(name);
+	i = this.connectedUser.indexOf(user);
+	this.connectedUser.splice(i,1);
+}
+
+/**
+* Returns all the playlists of the host
+*
+* @author: Michiocre
+* @return {array} Array of all the playlist objects
+*/
+method.getPlaylists = function() {
+	let returnPlaylists = [];
+	for (var i = 0; i < this.playlists.length; i++) {
+		returnPlaylists[i] = {
+			id: this.playlists[i].id,
+			name: this.playlists[i].name
+		};
+	}
+	return returnPlaylists;
+}
+
+/**
+* Returns the playlist object that corresponse to the given id
+*
+* @author: Michiocre
+* @param {string} playlistId The id that identifies the playlist
+* @return {object} The playlist object
+*/
+method.getPlaylistById = function(playlistId) {
+	for (var i = 0; i < this.playlists.length; i++) {
+		if (this.playlists[i].id == playlistId)
+			return this.playlists[i];
+		}
+	return null;
+}
+
+/**
+* Changes the active Playlist to the one that was given
+*
+* @author: Michiocre
+* @param {string} playlistId The id that identifies the playlist
+* @return {boolean} True if completed
+*/
+method.changePlaylist = async function(playlistId) {
+	let playlist = this.getPlaylistById(playlistId);
+
+		//Load tracks into Playlist if its empty
+	if (playlist.tracks.length == 0) {
+		let nextTracks = playlist.href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal';
+		playlist.tracks = await this.loadOneBatch(nextTracks);
+	}
+
+	//If the playlist is smaller than 4 tracks, it will not change
+	if (playlist.tracks.length < 4) {
+		return false;
+	}
+
+	//Generate 4 new songs if the playlist changed
+	if (playlist != this.activePlaylist) {
+		await this.getRandomTracks(playlist.id);
+	}
+
+	this.activePlaylist = playlist;
+	return true;
+}
+
+/**
+* Sets the internal list activeTracks to 4 random selected tracks from a playlist
+*
+* @author: Michiocre
+* @param {string} playlistId The id that identifies the playlist
+* @return {boolean} True if completed
+*/
+method.getRandomTracks = async function(playlistId) {
+	let playlist = this.getPlaylistById(playlistId);
+
+	//Reset all the votes
+	this.host.voted = null;
+	for (var i = 0; i < this.connectedUser.length; i++) {
+		this.connectedUser[i].voted = null;
+	}
+
+	let indexes = [];
+
+	//To make sure all the indexes are different
+	for (var i = 0; i < 4; i++) {
+		let counter;
+		do {
+			counter = 0;
+			indexes[i] = Math.floor(Math.random() * playlist.tracks.length);
+			for (var j = 0; j < indexes.length; j++) {
+				if (indexes[j] == indexes[i] && i != j) {
+					counter++;
+				}
+			}
+		} while (counter > 0);
+	}
+
+	let selectedTracks = [];
+	for (var i = 0; i < indexes.length; i++) {
+		selectedTracks[i] = playlist.tracks[indexes[i]].track;
+		selectedTracks[i].votes = 0;
+	}
+	this.activeTracks = selectedTracks;
+	return true;
+}
+
+/**
+* Returns the track from activeTracks with the given id
+*
+* @author: Michiocre
+* @param {string} id The id that identifies the track
+* @return {object} The track object
+*/
+method.getActiveTrackById = function(id) {
+	for (var i = 0; i < this.activeTracks.length; i++) {
+		if (this.activeTracks[i].id == id)
+			return this.activeTracks[i];
+		}
+	return null;
+}
 
 /**
 * Fetches the data of the host, and all his playlists
@@ -112,8 +255,7 @@ method.fetchData = async function() {
 	});
 	let hostRequestData = await hostRequest.json();
 
-	this.host.name = hostRequestData.display_name;
-	this.host.id = hostRequestData.id;
+	this.host.name = hostRequestData.display_name || hostRequestData.id;
 	this.host.profileUrl = hostRequestData.external_urls.spotify;
 
 	//Gets all the hosts playlists TODO: This should probably loop (now max 50 playlists will be returned)
@@ -144,73 +286,6 @@ method.fetchData = async function() {
    for (var i = 0; i < this.playlists.length; i++) {
 	   this.playlists[i].tracks = [];
    }
-
-   console.log('User ' + this.host.id + ' logged in all data was fetched.');
-}
-
-/**
-* Returns all the playlists of the host
-*
-* @author: Michiocre
-* @return {array} Array of all the playlist objects
-*/
-method.getPlaylists = async function() {
-	let returnPlaylists = [];
-	for (var i = 0; i < this.playlists.length; i++) {
-		returnPlaylists[i] = {
-			id: this.playlists[i].id,
-			name: this.playlists[i].name,
-			img: this.playlists[i].images[0].url,
-			url: this.playlists[i].external_urls.spotify,
-			href: this.playlists[i].href
-		};
-	}
-	return returnPlaylists;
-}
-
-/**
-* Returns the playlist object that corresponse to the given id
-*
-* @author: Michiocre
-* @param {string} playlistId The id that identifies the playlist
-* @return {object} The playlist object
-*/
-method.getPlaylistById = function(playlistId) {
-	for (var i = 0; i < this.playlists.length; i++) {
-		if (this.playlists[i].id == playlistId)
-			return this.playlists[i];
-		}
-	return emptyPlaylist;
-}
-
-/**
-* Returns the user with the given name
-*
-* @author: Michiocre
-* @param {string} name The name that identifies the user
-* @return {object} The user object
-*/
-method.getUserByName = function(name) {
-	for (var i = 0; i < this.connectedUser.length; i++) {
-		if (this.connectedUser[i].name == name)
-			return this.connectedUser[i];
-		}
-	return null;
-}
-
-/**
-* Returns the track from activeTracks with the given id
-*
-* @author: Michiocre
-* @param {string} id The id that identifies the track
-* @return {object} The track object
-*/
-method.getActiveTrackById = function(id) {
-	for (var i = 0; i < this.activeTracks.length; i++) {
-		if (this.activeTracks[i].id == id)
-			return this.activeTracks[i];
-		}
-	return null;
 }
 
 /**
@@ -240,73 +315,13 @@ method.loadOneBatch = async function(next) {
 }
 
 /**
-* Sets the internal varible activeTracks to 4 random selected tracks from a playlist
+* Gets the active Player data from the Spotify API
 *
 * @author: Michiocre
-* @param {string} playlistId The id that identifies the playlist
-* @return {boolean} True if completed
+* @return {boolean} True when done
 */
-method.getRandomTracks = async function(playlistId, intern) {
-	let playlist = this.getPlaylistById(playlistId);
-
-	if (playlist.tracks.length == 0) {
-		let nextTracks = playlist.href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal';
-		playlist.tracks = await this.loadOneBatch(nextTracks);
-	}
-
-	if (playlist.tracks.length < 4) {
-		return false;
-	}
-
-	if (playlist == this.activePlaylist && intern == false) {
-		return false;
-	}
-
-	//Reset all the votes
-	this.host.voted = null;
-	for (var i = 0; i < this.connectedUser.length; i++) {
-		this.connectedUser[i].voted = null;
-	}
-
-	this.activePlaylist = playlist;
-	let indexes = [];
-
-	//To make sure all the indexes are different
-	for (var i = 0; i < 4; i++) {
-		let counter;
-		do {
-			counter = 0;
-			indexes[i] = Math.floor(Math.random() * playlist.tracks.length);
-			for (var j = 0; j < indexes.length; j++) {
-				if (indexes[j] == indexes[i] && i != j) {
-					counter++;
-				}
-			}
-		} while (counter > 0);
-	}
-
-	let selectedTracks = [];
-	for (var i = 0; i < indexes.length; i++) {
-		selectedTracks[i] = playlist.tracks[indexes[i]].track;
-		selectedTracks[i].votes = 0;
-	}
-	this.activeTracks = selectedTracks;
-	return true;
-}
-
-/**
-* Returns the necessary data to update the frontend
-*
-* @author: Michiocre
-* @return {object} Object filled with the data
-*/
-method.update = async function(loggedIn, name) {
-	this.setDate();
-	if (loggedIn !== "true") {
-		this.getUserByName(name).lastUpdate = Date.now();
-	}
-    let state = {};
-    let playlistPlaceholder = emptyPlaylist;
+method.update = async function() {
+	this.lastUpdate = Date.now();
 
     let request = await fetch('https://api.spotify.com/v1/me/player', {
         headers: {
@@ -314,89 +329,29 @@ method.update = async function(loggedIn, name) {
         }
     });
 
-	let fetchData;
-	let activePlayer;
-
-	try {
-		 fetchData = await request.json();
-		 activePlayer = {
-	        volume: fetchData.device.volume_percent,
-	        progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
-	        isPlaying: fetchData.is_playing,
-	        track: {
-	            album: fetchData.item.album,
-	            artists: fetchData.item.artists,
-	            href: fetchData.item.href,
-	            id: fetchData.item.id,
-	            name: fetchData.item.name
-	       }
-	    }
-	} catch (e) {
-		activePlayer = null;
+	let fetchData = await request.json();
+	if (fetchData !== null) {
+		this.activePlayer = {
+			volume: fetchData.device.volume_percent,
+			progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
+			isPlaying: fetchData.is_playing,
+			track: {
+				album: fetchData.item.album,
+				artists: fetchData.item.artists,
+				href: fetchData.item.href,
+				id: fetchData.item.id,
+				name: fetchData.item.name
+			}
+		};
 	}
 
-    if (this.activePlaylist.id !== undefined) {
-        playlistPlaceholder = {
-            name: this.activePlaylist.name,
-            id: this.activePlaylist.id,
-            url: this.activePlaylist.external_urls.spotify,
-            img: this.activePlaylist.images[0].url
-        }
-    }
-
-    state = {
-        activePlaylist: playlistPlaceholder,
-        activeTracks: this.activeTracks,
-        numPlaylists: this.playlists.length,
-        connectedUser: this.connectedUser,
-        host: {
-            name: this.host.name,
-            id: this.host.id,
-            voted: this.host.voted
-        },
-        activePlayer: activePlayer
-    }
-
-	if (activePlayer !== null && this.activePlaylist.id !== undefined) {
-		if (activePlayer.progress > 98) {
+	if (this.activePlayer !== null && this.activePlaylist !== null) {
+		if (this.activePlayer.progress > 98) {
 			await this.play();
 		}
 	}
 
-    return state;
-}
-
-/**
-* Checks if a given token is the one that was provided by spotify for this room
-*
-* @author: Michiocre
-* @param {string} token The token that gets sent over from the frontend
-* @return {boolean} True if the token match
-*/
-method.checkToken = async function(token) {
-	return token == this.host.token;
-}
-
-/**
-* Adds a username to the list of connected users
-*
-* @author: Michiocre
-* @param {string} name The username that wants to be added
-* @return {boolean} True if the user was added, false if the name already exists
-*/
-method.connect = async function(name) {
-	if (this.getUserByName(name) !== null || name === "null") {
-		return false;
-	}
-
-	let newUser = {
-		name: name,
-		voted: null,
-		lastUpdate: Date.now()
-	}
-	this.connectedUser.push(newUser);
-	console.log('New User: ' + name + ' connected');
-	return true;
+    return true;
 }
 
 /**
@@ -407,10 +362,10 @@ method.connect = async function(name) {
 * @param {string} trackId The track whomst the user has voted for
 * @return {boolean} True if the vote was successfully changed
 */
-method.vote = async function(name, trackId, loggedIn) {
+method.vote = async function(trackId, isHost, name) {
 	let user = this.getUserByName(name);
 
-	if (loggedIn == 'true') {
+	if (isHost == true) {
 		user = this.host;
 	}
 
@@ -441,23 +396,6 @@ method.vote = async function(name, trackId, loggedIn) {
 		return true;
 	}
 	return false;
-}
-
-/**
-* Changes the volume of the active audio player
-*
-* @author: Michiocre
-* @param {int} volume The volume percentage
-* @return {boolean} True if the vote was successfully changed
-*/
-method.setVolume = async function(volume) {
-	console.log(volume);
-	let request = fetch('https://api.spotify.com/v1/me/player/volume?volume_percent=' + volume, {
-        headers: {
-            "Authorization": "Bearer " + this.host.token
-        }
-    });
-	return true;
 }
 
 /**
@@ -499,7 +437,7 @@ method.play = async function() {
 		body: JSON.stringify(payload)
 	});
 
-	return this.getRandomTracks(this.activePlaylist.id, true);
+	return this.getRandomTracks(this.activePlaylist.id);
 }
 
 module.exports = Room;

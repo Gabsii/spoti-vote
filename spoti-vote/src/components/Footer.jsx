@@ -39,8 +39,8 @@ class Footer extends Component {
 			<SongIcon background={track.img}/>
 			<SongAggregation songName={track.name} artists={track.artists}/>
 			<Progressbar activePlayer={this.props.activePlayer}/> {
-				this.props.loggedIn
-					? <VolumeBar activePlayer={this.props.activePlayer} volumeHandler={this.props.volumeHandler}/>
+				this.props.isHost
+					? <VolumeBar activePlayer={this.props.activePlayer}/>
 					: ''
 			}
 

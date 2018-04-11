@@ -4,100 +4,112 @@ import Sidebar from './Sidebar.jsx';
 // import Menu from './Menubar/Menu.jsx';
 import CardContainer from './Cards/CardContainer.jsx';
 import queryString from 'query-string';
+import socketIOClient from 'socket.io-client'
 
 let constants = require('../js/constants');
 let config = require('../js/config');
 
+let defaultActivePlayer = {
+	progress: 0,
+	track: {
+		name: 'Spotify isnt running',
+		album: {images: [{url: 'http://via.placeholder.com/75x75'}]},
+		artists: [{name: 'Turn on Spotify'}]
+	}
+};
+let defaultActivePlaylist= {
+	name: 'Host is selecting',
+	images: [
+		{url:'http://via.placeholder.com/152x152'}
+	],
+	external_urls: {spotify: ''}
+};
+
 class App extends Component {
 	constructor() {
 		super();
+		this.socket = socketIOClient('http://' + config.ipAddress + ':' + config.portBackend);
 		this.state = {
-			loggedIn: false,
-			activePlaylist: {},
-			activeTracks: {},
-			activePlayer: {},
-			numPlaylists: 0,
+			token: queryString.parse(window.location.search).token || null,
+			roomId: window.location.pathname.split('/')[2],
+			loginPage: 'http://' + config.ipAddress + ':' + config.portFrontend,
+			isHost: false,
 			connectedUser: [],
-			host: {},
-			update: true,
-			name: null
+			playlists: [],
+			host: {
+				name: null,
+				voted: null
+			},
+			activePlaylist: defaultActivePlaylist,
+			activeTracks: {},
+			activePlayer: defaultActivePlayer
 		}
 	}
 
 	componentDidMount() {
-		let token = queryString.parse(window.location.search).token;
-		let name = queryString.parse(window.location.search).name;
-		if (token !== undefined) {
-			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/checkToken?id=' + window.location.pathname.split('/')[2] + '&token=' + token, {}).then((response) => response.json().then(data => {
-				switch (data.responseCode) {
-					case 200:
-						this.setState({loggedIn: data.content});
-						break;
-					default:
-						window.location.pathname = '/';
-						break;
-				}
-			})).catch(function() {
-				//window.location.reload();
+		//When the server asks for the id, it will return the id and the token
+		this.socket.on('roomId', data => {
+			this.socket.emit('roomId', {
+				roomId: this.state.roomId,
+				token: this.state.token
 			});
-		} else {
-			this.setState({loggedIn: false});
-			if (name === undefined && this.state.loggedIn === false) {
-				let username = window.prompt("Set username.\n\n If this is your second time in this prompt, choose another Username because the old one is taken.");
-				if (username !== null || username !== "") {
-					fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/connect?id=' + window.location.pathname.split('/')[2] + '&name=' + username, {}).then((response) => response.json().then(data => {
-						if (data.responseCode == "500") {
-							console.log(data.responseCode);
-							window.reload();
-						} else {
-							console.log(data.responseCode);
-							this.setState({name: username});
-						}
-					})).catch(function() {});
-				} else {
-					window.location.pathname = 'http://' + config.ipAddress + ':' + config.portFrontend;
-				}
-			} else {
-				this.setState({name: name});
-			}
-		}
-	}
+		});
 
-	componentDidUpdate() {
-		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/update?id=' + window.location.pathname.split('/')[2] + '&loggedIn=' + this.state.loggedIn + '&name=' + this.state.name, {}).then((response) => response.json().then(data => {
-			setTimeout(function() {
-				switch (data.responseCode) {
-					case 200:
-						this.setState({
-							activePlaylist: data.content.activePlaylist,
-							activeTracks: data.content.activeTracks,
-							numPlaylists: data.content.numPlaylists,
-							connectedUser: data.content.connectedUser,
-							host: data.content.host,
-							activePlayer: data.content.activePlayer
-						});
-						break;
-					default:
-						window.location.pathname = '/';
-						break;
+		//When the server asks for a name, the user is prompted with popups
+		this.socket.on('nameEvent', data => {
+			let name = window.prompt('Enter Name:');
+			if (name !== null) {
+				while (data.userNames.indexOf(name) !== -1 || name.length > 15) {
+					if (name.length > 15) {
+						name = window.prompt('This Name is to long, choose another with a maximum of 15 characters:');
+					} else {
+						name = window.prompt('This Name is already taken, choose another:');
+					}
 				}
-			}.bind(this), 500);
-		})).catch(function() {
-			window.location.reload();
+			}
+			if (name === null) {
+				window.alert('You have to enter a Name.');
+				window.location.pathname = '/';
+			} else {
+				this.socket.emit('nameEvent', {name: name});
+			}
+		});
+
+		this.socket.on('initData', data => {
+			this.setState({
+				host: {
+					name: data.hostName,
+					voted: this.state.host.voted
+				},
+				playlists: data.playlists,
+				isHost: data.isHost
+			});
+
+		});
+
+		this.socket.on('update', data => {
+			this.setState({
+				connectedUser: data.connectedUser,
+				host: data.host,
+				activePlaylist: data.activePlaylist || this.state.activePlaylist,
+				activeTracks: data.activeTracks,
+				activePlayer: data.activePlayer || defaultActivePlayer
+			});
+		});
+
+		this.socket.on('errorEvent', data => {
+			window.alert(data.message);
+			window.location.pathname = '/';
 		});
 	}
 
 	selectPlaylist(event) {
 		let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
-		if (playlistId == null) {
-			playlistId = 'none';
+		if (playlistId != null && playlistId != 'none') {
+			this.socket.emit('changePlaylist', {
+				playlistId: playlistId
+			});
 		}
-		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/newTracks?id=' + window.location.pathname.split('/')[2] + '&playlist=' + playlistId, {}).then((response) => response.json().then(data => {}));
-	}
-
-	volumeHandler(event) {
-		let volume = event.target.value;
-		fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/setVolume?id=' + window.location.pathname.split('/')[2] + '&volume=' + volume, {}).then((response) => response.json().then(data => {}));
 	}
 
 	render() {
@@ -107,9 +119,9 @@ class App extends Component {
 				width: '100vw'
 			}}>
 			{/* <Menu/> */}
-			<Sidebar loggedIn={this.state.loggedIn} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} numPlaylists={this.state.numPlaylists}/>
-			<CardContainer name={this.state.name} loggedIn={this.state.loggedIn} activeTracks={this.state.activeTracks}/>
-			<Footer loggedIn={this.state.loggedIn} activePlayer={this.state.activePlayer} volumeHandler={this.volumeHandler.bind(this)}/>
+			<Sidebar isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
+			<CardContainer name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
+			<Footer isHost={this.state.isHost} activePlayer={this.state.activePlayer}/>
 		</section>);
 	}
 }

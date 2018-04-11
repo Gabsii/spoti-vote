@@ -44,45 +44,17 @@ let centerContainer = {
 	marginBottom: '5px'
 }
 class Infos extends Component {
-	constructor() {
-		super();
-		this.state = {
-			playlists: []
-		}
-	}
-
-	componentDidUpdate() {
-		//This is only run, when the update request reports a different amount of playlists then the current numbers of playlists
-		//It will fetch all the playlists again. (Do we need this)
-		if (this.props.loggedIn === true && this.props.numPlaylists !== this.state.playlists.length) {
-			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/room/playlists?id=' + window.location.pathname.split('/')[2], {}).then((response) => response.json().then(data => {
-				switch (data.responseCode) {
-					case 200:
-						if (this.state.playlists.length !== data.content.length) {
-							this.setState({playlists: data.content});
-						}
-						break;
-					default:
-						window.location.pathname = '/';
-						break;
-				}
-
-			})).catch(function() {
-				window.location.reload();
-			});
-		}
-	}
 
 	render() {
 		let option = <div>{this.props.activePlaylist.name}</div>;
 
-		if (this.props.loggedIn === true) {
+		if (this.props.isHost === true) {
 			option = <select style={{
 					width: '175px'
 				}} onChange={this.props.playlistHandler}>
 
 				<option>Select a Playlist</option>
-				{this.state.playlists.map((playlist) => <option key={playlist.id} id={playlist.id} img={playlist.img} url={playlist.url} href={playlist.href}>{playlist.name}</option>)}
+				{this.props.playlists.map((playlist) => <option key={playlist.id} id={playlist.id}>{playlist.name}</option>)}
 			</select>;
 		}
 
@@ -111,8 +83,8 @@ class Infos extends Component {
 					fontSize: '14px'
 				}}>{option}
 			</div>
-			<a href={this.props.activePlaylist.url}>
-				<img alt="Current Playlist" src={this.props.activePlaylist.img || 'http://via.placeholder.com/152x152'} style={{
+			<a href={this.props.activePlaylist.external_urls.spotify}>
+				<img alt="Current Playlist" src={this.props.activePlaylist.images[0].url} style={{
 						...imgStyle,
 						display: 'flex',
 						alignItems: 'center',

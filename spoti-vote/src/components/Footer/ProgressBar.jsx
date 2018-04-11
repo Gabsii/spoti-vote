@@ -23,17 +23,7 @@ class Progressbar extends Component {
 		}
 		if (this.props.activePlayer !== null) {
 			if (this.props.activePlayer.progress !== undefined) {
-				progressStyle = {
-					//width must be manipulated
-					background: 'linear-gradient(to right, #ffff00, #00ff00)',
-					height: '14px',
-					borderStyle: 'solid',
-					borderRadius: '15px',
-					borderColor: '#333',
-					margin: '2px',
-					animation: 'width 3s ease-out infinite',
-					width: this.props.activePlayer.progress + '%'
-				}
+				progressStyle.width = this.props.activePlayer.progress + '%';
 			}
 		}
 
