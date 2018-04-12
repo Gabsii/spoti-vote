@@ -80,7 +80,7 @@ class App extends Component {
 					}
 				}
 			}
-			if (name === null) {
+			if (name === null || name === '') {
 				window.alert('You have to enter a Name.');
 				window.location.pathname = '/';
 			} else {

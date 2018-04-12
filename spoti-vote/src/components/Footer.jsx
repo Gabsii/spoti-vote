@@ -11,6 +11,7 @@ let defaultStyle = {
 	position: 'absolute',
 	bottom: 0,
 	backgroundColor: constants.colors.backgroundLite,
+	textOverflow: 'ellipsis',
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center'

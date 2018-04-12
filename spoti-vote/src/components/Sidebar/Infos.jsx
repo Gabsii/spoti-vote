@@ -7,6 +7,7 @@ let constants = require('../../js/constants');
 let defaultStyle = {
 	height: '300px',
 	maxWidth: '250px',
+	minWidth: '200px',
 	position: 'absolute',
 	top: 0,
 	display: 'flex',
