@@ -43,7 +43,7 @@ function Room(token, rooms) {
 	this.connectedUser = [];
 	this.activePlayer = {};
 	this.id = makeid(5);
-	this.lastUpdate = Date.now();
+	this.hostDisconnect = null;
 
 	//Makes sure the id is unique
 	let counter;
@@ -60,16 +60,6 @@ function Room(token, rooms) {
 	}
 	console.log(this.id + ' - Was created (ROOM)');
 }
-
-/**
-* Gets the name of the host
-*
-* @author: Michiocre
-* @returns: Array of all the names
-*/
-method.getHostName = function() {
-	return this.host.name;
-};
 
 /**
 * Gets a list of all usernames

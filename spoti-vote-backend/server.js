@@ -17,7 +17,7 @@ let io = socketIo(server);
 //Global Varibles
 let redirect_uri = process.env.REDIRECT_URI || 'http://' + config.ipAddress + ':' + config.portBackend + '/callback';
 let rooms = [];
-let allClients = [];
+let allClients = {};
 
 /**
 * Return the room with the specified id
@@ -91,21 +91,34 @@ app.get('/rooms', async (req, res) => {
 
 	res.send({responseCode: constants.codes.SUCCESS, content: roomIds});
 });
-
 /*jshint ignore: end */
 
+
 /**
-* Is called when a new client connects to the socket
+* Is called when a new connection is established
 */
 io.on('connection', (socket) => {
-    let room = null;
+	//Local varibles, can only be used by the same connection (but in every call)
+	let room = null;
     let isHost = false;
     let name = null;
 
-	allClients.push(socket);
-	console.log('Current Usercount: ' + allClients.length);
+	/*jshint ignore: start */
+	//This function is called every 500ms
+	let updateInterval = setInterval(
+        () => theUpdateFunction(socket, room, isHost),500
+	);
+	/*jshint ignore: end */
 
+	//This is what happens when a user connects
     socket.emit('roomId');
+
+	/**
+    * Called when a user wants to connect to a room
+	*
+	* Will set the local varible {room} and {isHost}
+	* @param {string} roomId Id of the room
+    */
     socket.on('roomId', data => {
         room = getRoomById(data.roomId);
         if (room !== null) {
@@ -113,9 +126,11 @@ io.on('connection', (socket) => {
                 isHost = true;
 				socket.emit('initData', {
 					playlists: room.getPlaylists(),
-					hostName: room.getHostName(),
+					hostName: room.host.name,
 					isHost: isHost
 				});
+
+				console.log('-c- Host connected');
             } else {
                 socket.emit('nameEvent', {
 					userNames: room.getUserNames()
@@ -126,49 +141,78 @@ io.on('connection', (socket) => {
         }
     });
 
+	/**
+    * Called when a user thats not a host wants to enter a room
+	*
+	* Will set the local varible {name}
+	* @param {string} name Name of the user
+    */
     socket.on('nameEvent', data => {
         name = data.name;
         if (name !== null) {
             room.addUser(name);
 			socket.emit('initData', {
-				hostName: room.getHostName()
+				hostName: room.host.name
 			});
         }
+
+		console.log('-c- ['+data.name+'] connected');
     });
 
-	socket.on('changePlaylist', data => {
-        room.changePlaylist(data.playlistId);
-    });
-
-	socket.on('vote', data => {
-        room.vote(data.trackId, isHost, name);
-    });
-
+	/**
+    * Called when the host changes the volume
+	* @param {int} volume Volume in percent
+    */
 	socket.on('changeVolume', data => {
         room.changeVolume(data.volume);
+
+		console.log('-volume- The volume was changed to: ['+data.volume+']');
     });
 
-	/*jshint ignore: start */
-    setInterval(
-        () => theUpdateFunction(socket, room, isHost),500
-    );
-	/*jshint ignore: end */
+	/**
+    * Called when the host changes the playlist
+	* @param {string} playlistId Name of the user
+    */
+	socket.on('changePlaylist', data => {
+        room.changePlaylist(data.playlistId);
+
+		console.log('-playlistChange- Playlist changed to: ['+data.playlistId+']');
+    });
+
+	/**
+    * Called when a user votes on a track
+	* @param {string} trackId Id of the track
+    */
+	socket.on('vote', data => {
+        room.vote(data.trackId, isHost, name);
+
+		if (isHost === true) {
+			console.log('-vote- the host voted for: ['+data.trackId+']');
+		} else {
+			console.log('-vote- ['+name+'] voted for: ['+data.trackId+']');
+		}
+    });
 
     /**
-    * Called when a client disconnects
+    * Called when a connection is closed
     */
     socket.on('disconnect', () => {
+		/*jshint ignore: start */
+		clearInterval(updateInterval);
+		/*jshint ignore: end */
 		if (room !== null) {
-			room.removeUser(name);
-		}
-		let i = allClients.indexOf(socket);
-		allClients.splice(i,1);
-		if (allClients.length >= 0 && rooms.length > 0) {
-			//rooms = [];
-			//console.log('All rooms were deleted');
-		}
+			if (isHost === false) {
+				room.removeUser(name);
 
-		console.log('Current Usercount: ' + allClients.length);
+				console.log('-d- ['+name+'] disconnect');
+			} else {
+
+
+				console.log('-d- Host disconnect');
+			}
+		} else {
+			console.log('-d- User was auto-disconnected');
+		}
     });
 });
 
@@ -181,11 +225,11 @@ io.on('connection', (socket) => {
 * @param {socket} socket The socket object passed down from the call
 */
 async function theUpdateFunction(socket, room, isHost) {
-	if(allClients.indexOf(socket) >= 0) {
-		if (room !== null) {
-			room.update(isHost);
-		}
+	if (room !== null) {
+		room.update(isHost);
 		socket.emit('update', room);
+
+		console.log('-u-');
 	}
 };
 
