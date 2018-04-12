@@ -350,23 +350,17 @@ method.update = async function(isHost) {
 	}
 
 	if (fetchData !== null) {
-		if (fetchData.device !== undefined && fetchData.item !== undefined) {
-			this.activePlayer = {
-				volume: fetchData.device.volume_percent,
-				progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
-				isPlaying: fetchData.is_playing,
-				track: {
-					album: fetchData.item.album,
-					artists: fetchData.item.artists,
-					href: fetchData.item.href,
-					id: fetchData.item.id,
-					name: fetchData.item.name
-				}
-			};
-		} else {
+		if (fetchData.device === undefined || fetchData.item === undefined || fetchData.track === undefined) {
 			this.activePlayer = {
 				volume: this.activePlayer.volume,
 				progress: this.activePlayer.progress,
+				isPlaying: fetchData.is_playing,
+				track: this.activePlayer.track
+			};
+		} else {
+			this.activePlayer = {
+				volume: fetchData.device.volume_percent,
+				progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
 				isPlaying: fetchData.is_playing,
 				track: {
 					album: fetchData.item.album,
@@ -479,6 +473,23 @@ method.play = async function() {
 	});
 
 	return this.getRandomTracks(this.activePlaylist.id);
+};
+
+/**
+* Changes the volume to a given value
+*
+* @author: Michiocre
+* @param {int} volume The volume in percent
+* @return {boolean} True if completed
+*/
+method.changeVolume = async function(volume) {
+	let request = await fetch('https://api.spotify.com/v1/me/player/volume?volume_percent=' + volume,{
+		headers: {
+			"Authorization": "Bearer " + this.host.token
+		},
+		method: "PUT"
+	});
+	return true;
 };
 
 /*jshint ignore: end */

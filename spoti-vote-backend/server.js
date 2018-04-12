@@ -144,6 +144,10 @@ io.on('connection', (socket) => {
         room.vote(data.trackId, isHost, name);
     });
 
+	socket.on('changeVolume', data => {
+        room.changeVolume(data.volume);
+    });
+
 	/*jshint ignore: start */
     setInterval(
         () => theUpdateFunction(socket, room, isHost),500

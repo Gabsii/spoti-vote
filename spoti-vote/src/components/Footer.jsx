@@ -40,7 +40,7 @@ class Footer extends Component {
 			<SongAggregation songName={track.name} artists={track.artists}/>
 			<Progressbar activePlayer={this.props.activePlayer}/> {
 				this.props.isHost
-					? <VolumeBar activePlayer={this.props.activePlayer}/>
+					? <VolumeBar activePlayer={this.props.activePlayer} socket={this.props.socket}/>
 					: ''
 			}
 
