@@ -121,7 +121,13 @@ method.addUser = async function(name) {
 method.removeUser = async function(name) {
 	let user = this.getUserByName(name);
 	i = this.connectedUser.indexOf(user);
-	this.connectedUser.splice(i,1);
+	if (i >= 0) {
+		if (user.voted !== null) {
+			track = this.getActiveTrackById(user.voted);
+			track.votes -= 1;
+		}
+		this.connectedUser.splice(i,1);
+	}
 }
 
 /**
@@ -336,7 +342,7 @@ method.update = async function(isHost) {
 	}
 
 	if (fetchData !== null) {
-		if (fetchData.device !== undefined) {
+		if (fetchData.device !== undefined && fetchData.item !== undefined) {
 			this.activePlayer = {
 				volume: fetchData.device.volume_percent,
 				progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
@@ -352,7 +358,7 @@ method.update = async function(isHost) {
 		} else {
 			this.activePlayer = {
 				volume: this.activePlayer.volume,
-				progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
+				progress: this.activePlayer.progress,
 				isPlaying: fetchData.is_playing,
 				track: {
 					album: fetchData.item.album,

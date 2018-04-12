@@ -99,6 +99,7 @@ io.on('connection', function(socket) {
     let name = null;
 
 	allClients.push(socket);
+	console.log('Current Usercount: ' + allClients.length);
 
     socket.emit('roomId');
     socket.on('roomId', data => {
@@ -148,7 +149,6 @@ io.on('connection', function(socket) {
     * Called when a client disconnects
     */
     socket.on('disconnect', function() {
-		console.log('User disconnected');
 		if (room != null) {
 			room.removeUser(name);
 		}
