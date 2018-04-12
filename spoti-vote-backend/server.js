@@ -149,7 +149,7 @@ io.on('connection', function(socket) {
     * Called when a client disconnects
     */
     socket.on('disconnect', function() {
-		if (room != null) {
+		if (room !== null) {
 			room.removeUser(name);
 		}
 		let i = allClients.indexOf(socket);

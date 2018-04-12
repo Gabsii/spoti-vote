@@ -115,7 +115,7 @@ class App extends Component {
 
 	selectPlaylist(event) {
 		let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
-		if (playlistId != null && playlistId != 'none') {
+		if (playlistId !== null && playlistId !== 'none') {
 			this.socket.emit('changePlaylist', {
 				playlistId: playlistId
 			});

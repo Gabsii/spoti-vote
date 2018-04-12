@@ -3,7 +3,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faHeadphones} from '@fortawesome/fontawesome-free-solid';
 
 let constants = require('../../js/constants');
-let config = require('../../js/config');
 
 let defaultStyle = {
 	height: '300px',
