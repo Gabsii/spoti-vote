@@ -1,3 +1,4 @@
+/*jshint esversion: 6, node: true, undef: true, unused: true */
 let codes = {
 	SUCCESS: 200,
 	NOTFOUND: 404,
@@ -7,6 +8,6 @@ let codes = {
 
 module.exports = {
     codes: codes
-}
+};
 
 //let color = require('./css/colors.js'); Path to this file color.green == "1DB954"
