@@ -28,7 +28,7 @@ class Footer extends Component {
 
 			if (this.props.activePlayer.track !== null && this.props.activePlayer.track !== undefined) {
 				track = {
-					img: this.props.activePlayer.track.album.images[0].url,
+					img: this.props.activePlayer.track.album.images[this.props.activePlayer.track.album.images.length - 1].url,
 					name: this.props.activePlayer.track.name,
 					artists: this.props.activePlayer.track.artists
 				}

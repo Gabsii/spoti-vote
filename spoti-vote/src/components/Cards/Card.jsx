@@ -12,8 +12,8 @@ let defaultStyle = {
 	backgroundPosition: 'center',
 	backgroundRepeat: 'no-repeat',
 	backgroundSize: 'cover',
-	backgroundColor: constants.colors.blueCard,
 	WebKitUserSelect: 'none',
+	color: constants.colors.font,
 	MozUserSelect: 'none'
 }
 
@@ -91,14 +91,20 @@ class Card extends Component {
 					backgroundColor: 'rgba(' + tint.r + ',' + tint.g + ',' + tint.b + ',' + 0.5 + ')'
 				}}>
 				<div style={{
-						fontSize: '2em',
-						textAlign: 'center'
-					}}>{this.props.randomTrack.name || '-'}</div>
-				<div>{artistString || '-'}</div>
-				<div style={{
+						width: '100%',
+						padding: '15px 0px',
+						background: 'rgba(0, 0, 0, 0.5)'
+					}}>
+					<div style={{
+							fontSize: '2em',
+							textAlign: 'center'
+						}}>{this.props.randomTrack.name || '-'}</div>
+					<div>{artistString || '-'}</div>
+					<div style={{
 
-						fontSize: '1.25em'
-					}}>{votes + ' Votes'}</div>
+							fontSize: '1.25em'
+						}}>{votes + ' Votes'}</div>
+				</div>
 			</div>
 		</button>);
 	}
