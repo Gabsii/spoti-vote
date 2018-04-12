@@ -149,6 +149,7 @@ io.on('connection', function(socket) {
     * Called when a client disconnects
     */
     socket.on('disconnect', function() {
+		console.log('User disconnected');
 		if (room != null) {
 			room.removeUser(name);
 		}
@@ -158,6 +159,8 @@ io.on('connection', function(socket) {
 			//rooms = [];
 			//console.log('All rooms were deleted');
 		}
+
+		console.log('Current Usercount: ' + allClients.length);
     });
 });
 
@@ -168,10 +171,12 @@ io.on('connection', function(socket) {
 * @param {socket} socket The socket object passed down from the call
 */
 async function theUpdateFunction(socket, room, isHost) {
-	if (room !== null) {
-		room.update(isHost);
+	if(allClients.indexOf(socket) >= 0) {
+		if (room !== null) {
+			room.update(isHost);
+		}
+		socket.emit('update', room);
 	}
-	socket.emit('update', room);
 };
 
 /**
