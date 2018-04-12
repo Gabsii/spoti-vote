@@ -88,13 +88,23 @@ class App extends Component {
 		});
 
 		this.socket.on('update', data => {
-			this.setState({
-				connectedUser: data.connectedUser,
-				host: data.host,
-				activePlaylist: data.activePlaylist || this.state.activePlaylist,
-				activeTracks: data.activeTracks,
-				activePlayer: data.activePlayer || defaultActivePlayer
-			});
+			if (data === null) {
+				this.setState({
+					connectedUser: [],
+					host: {name: 'No host found', voted: null},
+					activePlaylist: this.state.activePlaylist,
+					activeTracks: [],
+					activePlayer: defaultActivePlayer
+				});
+			} else {
+				this.setState({
+					connectedUser: data.connectedUser || [],
+					host: data.host || {name: 'No host found', voted: null},
+					activePlaylist: data.activePlaylist || this.state.activePlaylist,
+					activeTracks: data.activeTracks || [],
+					activePlayer: data.activePlayer || defaultActivePlayer
+				});
+			}
 		});
 
 		this.socket.on('errorEvent', data => {
@@ -105,7 +115,7 @@ class App extends Component {
 
 	selectPlaylist(event) {
 		let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
-		if (playlistId != null && playlistId != 'none') {
+		if (playlistId !== null && playlistId !== 'none') {
 			this.socket.emit('changePlaylist', {
 				playlistId: playlistId
 			});
@@ -121,7 +131,7 @@ class App extends Component {
 			{/* <Menu/> */}
 			<Sidebar isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
 			<CardContainer name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
-			<Footer isHost={this.state.isHost} activePlayer={this.state.activePlayer}/>
+			<Footer isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
 		</section>);
 	}
 }
