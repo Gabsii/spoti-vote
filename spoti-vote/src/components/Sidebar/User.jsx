@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import icon from "../../img/userIcon.svg";
 
 let defaultStyle = {
+	width: '100%',
 	display: 'flex',
 	alignItems: 'center',
-	textOverflow: 'ellipsis',
 	justifyContent: 'space-between',
 	padding: '5px'
 }
@@ -25,7 +25,7 @@ class User extends Component {
 			<img alt="icon" src={icon} style={imgStyle}/>
 			<div style={{
 					marginRight: 'auto',
-					minWidth: '82px'
+					textOverflow: 'ellipsis'
 				}}>
 				{this.props.name}
 			</div>

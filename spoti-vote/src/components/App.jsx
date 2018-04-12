@@ -146,7 +146,7 @@ class App extends Component {
 				width: '100vw'
 			}}>
 			<Sidebar isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
-			<CardContainer name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
+			<CardContainer room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
 			<Footer isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
 		</section>);
 	}
