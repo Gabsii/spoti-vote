@@ -1,3 +1,4 @@
+/*jshint esversion: 6, node: true, undef: true*/
 "use strict"; //Places the server in a strict enviroment (More exeptions, catches coding blooper, prevents unsafe actions, disables some features)
 const express = require('express');
 const http = require('http');
@@ -34,10 +35,12 @@ function getRoomById(roomId) {
 	return room;
 }
 
+/*jshint ignore: start */
+
 /**
 * Login using the Spotify API (This is only a Redirect)
 */
-app.get('/login', function(req, res) {
+app.get('/login', (req, res) => {
 	res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state playlist-read-collaborative playlist-read-private', redirect_uri}));
 });
 
@@ -45,7 +48,7 @@ app.get('/login', function(req, res) {
 * The callback that will be called when the Login with the Spotify API is completed
 * Will redirect the user to the newly created room
 */
-app.get('/callback', async function(req, res) {
+app.get('/callback', async (req, res) => {
 	let code = req.query.code || null;
 	let authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
@@ -60,7 +63,7 @@ app.get('/callback', async function(req, res) {
 		},
 		json: true
 	};
-	request.post(authOptions, async function(error, response, body) {
+	request.post(authOptions, async (error, response, body) => {
 		let uri = process.env.FRONTEND_URI || 'http://' + config.ipAddress + ':' + config.portFrontend + '/app';
 
 		let room = new Room(body.access_token, rooms);
@@ -78,7 +81,7 @@ app.get('/callback', async function(req, res) {
 * @Returns ResponseCode of 200
 * @Returns content Array of all the rooms
 */
-app.get('/rooms', async function(req, res) {
+app.get('/rooms', async (req, res) => {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 
 	let roomIds = [];
@@ -89,16 +92,18 @@ app.get('/rooms', async function(req, res) {
 	res.send({responseCode: constants.codes.SUCCESS, content: roomIds});
 });
 
+/*jshint ignore: end */
 
 /**
 * Is called when a new client connects to the socket
 */
-io.on('connection', function(socket) {
+io.on('connection', (socket) => {
     let room = null;
     let isHost = false;
     let name = null;
 
 	allClients.push(socket);
+	console.log('Current Usercount: ' + allClients.length);
 
     socket.emit('roomId');
     socket.on('roomId', data => {
@@ -117,12 +122,12 @@ io.on('connection', function(socket) {
 				});
             }
         } else {
-            socket.emit('errorEvent', {message: 'Room does not exist.'})
+            socket.emit('errorEvent', {message: 'Room does not exist.'});
         }
     });
 
     socket.on('nameEvent', data => {
-        name = data.name
+        name = data.name;
         if (name !== null) {
             room.addUser(name);
 			socket.emit('initData', {
@@ -139,17 +144,21 @@ io.on('connection', function(socket) {
         room.vote(data.trackId, isHost, name);
     });
 
+	socket.on('changeVolume', data => {
+        room.changeVolume(data.volume);
+    });
 
+	/*jshint ignore: start */
     setInterval(
-        () => theUpdateFunction(socket, room),500
+        () => theUpdateFunction(socket, room, isHost),500
     );
-
+	/*jshint ignore: end */
 
     /**
     * Called when a client disconnects
     */
-    socket.on('disconnect', function() {
-		if (room != null) {
+    socket.on('disconnect', () => {
+		if (room !== null) {
 			room.removeUser(name);
 		}
 		let i = allClients.indexOf(socket);
@@ -158,8 +167,12 @@ io.on('connection', function(socket) {
 			//rooms = [];
 			//console.log('All rooms were deleted');
 		}
+
+		console.log('Current Usercount: ' + allClients.length);
     });
 });
+
+/*jshint ignore: start */
 
 /**
 * This function will be called every interval and is used to update the users
@@ -167,12 +180,16 @@ io.on('connection', function(socket) {
 * @author: Michiocre
 * @param {socket} socket The socket object passed down from the call
 */
-async function theUpdateFunction(socket, room) {
-	if (room !== null) {
-		room.update();
+async function theUpdateFunction(socket, room, isHost) {
+	if(allClients.indexOf(socket) >= 0) {
+		if (room !== null) {
+			room.update(isHost);
+		}
+		socket.emit('update', room);
 	}
-	socket.emit('update', room);
 };
+
+/*jshint ignore: end */
 
 /**
 * Starts the server

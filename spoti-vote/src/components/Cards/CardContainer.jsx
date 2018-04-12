@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import Card from './Card.jsx';
 
 let constants = require('../../js/constants');
-let config = require('../../js/config');
 
 let defaultStyle = {
 	height: 'calc(100vh - 125px)',

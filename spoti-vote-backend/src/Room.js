@@ -1,7 +1,9 @@
+/*jshint esversion: 6, node: true, undef: true, unused: true */
 let method = Room.prototype; //This is used when programming object oriented in js to make everything a bit more organised
+/*jshint ignore: start */
 const request = require('request');
 const fetch = require('node-fetch');
-
+/*jshint ignore: end */
 /**
 * Return a randomly generated string with a specified length, based on the possible symbols
 *
@@ -67,7 +69,7 @@ function Room(token, rooms) {
 */
 method.getHostName = function() {
 	return this.host.name;
-}
+};
 
 /**
 * Gets a list of all usernames
@@ -82,7 +84,7 @@ method.getUserNames = function() {
 		names.push(this.connectedUser[i].name);
 	}
 	return names;
-}
+};
 
 /**
 * Returns the user with the given name
@@ -97,7 +99,7 @@ method.getUserByName = function(name) {
 			return this.connectedUser[i];
 		}
 	return null;
-}
+};
 
 /**
 * Adds a user to the connectedUser list
@@ -105,12 +107,12 @@ method.getUserByName = function(name) {
 * @author: Michiocre
 * @param {string} name The username that wants to be added
 */
-method.addUser = async function(name) {
+method.addUser = function(name) {
 	this.connectedUser.push({
 		name: name,
 		voted: null
 	});
-}
+};
 
 /**
 * Removes a user from the connectedUser list
@@ -118,11 +120,17 @@ method.addUser = async function(name) {
 * @author: Michiocre
 * @param {string} name The username that wants to be removed
 */
-method.removeUser = async function(name) {
+method.removeUser = function(name) {
 	let user = this.getUserByName(name);
-	i = this.connectedUser.indexOf(user);
-	this.connectedUser.splice(i,1);
-}
+	let i = this.connectedUser.indexOf(user);
+	if (i >= 0) {
+		if (user.voted !== null) {
+			let track = this.getActiveTrackById(user.voted);
+			track.votes -= 1;
+		}
+		this.connectedUser.splice(i,1);
+	}
+};
 
 /**
 * Returns all the playlists of the host
@@ -139,7 +147,7 @@ method.getPlaylists = function() {
 		};
 	}
 	return returnPlaylists;
-}
+};
 
 /**
 * Returns the playlist object that corresponse to the given id
@@ -154,7 +162,9 @@ method.getPlaylistById = function(playlistId) {
 			return this.playlists[i];
 		}
 	return null;
-}
+};
+
+/*jshint ignore: start */
 
 /**
 * Changes the active Playlist to the one that was given
@@ -167,7 +177,7 @@ method.changePlaylist = async function(playlistId) {
 	let playlist = this.getPlaylistById(playlistId);
 
 		//Load tracks into Playlist if its empty
-	if (playlist.tracks.length == 0) {
+	if (playlist.tracks.length === 0) {
 		let nextTracks = playlist.href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal';
 		playlist.tracks = await this.loadOneBatch(nextTracks);
 	}
@@ -184,7 +194,9 @@ method.changePlaylist = async function(playlistId) {
 
 	this.activePlaylist = playlist;
 	return true;
-}
+};
+
+/*jshint ignore: end */
 
 /**
 * Sets the internal list activeTracks to 4 random selected tracks from a playlist
@@ -193,7 +205,7 @@ method.changePlaylist = async function(playlistId) {
 * @param {string} playlistId The id that identifies the playlist
 * @return {boolean} True if completed
 */
-method.getRandomTracks = async function(playlistId) {
+method.getRandomTracks = function(playlistId) {
 	let playlist = this.getPlaylistById(playlistId);
 
 	//Reset all the votes
@@ -205,7 +217,7 @@ method.getRandomTracks = async function(playlistId) {
 	let indexes = [];
 
 	//To make sure all the indexes are different
-	for (var i = 0; i < 4; i++) {
+	for (i = 0; i < 4; i++) {
 		let counter;
 		do {
 			counter = 0;
@@ -219,13 +231,13 @@ method.getRandomTracks = async function(playlistId) {
 	}
 
 	let selectedTracks = [];
-	for (var i = 0; i < indexes.length; i++) {
+	for (i = 0; i < indexes.length; i++) {
 		selectedTracks[i] = playlist.tracks[indexes[i]].track;
 		selectedTracks[i].votes = 0;
 	}
 	this.activeTracks = selectedTracks;
 	return true;
-}
+};
 
 /**
 * Returns the track from activeTracks with the given id
@@ -240,7 +252,9 @@ method.getActiveTrackById = function(id) {
 			return this.activeTracks[i];
 		}
 	return null;
-}
+};
+
+/*jshint ignore: start */
 
 /**
 * Fetches the data of the host, and all his playlists
@@ -270,7 +284,7 @@ method.fetchData = async function() {
 
    this.playlists = playlistRequestData.items;
 
-   while (next != null) {
+   while (next !== null) {
 	   playlistRequest = await fetch(next, {
 		   headers: {
 			   "Authorization": "Bearer " + this.host.token
@@ -286,7 +300,7 @@ method.fetchData = async function() {
    for (var i = 0; i < this.playlists.length; i++) {
 	   this.playlists[i].tracks = [];
    }
-}
+};
 
 /**
 * Recursive function, in each iteration it will get up to 100 tracks of the playlist, and if there are more to get it will also return the url for the next batch of up to 100 tracks
@@ -312,7 +326,7 @@ method.loadOneBatch = async function(next) {
 		tracks = fetchData.items;
 	}
 	return tracks;
-}
+};
 
 /**
 * Gets the active Player data from the Spotify API
@@ -320,7 +334,7 @@ method.loadOneBatch = async function(next) {
 * @author: Michiocre
 * @return {boolean} True when done
 */
-method.update = async function() {
+method.update = async function(isHost) {
 	this.lastUpdate = Date.now();
 
     let request = await fetch('https://api.spotify.com/v1/me/player', {
@@ -328,31 +342,49 @@ method.update = async function() {
             "Authorization": "Bearer " + this.host.token
         }
     });
-
-	let fetchData = await request.json();
-	if (fetchData !== null) {
-		this.activePlayer = {
-			volume: fetchData.device.volume_percent,
-			progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
-			isPlaying: fetchData.is_playing,
-			track: {
-				album: fetchData.item.album,
-				artists: fetchData.item.artists,
-				href: fetchData.item.href,
-				id: fetchData.item.id,
-				name: fetchData.item.name
-			}
-		};
+	let fetchData
+	try {
+		fetchData = await request.json();
+	} catch (e) {
+		fetchData = null;
 	}
 
-	if (this.activePlayer !== null && this.activePlaylist !== null) {
+	if (fetchData !== null) {
+		if (fetchData.device === undefined || fetchData.item === undefined || fetchData.track === undefined) {
+			this.activePlayer = {
+				volume: this.activePlayer.volume,
+				progress: this.activePlayer.progress,
+				isPlaying: fetchData.is_playing,
+				track: this.activePlayer.track
+			};
+		} else {
+			this.activePlayer = {
+				volume: fetchData.device.volume_percent,
+				progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
+				isPlaying: fetchData.is_playing,
+				track: {
+					album: fetchData.item.album,
+					artists: fetchData.item.artists,
+					href: fetchData.item.href,
+					id: fetchData.item.id,
+					name: fetchData.item.name
+				}
+			};
+		}
+	} else {
+		this.activePlayer = null;
+	}
+
+	if (this.activePlayer !== null && this.activePlaylist !== null && isHost == true) {
 		if (this.activePlayer.progress > 98) {
 			await this.play();
 		}
 	}
 
     return true;
-}
+};
+
+/*jshint ignore: end */
 
 /**
 * Changes the vote of a user to the specified track
@@ -362,7 +394,7 @@ method.update = async function() {
 * @param {string} trackId The track whomst the user has voted for
 * @return {boolean} True if the vote was successfully changed
 */
-method.vote = async function(trackId, isHost, name) {
+method.vote = function(trackId, isHost, name) {
 	let user = this.getUserByName(name);
 
 	if (isHost == true) {
@@ -396,7 +428,9 @@ method.vote = async function(trackId, isHost, name) {
 		return true;
 	}
 	return false;
-}
+};
+
+/*jshint ignore: start */
 
 /**
 * PLays the most voted track {{ONLY USED FOR TESTING PURPOSES}}
@@ -429,6 +463,7 @@ method.play = async function() {
 		uris: ['spotify:track:' + track.id]
 	};
 
+
 	let request = await fetch('https://api.spotify.com/v1/me/player/play', {
 		headers: {
 			"Authorization": "Bearer " + this.host.token
@@ -438,6 +473,25 @@ method.play = async function() {
 	});
 
 	return this.getRandomTracks(this.activePlaylist.id);
-}
+};
+
+/**
+* Changes the volume to a given value
+*
+* @author: Michiocre
+* @param {int} volume The volume in percent
+* @return {boolean} True if completed
+*/
+method.changeVolume = async function(volume) {
+	let request = await fetch('https://api.spotify.com/v1/me/player/volume?volume_percent=' + volume,{
+		headers: {
+			"Authorization": "Bearer " + this.host.token
+		},
+		method: "PUT"
+	});
+	return true;
+};
+
+/*jshint ignore: end */
 
 module.exports = Room;
