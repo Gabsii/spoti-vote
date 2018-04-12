@@ -4,20 +4,47 @@ let constants = require('../../js/constants');
 
 let borderStyle = {
 	width: '25%',
-	border: '1px solid lightgray',
-	borderRadius: '15px'
+	backgroundColor: constants.colors.barBackground,
+	borderRadius: '11px'
 }
 
 class Progressbar extends Component {
+
+	constructor() {
+		super();
+		this.state = {
+			hover: false
+		}
+	}
+
+	toggleHover() {
+		this.setState({
+			hover: !this.state.hover
+		})
+	}
+
 	render() {
+		let linkStyle;
+
+		console.log(this.state.hover);
+
+		if (this.state.hover) {
+			linkStyle = {
+				background: constants.colors.green
+			}
+		} else {
+			linkStyle = {
+				background: constants.colors.fontSecondary
+			}
+		}
+
 		let progressStyle = {
-			//width must be manipulated
-			background: 'linear-gradient(to right, #ffff00, #00ff00)',
-			height: '14px',
+			background: constants.colors.fontSecondary,
+			height: '10px',
 			borderStyle: 'solid',
 			borderRadius: '15px',
 			borderColor: '#333',
-			margin: '2px',
+			margin: '1px',
 			animation: 'width 3s ease-out infinite',
 			width: '0%'
 		}
@@ -27,8 +54,13 @@ class Progressbar extends Component {
 			}
 		}
 
-		return (<div style={borderStyle}>
-			<div role="progressbar" style={progressStyle}></div>
+		console.log(linkStyle);
+
+		return (<div style={borderStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+			<div role="progressbar" style={{
+					...progressStyle,
+					...linkStyle
+				}}></div>
 		</div>);
 	}
 }
