@@ -93,6 +93,7 @@ class Card extends Component {
 				<div style={{
 						width: '100%',
 						padding: '15px 0px',
+						textShadow: '2px 2px 8px #000000',
 						background: 'rgba(0, 0, 0, 0.5)'
 					}}>
 					<div style={{
@@ -101,7 +102,6 @@ class Card extends Component {
 						}}>{this.props.randomTrack.name || '-'}</div>
 					<div>{artistString || '-'}</div>
 					<div style={{
-
 							fontSize: '1.25em'
 						}}>{votes + ' Votes'}</div>
 				</div>

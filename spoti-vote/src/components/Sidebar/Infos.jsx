@@ -45,7 +45,7 @@ let centerContainer = {
 class Infos extends Component {
 
 	render() {
-		let option = <div>{this.props.activePlaylist.name}</div>;
+		let option = <div>Playlist:{' ' + this.props.activePlaylist.name}</div>;
 
 		if (this.props.isHost === true) {
 			option = <select style={{
