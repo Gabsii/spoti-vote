@@ -320,7 +320,7 @@ method.loadOneBatch = async function(next) {
 * @author: Michiocre
 * @return {boolean} True when done
 */
-method.update = async function() {
+method.update = async function(isHost) {
 	this.lastUpdate = Date.now();
 
     let request = await fetch('https://api.spotify.com/v1/me/player', {
@@ -352,7 +352,7 @@ method.update = async function() {
 		this.activePlayer = null;
 	}
 
-	if (this.activePlayer !== null && this.activePlaylist !== null) {
+	if (this.activePlayer !== null && this.activePlaylist !== null && isHost == true) {
 		if (this.activePlayer.progress > 98) {
 			await this.play();
 		}

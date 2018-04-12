@@ -141,7 +141,7 @@ io.on('connection', function(socket) {
 
 
     setInterval(
-        () => theUpdateFunction(socket, room),500
+        () => theUpdateFunction(socket, room, isHost),500
     );
 
 
@@ -167,9 +167,9 @@ io.on('connection', function(socket) {
 * @author: Michiocre
 * @param {socket} socket The socket object passed down from the call
 */
-async function theUpdateFunction(socket, room) {
+async function theUpdateFunction(socket, room, isHost) {
 	if (room !== null) {
-		room.update();
+		room.update(isHost);
 	}
 	socket.emit('update', room);
 };
