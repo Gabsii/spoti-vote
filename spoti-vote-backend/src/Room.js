@@ -380,7 +380,6 @@ method.update = async function(isHost) {
 			await this.play();
 		}
 	}
-	console.log(this.activePlayer);
     return true;
 };
 

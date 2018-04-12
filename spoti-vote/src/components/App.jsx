@@ -123,7 +123,6 @@ class App extends Component {
 	}
 
 	render() {
-		console.log(this.state.activePlayer);
 		return (<section style={{
 				backgroundColor: constants.colors.background,
 				height: '100vh',
