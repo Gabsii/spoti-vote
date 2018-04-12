@@ -66,7 +66,7 @@ app.get('/callback', async (req, res) => {
 	request.post(authOptions, async (error, response, body) => {
 		let uri = process.env.FRONTEND_URI || 'http://' + config.ipAddress + ':' + config.portFrontend + '/app';
 
-		let room = new Room(body.access_token, rooms);
+		let room = new Room(body.access_token, rooms, 4);
 
 		await room.fetchData();
 		rooms.push(room);
@@ -130,14 +130,14 @@ io.on('connection', (socket) => {
 					isHost: isHost
 				});
 
-				console.log('-c- Host connected');
+				console.log('-c - Host connected');
             } else {
                 socket.emit('nameEvent', {
 					userNames: room.getUserNames()
 				});
             }
         } else {
-            socket.emit('errorEvent', {message: 'Room does not exist.'});
+            socket.emit('errorEvent', {message: 'Room has been closed'});
         }
     });
 
@@ -156,7 +156,7 @@ io.on('connection', (socket) => {
 			});
         }
 
-		console.log('-c- ['+data.name+'] connected');
+		console.log('-c - ['+data.name+'] connected');
     });
 
 	/**
@@ -166,7 +166,7 @@ io.on('connection', (socket) => {
 	socket.on('changeVolume', data => {
         room.changeVolume(data.volume);
 
-		console.log('-volume- The volume was changed to: ['+data.volume+']');
+		console.log('-vl- The volume was changed to: ['+data.volume+']');
     });
 
 	/**
@@ -176,7 +176,7 @@ io.on('connection', (socket) => {
 	socket.on('changePlaylist', data => {
         room.changePlaylist(data.playlistId);
 
-		console.log('-playlistChange- Playlist changed to: ['+data.playlistId+']');
+		console.log('-pC- Playlist changed to: ['+data.playlistId+']');
     });
 
 	/**
@@ -187,9 +187,9 @@ io.on('connection', (socket) => {
         room.vote(data.trackId, isHost, name);
 
 		if (isHost === true) {
-			console.log('-vote- the host voted for: ['+data.trackId+']');
+			console.log('-vo- the host voted for: ['+data.trackId+']');
 		} else {
-			console.log('-vote- ['+name+'] voted for: ['+data.trackId+']');
+			console.log('-vo- ['+name+'] voted for: ['+data.trackId+']');
 		}
     });
 
@@ -204,14 +204,14 @@ io.on('connection', (socket) => {
 			if (isHost === false) {
 				room.removeUser(name);
 
-				console.log('-d- ['+name+'] disconnect');
+				console.log('-d - ['+name+'] disconnect');
 			} else {
 
 
-				console.log('-d- Host disconnect');
+				console.log('-d - Host disconnect');
 			}
 		} else {
-			console.log('-d- User was auto-disconnected');
+			console.log('-d - User was auto-disconnected');
 		}
     });
 });
@@ -229,7 +229,7 @@ async function theUpdateFunction(socket, room, isHost) {
 		room.update(isHost);
 		socket.emit('update', room);
 
-		console.log('-u-');
+		//console.log('-u -');
 	}
 };
 

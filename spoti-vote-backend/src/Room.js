@@ -30,7 +30,7 @@ function makeid(length) {
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function Room(token, rooms) {
+function Room(token, rooms, cardNum) {
 	//The host object
 	this.host = {
 		token: token,
@@ -38,12 +38,14 @@ function Room(token, rooms) {
 		profileUrl: '',
 		voted: null
 	};
+	this.cardNum = cardNum;
 	this.activeTracks = [];
 	this.activePlaylist = null;
 	this.connectedUser = [];
 	this.activePlayer = {};
 	this.id = makeid(5);
 	this.hostDisconnect = null;
+	this.isChanging = false;
 
 	//Makes sure the id is unique
 	let counter;
@@ -58,7 +60,8 @@ function Room(token, rooms) {
 			this.id = makeid(5);
 		}
 	}
-	console.log(this.id + ' - Was created (ROOM)');
+
+	console.log('-r - [' + this.id + '] created');
 }
 
 /**
@@ -131,10 +134,13 @@ method.removeUser = function(name) {
 method.getPlaylists = function() {
 	let returnPlaylists = [];
 	for (var i = 0; i < this.playlists.length; i++) {
-		returnPlaylists[i] = {
-			id: this.playlists[i].id,
-			name: this.playlists[i].name
-		};
+		if (this.playlists[i].tracks.total > this.cardNum) {
+			returnPlaylists.push({
+				id: this.playlists[i].id,
+				name: this.playlists[i].name
+			});
+		}
+		this.playlists[i].tracks = [];
 	}
 	return returnPlaylists;
 };
@@ -172,8 +178,8 @@ method.changePlaylist = async function(playlistId) {
 		playlist.tracks = await this.loadOneBatch(nextTracks);
 	}
 
-	//If the playlist is smaller than 4 tracks, it will not change
-	if (playlist.tracks.length < 4) {
+	//If the playlist is smaller than 5 tracks, it will not change -> Because there has to be one active and 4 voteable tracks
+	if (playlist.tracks.length < this.cardNum+1) {
 		return false;
 	}
 
@@ -204,28 +210,24 @@ method.getRandomTracks = function(playlistId) {
 		this.connectedUser[i].voted = null;
 	}
 
-	let indexes = [];
-
-	//To make sure all the indexes are different
-	for (i = 0; i < 4; i++) {
-		let counter;
-		do {
-			counter = 0;
-			indexes[i] = Math.floor(Math.random() * playlist.tracks.length);
-			for (var j = 0; j < indexes.length; j++) {
-				if (indexes[j] == indexes[i] && i != j) {
-					counter++;
-				}
-			}
-		} while (counter > 0);
-	}
-
 	let selectedTracks = [];
-	for (i = 0; i < indexes.length; i++) {
-		selectedTracks[i] = playlist.tracks[indexes[i]].track;
-		selectedTracks[i].votes = 0;
+
+	for (var i = 0; i < this.cardNum; i++) {
+		let track;
+		let active;
+		do {
+			active = false;
+			track = playlist.tracks[Math.floor(Math.random() * playlist.tracks.length)].track;
+			if (track.id === this.activePlayer.track.id) {
+				active = true;
+			}
+		} while (selectedTracks.includes(track) === true || active === true);
+		selectedTracks.push(track);
 	}
+
 	this.activeTracks = selectedTracks;
+
+	console.log('-rT- [' +selectedTracks[0].name+','+selectedTracks[1].name+','+selectedTracks[2].name+','+selectedTracks[3].name+','+ '] have been selected');
 	return true;
 };
 
@@ -263,33 +265,33 @@ method.fetchData = async function() {
 	this.host.profileUrl = hostRequestData.external_urls.spotify;
 
 	//Gets all the hosts playlists TODO: This should probably loop (now max 50 playlists will be returned)
-   let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
-	   headers: {
-		   "Authorization": "Bearer " + this.host.token
-	   }
-   });
+	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
+		headers: {
+			"Authorization": "Bearer " + this.host.token
+		}
+	});
 
-   let playlistRequestData = await playlistRequest.json();
-   next = playlistRequestData.next;
+	let playlistRequestData = await playlistRequest.json();
+	next = playlistRequestData.next;
 
-   this.playlists = playlistRequestData.items;
+	for (var i = 0; i < playlistRequestData.items.length; i++) {
+		playlistRequestData.items
+	}
 
-   while (next !== null) {
-	   playlistRequest = await fetch(next, {
-		   headers: {
-			   "Authorization": "Bearer " + this.host.token
-		   }
-	   });
+	this.playlists = playlistRequestData.items;
 
-	   playlistRequestData = await playlistRequest.json();
-	   next = playlistRequestData.next;
+	while (next !== null) {
+		playlistRequest = await fetch(next, {
+			headers: {
+				"Authorization": "Bearer " + this.host.token
+			}
+		});
 
-	   this.playlists = this.playlists.concat(playlistRequestData.items);
-   }
+		playlistRequestData = await playlistRequest.json();
+		next = playlistRequestData.next;
 
-   for (var i = 0; i < this.playlists.length; i++) {
-	   this.playlists[i].tracks = [];
-   }
+		this.playlists = this.playlists.concat(playlistRequestData.items);
+	}
 };
 
 /**
@@ -365,9 +367,10 @@ method.update = async function(isHost) {
 		this.activePlayer = null;
 	}
 
-	if (this.activePlayer !== null && this.activePlaylist !== null && isHost == true) {
+	if (this.activePlayer !== null && this.activePlaylist !== null) {
 		if (this.activePlayer.progress > 98) {
 			await this.play();
+			this.isChanging = false;
 		}
 	}
     return true;
@@ -429,39 +432,43 @@ method.vote = function(trackId, isHost, name) {
 * @return {boolean} True if the request to the spotify API was successfully changed
 */
 method.play = async function() {
+	if (this.isChanging === false) {
+		this.isChanging = true;
+		let track = this.activeTracks[0];
 
-	let track = this.activeTracks[0];
-
-	for (var i = 1; i < this.activeTracks.length; i++) {
-		if (this.activeTracks[i].votes > track.votes || (track.votes == null && this.activeTracks[i].votes >= 1)) {
-			track = this.activeTracks[i];
+		for (var i = 1; i < this.activeTracks.length; i++) {
+			if (this.activeTracks[i].votes > track.votes || (track.votes == null && this.activeTracks[i].votes >= 1)) {
+				track = this.activeTracks[i];
+			}
 		}
-	}
 
-	let possibleTracks = [];
+		let possibleTracks = [];
 
-	for (var i = 0; i < this.activeTracks.length; i++) {
-		if (this.activeTracks[i].votes == track.votes) {
-			possibleTracks.push(this.activeTracks[i]);
+		for (var i = 0; i < this.activeTracks.length; i++) {
+			if (this.activeTracks[i].votes == track.votes) {
+				possibleTracks.push(this.activeTracks[i]);
+			}
 		}
+
+		track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
+
+		console.log('-pl- ['+track.name+'] has been selected, since it had ['+track.votes+'] votes');
+
+		let payload = {
+			uris: ['spotify:track:' + track.id]
+		};
+
+
+		let request = await fetch('https://api.spotify.com/v1/me/player/play', {
+			headers: {
+				"Authorization": "Bearer " + this.host.token
+			},
+			method: "PUT",
+			body: JSON.stringify(payload)
+		});
+
+		return this.getRandomTracks(this.activePlaylist.id);
 	}
-
-	track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
-
-	let payload = {
-		uris: ['spotify:track:' + track.id]
-	};
-
-
-	let request = await fetch('https://api.spotify.com/v1/me/player/play', {
-		headers: {
-			"Authorization": "Bearer " + this.host.token
-		},
-		method: "PUT",
-		body: JSON.stringify(payload)
-	});
-
-	return this.getRandomTracks(this.activePlaylist.id);
 };
 
 /**
