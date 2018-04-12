@@ -328,8 +328,13 @@ method.update = async function() {
             "Authorization": "Bearer " + this.host.token
         }
     });
+	let fetchData
+	try {
+		fetchData = await request.json();
+	} catch (e) {
+		fetchData = null;
+	}
 
-	let fetchData = await request.json();
 	if (fetchData !== null) {
 		this.activePlayer = {
 			volume: fetchData.device.volume_percent,
@@ -343,6 +348,8 @@ method.update = async function() {
 				name: fetchData.item.name
 			}
 		};
+	} else {
+		this.activePlayer = null;
 	}
 
 	if (this.activePlayer !== null && this.activePlaylist !== null) {
@@ -428,6 +435,7 @@ method.play = async function() {
 	let payload = {
 		uris: ['spotify:track:' + track.id]
 	};
+
 
 	let request = await fetch('https://api.spotify.com/v1/me/player/play', {
 		headers: {
