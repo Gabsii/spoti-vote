@@ -350,14 +350,7 @@ method.update = async function(isHost) {
 	}
 
 	if (fetchData !== null) {
-		if (fetchData.device === undefined || fetchData.item === undefined || fetchData.track === undefined) {
-			this.activePlayer = {
-				volume: this.activePlayer.volume,
-				progress: this.activePlayer.progress,
-				isPlaying: fetchData.is_playing,
-				track: this.activePlayer.track
-			};
-		} else {
+		if (fetchData.device !== undefined && fetchData.item !== undefined) {
 			this.activePlayer = {
 				volume: fetchData.device.volume_percent,
 				progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
@@ -370,6 +363,13 @@ method.update = async function(isHost) {
 					name: fetchData.item.name
 				}
 			};
+		} else {
+			this.activePlayer = {
+				volume: this.activePlayer.volume,
+				progress: this.activePlayer.progress,
+				isPlaying: fetchData.is_playing,
+				track: this.activePlayer.track
+			};
 		}
 	} else {
 		this.activePlayer = null;
@@ -380,7 +380,6 @@ method.update = async function(isHost) {
 			await this.play();
 		}
 	}
-
     return true;
 };
 
