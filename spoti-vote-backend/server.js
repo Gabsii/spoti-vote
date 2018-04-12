@@ -139,7 +139,6 @@ io.on('connection', function(socket) {
         room.vote(data.trackId, isHost, name);
     });
 
-
     setInterval(
         () => theUpdateFunction(socket, room, isHost),500
     );

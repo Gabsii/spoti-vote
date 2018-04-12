@@ -89,8 +89,8 @@ class App extends Component {
 
 		this.socket.on('update', data => {
 			this.setState({
-				connectedUser: data.connectedUser,
-				host: data.host,
+				connectedUser: data.connectedUser || [],
+				host: data.host || {name: 'No host found', voted: null},
 				activePlaylist: data.activePlaylist || this.state.activePlaylist,
 				activeTracks: data.activeTracks,
 				activePlayer: data.activePlayer || defaultActivePlayer
