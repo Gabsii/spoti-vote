@@ -12,8 +12,10 @@ let defaultStyle = {
 	backgroundPosition: 'center',
 	backgroundRepeat: 'no-repeat',
 	backgroundSize: 'cover',
-	WebKitUserSelect: 'none',
+	boxShadow: '10px 10px 5px 0px rgba(0,0,0,0.75)',
 	color: constants.colors.font,
+	borderRadius: '3px',
+	WebKitUserSelect: 'none',
 	MozUserSelect: 'none'
 }
 
@@ -88,6 +90,7 @@ class Card extends Component {
 			}} id={this.props.randomTrack.id}>
 			<div style={{
 					...imgStyle,
+					borderRadius: '3px',
 					backgroundColor: 'rgba(' + tint.r + ',' + tint.g + ',' + tint.b + ',' + 0.5 + ')'
 				}}>
 				<div style={{

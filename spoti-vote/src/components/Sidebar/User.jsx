@@ -3,6 +3,7 @@ import icon from "../../img/userIcon.svg";
 
 let defaultStyle = {
 	width: '100%',
+	minWidth: 0,
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'space-between',
@@ -25,7 +26,9 @@ class User extends Component {
 			<img alt="icon" src={icon} style={imgStyle}/>
 			<div style={{
 					marginRight: 'auto',
-					textOverflow: 'ellipsis'
+					textOverflow: 'ellipsis',
+					whiteSpace: 'nowrap'
+
 				}}>
 				{this.props.name}
 			</div>

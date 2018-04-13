@@ -27,7 +27,28 @@ class CardContainer extends Component {
 		}
 	}
 
-	voteHandler(trackId) {
+	/**
+	 * Get siblings of an element
+	 * @author cferdinandi
+	 * @param  {Element} elem
+	 * @return {Object}
+	 */
+	getSiblings(elem) {
+		let siblings = [];
+		let sibling = elem.parentNode.firstChild;
+		let skipMe = elem;
+		for (; sibling; sibling = sibling.nextSibling) 
+			if (sibling.nodeType == 1 && sibling != skipMe) 
+				siblings.push(sibling);
+	return siblings;
+	}
+
+	voteHandler(trackId, event) {
+		let buttons = this.getSiblings(event.target.closest('button'));
+		for (let i = 0; i < buttons.length; i++) {
+			buttons[i].style.opacity = 1;
+			//fade to 0.25 opacity
+		}
 		if (this.state.voted !== trackId) {
 			this.setState({voted: trackId});
 			this.props.socket.emit('vote', {trackId: trackId});
