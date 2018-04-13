@@ -1,5 +1,11 @@
-Describe your problem.
+**Describe your problem.**
 
-Can it be reprodueced? 
+YOUR TEXT HERE
 
-Where did the error occur? 
+**Can it be reproduced?**
+
+YOUR TEXT HERE
+
+**Where did the error occur?**
+
+YOUR TEXT HERE

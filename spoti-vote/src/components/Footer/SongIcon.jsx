@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 
 let defaultStyle = {
-	height: '75px',
-	width: '75px',
+	height: '100%',
 	position: 'absolute',
 	bottom: 0,
 	left: 0

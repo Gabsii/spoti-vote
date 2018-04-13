@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import icon from "../../img/userIcon.svg";
 
 let defaultStyle = {
+	width: '100%',
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'space-between',
@@ -23,9 +24,12 @@ class User extends Component {
 		return (<div style={defaultStyle}>
 			<img alt="icon" src={icon} style={imgStyle}/>
 			<div style={{
-					marginRight: 'auto'
+					marginRight: 'auto',
+					textOverflow: 'ellipsis',
+					whiteSpace: 'nowrap'
+
 				}}>
-				<div>{this.props.name}</div>
+				{this.props.name}
 			</div>
 			<div className="vote" style={{
 					width: '24px',

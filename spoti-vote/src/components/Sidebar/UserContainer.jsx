@@ -3,9 +3,9 @@ import User from './User.jsx';
 
 let constants = require('../../js/constants');
 let defaultStyle = {
-	height: 'calc(100% - 300px)',
-	marginTop: '300px',
-	flex: '0 0 100%'
+	height: 'calc(100% - 340px)',
+	width: '100%',
+	marginTop: '300px'
 }
 
 let titleStyle = {

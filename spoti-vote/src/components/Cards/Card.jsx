@@ -12,7 +12,9 @@ let defaultStyle = {
 	backgroundPosition: 'center',
 	backgroundRepeat: 'no-repeat',
 	backgroundSize: 'cover',
-	backgroundColor: constants.colors.blueCard,
+	boxShadow: '10px 10px 5px 0px rgba(0,0,0,0.75)',
+	color: constants.colors.font,
+	borderRadius: '3px',
 	WebKitUserSelect: 'none',
 	MozUserSelect: 'none'
 }
@@ -88,17 +90,24 @@ class Card extends Component {
 			}} id={this.props.randomTrack.id}>
 			<div style={{
 					...imgStyle,
+					borderRadius: '3px',
 					backgroundColor: 'rgba(' + tint.r + ',' + tint.g + ',' + tint.b + ',' + 0.5 + ')'
 				}}>
 				<div style={{
-						fontSize: '2em',
-						textAlign: 'center'
-					}}>{this.props.randomTrack.name || '-'}</div>
-				<div>{artistString || '-'}</div>
-				<div style={{
-
-						fontSize: '1.25em'
-					}}>{votes + ' Votes'}</div>
+						width: '100%',
+						padding: '15px 0px',
+						textShadow: '2px 2px 8px #000000',
+						background: 'rgba(0, 0, 0, 0.5)'
+					}}>
+					<div style={{
+							fontSize: '2em',
+							textAlign: 'center'
+						}}>{this.props.randomTrack.name || '-'}</div>
+					<div>{artistString || '-'}</div>
+					<div style={{
+							fontSize: '1.25em'
+						}}>{votes + ' Votes'}</div>
+				</div>
 			</div>
 		</button>);
 	}
