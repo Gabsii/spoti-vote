@@ -140,7 +140,10 @@ method.getPlaylists = function() {
 				name: this.playlists[i].name
 			});
 		}
-		this.playlists[i].tracks = [];
+		if (Array.isArray(this.playlists[i].tracks) !== true) {
+			this.playlists[i].tracks = [];
+		}
+
 	}
 	return returnPlaylists;
 };
@@ -201,25 +204,36 @@ method.changePlaylist = async function(playlistId) {
 * @param {string} playlistId The id that identifies the playlist
 * @return {boolean} True if completed
 */
-method.getRandomTracks = function(playlistId) {
+method.getRandomTracks = function(playlistId, activeTrack) {
 	let playlist = this.getPlaylistById(playlistId);
+	if (activeTrack === null || activeTrack === undefined) {
+		if (this.activePlayer !== null) {
+			activeTrack = this.activePlayer.track;
+		} else {
+			activeTrack = null;
+		}
+	}
 
 	//Reset all the votes
 	this.host.voted = null;
 	for (var i = 0; i < this.connectedUser.length; i++) {
 		this.connectedUser[i].voted = null;
 	}
+	for (var i = 0; i < this.activeTracks.length; i++) {
+		this.activeTracks[i].votes = 0;
+	}
 
 	let selectedTracks = [];
-
 	for (var i = 0; i < this.cardNum; i++) {
 		let track;
 		let active;
 		do {
 			active = false;
 			track = playlist.tracks[Math.floor(Math.random() * playlist.tracks.length)].track;
-			if (track.id === this.activePlayer.track.id) {
-				active = true;
+			if (activeTrack !== null) {
+				if (track.id === activeTrack.id) {
+					active = true;
+				}
 			}
 		} while (selectedTracks.includes(track) === true || active === true);
 		selectedTracks.push(track);
@@ -467,7 +481,7 @@ method.play = async function() {
 			body: JSON.stringify(payload)
 		});
 
-		return this.getRandomTracks(this.activePlaylist.id);
+		return this.getRandomTracks(this.activePlaylist.id, track);
 	}
 };
 

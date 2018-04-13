@@ -31,7 +31,7 @@ function getRoomById(roomId) {
 	for (var i = 0; i < rooms.length; i++) {
 		if (rooms[i].id == roomId)
 			room = rooms[i];
-		}
+	}
 	return room;
 }
 
@@ -99,14 +99,14 @@ app.get('/rooms', async (req, res) => {
 */
 io.on('connection', (socket) => {
 	//Local varibles, can only be used by the same connection (but in every call)
-	let room = null;
+	let roomId = null;
     let isHost = false;
     let name = null;
 
 	/*jshint ignore: start */
 	//This function is called every 500ms
 	let updateInterval = setInterval(
-        () => theUpdateFunction(socket, room, isHost),500
+        () => theUpdateFunction(socket, roomId, isHost),500
 	);
 	/*jshint ignore: end */
 
@@ -120,8 +120,9 @@ io.on('connection', (socket) => {
 	* @param {string} roomId Id of the room
     */
     socket.on('roomId', data => {
-        room = getRoomById(data.roomId);
+        let room = getRoomById(data.roomId);
         if (room !== null) {
+			roomId = room.id;
             if (data.token == room.host.token) {
                 isHost = true;
 				socket.emit('initData', {
@@ -148,15 +149,21 @@ io.on('connection', (socket) => {
 	* @param {string} name Name of the user
     */
     socket.on('nameEvent', data => {
-        name = data.name;
-        if (name !== null) {
-            room.addUser(name);
-			socket.emit('initData', {
-				hostName: room.host.name
-			});
-        }
+		let room = getRoomById(roomId);
+		if (room !== null) {
+			name = data.name;
+	        if (name !== null) {
+	            room.addUser(name);
+				socket.emit('initData', {
+					hostName: room.host.name
+				});
+	        }
 
-		console.log('-c - ['+data.name+'] connected');
+			console.log('-c - ['+data.name+'] connected');
+		} else {
+			socket.emit('error', {message: 'Room was closed'});
+		}
+
     });
 
 	/**
@@ -164,9 +171,14 @@ io.on('connection', (socket) => {
 	* @param {int} volume Volume in percent
     */
 	socket.on('changeVolume', data => {
-        room.changeVolume(data.volume);
+		let room = getRoomById(roomId);
+		if (room !== null) {
+			room.changeVolume(data.volume);
 
-		console.log('-vl- The volume was changed to: ['+data.volume+']');
+			console.log('-vl- The volume was changed to: ['+data.volume+']');
+		} else {
+			socket.emit('error', {message: 'Room was closed'});
+		}
     });
 
 	/**
@@ -174,9 +186,14 @@ io.on('connection', (socket) => {
 	* @param {string} playlistId Name of the user
     */
 	socket.on('changePlaylist', data => {
-        room.changePlaylist(data.playlistId);
+		let room = getRoomById(roomId);
+		if (room !== null) {
+			room.changePlaylist(data.playlistId);
 
-		console.log('-pC- Playlist changed to: ['+data.playlistId+']');
+			console.log('-pC- Playlist changed to: ['+data.playlistId+']');
+		} else {
+			socket.emit('error', {message: 'Room was closed'});
+		}
     });
 
 	/**
@@ -184,12 +201,31 @@ io.on('connection', (socket) => {
 	* @param {string} trackId Id of the track
     */
 	socket.on('vote', data => {
-        room.vote(data.trackId, isHost, name);
+		let room = getRoomById(roomId);
+		if (room !== null) {
+			room.vote(data.trackId, isHost, name);
 
-		if (isHost === true) {
-			console.log('-vo- the host voted for: ['+data.trackId+']');
+			if (isHost === true) {
+				console.log('-vo- the host voted for: ['+data.trackId+']');
+			} else {
+				console.log('-vo- ['+name+'] voted for: ['+data.trackId+']');
+			}
 		} else {
-			console.log('-vo- ['+name+'] voted for: ['+data.trackId+']');
+			socket.emit('error', {message: 'Room was closed'});
+		}
+    });
+
+	/**
+    * Called when the host wants to close the room
+    */
+	socket.on('logout', data => {
+		let room = getRoomById(roomId);
+		if (room !== null) {
+			console.log('-lo- room ['+room.id+'] was closed by host');
+			let i = rooms.indexOf(room);
+			rooms.splice(i,1);
+		} else {
+			socket.emit('error', {message: 'Room was closed'});
 		}
     });
 
@@ -197,6 +233,8 @@ io.on('connection', (socket) => {
     * Called when a connection is closed
     */
     socket.on('disconnect', () => {
+		let room = getRoomById(roomId);
+
 		/*jshint ignore: start */
 		clearInterval(updateInterval);
 		/*jshint ignore: end */
@@ -206,8 +244,6 @@ io.on('connection', (socket) => {
 
 				console.log('-d - ['+name+'] disconnect');
 			} else {
-
-
 				console.log('-d - Host disconnect');
 			}
 		} else {
@@ -224,12 +260,14 @@ io.on('connection', (socket) => {
 * @author: Michiocre
 * @param {socket} socket The socket object passed down from the call
 */
-async function theUpdateFunction(socket, room, isHost) {
+async function theUpdateFunction(socket, roomId, isHost) {
+	let room = getRoomById(roomId);
 	if (room !== null) {
 		room.update(isHost);
 		socket.emit('update', room);
-
 		//console.log('-u -');
+	} else {
+		socket.emit('errorEvent', {message: null});
 	}
 };
 
