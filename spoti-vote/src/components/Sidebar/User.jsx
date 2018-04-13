@@ -3,7 +3,6 @@ import icon from "../../img/userIcon.svg";
 
 let defaultStyle = {
 	width: '100%',
-	// minWidth: 0,
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'space-between',
