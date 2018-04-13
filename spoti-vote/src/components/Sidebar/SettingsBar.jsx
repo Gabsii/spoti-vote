@@ -19,7 +19,7 @@ let defaultStyle = {
 	color: constants.colors.fontSecondary
 }
 
-class User extends Component {
+class SettingsBar extends Component {
 
 	render() {
 		return (<div style={defaultStyle}>
@@ -32,4 +32,4 @@ class User extends Component {
 		</div>);
 	}
 }
-export default User;
+export default SettingsBar;
