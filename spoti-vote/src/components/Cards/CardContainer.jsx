@@ -57,7 +57,11 @@ class CardContainer extends Component {
 	}
 
 	render() {
-		//check if voted and add opacity effect
+		//check if voted and add opacity effect @michi wo ladesch neue songs?
+		// for (var i = 0; i < buttons.length; i++) {
+		// 	buttons[i].style.opacity = 1;
+		// }
+		const buttons = window.document.getElementsByTagName('button');
 		if (this.props.activeTracks.length > 0) {
 			return (<main style={defaultStyle}>
 				{
