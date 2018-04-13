@@ -25,9 +25,6 @@ class Progressbar extends Component {
 
 	render() {
 		let linkStyle;
-
-		console.log(this.state.hover);
-
 		if (this.state.hover) {
 			linkStyle = {
 				background: constants.colors.green
@@ -53,8 +50,6 @@ class Progressbar extends Component {
 				progressStyle.width = this.props.activePlayer.progress + '%';
 			}
 		}
-
-		console.log(linkStyle);
 
 		return (<div style={borderStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
 			<div role="progressbar" style={{

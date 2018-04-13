@@ -14,12 +14,13 @@
     src: local('Circular Medium'), url('../fonts/lineto-circular-pro-medium.woff') format('woff');
 }
 
+/*
 @font-face {
     font-family: 'Circular Book Italic';
     font-style: normal;
     font-weight: normal;
     src: local('Circular Book Italic'), url('../fonts/lineto-circular-pro-bookItalic.woff') format('woff');
-}
+} */
 
 @font-face {
     font-family: 'Circular Bold';
@@ -28,12 +29,13 @@
     src: local('Circular Bold'), url('../fonts/lineto-circular-pro-bold.woff') format('woff');
 }
 
+/*
 @font-face {
     font-family: 'Circular Medium Italic';
     font-style: normal;
     font-weight: normal;
     src: local('Circular Medium Italic'), url('../fonts/lineto-circular-pro-mediumItalic.woff') format('woff');
-}
+} */
 
 body {
     margin: 0;
@@ -43,4 +45,8 @@ body {
 
 button {
     font-family: 'Circular Bold';
+}
+
+img, embed, object, video {
+    max-width: 100%;
 }

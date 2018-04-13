@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Infos from './Sidebar/Infos.jsx';
 import UserContainer from './Sidebar/UserContainer.jsx';
+import SettingsBar from './Sidebar/SettingsBar.jsx';
 
 let constants = require('../js/constants');
 let defaultStyle = {
@@ -13,6 +14,7 @@ let defaultStyle = {
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',
+	flexFlow: 'column',
 	color: 'white',
 	backgroundColor: constants.colors.backgroundLite
 }
@@ -26,6 +28,7 @@ class Sidebar extends Component {
 					? <UserContainer activeTracks={this.props.activeTracks} connectedUser={this.props.connectedUser}/>
 					: ''
 			}
+			<SettingsBar/>
 		</div>);
 	}
 }

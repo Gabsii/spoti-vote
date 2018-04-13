@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import Footer from './Footer.jsx';
 import Sidebar from './Sidebar.jsx';
-// import Menu from './Menubar/Menu.jsx';
 import CardContainer from './Cards/CardContainer.jsx';
 import queryString from 'query-string';
 import socketIOClient from 'socket.io-client'
@@ -13,16 +12,30 @@ let defaultActivePlayer = {
 	progress: 0,
 	track: {
 		name: 'Spotify isnt running',
-		album: {images: [{url: 'http://via.placeholder.com/75x75'}]},
-		artists: [{name: 'Turn on Spotify'}]
+		album: {
+			images: [
+				{
+					url: 'http://via.placeholder.com/75x75'
+				}
+			]
+		},
+		artists: [
+			{
+				name: 'Turn on Spotify'
+			}
+		]
 	}
 };
-let defaultActivePlaylist= {
+let defaultActivePlaylist = {
 	name: 'Host is selecting',
 	images: [
-		{url:'http://via.placeholder.com/152x152'}
+		{
+			url: 'http://via.placeholder.com/152x152'
+		}
 	],
-	external_urls: {spotify: ''}
+	external_urls: {
+		spotify: ''
+	}
 };
 
 class App extends Component {
@@ -67,7 +80,7 @@ class App extends Component {
 					}
 				}
 			}
-			if (name === null) {
+			if (name === null || name === '') {
 				window.alert('You have to enter a Name.');
 				window.location.pathname = '/';
 			} else {
@@ -91,7 +104,10 @@ class App extends Component {
 			if (data === null) {
 				this.setState({
 					connectedUser: [],
-					host: {name: 'No host found', voted: null},
+					host: {
+						name: 'No host found',
+						voted: null
+					},
 					activePlaylist: this.state.activePlaylist,
 					activeTracks: [],
 					activePlayer: defaultActivePlayer
@@ -99,7 +115,10 @@ class App extends Component {
 			} else {
 				this.setState({
 					connectedUser: data.connectedUser || [],
-					host: data.host || {name: 'No host found', voted: null},
+					host: data.host || {
+						name: 'No host found',
+						voted: null
+					},
 					activePlaylist: data.activePlaylist || this.state.activePlaylist,
 					activeTracks: data.activeTracks || [],
 					activePlayer: data.activePlayer || defaultActivePlayer
@@ -116,9 +135,7 @@ class App extends Component {
 	selectPlaylist(event) {
 		let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
 		if (playlistId !== null && playlistId !== 'none') {
-			this.socket.emit('changePlaylist', {
-				playlistId: playlistId
-			});
+			this.socket.emit('changePlaylist', {playlistId: playlistId});
 		}
 	}
 
@@ -128,9 +145,8 @@ class App extends Component {
 				height: '100vh',
 				width: '100vw'
 			}}>
-			{/* <Menu/> */}
 			<Sidebar isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
-			<CardContainer name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
+			<CardContainer room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
 			<Footer isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
 		</section>);
 	}

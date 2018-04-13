@@ -27,16 +27,37 @@ class CardContainer extends Component {
 		}
 	}
 
-	voteHandler(trackId) {
+	/**
+	 * Get siblings of an element
+	 * @author cferdinandi
+	 * @param  {Element} elem
+	 * @return {Object}
+	 */
+	getSiblings(elem) {
+		let siblings = [];
+		let sibling = elem.parentNode.firstChild;
+		let skipMe = elem;
+		for (; sibling; sibling = sibling.nextSibling) 
+			if (sibling.nodeType === 1 && sibling !== skipMe) 
+				siblings.push(sibling);
+	return siblings;
+	}
+
+	voteHandler(trackId, event) {
+		let buttons = this.getSiblings(event.target.closest('button'));
+		event.target.closest('button').style.opacity = 1;
+		for (let i = 0; i < buttons.length; i++) {
+			buttons[i].style.opacity = 0.25;
+			//fade opacity??
+		}
 		if (this.state.voted !== trackId) {
 			this.setState({voted: trackId});
-			this.props.socket.emit('vote', {
-				trackId: trackId
-			});
+			this.props.socket.emit('vote', {trackId: trackId});
 		}
 	}
 
 	render() {
+		//check if voted and add opacity effect
 		if (this.props.activeTracks.length > 0) {
 			return (<main style={defaultStyle}>
 				{
@@ -46,7 +67,29 @@ class CardContainer extends Component {
 				}
 			</main>);
 		} else {
-			return (<main style={defaultStyle}></main>);
+			return (<main style={defaultStyle}>
+				<div style={{
+						width: '100%',
+						display: 'flex',
+						justifyContent: 'center',
+						alignItems: 'center',
+						flexDirection: 'column',
+						color: constants.colors.font
+					}}>
+					<h1 style={{
+							fontSize: '5em'
+						}}>Select a playlist first!</h1><br/><br/>
+					<h2 style={{
+							fontSize: '2em'
+						}}>Users can connect with
+						<b style={{
+								fontFamily: 'Circular Bold'
+							}}>
+							{' ' + this.props.room + ' '}
+						</b>
+						as Code!</h2>
+				</div>
+			</main>);
 		}
 
 	}

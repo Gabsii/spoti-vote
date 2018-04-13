@@ -6,7 +6,6 @@ let constants = require('../../js/constants');
 
 let defaultStyle = {
 	height: '300px',
-	maxWidth: '250px',
 	position: 'absolute',
 	top: 0,
 	display: 'flex',
@@ -45,7 +44,7 @@ let centerContainer = {
 class Infos extends Component {
 
 	render() {
-		let option = <div>{this.props.activePlaylist.name}</div>;
+		let option = <div>Playlist:{' ' + this.props.activePlaylist.name}</div>;
 
 		if (this.props.isHost === true) {
 			option = <select style={{
