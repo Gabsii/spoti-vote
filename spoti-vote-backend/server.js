@@ -102,11 +102,14 @@ io.on('connection', (socket) => {
 	let roomId = null;
     let isHost = false;
     let name = null;
+	let updateCounter = {
+		amount: 0
+	};
 
 	/*jshint ignore: start */
 	//This function is called every 500ms
 	let updateInterval = setInterval(
-        () => theUpdateFunction(socket, roomId, isHost),500
+        () => theUpdateFunction(socket, roomId, isHost, updateCounter),500
 	);
 	/*jshint ignore: end */
 
@@ -130,6 +133,7 @@ io.on('connection', (socket) => {
 					hostName: room.host.name,
 					isHost: isHost
 				});
+				room.hostDisconnect = null;
 
 				console.log('-c - Host connected');
             } else {
@@ -244,6 +248,8 @@ io.on('connection', (socket) => {
 
 				console.log('-d - ['+name+'] disconnect');
 			} else {
+				room.hostDisconnect = Date.now();
+
 				console.log('-d - Host disconnect');
 			}
 		} else {
@@ -260,7 +266,7 @@ io.on('connection', (socket) => {
 * @author: Michiocre
 * @param {socket} socket The socket object passed down from the call
 */
-async function theUpdateFunction(socket, roomId, isHost) {
+async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 	let room = getRoomById(roomId);
 	if (room !== null) {
 		room.update(isHost);
@@ -268,6 +274,16 @@ async function theUpdateFunction(socket, roomId, isHost) {
 		//console.log('-u -');
 	} else {
 		socket.emit('errorEvent', {message: null});
+	}
+	updateCounter.amount += 1;
+	if (updateCounter.amount > 30) {
+		for (var i = 0; i < rooms.length; i++) {
+			if (Date.now() - rooms[i].hostDisconnect > 1000*60 && rooms[i].hostDisconnect !== null) {
+				let i = rooms.indexOf(room);
+				rooms.splice(i,1);
+			}
+		}
+		updateCounter.amount  = 0;
 	}
 };
 
