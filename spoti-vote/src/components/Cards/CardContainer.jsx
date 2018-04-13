@@ -48,7 +48,7 @@ class CardContainer extends Component {
 		event.target.closest('button').style.opacity = 1;
 		for (let i = 0; i < buttons.length; i++) {
 			buttons[i].style.opacity = 0.25;
-			//fade to 0.25 opacity
+			//fade opacity??
 		}
 		if (this.state.voted !== trackId) {
 			this.setState({voted: trackId});
@@ -57,6 +57,7 @@ class CardContainer extends Component {
 	}
 
 	render() {
+		//check if voted and add opacity effect
 		if (this.props.activeTracks.length > 0) {
 			return (<main style={defaultStyle}>
 				{
