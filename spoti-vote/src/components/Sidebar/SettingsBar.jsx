@@ -21,14 +21,25 @@ let defaultStyle = {
 
 class SettingsBar extends Component {
 
+	logoutHandler() {
+		if (this.props.isHost === true) {
+			if (window.confirm('This will close the room, are you sure?')) {
+				this.props.socket.emit('logout');
+				window.location.pathname = '/';
+			}
+		} else {
+			window.location.pathname = '/';
+		}
+	}
+
 	render() {
 		return (<div style={defaultStyle}>
 			<a>
 				<FontAwesomeIcon icon={faCog} size="2x"/>
 			</a>
-			<a href={'http://' + config.ipAddress + ':' + config.portFrontend + '/'}>
+			<div onClick={this.logoutHandler.bind(this)}>
 				<FontAwesomeIcon icon={faSignOutAlt} size="2x"/>
-			</a>
+			</div>
 		</div>);
 	}
 }

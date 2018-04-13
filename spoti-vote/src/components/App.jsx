@@ -127,7 +127,9 @@ class App extends Component {
 		});
 
 		this.socket.on('errorEvent', data => {
-			window.alert(data.message);
+			if (data.message !== null && data.message !== undefined) {
+				window.alert(data.message);
+			}
 			window.location.pathname = '/';
 		});
 	}
@@ -145,7 +147,7 @@ class App extends Component {
 				height: '100vh',
 				width: '100vw'
 			}}>
-			<Sidebar isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
+			<Sidebar socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
 			<CardContainer room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
 			<Footer isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
 		</section>);

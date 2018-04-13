@@ -29,7 +29,7 @@ class Sidebar extends Component {
 					? <UserContainer activeTracks={this.props.activeTracks} connectedUser={this.props.connectedUser}/>
 					: ''
 			}
-			<SettingsBar/>
+			<SettingsBar isHost={this.props.isHost} socket={this.props.socket}/>
 		</div>);
 	}
 }
