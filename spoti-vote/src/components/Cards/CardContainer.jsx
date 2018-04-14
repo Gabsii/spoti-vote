@@ -4,18 +4,19 @@ import Card from './Card.jsx';
 let constants = require('../../js/constants');
 
 let defaultStyle = {
-	height: 'calc(100vh - 125px)',
-	maxWidth: 'calc(100vw - 200px)',
-	minWidth: 'calc(100vw - 250px)',
+	// height: 'calc(100vh - 125px)',
+	// maxWidth: 'calc(100vw - 200px)',
+	// minWidth: 'calc(100vw - 250px)',
 	position: 'absolute',
-	top: 0,
+	// top: 0,
 	left: 0,
 	display: 'flex',
 	flexWrap: 'wrap',
 	flexDirection: 'row',
 	padding: '25px',
 	overflow: 'hidden',
-	backgroundColor: constants.colors.background
+	backgroundColor: constants.colors.background,
+	writeable: true
 }
 
 class CardContainer extends Component {
@@ -56,40 +57,112 @@ class CardContainer extends Component {
 		}
 	}
 
-	render() {
-		//check if voted and add opacity effect
-		if (this.props.activeTracks.length > 0) {
-			return (<main style={defaultStyle}>
-				{
-					this.props.activeTracks.map((track, index) => {
-						return <Card randomTrack={track} onClick={this.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
-					})
+	componentWillReceiveProps(nextProps) {
+		if (this.props.activeTracks[0] !== undefined && this.props.activeTracks[1] !== undefined && this.props.activeTracks[2] !== undefined && this.props.activeTracks[3] !== undefined) {
+			if (nextProps.activeTracks[0].id !== this.props.activeTracks[0].id && nextProps.activeTracks[1].id !== this.props.activeTracks[1].id && nextProps.activeTracks[2].id !== this.props.activeTracks[2].id && nextProps.activeTracks[3].id !== this.props.activeTracks[3].id) {
+				const buttons = window.document.getElementsByTagName('button');
+				for (var i = 0; i < buttons.length; i++) {
+					buttons[i].style.opacity = 1;
 				}
-			</main>);
-		} else {
-			return (<main style={defaultStyle}>
-				<div style={{
-						width: '100%',
-						display: 'flex',
-						justifyContent: 'center',
-						alignItems: 'center',
-						flexDirection: 'column',
-						color: constants.colors.font
+			}
+		}
+	}
+
+	render() {
+		if (this.props.activeTracks.length > 0) {
+			if (this.props.isPhone) {
+				return (<main style={{
+						...defaultStyle,
+						height: 'calc(100vh - 200px)', // top bar should be 75px high
+						top: '75px',
+						maxWidth: 'calc(100vw - 50px)',
+						minWidth: 'calc(100vw - 50px)'
 					}}>
-					<h1 style={{
-							fontSize: '5em'
-						}}>Select a playlist first!</h1><br/><br/>
-					<h2 style={{
-							fontSize: '2em'
-						}}>Users can connect with
-						<b style={{
-								fontFamily: 'Circular Bold'
-							}}>
-							{' ' + this.props.room + ' '}
-						</b>
-						as Code!</h2>
-				</div>
-			</main>);
+					{
+						this.props.activeTracks.map((track, index) => {
+							return <Card randomTrack={track} onClick={this.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
+						})
+					}
+				</main>);
+			} else {
+				return (<main style={{
+						...defaultStyle,
+						height: 'calc(100vh - 125px)',
+						top: 0,
+						maxWidth: 'calc(100vw - 200px)',
+						minWidth: 'calc(100vw - 250px)'
+					}}>
+					{
+						this.props.activeTracks.map((track, index) => {
+							return <Card randomTrack={track} onClick={this.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
+						})
+					}
+				</main>);
+			}
+		} else {
+			if (this.props.isPhone) {
+				return (<main style={{
+						...defaultStyle,
+						height: 'calc(100vh - 200px)', // top bar should be 75px high
+						top: '75px',
+						maxWidth: 'calc(100vw - 50px)',
+						minWidth: 'calc(100vw - 50px)'
+					}}>
+					<div style={{
+							width: '100%',
+							display: 'flex',
+							justifyContent: 'center',
+							alignItems: 'center',
+							flexDirection: 'column',
+							color: constants.colors.font
+						}}>
+						<h1 style={{
+								fontSize: '5em',
+								textAlign: 'center'
+							}}>Select a playlist first!</h1><br/><br/>
+						<h2 style={{
+								fontSize: '2em'
+							}}>Users can connect with
+							<b style={{
+									fontFamily: 'Circular Bold'
+								}}>
+								{' ' + this.props.room + ' '}
+							</b>
+							as Code!</h2>
+					</div>
+				</main>);
+			} else {
+				return (<main style={{
+						...defaultStyle,
+						height: 'calc(100vh - 125px)',
+						top: 0,
+						maxWidth: 'calc(100vw - 200px)',
+						minWidth: 'calc(100vw - 250px)'
+					}}>
+					<div style={{
+							width: '100%',
+							display: 'flex',
+							justifyContent: 'center',
+							alignItems: 'center',
+							flexDirection: 'column',
+							color: constants.colors.font
+						}}>
+						<h1 style={{
+								fontSize: '5em',
+								textAlign: 'center'
+							}}>Select a playlist first!</h1><br/><br/>
+						<h2 style={{
+								fontSize: '2em'
+							}}>Users can connect with
+							<b style={{
+									fontFamily: 'Circular Bold'
+								}}>
+								{' ' + this.props.room + ' '}
+							</b>
+							as Code!</h2>
+					</div>
+				</main>);
+			}
 		}
 
 	}

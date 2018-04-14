@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
+import MediaQuery from 'react-responsive';
+import queryString from 'query-string';
+import socketIOClient from 'socket.io-client'
 import Footer from './Footer.jsx';
 import Sidebar from './Sidebar.jsx';
 import CardContainer from './Cards/CardContainer.jsx';
-import queryString from 'query-string';
-import socketIOClient from 'socket.io-client'
 
 let constants = require('../js/constants');
 let config = require('../js/config');
@@ -147,8 +148,26 @@ class App extends Component {
 				height: '100vh',
 				width: '100vw'
 			}}>
-			<Sidebar socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
-			<CardContainer room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
+			<MediaQuery minWidth={constants.breakpoints.medium}>{
+					(matches) => {
+						if (matches) {
+							return (<Sidebar isPhone={false} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>);
+						} else {
+							return (<Sidebar isPhone={true} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>);
+						}
+					}
+				}
+			</MediaQuery>
+			<MediaQuery minWidth={constants.breakpoints.medium}>{
+					(matches) => {
+						if (matches) { // = tablet^
+							return <CardContainer isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
+						} else { // = phone
+							return <CardContainer isPhone={true} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
+						}
+					}
+				}
+			</MediaQuery>
 			<Footer isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
 		</section>);
 	}
