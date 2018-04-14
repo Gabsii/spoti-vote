@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import icon from "../../img/userIcon.svg";
+import Marquee from 'react-text-marquee'
 
 let defaultStyle = {
 	display: 'flex',
@@ -25,11 +26,11 @@ class User extends Component {
 			<div style={{
 					width: 'calc(100% - 108px)',
 					marginRight: 'auto',
-					textOverflow: 'ellipsis',
+					textOverflow: 'clip',
 					whiteSpace: 'nowrap',
 					overflow: 'hidden'
 				}}>
-				{this.props.name}
+				<Marquee text={this.props.name}/>
 			</div>
 			<div className="vote" style={{
 					width: '24px',
