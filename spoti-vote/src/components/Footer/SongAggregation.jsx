@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Marquee from 'react-text-marquee'
 
 let constants = require('../../js/constants');
 let defaultStyle = {
@@ -29,14 +30,14 @@ class SongAggregation extends Component {
 					fontSize: '0.9em',
 					color: constants.colors.font
 				}}>
-				{this.props.songName}
+				<Marquee text={this.props.songName}/>
 			</div>
 			<div style={{
 					marginTop: '5px',
 					fontSize: '0.8em',
 					color: constants.colors.fontSecondary
 				}}>
-				{artistString}
+				<Marquee text={artistString}/>
 			</div>
 		</div>);
 	}

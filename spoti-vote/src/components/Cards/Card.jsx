@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Marquee from 'react-text-marquee'
 
 let constants = require('../../js/constants');
 
@@ -101,9 +102,16 @@ class Card extends Component {
 					}}>
 					<div style={{
 							fontSize: '2em',
-							textAlign: 'center'
-						}}>{this.props.randomTrack.name || '-'}</div>
-					<div>{artistString || '-'}</div>
+							textAlign: 'center',
+							textOverflow: 'clip',
+							whiteSpace: 'nowrap',
+							overflow: 'hidden'
+						}}><Marquee text={this.props.randomTrack.name || '-'}/></div>
+					<div style={{
+							textOverflow: 'clip',
+							whiteSpace: 'nowrap',
+							overflow: 'hidden'
+						}}><Marquee text={artistString || '-'}/></div>
 					<div style={{
 							fontSize: '1.25em'
 						}}>{votes + ' Votes'}</div>
