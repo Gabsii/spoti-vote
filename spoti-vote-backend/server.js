@@ -165,7 +165,7 @@ io.on('connection', (socket) => {
 
 			console.log('-c - ['+data.name+'] connected');
 		} else {
-			socket.emit('error', {message: 'Room was closed'});
+			socket.emit('errorEvent', {message: 'Room was closed'});
 		}
 
     });
@@ -181,7 +181,7 @@ io.on('connection', (socket) => {
 
 			console.log('-vl- The volume was changed to: ['+data.volume+']');
 		} else {
-			socket.emit('error', {message: 'Room was closed'});
+			socket.emit('errorEvent', {message: 'Room was closed'});
 		}
     });
 
@@ -196,7 +196,7 @@ io.on('connection', (socket) => {
 
 			console.log('-pC- Playlist changed to: ['+data.playlistId+']');
 		} else {
-			socket.emit('error', {message: 'Room was closed'});
+			socket.emit('errorEvent', {message: 'Room was closed'});
 		}
     });
 
@@ -215,7 +215,7 @@ io.on('connection', (socket) => {
 				console.log('-vo- ['+name+'] voted for: ['+data.trackId+']');
 			}
 		} else {
-			socket.emit('error', {message: 'Room was closed'});
+			socket.emit('errorEvent', {message: 'Room was closed'});
 		}
     });
 
@@ -229,7 +229,7 @@ io.on('connection', (socket) => {
 			let i = rooms.indexOf(room);
 			rooms.splice(i,1);
 		} else {
-			socket.emit('error', {message: 'Room was closed'});
+			socket.emit('errorEvent', {message: 'Room was closed'});
 		}
     });
 
