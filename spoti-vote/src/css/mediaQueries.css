@@ -1,7 +1,0 @@
-/*
-since inline styles are used, extending by external files doesnt work
- @media only screen and (max-device-width: 480px) {
-    #sidebar {
-        display: none;
-    }
-} */

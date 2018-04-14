@@ -18,8 +18,7 @@ let titleStyle = {
 }
 
 let containerStyle = {
-	heigth: '100px',
-	display: 'block'
+	wordWrap: 'break-word'
 }
 
 class UserContainer extends Component {
@@ -37,7 +36,7 @@ class UserContainer extends Component {
 		}
 
 		return (<div style={defaultStyle}>
-			<div className="progressbar" style={titleStyle}>Users</div>
+			<div style={titleStyle}>Users</div>
 			<div style={containerStyle}>
 				{
 					this.props.connectedUser.map(function(user, index) {

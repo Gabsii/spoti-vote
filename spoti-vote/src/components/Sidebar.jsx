@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import Infos from './Sidebar/Infos.jsx';
 import UserContainer from './Sidebar/UserContainer.jsx';
 import SettingsBar from './Sidebar/SettingsBar.jsx';
-import '../css/mediaQueries.css';
 
 let constants = require('../js/constants');
 
@@ -47,7 +46,6 @@ class Sidebar extends Component {
 					: ''
 			}
 			<SettingsBar isHost={this.props.isHost} socket={this.props.socket}/>
-			<style></style>
 		</div>);
 	}
 }

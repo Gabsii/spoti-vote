@@ -12,7 +12,7 @@ let config = require('../js/config');
 let defaultActivePlayer = {
 	progress: 0,
 	track: {
-		name: 'Spotify isnt running',
+		name: 'Spotify isn\'t running',
 		album: {
 			images: [
 				{
@@ -22,7 +22,7 @@ let defaultActivePlayer = {
 		},
 		artists: [
 			{
-				name: 'Turn on Spotify'
+				name: 'Start Spotify'
 			}
 		]
 	}

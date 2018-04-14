@@ -15,8 +15,7 @@ let defaultStyle = {
 	flexDirection: 'row',
 	padding: '25px',
 	overflow: 'hidden',
-	backgroundColor: constants.colors.background,
-	writeable: true
+	backgroundColor: constants.colors.background
 }
 
 class CardContainer extends Component {
@@ -64,6 +63,7 @@ class CardContainer extends Component {
 				for (var i = 0; i < buttons.length; i++) {
 					buttons[i].style.opacity = 1;
 				}
+				//push notification
 			}
 		}
 	}
