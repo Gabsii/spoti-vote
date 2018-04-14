@@ -4,11 +4,11 @@ import Card from './Card.jsx';
 let constants = require('../../js/constants');
 
 let defaultStyle = {
-	height: 'calc(100vh - 125px)',
+	// height: 'calc(100vh - 125px)',
 	// maxWidth: 'calc(100vw - 200px)',
 	// minWidth: 'calc(100vw - 250px)',
 	position: 'absolute',
-	top: 0,
+	// top: 0,
 	left: 0,
 	display: 'flex',
 	flexWrap: 'wrap',
@@ -67,6 +67,8 @@ class CardContainer extends Component {
 			if (this.props.isPhone) {
 				return (<main style={{
 						...defaultStyle,
+						height: 'calc(100vh - 200px)', // top bar should be 75px high
+						top: '75px',
 						maxWidth: 'calc(100vw - 50px)',
 						minWidth: 'calc(100vw - 50px)'
 					}}>
@@ -79,6 +81,8 @@ class CardContainer extends Component {
 			} else {
 				return (<main style={{
 						...defaultStyle,
+						height: 'calc(100vh - 125px)',
+						top: 0,
 						maxWidth: 'calc(100vw - 200px)',
 						minWidth: 'calc(100vw - 250px)'
 					}}>
@@ -93,6 +97,8 @@ class CardContainer extends Component {
 			if (this.props.isPhone) {
 				return (<main style={{
 						...defaultStyle,
+						height: 'calc(100vh - 200px)', // top bar should be 75px high
+						top: '75px',
 						maxWidth: 'calc(100vw - 50px)',
 						minWidth: 'calc(100vw - 50px)'
 					}}>
@@ -122,6 +128,8 @@ class CardContainer extends Component {
 			} else {
 				return (<main style={{
 						...defaultStyle,
+						height: 'calc(100vh - 125px)',
+						top: 0,
 						maxWidth: 'calc(100vw - 200px)',
 						minWidth: 'calc(100vw - 250px)'
 					}}>

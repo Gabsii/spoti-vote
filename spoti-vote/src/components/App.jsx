@@ -148,8 +148,15 @@ class App extends Component {
 				height: '100vh',
 				width: '100vw'
 			}}>
-			<MediaQuery minWidth={constants.breakpoints.medium}>
-				<Sidebar socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
+			<MediaQuery minWidth={constants.breakpoints.medium}>{
+					(matches) => {
+						if (matches) {
+							return (<Sidebar isPhone={false} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>);
+						} else {
+							return (<Sidebar isPhone={true} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>);
+						}
+					}
+				}
 			</MediaQuery>
 			<MediaQuery minWidth={constants.breakpoints.medium}>{
 					(matches) => {
