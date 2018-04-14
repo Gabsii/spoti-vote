@@ -17,10 +17,6 @@ let titleStyle = {
 	justifyContent: 'center'
 }
 
-let containerStyle = {
-	wordWrap: 'break-word'
-}
-
 class UserContainer extends Component {
 
 	render() {
@@ -37,7 +33,7 @@ class UserContainer extends Component {
 
 		return (<div style={defaultStyle}>
 			<div style={titleStyle}>Users</div>
-			<div style={containerStyle}>
+			<div>
 				{
 					this.props.connectedUser.map(function(user, index) {
 						return <User voteColor={user.color} key={index} name={user.name}/>

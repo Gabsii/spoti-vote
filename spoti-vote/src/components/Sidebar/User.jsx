@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import icon from "../../img/userIcon.svg";
 
 let defaultStyle = {
-	width: 'min-content',
 	display: 'flex',
 	alignItems: 'center',
+	justifyContent: 'space-between',
 	padding: '5px'
 }
 let imgStyle = {
@@ -23,11 +23,11 @@ class User extends Component {
 		return (<div style={defaultStyle}>
 			<img alt="icon" src={icon} style={imgStyle}/>
 			<div style={{
+					width: 'calc(100% - 108px)',
 					marginRight: 'auto',
-					whiteSpace: 'nowrap',
-					overflow: 'hidden',
 					textOverflow: 'ellipsis',
-					width: 'calc(100% - 108px)'
+					whiteSpace: 'nowrap',
+					overflow: 'hidden'
 				}}>
 				{this.props.name}
 			</div>

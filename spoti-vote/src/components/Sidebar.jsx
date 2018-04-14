@@ -26,8 +26,8 @@ class Sidebar extends Component {
 		} else {
 			defaultStyle = {
 				height: 'calc(100vh - 75px)',
-				maxWidth: '250px',
-				minWidth: '200px',
+				// maxWidth: '250px',
+				width: '200px',
 				position: 'absolute',
 				top: 0,
 				right: 0,

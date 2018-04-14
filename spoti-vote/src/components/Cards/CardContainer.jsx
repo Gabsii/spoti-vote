@@ -75,8 +75,8 @@ class CardContainer extends Component {
 						...defaultStyle,
 						height: 'calc(100vh - 200px)', // top bar should be 75px high
 						top: '75px',
-						maxWidth: 'calc(100vw - 50px)',
-						minWidth: 'calc(100vw - 50px)'
+						width: 'calc(100vw - 50px)',
+						// minWidth: 'calc(100vw - 50px)'
 					}}>
 					{
 						this.props.activeTracks.map((track, index) => {
@@ -89,8 +89,8 @@ class CardContainer extends Component {
 						...defaultStyle,
 						height: 'calc(100vh - 125px)',
 						top: 0,
-						maxWidth: 'calc(100vw - 200px)',
-						minWidth: 'calc(100vw - 250px)'
+						width: 'calc(100vw - 250px)',
+						// minWidth: 'calc(100vw - 250px)'
 					}}>
 					{
 						this.props.activeTracks.map((track, index) => {
@@ -105,8 +105,8 @@ class CardContainer extends Component {
 						...defaultStyle,
 						height: 'calc(100vh - 200px)', // top bar should be 75px high
 						top: '75px',
-						maxWidth: 'calc(100vw - 50px)',
-						minWidth: 'calc(100vw - 50px)'
+						width: 'calc(100vw - 50px)',
+						// minWidth: 'calc(100vw - 50px)'
 					}}>
 					<div style={{
 							width: '100%',
@@ -136,8 +136,8 @@ class CardContainer extends Component {
 						...defaultStyle,
 						height: 'calc(100vh - 125px)',
 						top: 0,
-						maxWidth: 'calc(100vw - 200px)',
-						minWidth: 'calc(100vw - 250px)'
+						width: 'calc(100vw - 250px)',
+						// minWidth: 'calc(100vw - 250px)'
 					}}>
 					<div style={{
 							width: '100%',
