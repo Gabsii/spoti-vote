@@ -57,12 +57,18 @@ class CardContainer extends Component {
 		}
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if (this.props.activeTracks[0] !== undefined && this.props.activeTracks[1] !== undefined && this.props.activeTracks[2] !== undefined && this.props.activeTracks[3] !== undefined) {
+			if (nextProps.activeTracks[0].id !== this.props.activeTracks[0].id && nextProps.activeTracks[1].id !== this.props.activeTracks[1].id && nextProps.activeTracks[2].id !== this.props.activeTracks[2].id && nextProps.activeTracks[3].id !== this.props.activeTracks[3].id) {
+				const buttons = window.document.getElementsByTagName('button');
+				for (var i = 0; i < buttons.length; i++) {
+					buttons[i].style.opacity = 1;
+				}
+			}
+		}
+	}
+
 	render() {
-		//check if voted and add opacity effect @michi wo ladesch neue songs?
-		// for (var i = 0; i < buttons.length; i++) {
-		// 	buttons[i].style.opacity = 1;
-		// }
-		const buttons = window.document.getElementsByTagName('button');
 		if (this.props.activeTracks.length > 0) {
 			if (this.props.isPhone) {
 				return (<main style={{
