@@ -134,14 +134,19 @@ method.removeUser = function(name) {
 method.getPlaylists = function() {
 	let returnPlaylists = [];
 	for (var i = 0; i < this.playlists.length; i++) {
-		if (this.playlists[i].tracks.total > this.cardNum) {
+		if (Array.isArray(this.playlists[i].tracks) !== true) {
+			if (this.playlists[i].tracks.total > this.cardNum) {
+				returnPlaylists.push({
+					id: this.playlists[i].id,
+					name: this.playlists[i].name
+				});
+				this.playlists[i].tracks = [];
+			}
+		} else {
 			returnPlaylists.push({
 				id: this.playlists[i].id,
 				name: this.playlists[i].name
 			});
-		}
-		if (Array.isArray(this.playlists[i].tracks) !== true) {
-			this.playlists[i].tracks = [];
 		}
 
 	}
