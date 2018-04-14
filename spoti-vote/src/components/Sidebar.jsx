@@ -30,6 +30,7 @@ class Sidebar extends Component {
 					: ''
 			}
 			<SettingsBar isHost={this.props.isHost} socket={this.props.socket}/>
+			<style></style>
 		</div>);
 	}
 }
