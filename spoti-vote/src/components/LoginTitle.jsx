@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import MediaQuery from 'react-responsive';
 import LoginCode from './Buttons/LoginCode.jsx';
 
 let constants = require('../js/constants');
@@ -44,7 +45,17 @@ class LoginTitle extends Component {
 			<div>
 				Kahoot x Spotify Collaboration
 			</div>
-			<LoginCode/>
+			<MediaQuery maxWidth={constants.breakpoints.medium}>
+				{
+					(matches) => {
+						if (matches) {
+							return (<LoginCode isPhone={true}/>);
+						} else {
+							return (<LoginCode isPhone={false}/>);
+						}
+					}
+				}
+			</MediaQuery>
 		</div>);
 	}
 }

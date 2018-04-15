@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import MediaQuery from 'react-responsive';
 import '../../css/selectors.css';
 
 let constants = require('../../js/constants.js');
@@ -38,8 +39,6 @@ class LoginCode extends Component {
 
 	submitHandler(event) {
 		event.preventDefault();
-		// check for input hijacking
-		// send data to join room
 		if (this.state.room) {
 			window.location.href = 'http://' + config.ipAddress + ':' + config.portFrontend + '/app/' + this.state.room;
 		}
@@ -56,6 +55,9 @@ class LoginCode extends Component {
 						exists = true
 						this.setState({room: str, roomExists: true});
 					}
+				}
+				if (this.state.room && this.props.isPhone) {
+					window.location.href = 'http://' + config.ipAddress + ':' + config.portFrontend + '/app/' + this.state.room;
 				}
 				if (!exists) {
 					this.setState({roomExists: false});
@@ -74,22 +76,37 @@ class LoginCode extends Component {
 	}
 
 	render() {
+		let borderStyle;
+
+		this.props.isPhone
+			? borderStyle = {
+				borderRadius: '500px'
+			}
+			: borderStyle = {
+				borderTopLeftRadius: '500px',
+				borderBottomLeftRadius: '500px',
+				borderTopRightRadius: '0px',
+				borderBottomRightRadius: '0px'
+			}
+
 		return (<div>
 			<form style={formStyle} onSubmit={this.submitHandler.bind(this)}>
 				<input type="text" id="code" maxLength="5" placeholder="Room Code" style={{
 						...defaultStyle,
+						...borderStyle,
 						textAlign: "center",
-						borderTopLeftRadius: "500px",
-						borderBottomLeftRadius: "500px",
 						backgroundColor: constants.colors.background,
 						color: constants.colors.font
 					}} autoComplete="off" onChange={this.checkRoom.bind(this)} pattern="[A-Za-z]{5}"/>
-				<input type="submit" id="loginCode" value="join" style={{
-						...defaultStyle,
-						fontFamily: 'Circular Bold',
-						borderTopRightRadius: "500px",
-						borderBottomRightRadius: "500px"
-					}}/>
+				<MediaQuery minWidth={constants.breakpoints.medium}>
+
+					<input type="submit" id="loginCode" value="join" style={{
+							...defaultStyle,
+							fontFamily: 'Circular Bold',
+							borderTopRightRadius: "500px",
+							borderBottomRightRadius: "500px"
+						}}/>
+				</MediaQuery>
 			</form>
 			{
 				this.state.room === false && this.state.roomExists === false
@@ -98,7 +115,7 @@ class LoginCode extends Component {
 								marginTop: '5px',
 								textShadow: 'none'
 							}}>Room doesn't exist</h5>
-					: ""
+					: ''
 			}
 			</div>);
 	}

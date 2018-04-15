@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import MediaQuery from 'react-responsive';
 import '../css/parallax.css';
 import FullscreenImage from './FullscreenImage.jsx';
 import LoginButton from './Buttons/LoginButton.jsx';
@@ -7,6 +8,8 @@ import LoginTitle from './LoginTitle.jsx';
 import Header from './Header.jsx';
 import pictureOne from '../img/austin-neill-247237-unsplash.jpg';
 import pictureTwo from '../img/andre-benz-276974-unsplash.jpg';
+
+let constants = require('../js/constants');
 
 class Login extends Component {
 	componentDidMount() {
@@ -23,7 +26,9 @@ class Login extends Component {
 			<FullscreenImage id="parallax" source={pictureOne}>
 				<LoginButton/>
 				<LoginTitle/>
-				<ScrollDown/>
+				<MediaQuery minWidth={constants.breakpoints.medium}>
+					<ScrollDown/>
+				</MediaQuery>
 			</FullscreenImage>
 			<FullscreenImage id="down" source={pictureTwo}>
 				<Header></Header>
