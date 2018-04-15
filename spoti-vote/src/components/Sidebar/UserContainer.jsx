@@ -17,11 +17,6 @@ let titleStyle = {
 	justifyContent: 'center'
 }
 
-let containerStyle = {
-	heigth: '100px',
-	display: 'block'
-}
-
 class UserContainer extends Component {
 
 	render() {
@@ -37,8 +32,8 @@ class UserContainer extends Component {
 		}
 
 		return (<div style={defaultStyle}>
-			<div className="progressbar" style={titleStyle}>Users</div>
-			<div style={containerStyle}>
+			<div style={titleStyle}>Users</div>
+			<div>
 				{
 					this.props.connectedUser.map(function(user, index) {
 						return <User voteColor={user.color} key={index} name={user.name}/>

@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import Infos from './Sidebar/Infos.jsx';
 import UserContainer from './Sidebar/UserContainer.jsx';
 import SettingsBar from './Sidebar/SettingsBar.jsx';
-import '../css/mediaQueries.css';
 
 let constants = require('../js/constants');
 
@@ -27,8 +26,8 @@ class Sidebar extends Component {
 		} else {
 			defaultStyle = {
 				height: 'calc(100vh - 75px)',
-				maxWidth: '250px',
-				minWidth: '200px',
+				// maxWidth: '250px',
+				width: '200px',
 				position: 'absolute',
 				top: 0,
 				right: 0,
@@ -47,7 +46,6 @@ class Sidebar extends Component {
 					: ''
 			}
 			<SettingsBar isHost={this.props.isHost} socket={this.props.socket}/>
-			<style></style>
 		</div>);
 	}
 }
