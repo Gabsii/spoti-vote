@@ -57,7 +57,15 @@ class Sidebar extends Component {
 						: ''
 				}
 			</MediaQuery>
-			<SettingsBar isHost={this.props.isHost} socket={this.props.socket}/>
+			<MediaQuery maxWidth={constants.breakpoints.medium}>{
+					(matches) => {
+						if (matches) {
+							return (<SettingsBar isPhone={true} isHost={this.props.isHost} socket={this.props.socket}/>);
+						} else {
+							return (<SettingsBar isPhone={false} isHost={this.props.isHost} socket={this.props.socket}/>);
+						}
+					}
+				}</MediaQuery>
 		</div>);
 	}
 }
