@@ -8,6 +8,7 @@
     "react": "^16.2.0",
     "react-cookie": "^2.1.4",
     "react-dom": "^16.2.0",
+    "react-responsive": "^4.1.0",
     "react-scripts": "1.1.1",
     "socket.io-client": "^2.1.0"
   },

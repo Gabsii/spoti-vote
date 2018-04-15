@@ -15,11 +15,29 @@ let defaultStyle = {
 	bottom: 0,
 	display: 'flex',
 	alignItems: 'center',
-	justifyContent: 'space-between',
-	color: constants.colors.fontSecondary
+	justifyContent: 'space-between'
 }
 
-class User extends Component {
+let buttonStyle = {
+	border: 0,
+	color: constants.colors.fontSecondary,
+	background: 'none'
+}
+
+class SettingsBar extends Component {
+
+	constructor() {
+		super();
+		this.state = {
+			hover: false
+		}
+	}
+
+	toggleHover() {
+		this.setState({
+			hover: !this.state.hover
+		})
+	}
 
 	logoutHandler() {
 		if (this.props.isHost === true) {
@@ -33,14 +51,30 @@ class User extends Component {
 	}
 
 	render() {
+		let linkStyle;
+		if (this.state.hover) {
+			linkStyle = {
+				cursor: 'pointer'
+			}
+		} else {
+			linkStyle = {
+				cursor: 'context-menu'
+			}
+		}
 		return (<div style={defaultStyle}>
-			<a>
+			<button style={{
+					...buttonStyle,
+					...linkStyle
+				}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
 				<FontAwesomeIcon icon={faCog} size="2x"/>
-			</a>
-			<div onClick={this.logoutHandler.bind(this)}>
+			</button>
+			<button style={{
+					...buttonStyle,
+					...linkStyle
+				}} onClick={this.logoutHandler.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
 				<FontAwesomeIcon icon={faSignOutAlt} size="2x"/>
-			</div>
+			</button>
 		</div>);
 	}
 }
-export default User;
+export default SettingsBar;

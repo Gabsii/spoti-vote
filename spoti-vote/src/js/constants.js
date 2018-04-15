@@ -34,10 +34,20 @@ let colors = {
 	barBackground: "#404040" // background color for bar elements
 }
 
+// http://gs.statcounter.com/screen-resolution-stats
+
+let breakpoints = { //only focuses on width
+	small: 375, // [0;375] 375x667 small Smartphones
+	medium: 760, // ]375;760] large Smartphones
+	large: 980, // ]760;980] Tablets
+	xlarge: 1280 // ]980;1280] Laptops (everything else is DESKTOP FIRST)
+}
+
 module.exports = {
 	colors: colors,
 	iterateCardColors: iterateCardColors,
-	codes: codes
+	codes: codes,
+	breakpoints: breakpoints
 }
 
 //let color = require('./css/colors.js'); Path to this file color.green == "1DB954"
