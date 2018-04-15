@@ -134,14 +134,19 @@ method.removeUser = function(name) {
 method.getPlaylists = function() {
 	let returnPlaylists = [];
 	for (var i = 0; i < this.playlists.length; i++) {
-		if (this.playlists[i].tracks.total > this.cardNum) {
+		if (Array.isArray(this.playlists[i].tracks) !== true) {
+			if (this.playlists[i].tracks.total > this.cardNum) {
+				returnPlaylists.push({
+					id: this.playlists[i].id,
+					name: this.playlists[i].name
+				});
+				this.playlists[i].tracks = [];
+			}
+		} else {
 			returnPlaylists.push({
 				id: this.playlists[i].id,
 				name: this.playlists[i].name
 			});
-		}
-		if (Array.isArray(this.playlists[i].tracks) !== true) {
-			this.playlists[i].tracks = [];
 		}
 
 	}
@@ -382,8 +387,11 @@ method.update = async function(isHost) {
 	}
 
 	if (this.activePlayer !== null && this.activePlaylist !== null) {
-		if (this.activePlayer.progress > 98) {
+		if (this.activePlayer.progress > 98 && this.isChanging === false) {
+			this.isChanging = true;
 			await this.play();
+		} else if (this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isChanging === true) {
+			console.log('Reset Cooldown');
 			this.isChanging = false;
 		}
 	}
@@ -446,43 +454,40 @@ method.vote = function(trackId, isHost, name) {
 * @return {boolean} True if the request to the spotify API was successfully changed
 */
 method.play = async function() {
-	if (this.isChanging === false) {
-		this.isChanging = true;
-		let track = this.activeTracks[0];
+	let track = this.activeTracks[0];
 
-		for (var i = 1; i < this.activeTracks.length; i++) {
-			if (this.activeTracks[i].votes > track.votes || (track.votes == null && this.activeTracks[i].votes >= 1)) {
-				track = this.activeTracks[i];
-			}
+	for (var i = 1; i < this.activeTracks.length; i++) {
+		if (this.activeTracks[i].votes > track.votes || (track.votes == null && this.activeTracks[i].votes >= 1)) {
+			track = this.activeTracks[i];
 		}
-
-		let possibleTracks = [];
-
-		for (var i = 0; i < this.activeTracks.length; i++) {
-			if (this.activeTracks[i].votes == track.votes) {
-				possibleTracks.push(this.activeTracks[i]);
-			}
-		}
-
-		track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
-
-		console.log('-pl- ['+track.name+'] has been selected, since it had ['+track.votes+'] votes');
-
-		let payload = {
-			uris: ['spotify:track:' + track.id]
-		};
-
-
-		let request = await fetch('https://api.spotify.com/v1/me/player/play', {
-			headers: {
-				"Authorization": "Bearer " + this.host.token
-			},
-			method: "PUT",
-			body: JSON.stringify(payload)
-		});
-
-		return this.getRandomTracks(this.activePlaylist.id, track);
 	}
+
+	let possibleTracks = [];
+
+	for (var i = 0; i < this.activeTracks.length; i++) {
+		if (this.activeTracks[i].votes == track.votes) {
+			possibleTracks.push(this.activeTracks[i]);
+		}
+	}
+
+	track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
+
+	console.log('-pl- ['+track.name+'] has been selected, since it had ['+track.votes+'] votes');
+
+	let payload = {
+		uris: ['spotify:track:' + track.id]
+	};
+
+
+	let request = await fetch('https://api.spotify.com/v1/me/player/play', {
+		headers: {
+			"Authorization": "Bearer " + this.host.token
+		},
+		method: "PUT",
+		body: JSON.stringify(payload)
+	});
+
+	return this.getRandomTracks(this.activePlaylist.id, track);
 };
 
 /**
