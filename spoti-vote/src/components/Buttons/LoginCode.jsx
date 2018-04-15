@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import MediaQuery from 'react-responsive';
+import ReallySmoothScroll from 'really-smooth-scroll';
 import '../../css/selectors.css';
 
 let constants = require('../../js/constants.js');
@@ -78,16 +79,19 @@ class LoginCode extends Component {
 	render() {
 		let borderStyle;
 
-		this.props.isPhone
-			? borderStyle = {
+		if (this.props.isPhone) {
+			borderStyle = {
 				borderRadius: '500px'
 			}
-			: borderStyle = {
+		} else {
+			borderStyle = {
 				borderTopLeftRadius: '500px',
 				borderBottomLeftRadius: '500px',
 				borderTopRightRadius: '0px',
 				borderBottomRightRadius: '0px'
-			}
+			};
+			ReallySmoothScroll.shim();
+		}
 
 		return (<div>
 			<form style={formStyle} onSubmit={this.submitHandler.bind(this)}>

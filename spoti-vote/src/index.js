@@ -4,13 +4,10 @@ import Login from './components/Login.jsx';
 import App from './components/App.jsx';
 import './css/reset.css';
 import './css/fonts.css';
-import ReallySmoothScroll from 'really-smooth-scroll';
 import registerServiceWorker from './registerServiceWorker';
 
 import {Route} from 'react-router';
 import {BrowserRouter} from 'react-router-dom';
-
-ReallySmoothScroll.shim();
 
 ReactDOM.render((<BrowserRouter>
 	<div>
