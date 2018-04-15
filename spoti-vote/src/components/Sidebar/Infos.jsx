@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import MediaQuery from 'react-responsive';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faHeadphones} from '@fortawesome/fontawesome-free-solid';
 
@@ -44,6 +45,14 @@ let centerContainer = {
 class Infos extends Component {
 
 	render() {
+		let heightStyle;
+		this.props.isPhone
+			? heightStyle = {
+				height: '75px'
+			}
+			: heightStyle = {
+				height: '300px'
+			}
 		let option = <div>Playlist:{' ' + this.props.activePlaylist.name}</div>;
 
 		if (this.props.isHost === true) {
@@ -68,7 +77,10 @@ class Infos extends Component {
 
 		let roomName = ": " + window.location.pathname.split('/')[2];
 
-		return (<div style={defaultStyle}>
+		return (<div style={{
+				...defaultStyle,
+				...heightStyle
+			}}>
 			<div style={{
 					...centerContainer,
 					fontWeight: 'bold',
@@ -81,22 +93,24 @@ class Infos extends Component {
 					fontSize: '14px'
 				}}>{option}
 			</div>
-			<a href={this.props.activePlaylist.external_urls.spotify}>
-				<img alt="Current Playlist" src={this.props.activePlaylist.images[0].url} style={{
-						...imgStyle,
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center'
-					}}/>
-			</a>
-			<div style={nameContainer}>
-				<FontAwesomeIcon style={iconColor} icon={faHeadphones} size="2x"/>
-				<div style={{
-						marginLeft: '10px'
-					}}>
-					{this.props.host.name || this.props.host.id}
+			<MediaQuery minWidth={constants.breakpoints.medium}>
+				<a href={this.props.activePlaylist.external_urls.spotify}>
+					<img alt="Current Playlist" src={this.props.activePlaylist.images[0].url} style={{
+							...imgStyle,
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center'
+						}}/>
+				</a>
+				<div style={nameContainer}>
+					<FontAwesomeIcon style={iconColor} icon={faHeadphones} size="2x"/>
+					<div style={{
+							marginLeft: '10px'
+						}}>
+						{this.props.host.name || this.props.host.id}
+					</div>
 				</div>
-			</div>
+			</MediaQuery>
 		</div>);
 	}
 }
