@@ -10,9 +10,8 @@ let defaultStyle = {
 	minWidth: 0,
 	height: '32px',
 	boxSizing: 'border-box',
+	marginTop: 'auto',
 	padding: '4px 16px',
-	position: 'relative',
-	bottom: 0,
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'space-between'

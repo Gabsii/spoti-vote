@@ -10,6 +10,8 @@
     "react-dom": "^16.2.0",
     "react-responsive": "^4.1.0",
     "react-scripts": "1.1.1",
+    "react-text-marquee": "^1.0.1",
+    "react-web-notification": "^0.3.1",
     "socket.io-client": "^2.1.0"
   },
   "scripts": {

@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import Card from './Card.jsx';
+import Notification from 'react-web-notification';
+import logo from '../../img/spotiLogo.png';
 
 let constants = require('../../js/constants');
 
@@ -15,8 +17,7 @@ let defaultStyle = {
 	flexDirection: 'row',
 	padding: '25px',
 	overflow: 'hidden',
-	backgroundColor: constants.colors.background,
-	writeable: true
+	backgroundColor: constants.colors.background
 }
 
 class CardContainer extends Component {
@@ -24,8 +25,46 @@ class CardContainer extends Component {
 	constructor() {
 		super();
 		this.state = {
-			voted: null
+			voted: null,
+			notification: {
+				ignore: true,
+				title: ''
+			}
 		}
+	}
+
+	handlePermissionGranted() {
+		console.log('Permission Granted');
+		this.setState({
+			notification: {
+				ignore: false
+			}
+		});
+	}
+	handlePermissionDenied() {
+		console.log('Permission Denied');
+		this.setState({
+			notification: {
+				ignore: true
+			}
+		});
+	}
+	handleNotSupported() {
+		console.log('Web Notification not Supported');
+		this.setState({
+			notification: {
+				ignore: true
+			}
+		});
+	}
+	handleNotificationOnClick(e, tag) {
+		console.log(e, 'Notification clicked tag:' + tag);
+	}
+	handleNotificationOnError(e, tag) {
+		console.log(e, 'Notification error tag:' + tag);
+	}
+	handleNotificationOnClose(e, tag) {
+		console.log(e, 'Notification closed tag:' + tag);
 	}
 
 	/**
@@ -64,19 +103,47 @@ class CardContainer extends Component {
 				for (var i = 0; i < buttons.length; i++) {
 					buttons[i].style.opacity = 1;
 				}
+				if (this.state.notification.ignore) {
+					return;
+				}
+
+				const now = Date.now();
+
+				const title = 'Spoti Vote';
+				const body = 'New Songs were loaded!';
+				const tag = now;
+				const icon = logo;
+				// const icon = 'http://localhost:3000/Notifications_button_24.png';
+
+				// Available options
+				// See https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
+				const options = {
+					tag: tag,
+					body: body,
+					icon: icon,
+					lang: 'en',
+					dir: 'ltr'
+				}
+				this.setState({
+					notification: {
+						title: title,
+						options: options
+					}
+				});
 			}
 		}
 	}
 
 	render() {
+		console.log(this.state);
 		if (this.props.activeTracks.length > 0) {
 			if (this.props.isPhone) {
 				return (<main style={{
 						...defaultStyle,
 						height: 'calc(100vh - 200px)', // top bar should be 75px high
 						top: '75px',
-						maxWidth: 'calc(100vw - 50px)',
-						minWidth: 'calc(100vw - 50px)'
+						width: 'calc(100vw - 50px)',
+						// minWidth: 'calc(100vw - 50px)'
 					}}>
 					{
 						this.props.activeTracks.map((track, index) => {
@@ -89,14 +156,15 @@ class CardContainer extends Component {
 						...defaultStyle,
 						height: 'calc(100vh - 125px)',
 						top: 0,
-						maxWidth: 'calc(100vw - 200px)',
-						minWidth: 'calc(100vw - 250px)'
+						width: 'calc(100vw - 250px)',
+						// minWidth: 'calc(100vw - 250px)'
 					}}>
 					{
 						this.props.activeTracks.map((track, index) => {
 							return <Card randomTrack={track} onClick={this.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
 						})
 					}
+					<Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} onClick={this.handleNotificationOnClick.bind(this)} onClose={this.handleNotificationOnClose.bind(this)} onError={this.handleNotificationOnError.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
 				</main>);
 			}
 		} else {
@@ -105,8 +173,8 @@ class CardContainer extends Component {
 						...defaultStyle,
 						height: 'calc(100vh - 200px)', // top bar should be 75px high
 						top: '75px',
-						maxWidth: 'calc(100vw - 50px)',
-						minWidth: 'calc(100vw - 50px)'
+						width: 'calc(100vw - 50px)',
+						// minWidth: 'calc(100vw - 50px)'
 					}}>
 					<div style={{
 							width: '100%',
@@ -136,8 +204,8 @@ class CardContainer extends Component {
 						...defaultStyle,
 						height: 'calc(100vh - 125px)',
 						top: 0,
-						maxWidth: 'calc(100vw - 200px)',
-						minWidth: 'calc(100vw - 250px)'
+						width: 'calc(100vw - 250px)',
+						// minWidth: 'calc(100vw - 250px)'
 					}}>
 					<div style={{
 							width: '100%',
@@ -160,6 +228,7 @@ class CardContainer extends Component {
 								{' ' + this.props.room + ' '}
 							</b>
 							as Code!</h2>
+						<Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} onClick={this.handleNotificationOnClick.bind(this)} onClose={this.handleNotificationOnClose.bind(this)} onError={this.handleNotificationOnError.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
 					</div>
 				</main>);
 			}
