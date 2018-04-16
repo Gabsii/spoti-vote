@@ -244,7 +244,6 @@ io.on('connection', (socket) => {
     * Called when a connection is closed
     */
     socket.on('disconnect', () => {
-		console.warn('Request to disconnect');
 		let room = getRoomById(roomId);
 
 		/*jshint ignore: start */
@@ -254,14 +253,14 @@ io.on('connection', (socket) => {
 			if (isHost === false) {
 				room.removeUser(name);
 
-				console.log('-d - ['+name+'] disconnect');
+				console.log('-d - ['+name+'] disconnected from ['+room.id+']');
 			} else {
 				room.hostDisconnect = Date.now();
 
-				console.log('-d - Host disconnect');
+				console.log('-d - Host disconnected from ['+room.id+']');
 			}
 		} else {
-			console.log('-d - User was auto-disconnected');
+			console.log('-d - User was auto-disconnected from ['+roomId+']');
 		}
     });
 });
@@ -285,11 +284,15 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 	}
 	updateCounter.amount += 1;
 	if (updateCounter.amount > 30) {
+		let toBeDeleted = [];
 		for (var i = 0; i < rooms.length; i++) {
 			if (Date.now() - rooms[i].hostDisconnect > 1000*60 && rooms[i].hostDisconnect !== null) {
-				let i = rooms.indexOf(room);
-				rooms.splice(i,1);
+				toBeDeleted.push(rooms[i]);
 			}
+		}
+		for (var i = 0; i < toBeDeleted.length; i++) {
+			console.log('-de- Deleting ['+toBeDeleted[i].id+'] due to inactivity');
+			rooms.splice(rooms.indexOf(toBeDeleted[i]),1);
 		}
 		updateCounter.amount  = 0;
 	}
