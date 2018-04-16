@@ -38,13 +38,14 @@ function Room(token, rooms, cardNum) {
 		profileUrl: '',
 		voted: null
 	};
+	this.firstConnection = true;
 	this.cardNum = cardNum;
 	this.activeTracks = [];
 	this.activePlaylist = null;
 	this.connectedUser = [];
 	this.activePlayer = {};
 	this.id = makeid(5);
-	this.hostDisconnect = null;
+	this.hostDisconnect = Date.now();
 	this.isChanging = false;
 
 	//Makes sure the id is unique

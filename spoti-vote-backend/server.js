@@ -71,7 +71,7 @@ app.get('/callback', async (req, res) => {
 		await room.fetchData();
 		rooms.push(room);
 
-		res.redirect(uri + '/' + room.id + '?token=' + body.access_token);
+		res.redirect(uri + '/' + room.id);// + '?token=' + body.access_token);
 	});
 });
 
@@ -119,19 +119,58 @@ io.on('connection', (socket) => {
 	* Will set the local varible {room} and {isHost}
 	* @param {string} roomId Id of the room
     */
+<<<<<<< HEAD
 	socket.on('roomId', data => {
 		let room = getRoomById(data.roomId);
 		if (room !== null) {
 			roomId = room.id;
 			if (data.token == room.host.token) {
 				isHost = true;
+=======
+    socket.on('roomId', data => {
+		console.warn('Request to roomId:');
+		console.error(data);
+        let room = getRoomById(data.roomId);
+        if (room !== null) {
+			roomId = room.id;
+			if (room.firstConnection === true) {
+				room.firstConnection = false;
+				console.log('-c - Host connected');
+                isHost = true;
+>>>>>>> 993c0f5fa5050bca22713f126c8e7e5e9718b4d9
 				socket.emit('initData', {
 					playlists: room.getPlaylists(),
 					hostName: room.host.name,
-					isHost: isHost
+					isHost: isHost,
+					token: room.host.token
 				});
 				room.hostDisconnect = null;
+			} else {
+				if (room.hostDisconnect !== null) { //If host is gone
+					let token = data.token;
+					if (token == room.host.token) {
+						console.log('-c - Host connected');
+		                isHost = true;
+						socket.emit('initData', {
+							playlists: room.getPlaylists(),
+							hostName: room.host.name,
+							isHost: isHost,
+							token: room.host.token
+						});
+						room.hostDisconnect = null;
+					}
+				} else {
+	                socket.emit('nameEvent', {
+						userNames: room.getUserNames()
+					});
+				}
+			}
 
+
+
+
+
+<<<<<<< HEAD
 				console.log('-c - Host connected');
 			} else {
 				socket.emit('nameEvent', {userNames: room.getUserNames()});
@@ -140,6 +179,12 @@ io.on('connection', (socket) => {
 			socket.emit('errorEvent', {message: 'Room has been closed'});
 		}
 	});
+=======
+        } else {
+            socket.emit('errorEvent', {message: 'Room has been closed'});
+        }
+    });
+>>>>>>> 993c0f5fa5050bca22713f126c8e7e5e9718b4d9
 
 	/**
     * Called when a user thats not a host wants to enter a room
@@ -147,16 +192,32 @@ io.on('connection', (socket) => {
 	* Will set the local varible {name}
 	* @param {string} name Name of the user
     */
+<<<<<<< HEAD
 	socket.on('nameEvent', data => {
+=======
+    socket.on('nameEvent', data => {
+		console.warn('Request to nameEvent:');
+		console.error(data);
+>>>>>>> 993c0f5fa5050bca22713f126c8e7e5e9718b4d9
 		let room = getRoomById(roomId);
 		if (room !== null) {
+			console.log('-c - ['+data.name+'] connected');
 			name = data.name;
+<<<<<<< HEAD
 			if (name !== null) {
 				room.addUser(name);
 				socket.emit('initData', {hostName: room.host.name});
 			}
 
 			console.log('-c - [' + data.name + '] connected');
+=======
+	        if (name !== null) {
+	            room.addUser(name);
+				socket.emit('initData', {
+					hostName: room.host.name
+				});
+	        }
+>>>>>>> 993c0f5fa5050bca22713f126c8e7e5e9718b4d9
 		} else {
 			socket.emit('errorEvent', {message: 'Room was closed'});
 		}
@@ -168,11 +229,18 @@ io.on('connection', (socket) => {
 	* @param {int} volume Volume in percent
     */
 	socket.on('changeVolume', data => {
+		console.warn('Request to changeVolume:');
+		console.error(data);
 		let room = getRoomById(roomId);
 		if (room !== null) {
+<<<<<<< HEAD
 			room.changeVolume(data.volume);
 
 			console.log('-vl- The volume was changed to: [' + data.volume + ']');
+=======
+			console.log('-vl- The volume was changed to: ['+data.volume+']');
+			room.changeVolume(data.volume);
+>>>>>>> 993c0f5fa5050bca22713f126c8e7e5e9718b4d9
 		} else {
 			socket.emit('errorEvent', {message: 'Room was closed'});
 		}
@@ -183,11 +251,18 @@ io.on('connection', (socket) => {
 	* @param {string} playlistId Name of the user
     */
 	socket.on('changePlaylist', data => {
+		console.warn('Request to changePlaylist:');
+		console.error(data);
 		let room = getRoomById(roomId);
 		if (room !== null) {
+<<<<<<< HEAD
 			room.changePlaylist(data.playlistId);
 
 			console.log('-pC- Playlist changed to: [' + data.playlistId + ']');
+=======
+			console.log('-pC- Playlist changed to: ['+data.playlistId+']');
+			room.changePlaylist(data.playlistId);
+>>>>>>> 993c0f5fa5050bca22713f126c8e7e5e9718b4d9
 		} else {
 			socket.emit('errorEvent', {message: 'Room was closed'});
 		}
@@ -198,15 +273,16 @@ io.on('connection', (socket) => {
 	* @param {string} trackId Id of the track
     */
 	socket.on('vote', data => {
+		console.warn('Request to vote:');
+		console.error(data);
 		let room = getRoomById(roomId);
 		if (room !== null) {
-			room.vote(data.trackId, isHost, name);
-
 			if (isHost === true) {
 				console.log('-vo- the host voted for: [' + data.trackId + ']');
 			} else {
 				console.log('-vo- [' + name + '] voted for: [' + data.trackId + ']');
 			}
+			room.vote(data.trackId, isHost, name);
 		} else {
 			socket.emit('errorEvent', {message: 'Room was closed'});
 		}
@@ -216,6 +292,8 @@ io.on('connection', (socket) => {
     * Called when the host wants to close the room
     */
 	socket.on('logout', data => {
+		console.warn('Request to logout:');
+		console.error(data);
 		let room = getRoomById(roomId);
 		if (room !== null) {
 			console.log('-lo- room [' + room.id + '] was closed by host');
@@ -239,14 +317,18 @@ io.on('connection', (socket) => {
 			if (isHost === false) {
 				room.removeUser(name);
 
+<<<<<<< HEAD
 				console.log('-d - [' + name + '] disconnect');
+=======
+				console.log('-d - ['+name+'] disconnected from ['+room.id+']');
+>>>>>>> 993c0f5fa5050bca22713f126c8e7e5e9718b4d9
 			} else {
 				room.hostDisconnect = Date.now();
 
-				console.log('-d - Host disconnect');
+				console.log('-d - Host disconnected from ['+room.id+']');
 			}
 		} else {
-			console.log('-d - User was auto-disconnected');
+			console.log('-d - User was auto-disconnected from ['+roomId+']');
 		}
 	});
 });
@@ -270,13 +352,26 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 	}
 	updateCounter.amount += 1;
 	if (updateCounter.amount > 30) {
+		let toBeDeleted = [];
 		for (var i = 0; i < rooms.length; i++) {
+<<<<<<< HEAD
 			if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
 				let i = rooms.indexOf(room);
 				rooms.splice(i, 1);
 			}
 		}
 		updateCounter.amount = 0;
+=======
+			if (Date.now() - rooms[i].hostDisconnect > 1000*60 && rooms[i].hostDisconnect !== null) {
+				toBeDeleted.push(rooms[i]);
+			}
+		}
+		for (var i = 0; i < toBeDeleted.length; i++) {
+			console.log('-de- Deleting ['+toBeDeleted[i].id+'] due to inactivity');
+			rooms.splice(rooms.indexOf(toBeDeleted[i]),1);
+		}
+		updateCounter.amount  = 0;
+>>>>>>> 993c0f5fa5050bca22713f126c8e7e5e9718b4d9
 	}
 };
 
