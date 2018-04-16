@@ -135,7 +135,6 @@ class CardContainer extends Component {
 	}
 
 	render() {
-		console.log(this.state);
 		if (this.props.activeTracks.length > 0) {
 			if (this.props.isPhone) {
 				return (<main style={{

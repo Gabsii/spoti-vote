@@ -50,17 +50,28 @@ class SettingsBar extends Component {
 	}
 
 	render() {
-		let linkStyle;
-		if (this.state.hover) {
-			linkStyle = {
+		let linkStyle,
+			marginStyle;
+		this.state.hover
+			? linkStyle = {
 				cursor: 'pointer'
 			}
-		} else {
-			linkStyle = {
+			: linkStyle = {
 				cursor: 'context-menu'
 			}
-		}
-		return (<div style={defaultStyle}>
+
+		this.props.isPhone
+			? marginStyle = {
+				marginBottom: 'auto'
+			}
+			: marginStyle = {
+				marginBottom: 0
+			}
+
+		return (<div style={{
+				...defaultStyle,
+				...marginStyle
+			}}>
 			<button style={{
 					...buttonStyle,
 					...linkStyle
