@@ -71,7 +71,7 @@ app.get('/callback', async (req, res) => {
 		await room.fetchData();
 		rooms.push(room);
 
-		res.redirect(uri + '/' + room.id + '?token=' + body.access_token);
+		res.redirect(uri + '/' + room.id);// + '?token=' + body.access_token);
 	});
 });
 
@@ -128,20 +128,42 @@ io.on('connection', (socket) => {
         let room = getRoomById(data.roomId);
         if (room !== null) {
 			roomId = room.id;
-            if (data.token == room.host.token) {
+			if (room.firstConnection === true) {
+				room.firstConnection = false;
 				console.log('-c - Host connected');
                 isHost = true;
 				socket.emit('initData', {
 					playlists: room.getPlaylists(),
 					hostName: room.host.name,
-					isHost: isHost
+					isHost: isHost,
+					token: room.host.token
 				});
 				room.hostDisconnect = null;
-            } else {
-                socket.emit('nameEvent', {
-					userNames: room.getUserNames()
-				});
-            }
+			} else {
+				if (room.hostDisconnect !== null) { //If host is gone
+					let token = data.token;
+					if (token == room.host.token) {
+						console.log('-c - Host connected');
+		                isHost = true;
+						socket.emit('initData', {
+							playlists: room.getPlaylists(),
+							hostName: room.host.name,
+							isHost: isHost,
+							token: room.host.token
+						});
+						room.hostDisconnect = null;
+					}
+				} else {
+	                socket.emit('nameEvent', {
+						userNames: room.getUserNames()
+					});
+				}
+			}
+
+
+
+
+
         } else {
             socket.emit('errorEvent', {message: 'Room has been closed'});
         }
