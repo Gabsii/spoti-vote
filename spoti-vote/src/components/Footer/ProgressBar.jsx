@@ -38,7 +38,7 @@ class Progressbar extends Component {
 
 		let progressStyle = {
 			background: constants.colors.fontSecondary,
-			height: '10px',
+			height: '6px',
 			borderStyle: 'solid',
 			borderRadius: '15px',
 			borderColor: '#333',
