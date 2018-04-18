@@ -42,11 +42,11 @@ let defaultActivePlaylist = {
 class App extends Component {
 	constructor() {
 		super();
-		this.socket = socketIOClient('http://' + config.ipAddress + ':' + config.portBackend);
+		this.socket = socketIOClient('http://' + config.ipAddress || 'spoti-vote.herokuapp.com' + ':' + config.portBackend || process.env.PORT);
 		this.state = {
 			token: queryString.parse(window.location.search).token || null,
 			roomId: window.location.pathname.split('/')[2],
-			loginPage: 'http://' + config.ipAddress + ':' + config.portFrontend,
+			loginPage: 'http://' + config.ipAddress || 'spoti-vote.herokuapp.com' + ':' + config.portFrontend || process.env.PORT,
 			isHost: false,
 			connectedUser: [],
 			playlists: [],

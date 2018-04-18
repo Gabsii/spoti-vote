@@ -23,7 +23,7 @@ let defaultStyle = {
 class LoginButton extends Component {
 
 	login() {
-		window.location.href = 'http://' + config.ipAddress + ':' + config.portBackend + '/login';
+		window.location.href = 'http://' + config.ipAddress || 'spoti-vote.herokuapp.com' + ':' + config.portBackend || process.env.PORT + '/login';
 	}
 
 	render() {

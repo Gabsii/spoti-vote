@@ -15,7 +15,7 @@ let server = http.createServer(app);
 let io = socketIo(server);
 
 //Global Varibles
-let redirect_uri = process.env.REDIRECT_URI || 'http://' + config.ipAddress + ':' + config.portBackend + '/callback';
+let redirect_uri = process.env.REDIRECT_URI || 'http://' + config.ipAddress || 'spoti-vote.herokuapp.com' + ':' + config.portBackend || process.env.PORT + '/callback';
 let rooms = [];
 let allClients = {};
 
@@ -64,7 +64,7 @@ app.get('/callback', async (req, res) => {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-		let uri = process.env.FRONTEND_URI || 'http://' + config.ipAddress + ':' + config.portFrontend + '/app';
+		let uri = process.env.FRONTEND_URI || 'http://' + config.ipAddress || 'spoti-vote.herokuapp.com' + ':' + config.portFrontend || process.env.PORT + '/app';
 
 		let room = new Room(body.access_token, rooms, 4);
 
@@ -314,6 +314,6 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 /**
 * Starts the server
 */
-server.listen(config.portBackend, () => {
+server.listen(config.portBackend || process.env.PORT, () => {
 	console.log('Server started on port: ' + server.address().port);
 });
