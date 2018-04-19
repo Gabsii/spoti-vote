@@ -29,7 +29,7 @@ let allClients = {};
 function getRoomById(roomId) {
 	let room = null;
 	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].id == roomId) 
+		if (rooms[i].id == roomId)
 			room = rooms[i];
 		}
 	return room;
@@ -120,45 +120,60 @@ io.on('connection', (socket) => {
 	* @param {string} roomId Id of the room
     */
 	socket.on('roomId', data => {
-		console.warn('Request to roomId:');
-		console.error(data);
-		let room = getRoomById(data.roomId);
-		if (room !== null) {
-			roomId = room.id;
-			if (room.firstConnection === true) {
-				room.firstConnection = false;
-				console.log('-c - Host connected');
-				isHost = true;
-				socket.emit('initData', {
-					playlists: room.getPlaylists(),
-					hostName: room.host.name,
-					isHost: isHost,
-					token: room.host.token
-				});
-				room.hostDisconnect = null;
-			} else {
-				if (room.hostDisconnect !== null) { //If host is gone
-					let token = data.token;
-					if (token == room.host.token) {
-						console.log('-c - Host connected');
-						isHost = true;
-						socket.emit('initData', {
-							playlists: room.getPlaylists(),
-							hostName: room.host.name,
-							isHost: isHost,
-							token: room.host.token
-						});
-						room.hostDisconnect = null;
-					}
-				} else {
-					socket.emit('nameEvent', {userNames: room.getUserNames()});
-				}
-			}
+        let room = getRoomById(data.roomId);
 
-		} else {
-			socket.emit('errorEvent', {message: 'Room has been closed'});
+		//Check if this user is already hosting a room
+		let x = 0;
+		for (let i = 0; i < rooms.length; i++) {
+			if (rooms[i].host.id == room.host.id && rooms[i].id !== room.id) {
+				x += 1;
+			}
 		}
-	});
+
+		if (x > 0) {
+			socket.emit('errorEvent', {message: 'You are already hosting a Room'});
+		} else {
+			if (room !== null) {
+				roomId = room.id;
+				if (room.firstConnection === true) {
+					room.firstConnection = false;
+					console.log('-c - Host connected');
+					isHost = true;
+					socket.emit('initData', {
+						playlists: room.getPlaylists(),
+						hostName: room.host.name,
+						isHost: isHost,
+						token: room.host.token
+					});
+					room.hostDisconnect = null;
+				} else {
+					if (room.hostDisconnect !== null && token !== null) { //If host is gone
+						let token = data.token;
+						if (token == room.host.token) {
+							console.log('-c - Host connected');
+							isHost = true;
+							socket.emit('initData', {
+								playlists: room.getPlaylists(),
+								hostName: room.host.name,
+								isHost: isHost,
+								token: room.host.token
+							});
+							room.hostDisconnect = null;
+						} else {
+							console.log('-c - Token was wrong');
+							socket.emit('errorEvent', {message: 'Your Token is wrong'});
+						}
+					} else {
+						socket.emit('nameEvent', {
+							userNames: room.getUserNames()
+						});
+					}
+				}
+			} else {
+				socket.emit('errorEvent', {message: 'Room has been closed'});
+			}
+		}
+    });
 
 	/**
     * Called when a user thats not a host wants to enter a room
@@ -314,6 +329,6 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 /**
 * Starts the server
 */
-server.listen(config.portBackend, () => {
+server.listen(config.portBackend || process.env.PORT, () => {
 	console.log('Server started on port: ' + server.address().port);
 });
