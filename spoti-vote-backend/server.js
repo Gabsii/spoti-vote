@@ -5,17 +5,26 @@ const http = require('http');
 const socketIo = require('socket.io');
 const querystring = require('querystring');
 const request = require('request');
-//Import of configs
-let config = require('./src/config');
-let constants = require('./src/constants');
-let Room = require('./src/Room');
+//Import of used files
+const constants = require('./src/constants');
+const Room = require('./src/Room');
 //Setup of the server
-let app = express();
-let server = http.createServer(app);
-let io = socketIo(server);
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
 //Global Varibles
+<<<<<<< HEAD
 let redirect_uri = process.env.REDIRECT_URI || 'http://' + config.ipAddress || 'spoti-vote.herokuapp.com' + ':' + config.portBackend || process.env.PORT + '/callback';
+=======
+const ipAddress = process.env.ADDRESS || 'localhost';
+const portFront = process.env.PORTFRONT || 80;
+const portBack = process.env.PORTBACK || 8888;
+const redirect_uri = 'http://' + ipAddress + ':' + portBack + '/callback';
+
+console.log(redirect_uri);
+
+>>>>>>> 0b43efbdeca346dd28050bb4db47808f4857e4a4
 let rooms = [];
 let allClients = {};
 
@@ -29,7 +38,7 @@ let allClients = {};
 function getRoomById(roomId) {
 	let room = null;
 	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].id == roomId) 
+		if (rooms[i].id == roomId)
 			room = rooms[i];
 		}
 	return room;
@@ -64,7 +73,11 @@ app.get('/callback', async (req, res) => {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
+<<<<<<< HEAD
 		let uri = process.env.FRONTEND_URI || 'http://' + config.ipAddress || 'spoti-vote.herokuapp.com' + ':' + config.portFrontend || process.env.PORT + '/app';
+=======
+		let uri = 'http://' + ipAddress + ':' + portFront + '/app';
+>>>>>>> 0b43efbdeca346dd28050bb4db47808f4857e4a4
 
 		let room = new Room(body.access_token, rooms, 4);
 
@@ -120,45 +133,60 @@ io.on('connection', (socket) => {
 	* @param {string} roomId Id of the room
     */
 	socket.on('roomId', data => {
-		console.warn('Request to roomId:');
-		console.error(data);
-		let room = getRoomById(data.roomId);
-		if (room !== null) {
-			roomId = room.id;
-			if (room.firstConnection === true) {
-				room.firstConnection = false;
-				console.log('-c - Host connected');
-				isHost = true;
-				socket.emit('initData', {
-					playlists: room.getPlaylists(),
-					hostName: room.host.name,
-					isHost: isHost,
-					token: room.host.token
-				});
-				room.hostDisconnect = null;
-			} else {
-				if (room.hostDisconnect !== null) { //If host is gone
-					let token = data.token;
-					if (token == room.host.token) {
-						console.log('-c - Host connected');
-						isHost = true;
-						socket.emit('initData', {
-							playlists: room.getPlaylists(),
-							hostName: room.host.name,
-							isHost: isHost,
-							token: room.host.token
-						});
-						room.hostDisconnect = null;
-					}
-				} else {
-					socket.emit('nameEvent', {userNames: room.getUserNames()});
-				}
-			}
+        let room = getRoomById(data.roomId);
 
-		} else {
-			socket.emit('errorEvent', {message: 'Room has been closed'});
+		//Check if this user is already hosting a room
+		let x = 0;
+		for (let i = 0; i < rooms.length; i++) {
+			if (rooms[i].host.id == room.host.id && rooms[i].id !== room.id) {
+				x += 1;
+			}
 		}
-	});
+
+		if (x > 0) {
+			socket.emit('errorEvent', {message: 'You are already hosting a Room'});
+		} else {
+			if (room !== null) {
+				roomId = room.id;
+				if (room.firstConnection === true) {
+					room.firstConnection = false;
+					console.log('-c - Host connected');
+					isHost = true;
+					socket.emit('initData', {
+						playlists: room.getPlaylists(),
+						hostName: room.host.name,
+						isHost: isHost,
+						token: room.host.token
+					});
+					room.hostDisconnect = null;
+				} else {
+					if (room.hostDisconnect !== null && token !== null) { //If host is gone
+						let token = data.token;
+						if (token == room.host.token) {
+							console.log('-c - Host connected');
+							isHost = true;
+							socket.emit('initData', {
+								playlists: room.getPlaylists(),
+								hostName: room.host.name,
+								isHost: isHost,
+								token: room.host.token
+							});
+							room.hostDisconnect = null;
+						} else {
+							console.log('-c - Token was wrong');
+							socket.emit('errorEvent', {message: 'Your Token is wrong'});
+						}
+					} else {
+						socket.emit('nameEvent', {
+							userNames: room.getUserNames()
+						});
+					}
+				}
+			} else {
+				socket.emit('errorEvent', {message: 'Room has been closed'});
+			}
+		}
+    });
 
 	/**
     * Called when a user thats not a host wants to enter a room
@@ -314,6 +342,10 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 /**
 * Starts the server
 */
+<<<<<<< HEAD
 server.listen(config.portBackend || process.env.PORT, () => {
+=======
+server.listen(portBack, () => {
+>>>>>>> 0b43efbdeca346dd28050bb4db47808f4857e4a4
 	console.log('Server started on port: ' + server.address().port);
 });

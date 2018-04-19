@@ -3,7 +3,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faCog, faSignOutAlt} from '@fortawesome/fontawesome-free-solid';
 
 let constants = require('../../js/constants');
-let config = require('../../js/config');
 
 let defaultStyle = {
 	width: '100%',
