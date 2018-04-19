@@ -48,6 +48,7 @@ function Room(token, rooms, cardNum) {
 	this.id = makeid(5);
 	this.hostDisconnect = Date.now();
 	this.isChanging = false;
+	this.isSkipping = false;
 
 	//Makes sure the id is unique
 	let counter;
@@ -400,9 +401,17 @@ method.update = async function(isHost) {
 		if (this.activePlayer.progress > 98 && this.isChanging === false) {
 			this.isChanging = true;
 			await this.play();
+		} else if (Math.round(this.activePlayer.progress % 5) == 0 && isHost == true && this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isSkipping === false && this.isChanging === false) {
+			//Check if skip
+			this.isSkipping = true;
+			await this.skip();
 		} else if (this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isChanging === true) {
+			//Reset cooldown
 			console.log('Reset Cooldown');
 			this.isChanging = false;
+		} else if (Math.round(this.activePlayer.progress % 5) == 2 && this.isSkipping == true) {
+			console.log('Skip Cooldown Reset');
+			this.isSkipping = false;
 		}
 	}
     return true;
@@ -457,8 +466,7 @@ method.vote = function(trackId, isHost, name) {
 /*jshint ignore: start */
 
 /**
-* PLays the most voted track {{ONLY USED FOR TESTING PURPOSES}}
-* Use this in combination with Postman or something, since it isnt called from the frontedn
+* PLays the most voted track
 *
 * @author: Michiocre
 * @return {boolean} True if the request to the spotify API was successfully changed
@@ -498,6 +506,33 @@ method.play = async function() {
 	});
 
 	return this.getRandomTracks(this.activePlaylist.id, track);
+};
+
+/**
+* PLays the current selection of Tracks
+*
+* @author: Michiocre
+* @return {boolean} True if new tracks were chosen
+*/
+method.skip = async function() {
+	let track = this.activePlayer.track;
+
+	let skips = 0;
+	for (var i = 0; i < this.connectedUser.length; i++) {
+		if (this.connectedUser[i].voted == 'skip') {
+			skips += 1;
+		}
+	}
+	if (this.host.voted == 'skip') {
+		skips += 1;
+	}
+
+	console.log('Skips: ['+skips+'] vs NoSkip: ['+((this.connectedUser.length+1)-skips)+'] has to be at least: ['+(2 * (this.connectedUser.length+1) / 3)+']');
+	if (skips >= (2 * (this.connectedUser.length+1) / 3)) {
+		this.getRandomTracks(this.activePlaylist.id, track);
+		return true;
+	}
+	return false;
 };
 
 /**
