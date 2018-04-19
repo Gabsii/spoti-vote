@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import '../../css/selectors.css';
 
 let constants = require('../../js/constants');
-const ipAddress = process.env.ADDRESS || '';
-const port = process.env.PORT || '';
+const ipAddress = process.env.ADDRESS || 'localhost';
+const portFront = process.env.PORTFRONT || 80;
+const portBack = process.env.PORTBACK || 8888;
 
 let defaultStyle = {
 	padding: "17px 48px",
@@ -24,7 +25,7 @@ let defaultStyle = {
 class LoginButton extends Component {
 
 	login() {
-		window.location.href = 'http://' + ipAddress + ':' + port + '/login';
+		window.location.href = 'http://' + ipAddress + ':' + portBack + '/login';
 	}
 
 	render() {

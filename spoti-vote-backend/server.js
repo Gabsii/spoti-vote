@@ -14,9 +14,12 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 //Global Varibles
-const ipAddress = process.env.ADDRESS || '';
-const port = process.env.PORT || '';
-const redirect_uri = 'http://' + ipAddress + ':' + port + '/callback';
+const ipAddress = process.env.ADDRESS || 'localhost';
+const portFront = process.env.PORTFRONT || 80;
+const portBack = process.env.PORTBACK || 8888;
+const redirect_uri = 'http://' + ipAddress + ':' + portBack + '/callback';
+
+console.log(redirect_uri);
 
 let rooms = [];
 let allClients = {};
@@ -66,7 +69,7 @@ app.get('/callback', async (req, res) => {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-		let uri = 'http://' + ipAddress + ':' + portFrontend + '/app';
+		let uri = 'http://' + ipAddress + ':' + portFront + '/app';
 
 		let room = new Room(body.access_token, rooms, 4);
 
@@ -331,6 +334,6 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 /**
 * Starts the server
 */
-server.listen(port, () => {
+server.listen(portBack, () => {
 	console.log('Server started on port: ' + server.address().port);
 });
