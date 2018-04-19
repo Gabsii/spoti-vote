@@ -1,4 +1,4 @@
-let ipAddress = 'https://spoti-vote.herokuapp.com/';
+let ipAddress = 'localhost';
 let portBackend = '8888';
 let portFrontend = '80';
 

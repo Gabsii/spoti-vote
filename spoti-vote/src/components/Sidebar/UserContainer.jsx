@@ -5,7 +5,8 @@ let constants = require('../../js/constants');
 let defaultStyle = {
 	height: 'calc(100% - 340px)',
 	width: '100%',
-	marginTop: '300px'
+	marginTop: '300px',
+	overflowY: 'auto'
 }
 
 let titleStyle = {

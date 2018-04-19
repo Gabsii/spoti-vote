@@ -92,7 +92,7 @@ class Card extends Component {
 			<div style={{
 					...imgStyle,
 					borderRadius: '3px',
-					backgroundColor: 'rgba(' + tint.r + ',' + tint.g + ',' + tint.b + ',' + 0.5 + ')'
+					backgroundColor: 'rgba(' + tint.r + ',' + tint.g + ',' + tint.b + ',0.5)'
 				}}>
 				<div style={{
 						width: '100%',
