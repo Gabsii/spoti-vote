@@ -4,7 +4,8 @@ import ReallySmoothScroll from 'really-smooth-scroll';
 import '../../css/selectors.css';
 
 let constants = require('../../js/constants.js');
-let config = require('../../js/config');
+const ipAddress = process.env.ADDRESS || '';
+const port = process.env.PORT || '';
 
 let defaultStyle = {
 	padding: "17px 40px",
@@ -41,7 +42,7 @@ class LoginCode extends Component {
 	submitHandler(event) {
 		event.preventDefault();
 		if (this.state.room) {
-			window.location.href = 'http://' + config.ipAddress + ':' + config.portFrontend + '/app/' + this.state.room;
+			window.location.href = 'http://' + ipAddress + ':' + port + '/app/' + this.state.room;
 		}
 	}
 
@@ -49,7 +50,7 @@ class LoginCode extends Component {
 		if (event.target.value.length === 5) {
 			let str = event.target.value.toUpperCase();
 			let exists = false;
-			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/rooms').then((response) => response.json().then(data => {
+			fetch('http://' + ipAddress + ':' + port + '/rooms').then((response) => response.json().then(data => {
 				for (var i = 0; i < data.content.length; i++) {
 					if (data.content[i] === str) {
 						console.log("exists");
@@ -58,7 +59,7 @@ class LoginCode extends Component {
 					}
 				}
 				if (this.state.room && this.props.isPhone) {
-					window.location.href = 'http://' + config.ipAddress + ':' + config.portFrontend + '/app/' + this.state.room;
+					window.location.href = 'http://' + ipAddress + ':' + port + '/app/' + this.state.room;
 				}
 				if (!exists) {
 					this.setState({roomExists: false});

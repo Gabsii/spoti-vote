@@ -5,17 +5,19 @@ const http = require('http');
 const socketIo = require('socket.io');
 const querystring = require('querystring');
 const request = require('request');
-//Import of configs
-let config = require('./src/config');
-let constants = require('./src/constants');
-let Room = require('./src/Room');
+//Import of used files
+const constants = require('./src/constants');
+const Room = require('./src/Room');
 //Setup of the server
-let app = express();
-let server = http.createServer(app);
-let io = socketIo(server);
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
 //Global Varibles
-let redirect_uri = process.env.REDIRECT_URI || 'http://' + config.ipAddress + ':' + config.portBackend + '/callback';
+const ipAddress = process.env.ADDRESS || '';
+const port = process.env.PORT || '';
+const redirect_uri = 'http://' + ipAddress + ':' + port + '/callback';
+
 let rooms = [];
 let allClients = {};
 
@@ -64,7 +66,7 @@ app.get('/callback', async (req, res) => {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-		let uri = process.env.FRONTEND_URI || 'http://' + config.ipAddress + ':' + config.portFrontend + '/app';
+		let uri = 'http://' + ipAddress + ':' + portFrontend + '/app';
 
 		let room = new Room(body.access_token, rooms, 4);
 
@@ -329,6 +331,6 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 /**
 * Starts the server
 */
-server.listen(config.portBackend || process.env.PORT, () => {
+server.listen(port, () => {
 	console.log('Server started on port: ' + server.address().port);
 });
