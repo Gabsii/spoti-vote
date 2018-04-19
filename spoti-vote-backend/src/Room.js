@@ -12,10 +12,10 @@ const fetch = require('node-fetch');
 * @return {string} The random string
 */
 function makeid(length) {
-	var text = "";
-	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //ALl possible symbols
+	let text = "";
+	let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //ALl possible symbols
 
-	for (var i = 0; i < length; i++)
+	for (let i = 0; i < length; i++)
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
 
 	return text;
@@ -35,6 +35,7 @@ function Room(token, rooms, cardNum) {
 	this.host = {
 		token: token,
 		name: '',
+		id: '',
 		profileUrl: '',
 		voted: null
 	};
@@ -52,7 +53,7 @@ function Room(token, rooms, cardNum) {
 	let counter;
 	while (counter > 0) {
 		counter = 0;
-		for (var i = 0; i < rooms.length; i++) {
+		for (let i = 0; i < rooms.length; i++) {
 			if (rooms[i].id == this.id) {
 				counter++;
 			}
@@ -74,7 +75,7 @@ function Room(token, rooms, cardNum) {
 method.getUserNames = function() {
 	let names = [];
 	names.push(this.host.name);
-	for (var i = 0; i < this.connectedUser.length; i++) {
+	for (let i = 0; i < this.connectedUser.length; i++) {
 		names.push(this.connectedUser[i].name);
 	}
 	return names;
@@ -88,7 +89,7 @@ method.getUserNames = function() {
 * @return {object} The user object
 */
 method.getUserByName = function(name) {
-	for (var i = 0; i < this.connectedUser.length; i++) {
+	for (let i = 0; i < this.connectedUser.length; i++) {
 		if (this.connectedUser[i].name == name)
 			return this.connectedUser[i];
 		}
@@ -134,7 +135,7 @@ method.removeUser = function(name) {
 */
 method.getPlaylists = function() {
 	let returnPlaylists = [];
-	for (var i = 0; i < this.playlists.length; i++) {
+	for (let i = 0; i < this.playlists.length; i++) {
 		if (Array.isArray(this.playlists[i].tracks) !== true) {
 			if (this.playlists[i].tracks.total > this.cardNum) {
 				returnPlaylists.push({
@@ -162,7 +163,7 @@ method.getPlaylists = function() {
 * @return {object} The playlist object
 */
 method.getPlaylistById = function(playlistId) {
-	for (var i = 0; i < this.playlists.length; i++) {
+	for (let i = 0; i < this.playlists.length; i++) {
 		if (this.playlists[i].id == playlistId)
 			return this.playlists[i];
 		}
@@ -222,15 +223,15 @@ method.getRandomTracks = function(playlistId, activeTrack) {
 
 	//Reset all the votes
 	this.host.voted = null;
-	for (var i = 0; i < this.connectedUser.length; i++) {
+	for (let i = 0; i < this.connectedUser.length; i++) {
 		this.connectedUser[i].voted = null;
 	}
-	for (var i = 0; i < this.activeTracks.length; i++) {
+	for (let i = 0; i < this.activeTracks.length; i++) {
 		this.activeTracks[i].votes = 0;
 	}
 
 	let selectedTracks = [];
-	for (var i = 0; i < this.cardNum; i++) {
+	for (let i = 0; i < this.cardNum; i++) {
 		let track;
 		let active;
 		do {
@@ -259,7 +260,7 @@ method.getRandomTracks = function(playlistId, activeTrack) {
 * @return {object} The track object
 */
 method.getActiveTrackById = function(id) {
-	for (var i = 0; i < this.activeTracks.length; i++) {
+	for (let i = 0; i < this.activeTracks.length; i++) {
 		if (this.activeTracks[i].id == id)
 			return this.activeTracks[i];
 		}
@@ -282,6 +283,7 @@ method.fetchData = async function() {
 	let hostRequestData = await hostRequest.json();
 
 	this.host.name = hostRequestData.display_name || hostRequestData.id;
+	this.host.id = hostRequestData.id;
 	this.host.profileUrl = hostRequestData.external_urls.spotify;
 
 	//Gets all the hosts playlists TODO: This should probably loop (now max 50 playlists will be returned)
@@ -294,7 +296,7 @@ method.fetchData = async function() {
 	let playlistRequestData = await playlistRequest.json();
 	next = playlistRequestData.next;
 
-	for (var i = 0; i < playlistRequestData.items.length; i++) {
+	for (let i = 0; i < playlistRequestData.items.length; i++) {
 		playlistRequestData.items
 	}
 
@@ -375,12 +377,19 @@ method.update = async function(isHost) {
 					name: fetchData.item.name
 				}
 			};
-		} else {
+		} else if (this.activePlayer !== undefined && this.activePlayer !== null) {
 			this.activePlayer = {
 				volume: this.activePlayer.volume,
 				progress: this.activePlayer.progress,
 				isPlaying: fetchData.is_playing,
 				track: this.activePlayer.track
+			};
+		} else {
+			this.activePlayer = {
+				volume: 0,
+				progress: 0,
+				isPlaying: false,
+				track: null
 			};
 		}
 	} else {
@@ -457,7 +466,7 @@ method.vote = function(trackId, isHost, name) {
 method.play = async function() {
 	let track = this.activeTracks[0];
 
-	for (var i = 1; i < this.activeTracks.length; i++) {
+	for (let i = 1; i < this.activeTracks.length; i++) {
 		if (this.activeTracks[i].votes > track.votes || (track.votes == null && this.activeTracks[i].votes >= 1)) {
 			track = this.activeTracks[i];
 		}
@@ -465,7 +474,7 @@ method.play = async function() {
 
 	let possibleTracks = [];
 
-	for (var i = 0; i < this.activeTracks.length; i++) {
+	for (let i = 0; i < this.activeTracks.length; i++) {
 		if (this.activeTracks[i].votes == track.votes) {
 			possibleTracks.push(this.activeTracks[i]);
 		}
