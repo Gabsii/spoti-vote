@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import MediaQuery from 'react-responsive';
 import Infos from './Sidebar/Infos.jsx';
 import UserContainer from './Sidebar/UserContainer.jsx';
 import SettingsBar from './Sidebar/SettingsBar.jsx';
@@ -40,12 +41,31 @@ class Sidebar extends Component {
 			}
 		}
 		return (<div id="sidebar" style={defaultStyle}>
-			<Infos isHost={this.props.isHost} host={this.props.host} playlistHandler={this.props.playlistHandler} activeTracks={this.props.activeTracks} activePlaylist={this.props.activePlaylist} playlists={this.props.playlists}/> {
-				this.props.isHost
-					? <UserContainer activeTracks={this.props.activeTracks} connectedUser={this.props.connectedUser}/>
-					: ''
-			}
-			<SettingsBar isHost={this.props.isHost} socket={this.props.socket}/>
+			<MediaQuery maxWidth={constants.breakpoints.medium}>{
+					(matches) => {
+						if (matches) {
+							return (<Infos isPhone={true} isHost={this.props.isHost} host={this.props.host} playlistHandler={this.props.playlistHandler} activeTracks={this.props.activeTracks} activePlaylist={this.props.activePlaylist} playlists={this.props.playlists}/>);
+						} else {
+							return (<Infos isPhone={false} isHost={this.props.isHost} host={this.props.host} playlistHandler={this.props.playlistHandler} activeTracks={this.props.activeTracks} activePlaylist={this.props.activePlaylist} playlists={this.props.playlists}/>);
+						}
+					}
+				}
+			</MediaQuery>
+			<MediaQuery minWidth={constants.breakpoints.medium}>{
+					this.props.isHost
+						? <UserContainer activeTracks={this.props.activeTracks} connectedUser={this.props.connectedUser}/>
+						: ''
+				}
+			</MediaQuery>
+			<MediaQuery maxWidth={constants.breakpoints.medium}>{
+					(matches) => {
+						if (matches) {
+							return (<SettingsBar isPhone={true} isHost={this.props.isHost} socket={this.props.socket}/>);
+						} else {
+							return (<SettingsBar isPhone={false} isHost={this.props.isHost} socket={this.props.socket}/>);
+						}
+					}
+				}</MediaQuery>
 		</div>);
 	}
 }

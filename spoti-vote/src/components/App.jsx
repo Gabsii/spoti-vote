@@ -6,8 +6,10 @@ import Footer from './Footer.jsx';
 import Sidebar from './Sidebar.jsx';
 import CardContainer from './Cards/CardContainer.jsx';
 
-let constants = require('../js/constants');
-let config = require('../js/config');
+const constants = require('../js/constants');
+const ipAddress = process.env.ADDRESS || 'localhost';
+const portFront = process.env.PORTFRONT || 80;
+const portBack = process.env.PORTBACK || 8888;
 
 let defaultActivePlayer = {
 	progress: 0,
@@ -42,11 +44,11 @@ let defaultActivePlaylist = {
 class App extends Component {
 	constructor() {
 		super();
-		this.socket = socketIOClient('http://' + config.ipAddress + ':' + config.portBackend);
+		this.socket = socketIOClient('http://' + ipAddress + ':' + portBack);
 		this.state = {
 			token: queryString.parse(window.location.search).token || null,
 			roomId: window.location.pathname.split('/')[2],
-			loginPage: 'http://' + config.ipAddress + ':' + config.portFrontend,
+			loginPage: 'http://' + ipAddress + ':' + portFront,
 			isHost: false,
 			connectedUser: [],
 			playlists: [],

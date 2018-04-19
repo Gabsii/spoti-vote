@@ -83,12 +83,14 @@ input[type=range]::-webkit-slider-thumb {
     height: 0;
     width: 0;
     border-radius: 20px;
+    -webkit-box-shadow: -80px 0 0 80px #B3B3B3;
     box-shadow: -80px 0 0 80px #B3B3B3;
 }
 
 #volume:hover input[type=range]::-webkit-slider-thumb {
     height: 20px;
     width: 20px;
+    -webkit-box-shadow: -80px 0 0 80px #1DB954;
     box-shadow: -80px 0 0 80px #1DB954;
     border: 1px solid black;
     background: #FFF;

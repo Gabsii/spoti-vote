@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
+import MediaQuery from 'react-responsive';
+import ReallySmoothScroll from 'really-smooth-scroll';
 import '../../css/selectors.css';
 
 let constants = require('../../js/constants.js');
-let config = require('../../js/config');
+const ipAddress = process.env.ADDRESS || 'localhost';
+const portFront = process.env.PORTFRONT || 80;
+const portBack = process.env.PORTBACK || 8888;
 
 let defaultStyle = {
 	padding: "17px 40px",
@@ -38,10 +42,8 @@ class LoginCode extends Component {
 
 	submitHandler(event) {
 		event.preventDefault();
-		// check for input hijacking
-		// send data to join room
 		if (this.state.room) {
-			window.location.href = 'http://' + config.ipAddress + ':' + config.portFrontend + '/app/' + this.state.room;
+			window.location.href = 'http://' + ipAddress + ':' + portFront + '/app/' + this.state.room;
 		}
 	}
 
@@ -49,13 +51,16 @@ class LoginCode extends Component {
 		if (event.target.value.length === 5) {
 			let str = event.target.value.toUpperCase();
 			let exists = false;
-			fetch('http://' + config.ipAddress + ':' + config.portBackend + '/rooms').then((response) => response.json().then(data => {
+			fetch('http://' + ipAddress + ':' + portBack + '/rooms').then((response) => response.json().then(data => {
 				for (var i = 0; i < data.content.length; i++) {
 					if (data.content[i] === str) {
 						console.log("exists");
 						exists = true
 						this.setState({room: str, roomExists: true});
 					}
+				}
+				if (this.state.room && this.props.isPhone) {
+					window.location.href = 'http://' + ipAddress + ':' + portFront + '/app/' + this.state.room;
 				}
 				if (!exists) {
 					this.setState({roomExists: false});
@@ -74,22 +79,40 @@ class LoginCode extends Component {
 	}
 
 	render() {
+		let borderStyle;
+
+		if (this.props.isPhone) {
+			borderStyle = {
+				borderRadius: '500px'
+			}
+		} else {
+			borderStyle = {
+				borderTopLeftRadius: '500px',
+				borderBottomLeftRadius: '500px',
+				borderTopRightRadius: '0px',
+				borderBottomRightRadius: '0px'
+			};
+			ReallySmoothScroll.shim();
+		}
+
 		return (<div>
 			<form style={formStyle} onSubmit={this.submitHandler.bind(this)}>
 				<input type="text" id="code" maxLength="5" placeholder="Room Code" style={{
 						...defaultStyle,
+						...borderStyle,
 						textAlign: "center",
-						borderTopLeftRadius: "500px",
-						borderBottomLeftRadius: "500px",
 						backgroundColor: constants.colors.background,
 						color: constants.colors.font
 					}} autoComplete="off" onChange={this.checkRoom.bind(this)} pattern="[A-Za-z]{5}"/>
-				<input type="submit" id="loginCode" value="join" style={{
-						...defaultStyle,
-						fontFamily: 'Circular Bold',
-						borderTopRightRadius: "500px",
-						borderBottomRightRadius: "500px"
-					}}/>
+				<MediaQuery minWidth={constants.breakpoints.medium}>
+
+					<input type="submit" id="loginCode" value="join" style={{
+							...defaultStyle,
+							fontFamily: 'Circular Bold',
+							borderTopRightRadius: "500px",
+							borderBottomRightRadius: "500px"
+						}}/>
+				</MediaQuery>
 			</form>
 			{
 				this.state.room === false && this.state.roomExists === false
@@ -98,7 +121,7 @@ class LoginCode extends Component {
 								marginTop: '5px',
 								textShadow: 'none'
 							}}>Room doesn't exist</h5>
-					: ""
+					: ''
 			}
 			</div>);
 	}
