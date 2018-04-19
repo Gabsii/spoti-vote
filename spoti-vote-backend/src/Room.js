@@ -37,7 +37,8 @@ function Room(token, rooms, cardNum) {
 		name: '',
 		id: '',
 		profileUrl: '',
-		voted: null
+		voted: null,
+		country: ''
 	};
 	this.firstConnection = true;
 	this.cardNum = cardNum;
@@ -185,7 +186,7 @@ method.changePlaylist = async function(playlistId) {
 
 		//Load tracks into Playlist if its empty
 	if (playlist.tracks.length === 0) {
-		let nextTracks = playlist.href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal';
+		let nextTracks = playlist.href + '/tracks?fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal'; //%2Cmarket='+this.host.country
 		playlist.tracks = await this.loadOneBatch(nextTracks);
 	}
 
@@ -286,6 +287,7 @@ method.fetchData = async function() {
 	this.host.name = hostRequestData.display_name || hostRequestData.id;
 	this.host.id = hostRequestData.id;
 	this.host.profileUrl = hostRequestData.external_urls.spotify;
+	this.host.country = hostRequestData.country;
 
 	//Gets all the hosts playlists TODO: This should probably loop (now max 50 playlists will be returned)
 	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
@@ -365,7 +367,7 @@ method.update = async function(isHost) {
 	}
 
 	if (fetchData !== null) {
-		if (fetchData.device !== undefined && fetchData.item !== undefined) {
+		if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
 			this.activePlayer = {
 				volume: fetchData.device.volume_percent,
 				progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
@@ -379,19 +381,19 @@ method.update = async function(isHost) {
 				}
 			};
 		} else if (this.activePlayer !== undefined && this.activePlayer !== null) {
-			this.activePlayer = {
-				volume: this.activePlayer.volume,
-				progress: this.activePlayer.progress,
-				isPlaying: fetchData.is_playing,
-				track: this.activePlayer.track
-			};
+			if (this.activePlayer.track !== undefined) {
+				this.activePlayer = {
+					volume: this.activePlayer.volume,
+					progress: this.activePlayer.progress,
+					isPlaying: fetchData.is_playing,
+					track: this.activePlayer.track
+				};
+			} else {
+				this.activePlayer = null;
+			}
+
 		} else {
-			this.activePlayer = {
-				volume: 0,
-				progress: 0,
-				isPlaying: false,
-				track: null
-			};
+			this.activePlayer = null;
 		}
 	} else {
 		this.activePlayer = null;
@@ -504,6 +506,8 @@ method.play = async function() {
 		method: "PUT",
 		body: JSON.stringify(payload)
 	});
+
+	console.log(track);
 
 	return this.getRandomTracks(this.activePlaylist.id, track);
 };
