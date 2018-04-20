@@ -359,12 +359,14 @@ method.update = async function(isHost) {
             "Authorization": "Bearer " + this.host.token
         }
     });
-	let fetchData
+	let fetchData;
 	try {
 		fetchData = await request.json();
 	} catch (e) {
 		fetchData = null;
 	}
+
+	console.log(fetchData);
 
 	if (fetchData !== null) {
 		if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
@@ -454,13 +456,14 @@ method.vote = function(trackId, isHost, name) {
 				oldTrack.votes = 0;
 			}
 		}
-
-		if (newTrack.votes === undefined) {
-			newTrack.votes = 1;
-		} else {
-			newTrack.votes = newTrack.votes + 1;
+		if (newTrack !== null) {
+			if (newTrack.votes === undefined) {
+				newTrack.votes = 1;
+			} else {
+				newTrack.votes = newTrack.votes + 1;
+			}
+			return true;
 		}
-		return true;
 	}
 	return false;
 };
@@ -506,8 +509,6 @@ method.play = async function() {
 		method: "PUT",
 		body: JSON.stringify(payload)
 	});
-
-	console.log(track);
 
 	return this.getRandomTracks(this.activePlaylist.id, track);
 };
