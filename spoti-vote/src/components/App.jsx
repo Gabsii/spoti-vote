@@ -5,11 +5,15 @@ import socketIOClient from 'socket.io-client'
 import Footer from './Footer.jsx';
 import Sidebar from './Sidebar.jsx';
 import CardContainer from './Cards/CardContainer.jsx';
+import Cookies from 'universal-cookie';
+
 
 const constants = require('../js/constants');
 const ipAddress = process.env.ADDRESS || 'localhost';
 const portFront = process.env.PORTFRONT || 80;
 const portBack = process.env.PORTBACK || 8888;
+
+const cookies = new Cookies();
 
 let defaultActivePlayer = {
 	progress: 0,
@@ -45,8 +49,13 @@ class App extends Component {
 	constructor() {
 		super();
 		this.socket = socketIOClient('http://' + ipAddress + ':' + portBack);
+		let token = cookies.get('token');
+		if (token === undefined) {
+			token = null;
+		}
+
 		this.state = {
-			token: queryString.parse(window.location.search).token || null,
+			token: token,
 			roomId: window.location.pathname.split('/')[2],
 			loginPage: 'http://' + ipAddress + ':' + portFront,
 			isHost: false,
@@ -92,15 +101,27 @@ class App extends Component {
 		});
 
 		this.socket.on('initData', data => {
-			this.setState({
-				host: {
-					name: data.hostName,
-					voted: this.state.host.voted
-				},
-				playlists: data.playlists,
-				isHost: data.isHost
-			});
-
+			if (data.token !== null && data.token !== undefined) {
+				cookies.set('token', data.token, { path: '/' });
+				this.setState({
+					host: {
+						name: data.hostName,
+						voted: this.state.host.voted
+					},
+					playlists: data.playlists,
+					isHost: data.isHost,
+					token: data.token
+				});
+			} else {
+				this.setState({
+					host: {
+						name: data.hostName,
+						voted: this.state.host.voted
+					},
+					playlists: data.playlists,
+					isHost: data.isHost
+				});
+			}
 		});
 
 		this.socket.on('update', data => {

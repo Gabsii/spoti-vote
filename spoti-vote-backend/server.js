@@ -128,15 +128,16 @@ io.on('connection', (socket) => {
         let room = getRoomById(data.roomId);
 
 		//Check if this user is already hosting a room
-		let x = 0;
+		let x = -1;
 		for (let i = 0; i < rooms.length; i++) {
 			if (rooms[i].host.id == room.host.id && rooms[i].id !== room.id) {
-				x += 1;
+				x = i;
 			}
 		}
 
-		if (x > 0) {
-			socket.emit('errorEvent', {message: 'You are already hosting a Room'});
+		if (x >= 0) {
+			socket.emit('errorEvent', {message: 'You are already hosting a Room, try joining: ['+rooms[x].id+']'});
+			rooms.splice(rooms.indexOf(room),1);
 		} else {
 			if (room !== null) {
 				roomId = room.id;
@@ -152,22 +153,15 @@ io.on('connection', (socket) => {
 					});
 					room.hostDisconnect = null;
 				} else {
-					if (room.hostDisconnect !== null && token !== null) { //If host is gone
-						let token = data.token;
-						if (token == room.host.token) {
-							console.log('-c - Host connected');
-							isHost = true;
-							socket.emit('initData', {
-								playlists: room.getPlaylists(),
-								hostName: room.host.name,
-								isHost: isHost,
-								token: room.host.token
-							});
-							room.hostDisconnect = null;
-						} else {
-							console.log('-c - Token was wrong');
-							socket.emit('errorEvent', {message: 'Your Token is wrong'});
-						}
+					if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
+						console.log('-c - Host connected');
+						isHost = true;
+						socket.emit('initData', {
+							playlists: room.getPlaylists(),
+							hostName: room.host.name,
+							isHost: isHost
+						});
+						room.hostDisconnect = null;
 					} else {
 						socket.emit('nameEvent', {
 							userNames: room.getUserNames()
