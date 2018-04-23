@@ -14,6 +14,7 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 //Global Varibles
+
 const ipAddress = process.env.ADDRESS || 'localhost';
 const portFront = process.env.PORT || 80;
 const portBack = process.env.PORTBACK || 8888;
@@ -126,206 +127,207 @@ io.on('connection', (socket) => {
 		let room = getRoomById(data.roomId);
 
 		//Check if this user is already hosting a room
-		let x = -1;
-		for (let i = 0; i < rooms.length; i++) {
-			if (rooms[i].host.id == room.host.id && rooms[i].id !== room.id) {
-				x = i;
+		if (room !== null) {
+			let x = -1;
+			for (let i = 0; i < rooms.length; i++) {
+				if (rooms[i].host.id == room.host.id && rooms[i].id !== room.id) {
+					x = i;
+				}
 			}
-		}
 
-		if (x >= 0) {
-			socket.emit('errorEvent', {
-				message: 'You are already hosting a Room, try joining: [' + rooms[x].id + ']'
-			});
-			rooms.splice(rooms.indexOf(room), 1);
-		} else {
-			if (room !== null) {
-				roomId = room.id;
-				if (room.firstConnection === true) {
-					room.firstConnection = false;
-					console.log('-c - Host connected');
-					isHost = true;
-					socket.emit('initData', {
-						playlists: room.getPlaylists(),
-						hostName: room.host.name,
-						isHost: isHost,
-						token: room.host.token
-					});
-					room.hostDisconnect = null;
-				} else {
-					if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
+			if (x >= 0) {
+				socket.emit('errorEvent', {
+					message: 'You are already hosting a Room, try joining: [' + rooms[x].id + ']'
+				});
+				rooms.splice(rooms.indexOf(room), 1);
+			} else {
+				if (room !== null) {
+					roomId = room.id;
+					if (room.firstConnection === true) {
+						room.firstConnection = false;
 						console.log('-c - Host connected');
 						isHost = true;
 						socket.emit('initData', {
 							playlists: room.getPlaylists(),
 							hostName: room.host.name,
-							isHost: isHost
+							isHost: isHost,
+							token: room.host.token
 						});
 						room.hostDisconnect = null;
 					} else {
-						socket.emit('nameEvent', {userNames: room.getUserNames()});
+						if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
+							console.log('-c - Host connected');
+							isHost = true;
+							socket.emit('initData', {
+								playlists: room.getPlaylists(),
+								hostName: room.host.name,
+								isHost: isHost
+							});
+							room.hostDisconnect = null;
+						} else {
+							socket.emit('nameEvent', {userNames: room.getUserNames()});
+						}
 					}
 				}
 			} else {
 				socket.emit('errorEvent', {message: 'Room has been closed'});
 			}
-		}
-	});
+		});
 
-	/**
+		/**
     * Called when a user thats not a host wants to enter a room
 	*
 	* Will set the local varible {name}
 	* @param {string} name Name of the user
     */
-	socket.on('nameEvent', data => {
-		console.warn('Request to nameEvent:');
-		console.error(data);
-		let room = getRoomById(roomId);
-		if (room !== null) {
-			console.log('-c - [' + data.name + '] connected');
-			name = data.name;
-			if (name !== null) {
-				room.addUser(name);
-				socket.emit('initData', {hostName: room.host.name});
+		socket.on('nameEvent', data => {
+			console.warn('Request to nameEvent:');
+			console.error(data);
+			let room = getRoomById(roomId);
+			if (room !== null) {
+				console.log('-c - [' + data.name + '] connected');
+				name = data.name;
+				if (name !== null) {
+					room.addUser(name);
+					socket.emit('initData', {hostName: room.host.name});
+				}
+			} else {
+				socket.emit('errorEvent', {message: 'Room was closed'});
 			}
-		} else {
-			socket.emit('errorEvent', {message: 'Room was closed'});
-		}
 
-	});
+		});
 
-	/**
+		/**
     * Called when the host changes the volume
 	* @param {int} volume Volume in percent
     */
-	socket.on('changeVolume', data => {
-		console.warn('Request to changeVolume:');
-		console.error(data);
-		let room = getRoomById(roomId);
-		if (room !== null) {
-			console.log('-vl- The volume was changed to: [' + data.volume + ']');
-			room.changeVolume(data.volume);
-		} else {
-			socket.emit('errorEvent', {message: 'Room was closed'});
-		}
-	});
+		socket.on('changeVolume', data => {
+			console.warn('Request to changeVolume:');
+			console.error(data);
+			let room = getRoomById(roomId);
+			if (room !== null) {
+				console.log('-vl- The volume was changed to: [' + data.volume + ']');
+				room.changeVolume(data.volume);
+			} else {
+				socket.emit('errorEvent', {message: 'Room was closed'});
+			}
+		});
 
-	/**
+		/**
     * Called when the host changes the playlist
 	* @param {string} playlistId Name of the user
     */
-	socket.on('changePlaylist', data => {
-		console.warn('Request to changePlaylist:');
-		console.error(data);
-		let room = getRoomById(roomId);
-		if (room !== null) {
-			console.log('-pC- Playlist changed to: [' + data.playlistId + ']');
-			room.changePlaylist(data.playlistId);
-		} else {
-			socket.emit('errorEvent', {message: 'Room was closed'});
-		}
-	});
+		socket.on('changePlaylist', data => {
+			console.warn('Request to changePlaylist:');
+			console.error(data);
+			let room = getRoomById(roomId);
+			if (room !== null) {
+				console.log('-pC- Playlist changed to: [' + data.playlistId + ']');
+				room.changePlaylist(data.playlistId);
+			} else {
+				socket.emit('errorEvent', {message: 'Room was closed'});
+			}
+		});
 
-	/**
+		/**
     * Called when a user votes on a track
 	* @param {string} trackId Id of the track
     */
-	socket.on('vote', data => {
-		console.warn('Request to vote:');
-		console.error(data);
-		let room = getRoomById(roomId);
-		if (room !== null) {
-			if (isHost === true) {
-				console.log('-vo- the host voted for: [' + data.trackId + ']');
+		socket.on('vote', data => {
+			console.warn('Request to vote:');
+			console.error(data);
+			let room = getRoomById(roomId);
+			if (room !== null) {
+				if (isHost === true) {
+					console.log('-vo- the host voted for: [' + data.trackId + ']');
+				} else {
+					console.log('-vo- [' + name + '] voted for: [' + data.trackId + ']');
+				}
+				room.vote(data.trackId, isHost, name);
 			} else {
-				console.log('-vo- [' + name + '] voted for: [' + data.trackId + ']');
+				socket.emit('errorEvent', {message: 'Room was closed'});
 			}
-			room.vote(data.trackId, isHost, name);
-		} else {
-			socket.emit('errorEvent', {message: 'Room was closed'});
-		}
-	});
+		});
 
-	/**
+		/**
     * Called when the host wants to close the room
     */
-	socket.on('logout', data => {
-		console.warn('Request to logout:');
-		console.error(data);
-		let room = getRoomById(roomId);
-		if (room !== null) {
-			console.log('-lo- room [' + room.id + '] was closed by host');
-			let i = rooms.indexOf(room);
-			rooms.splice(i, 1);
-		} else {
-			socket.emit('errorEvent', {message: 'Room was closed'});
-		}
-	});
+		socket.on('logout', data => {
+			console.warn('Request to logout:');
+			console.error(data);
+			let room = getRoomById(roomId);
+			if (room !== null) {
+				console.log('-lo- room [' + room.id + '] was closed by host');
+				let i = rooms.indexOf(room);
+				rooms.splice(i, 1);
+			} else {
+				socket.emit('errorEvent', {message: 'Room was closed'});
+			}
+		});
 
-	/**
+		/**
     * Called when a connection is closed
     */
-	socket.on('disconnect', () => {
-		let room = getRoomById(roomId);
+		socket.on('disconnect', () => {
+			let room = getRoomById(roomId);
 
-		/* jshint ignore: start */
-		clearInterval(updateInterval);
-		/* jshint ignore: end */
-		if (room !== null) {
-			if (isHost === false) {
-				room.removeUser(name);
+			/* jshint ignore: start */
+			clearInterval(updateInterval);
+			/* jshint ignore: end */
+			if (room !== null) {
+				if (isHost === false) {
+					room.removeUser(name);
 
-				console.log('-d - [' + name + '] disconnected from [' + room.id + ']');
+					console.log('-d - [' + name + '] disconnected from [' + room.id + ']');
+				} else {
+					room.hostDisconnect = Date.now();
+
+					console.log('-d - Host disconnected from [' + room.id + ']');
+				}
 			} else {
-				room.hostDisconnect = Date.now();
-
-				console.log('-d - Host disconnected from [' + room.id + ']');
+				console.log('-d - User was auto-disconnected from [' + roomId + ']');
 			}
-		} else {
-			console.log('-d - User was auto-disconnected from [' + roomId + ']');
-		}
+		});
 	});
-});
 
-/* jshint ignore: start */
+	/* jshint ignore: start */
 
-/**
+	/**
 * This function will be called every interval and is used to update the users
 *
 * @author: Michiocre
 * @param {socket} socket The socket object passed down from the call
 */
-async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
-	let room = getRoomById(roomId);
-	if (room !== null) {
-		room.update(isHost);
-		socket.emit('update', room);
-		//console.log('-u -');
-	} else {
-		socket.emit('errorEvent', {message: null});
-	}
-	updateCounter.amount += 1;
-	if (updateCounter.amount > 30) {
-		let toBeDeleted = [];
-		for (var i = 0; i < rooms.length; i++) {
-			if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
-				toBeDeleted.push(rooms[i]);
+	async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
+		let room = getRoomById(roomId);
+		if (room !== null) {
+			room.update(isHost);
+			socket.emit('update', room);
+			//console.log('-u -');
+		} else {
+			socket.emit('errorEvent', {message: null});
+		}
+		updateCounter.amount += 1;
+		if (updateCounter.amount > 30) {
+			let toBeDeleted = [];
+			for (var i = 0; i < rooms.length; i++) {
+				if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
+					toBeDeleted.push(rooms[i]);
+				}
 			}
+			for (var i = 0; i < toBeDeleted.length; i++) {
+				console.log('-de- Deleting [' + toBeDeleted[i].id + '] due to inactivity');
+				rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
+			}
+			updateCounter.amount = 0;
 		}
-		for (var i = 0; i < toBeDeleted.length; i++) {
-			console.log('-de- Deleting [' + toBeDeleted[i].id + '] due to inactivity');
-			rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
-		}
-		updateCounter.amount = 0;
-	}
-};
+	};
 
-/* jshint ignore: end */
+	/* jshint ignore: end */
 
-/**
+	/**
 * Starts the server
 */
-server.listen(portBack, () => {
-	console.log('Server started on port: ' + server.address().port);
-});
+	server.listen(portBack, () => {
+		console.log('Server started on port: ' + server.address().port);
+	});

@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import '../../css/selectors.css';
 
 let constants = require('../../js/constants');
-const ipAddress = process.env.ADDRESS || 'localhost';
-const portFront = process.env.PORTFRONT || 80;
-const portBack = process.env.PORTBACK || 8888;
+const ipAddress = window.location.host || 'localhost';
+const portFront = window.location.port || 80;
+const portBack = 8888;
 
 let defaultStyle = {
 	padding: "17px 48px",
