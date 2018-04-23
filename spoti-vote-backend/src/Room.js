@@ -37,7 +37,8 @@ function Room(token, rooms, cardNum) {
 		name: '',
 		id: '',
 		profileUrl: '',
-		voted: null
+		voted: null,
+		country: ''
 	};
 	this.firstConnection = true;
 	this.cardNum = cardNum;
@@ -48,6 +49,7 @@ function Room(token, rooms, cardNum) {
 	this.id = makeid(5);
 	this.hostDisconnect = Date.now();
 	this.isChanging = false;
+	this.isSkipping = false;
 
 	//Makes sure the id is unique
 	let counter;
@@ -184,7 +186,7 @@ method.changePlaylist = async function(playlistId) {
 
 		//Load tracks into Playlist if its empty
 	if (playlist.tracks.length === 0) {
-		let nextTracks = playlist.href + '/tracks?fields=items(track(name%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal';
+		let nextTracks = playlist.href + '/tracks?fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal'; //%2Cmarket='+this.host.country
 		playlist.tracks = await this.loadOneBatch(nextTracks);
 	}
 
@@ -285,6 +287,7 @@ method.fetchData = async function() {
 	this.host.name = hostRequestData.display_name || hostRequestData.id;
 	this.host.id = hostRequestData.id;
 	this.host.profileUrl = hostRequestData.external_urls.spotify;
+	this.host.country = hostRequestData.country;
 
 	//Gets all the hosts playlists TODO: This should probably loop (now max 50 playlists will be returned)
 	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
@@ -364,7 +367,7 @@ method.update = async function(isHost) {
 	}
 
 	if (fetchData !== null) {
-		if (fetchData.device !== undefined && fetchData.item !== undefined) {
+		if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
 			this.activePlayer = {
 				volume: fetchData.device.volume_percent,
 				progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
@@ -378,19 +381,19 @@ method.update = async function(isHost) {
 				}
 			};
 		} else if (this.activePlayer !== undefined && this.activePlayer !== null) {
-			this.activePlayer = {
-				volume: this.activePlayer.volume,
-				progress: this.activePlayer.progress,
-				isPlaying: fetchData.is_playing,
-				track: this.activePlayer.track
-			};
+			if (this.activePlayer.track !== undefined) {
+				this.activePlayer = {
+					volume: this.activePlayer.volume,
+					progress: this.activePlayer.progress,
+					isPlaying: fetchData.is_playing,
+					track: this.activePlayer.track
+				};
+			} else {
+				this.activePlayer = null;
+			}
+
 		} else {
-			this.activePlayer = {
-				volume: 0,
-				progress: 0,
-				isPlaying: false,
-				track: null
-			};
+			this.activePlayer = null;
 		}
 	} else {
 		this.activePlayer = null;
@@ -400,9 +403,17 @@ method.update = async function(isHost) {
 		if (this.activePlayer.progress > 98 && this.isChanging === false) {
 			this.isChanging = true;
 			await this.play();
+		} else if (Math.round(this.activePlayer.progress % 5) == 0 && isHost == true && this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isSkipping === false && this.isChanging === false) {
+			//Check if skip
+			this.isSkipping = true;
+			await this.skip();
 		} else if (this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isChanging === true) {
+			//Reset cooldown
 			console.log('Reset Cooldown');
 			this.isChanging = false;
+		} else if (Math.round(this.activePlayer.progress % 5) == 2 && this.isSkipping == true) {
+			console.log('Skip Cooldown Reset');
+			this.isSkipping = false;
 		}
 	}
     return true;
@@ -457,8 +468,7 @@ method.vote = function(trackId, isHost, name) {
 /*jshint ignore: start */
 
 /**
-* PLays the most voted track {{ONLY USED FOR TESTING PURPOSES}}
-* Use this in combination with Postman or something, since it isnt called from the frontedn
+* PLays the most voted track
 *
 * @author: Michiocre
 * @return {boolean} True if the request to the spotify API was successfully changed
@@ -497,7 +507,36 @@ method.play = async function() {
 		body: JSON.stringify(payload)
 	});
 
+	console.log(track);
+
 	return this.getRandomTracks(this.activePlaylist.id, track);
+};
+
+/**
+* PLays the current selection of Tracks
+*
+* @author: Michiocre
+* @return {boolean} True if new tracks were chosen
+*/
+method.skip = async function() {
+	let track = this.activePlayer.track;
+
+	let skips = 0;
+	for (var i = 0; i < this.connectedUser.length; i++) {
+		if (this.connectedUser[i].voted == 'skip') {
+			skips += 1;
+		}
+	}
+	if (this.host.voted == 'skip') {
+		skips += 1;
+	}
+
+	console.log('Skips: ['+skips+'] vs NoSkip: ['+((this.connectedUser.length+1)-skips)+'] has to be at least: ['+(2 * (this.connectedUser.length+1) / 3)+']');
+	if (skips >= (2 * (this.connectedUser.length+1) / 3)) {
+		this.getRandomTracks(this.activePlaylist.id, track);
+		return true;
+	}
+	return false;
 };
 
 /**
