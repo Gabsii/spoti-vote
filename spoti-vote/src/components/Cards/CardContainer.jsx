@@ -87,7 +87,7 @@ class CardContainer extends Component {
 		let buttons = this.getSiblings(event.target.closest('button'));
 		event.target.closest('button').style.opacity = 1;
 		for (let i = 0; i < buttons.length; i++) {
-			buttons[i].style.opacity = 0.25;
+			buttons[i].style.opacity = 0.5;
 			//fade opacity??
 		}
 		if (this.state.voted !== trackId) {
