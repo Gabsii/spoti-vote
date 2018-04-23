@@ -14,6 +14,7 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 //Global Varibles
+
 const ipAddress = process.env.ADDRESS || 'localhost';
 const portFront = process.env.PORT || 80;
 const portBack = process.env.PORTBACK || 8888;
@@ -126,18 +127,18 @@ io.on('connection', (socket) => {
 		let room = getRoomById(data.roomId);
 
 		//Check if this user is already hosting a room
-		let x = -1;
-		for (let i = 0; i < rooms.length; i++) {
-			if (rooms[i].host.id == room.host.id && rooms[i].id !== room.id) {
-				x = i;
+		if (room !== null) {
+			let x = -1;
+			for (let i = 0; i < rooms.length; i++) {
+				if (rooms[i].host.id == room.host.id && rooms[i].id !== room.id) {
+					x = i;
+				}
 			}
-		}
 
-		if (x >= 0) {
-			socket.emit('errorEvent', {message: 'You are already hosting a Room, try joining: ['+rooms[x].id+']'});
-			rooms.splice(rooms.indexOf(room),1);
-		} else {
-			if (room !== null) {
+			if (x >= 0) {
+				socket.emit('errorEvent', {message: 'You are already hosting a Room, try joining: ['+rooms[x].id+']'});
+				rooms.splice(rooms.indexOf(room),1);
+			} else {
 				roomId = room.id;
 				if (room.firstConnection === true) {
 					room.firstConnection = false;
@@ -164,9 +165,9 @@ io.on('connection', (socket) => {
 						socket.emit('nameEvent', {userNames: room.getUserNames()});
 					}
 				}
-			} else {
-				socket.emit('errorEvent', {message: 'Room has been closed'});
 			}
+		} else {
+			socket.emit('errorEvent', {message: 'Room has been closed'});
 		}
 	});
 
