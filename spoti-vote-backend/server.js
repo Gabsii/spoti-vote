@@ -134,8 +134,10 @@ io.on('connection', (socket) => {
 		}
 
 		if (x >= 0) {
-			socket.emit('errorEvent', {message: 'You are already hosting a Room, try joining: ['+rooms[x].id+']'});
-			rooms.splice(rooms.indexOf(room),1);
+			socket.emit('errorEvent', {
+				message: 'You are already hosting a Room, try joining: [' + rooms[x].id + ']'
+			});
+			rooms.splice(rooms.indexOf(room), 1);
 		} else {
 			if (room !== null) {
 				roomId = room.id;
