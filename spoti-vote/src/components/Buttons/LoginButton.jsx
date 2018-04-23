@@ -25,11 +25,7 @@ let defaultStyle = {
 class LoginButton extends Component {
 
 	login() {
-<<<<<<< HEAD
-		window.location.href = 'http://' + config.ipAddress + ':' + config.portBackend || process.env.PORT + '/login';
-=======
 		window.location.href = 'http://' + ipAddress + ':' + portBack + '/login';
->>>>>>> 0b43efbdeca346dd28050bb4db47808f4857e4a4
 	}
 
 	render() {

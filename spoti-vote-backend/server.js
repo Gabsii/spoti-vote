@@ -14,17 +14,12 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 //Global Varibles
-<<<<<<< HEAD
-let redirect_uri = process.env.REDIRECT_URI || 'http://' + config.ipAddress || 'spoti-vote.herokuapp.com' + ':' + config.portBackend || process.env.PORT + '/callback';
-=======
 const ipAddress = process.env.ADDRESS || 'localhost';
-const portFront = process.env.PORTFRONT || 80;
+const portFront = process.env.PORT || 80;
 const portBack = process.env.PORTBACK || 8888;
 const redirect_uri = 'http://' + ipAddress + ':' + portBack + '/callback';
 
 console.log(redirect_uri);
-
->>>>>>> 0b43efbdeca346dd28050bb4db47808f4857e4a4
 let rooms = [];
 let allClients = {};
 
@@ -38,7 +33,7 @@ let allClients = {};
 function getRoomById(roomId) {
 	let room = null;
 	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].id == roomId)
+		if (rooms[i].id == roomId) 
 			room = rooms[i];
 		}
 	return room;
@@ -73,12 +68,7 @@ app.get('/callback', async (req, res) => {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-<<<<<<< HEAD
-		let uri = process.env.FRONTEND_URI || 'http://' + config.ipAddress || 'spoti-vote.herokuapp.com' + ':' + config.portFrontend || process.env.PORT + '/app';
-=======
 		let uri = 'http://' + ipAddress + ':' + portFront + '/app';
->>>>>>> 0b43efbdeca346dd28050bb4db47808f4857e4a4
-
 		let room = new Room(body.access_token, rooms, 4);
 
 		await room.fetchData();
@@ -133,7 +123,7 @@ io.on('connection', (socket) => {
 	* @param {string} roomId Id of the room
     */
 	socket.on('roomId', data => {
-        let room = getRoomById(data.roomId);
+		let room = getRoomById(data.roomId);
 
 		//Check if this user is already hosting a room
 		let x = 0;
@@ -177,16 +167,14 @@ io.on('connection', (socket) => {
 							socket.emit('errorEvent', {message: 'Your Token is wrong'});
 						}
 					} else {
-						socket.emit('nameEvent', {
-							userNames: room.getUserNames()
-						});
+						socket.emit('nameEvent', {userNames: room.getUserNames()});
 					}
 				}
 			} else {
 				socket.emit('errorEvent', {message: 'Room has been closed'});
 			}
 		}
-    });
+	});
 
 	/**
     * Called when a user thats not a host wants to enter a room
@@ -342,10 +330,6 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 /**
 * Starts the server
 */
-<<<<<<< HEAD
-server.listen(config.portBackend || process.env.PORT, () => {
-=======
 server.listen(portBack, () => {
->>>>>>> 0b43efbdeca346dd28050bb4db47808f4857e4a4
 	console.log('Server started on port: ' + server.address().port);
 });
