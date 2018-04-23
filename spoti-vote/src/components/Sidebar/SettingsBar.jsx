@@ -70,17 +70,20 @@ class SettingsBar extends Component {
 		return (<div style={{
 				...defaultStyle,
 				...marginStyle
-			}}>
-			<button style={{
-					...buttonStyle,
-					...linkStyle
-				}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-				<FontAwesomeIcon icon={faCog} size="2x"/>
-			</button>
-			{
-
+			}}>{
 				this.props.isHost
-					? <SkipButton/>
+					? <button style={{
+								...buttonStyle,
+								...linkStyle
+							}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+							<FontAwesomeIcon icon={faCog} size="2x"/>
+						</button>
+					: <SkipButton/>
+			}{
+				this.props.isHost
+					? !this.props.isPhone
+						? <SkipButton/>
+						: ''
 					: ''
 
 			}
