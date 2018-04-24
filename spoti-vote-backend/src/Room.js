@@ -366,8 +366,6 @@ method.update = async function(isHost) {
 		fetchData = null;
 	}
 
-	console.log(fetchData);
-
 	if (fetchData !== null) {
 		if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
 			this.activePlayer = {

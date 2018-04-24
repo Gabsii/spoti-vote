@@ -137,6 +137,21 @@ io.on('connection', (socket) => {
 				}
 			}
 
+			//Check if its old
+			let toBeDeleted = [];
+			for (var i = 0; i < rooms.length; i++) {
+				if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
+					toBeDeleted.push(rooms[i]);
+				}
+			}
+			for (var i = 0; i < toBeDeleted.length; i++) {
+				console.log('-de- Deleting [' + toBeDeleted[i].id + '] due to inactivity');
+				rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
+				if (i == x) {
+					x = -1;
+				}
+			}
+
 			if (x >= 0) {
 				socket.emit('errorEvent', {message: 'You are already hosting a Room, try joining: ['+rooms[x].id+']'});
 				rooms.splice(rooms.indexOf(room),1);
@@ -308,20 +323,22 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 	} else {
 		socket.emit('errorEvent', {message: null});
 	}
-	updateCounter.amount += 1;
-	if (updateCounter.amount > 30) {
-		let toBeDeleted = [];
-		for (var i = 0; i < rooms.length; i++) {
-			if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
-				toBeDeleted.push(rooms[i]);
-			}
-		}
-		for (var i = 0; i < toBeDeleted.length; i++) {
-			console.log('-de- Deleting [' + toBeDeleted[i].id + '] due to inactivity');
-			rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
-		}
-		updateCounter.amount = 0;
-	}
+
+	//Check if old [Decapreated]
+	// updateCounter.amount += 1;
+	// if (updateCounter.amount > 30) {
+	// 	let toBeDeleted = [];
+	// 	for (var i = 0; i < rooms.length; i++) {
+	// 		if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
+	// 			toBeDeleted.push(rooms[i]);
+	// 		}
+	// 	}
+	// 	for (var i = 0; i < toBeDeleted.length; i++) {
+	// 		console.log('-de- Deleting [' + toBeDeleted[i].id + '] due to inactivity');
+	// 		rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
+	// 	}
+	// 	updateCounter.amount = 0;
+	// }
 };
 
 /* jshint ignore: end */
