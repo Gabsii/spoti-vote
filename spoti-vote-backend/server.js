@@ -20,6 +20,8 @@ const portFront = process.env.PORT || 80;
 const portBack = process.env.PORTBACK || 8888;
 const redirect_uri = 'http://' + ipAddress + ':' + portBack + '/callback';
 
+const secTillDelete = 60;
+
 console.log(redirect_uri);
 let rooms = [];
 let allClients = {};
@@ -34,7 +36,7 @@ let allClients = {};
 function getRoomById(roomId) {
 	let room = null;
 	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].id == roomId) 
+		if (rooms[i].id == roomId)
 			room = rooms[i];
 		}
 	return room;
@@ -137,12 +139,12 @@ io.on('connection', (socket) => {
 
 			//Check if its old
 			let toBeDeleted = [];
-			for (var i = 0; i < rooms.length; i++) {
-				if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
+			for (let i = 0; i < rooms.length; i++) {
+				if (Date.now() - rooms[i].hostDisconnect > 1000 * secTillDelete && rooms[i].hostDisconnect !== null) {
 					toBeDeleted.push(rooms[i]);
 				}
 			}
-			for (var i = 0; i < toBeDeleted.length; i++) {
+			for (let i = 0; i < toBeDeleted.length; i++) {
 				console.log('-de- Deleting [' + toBeDeleted[i].id + '] due to inactivity');
 				rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
 				if (i == x) {
