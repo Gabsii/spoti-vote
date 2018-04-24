@@ -139,14 +139,15 @@ class CardContainer extends Component {
 			if (this.props.isPhone) {
 				return (<main style={{
 						...defaultStyle,
-						height: 'calc(100vh - 200px)', // top bar should be 75px high
+						height: 'calc(100vh - 150px)', // top bar should be 75px high
 						top: '75px',
-						width: 'calc(100vw - 50px)',
+						width: '100vw',
+						padding: 0
 						// minWidth: 'calc(100vw - 50px)'
 					}}>
 					{
 						this.props.activeTracks.map((track, index) => {
-							return <Card randomTrack={track} onClick={this.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
+							return <Card isPhone={true} randomTrack={track} onClick={this.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
 						})
 					}
 				</main>);
@@ -160,7 +161,7 @@ class CardContainer extends Component {
 					}}>
 					{
 						this.props.activeTracks.map((track, index) => {
-							return <Card randomTrack={track} onClick={this.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
+							return <Card isPhone={false} randomTrack={track} onClick={this.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
 						})
 					}
 					<Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} onClick={this.handleNotificationOnClick.bind(this)} onClose={this.handleNotificationOnClose.bind(this)} onError={this.handleNotificationOnError.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
@@ -170,9 +171,10 @@ class CardContainer extends Component {
 			if (this.props.isPhone) {
 				return (<main style={{
 						...defaultStyle,
-						height: 'calc(100vh - 200px)', // top bar should be 75px high
+						height: 'calc(100vh - 150px)', // top bar should be 75px high
 						top: '75px',
-						width: 'calc(100vw - 50px)',
+						width: '100vw',
+						padding: 0
 						// minWidth: 'calc(100vw - 50px)'
 					}}>
 					<div style={{

@@ -153,38 +153,43 @@ io.on('connection', (socket) => {
 			}
 
 			if (x >= 0) {
-				socket.emit('errorEvent', {message: 'You are already hosting a Room, try joining: ['+rooms[x].id+']'});
-				rooms.splice(rooms.indexOf(room),1);
+				socket.emit('errorEvent', {
+					message: 'You are already hosting a Room, try joining: [' + rooms[x].id + ']'
+				});
+				rooms.splice(rooms.indexOf(room), 1);
 			} else {
-				roomId = room.id;
-				if (room.firstConnection === true) {
-					room.firstConnection = false;
-					console.log('-c - Host connected');
-					isHost = true;
-					socket.emit('initData', {
-						playlists: room.getPlaylists(),
-						hostName: room.host.name,
-						isHost: isHost,
-						token: room.host.token
-					});
-					room.hostDisconnect = null;
-				} else {
-					if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
+				if (room !== null) {
+					roomId = room.id;
+					if (room.firstConnection === true) {
+						room.firstConnection = false;
 						console.log('-c - Host connected');
 						isHost = true;
 						socket.emit('initData', {
 							playlists: room.getPlaylists(),
 							hostName: room.host.name,
-							isHost: isHost
+							isHost: isHost,
+							token: room.host.token
 						});
 						room.hostDisconnect = null;
 					} else {
-						socket.emit('nameEvent', {userNames: room.getUserNames()});
+						if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
+							console.log('-c - Host connected');
+							isHost = true;
+							socket.emit('initData', {
+								playlists: room.getPlaylists(),
+								hostName: room.host.name,
+								isHost: isHost
+							});
+							room.hostDisconnect = null;
+						} else {
+							socket.emit('nameEvent', {userNames: room.getUserNames()});
+						}
 					}
+
+				} else {
+					socket.emit('errorEvent', {message: 'Room has been closed'});
 				}
 			}
-		} else {
-			socket.emit('errorEvent', {message: 'Room has been closed'});
 		}
 	});
 
