@@ -29,7 +29,9 @@ class SkipButton extends Component {
 	}
 
 	skip() {
-		//add skipping mechanisms in here
+		this.props.socket.emit('vote', {
+			trackId: 'skip'
+		});
 	}
 
 	render() {

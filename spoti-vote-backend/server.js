@@ -36,9 +36,10 @@ let allClients = {};
 function getRoomById(roomId) {
 	let room = null;
 	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].id == roomId)
+		if (rooms[i].id == roomId) {
 			room = rooms[i];
 		}
+	}
 	return room;
 }
 

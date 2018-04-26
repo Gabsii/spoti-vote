@@ -78,11 +78,11 @@ class SettingsBar extends Component {
 							}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
 							<FontAwesomeIcon icon={faCog} size="2x"/>
 						</button>
-					: <SkipButton/>
+					: <SkipButton socket={this.props.socket}/>
 			}{
 				this.props.isHost
 					? !this.props.isPhone
-						? <SkipButton/>
+						? <SkipButton socket={this.props.socket}/>
 						: ''
 					: ''
 
