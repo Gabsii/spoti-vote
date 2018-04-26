@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import MediaQuery from 'react-responsive';
-import LoginCode from './Buttons/LoginCode.jsx';
+import LoginCode from './LoginCode.jsx';
 
-let constants = require('../js/constants');
+let constants = require('../../js/constants');
 
 let defaultContainer = {
 	flexDirection: 'column',

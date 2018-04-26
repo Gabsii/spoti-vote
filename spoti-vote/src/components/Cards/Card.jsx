@@ -60,7 +60,8 @@ class Card extends Component {
 
 	render() {
 		const tint = this.hexToRgb(this.props.color);
-		let linkStyle;
+		let linkStyle,
+			marginStyle;
 		if (this.state.hover) {
 			linkStyle = {
 				cursor: 'pointer'
@@ -68,6 +69,18 @@ class Card extends Component {
 		} else {
 			linkStyle = {
 				cursor: 'context-menu'
+			}
+		}
+
+		if (this.props.isPhone) {
+			marginStyle = {
+				flexBasis: 'calc(50% - 10px)',
+				margin: '5px'
+			}
+		} else {
+			marginStyle = {
+				flexBasis: 'calc(50% - 40px)',
+				margin: '20px'
 			}
 		}
 
@@ -87,6 +100,7 @@ class Card extends Component {
 		return (<button onClick={this.props.onClick} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} style={{
 				...defaultStyle,
 				...linkStyle,
+				...marginStyle,
 				backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url + ')'
 			}} id={this.props.randomTrack.id}>
 			<div style={{

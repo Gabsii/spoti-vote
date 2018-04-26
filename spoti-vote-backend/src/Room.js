@@ -239,7 +239,8 @@ method.getRandomTracks = function(playlistId, activeTrack) {
 		do {
 			active = false;
 			track = playlist.tracks[Math.floor(Math.random() * playlist.tracks.length)].track;
-			if (activeTrack !== null) {
+
+			if (activeTrack !== null && activeTrack !== undefined) {
 				if (track.id === activeTrack.id) {
 					active = true;
 				}
@@ -353,20 +354,24 @@ method.loadOneBatch = async function(next) {
 */
 method.update = async function(isHost) {
 	this.lastUpdate = Date.now();
+	let request;
+	try {
+		request = await fetch('https://api.spotify.com/v1/me/player', {
+	        headers: {
+	            "Authorization": "Bearer " + this.host.token
+	        }
+	    });
+	} catch (e) {
+		console.log('Error getting the ActivePlayer');
+	}
 
-    let request = await fetch('https://api.spotify.com/v1/me/player', {
-        headers: {
-            "Authorization": "Bearer " + this.host.token
-        }
-    });
+
 	let fetchData;
 	try {
 		fetchData = await request.json();
 	} catch (e) {
 		fetchData = null;
 	}
-
-	console.log(fetchData);
 
 	if (fetchData !== null) {
 		if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
