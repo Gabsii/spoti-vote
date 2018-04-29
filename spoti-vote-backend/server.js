@@ -328,21 +328,20 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 		socket.emit('errorEvent', {message: null});
 	}
 
-	//Check if old [Decapreated]
-	// updateCounter.amount += 1;
-	// if (updateCounter.amount > 30) {
-	// 	let toBeDeleted = [];
-	// 	for (var i = 0; i < rooms.length; i++) {
-	// 		if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
-	// 			toBeDeleted.push(rooms[i]);
-	// 		}
-	// 	}
-	// 	for (var i = 0; i < toBeDeleted.length; i++) {
-	// 		console.log('-de- Deleting [' + toBeDeleted[i].id + '] due to inactivity');
-	// 		rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
-	// 	}
-	// 	updateCounter.amount = 0;
-	// }
+	updateCounter.amount += 1;
+	if (updateCounter.amount > 30) {
+		let toBeDeleted = [];
+		for (var i = 0; i < rooms.length; i++) {
+			if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
+				toBeDeleted.push(rooms[i]);
+			}
+		}
+		for (var i = 0; i < toBeDeleted.length; i++) {
+			console.log('-de- Deleting [' + toBeDeleted[i].id + '] due to inactivity');
+			rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
+		}
+		updateCounter.amount = 0;
+	}
 };
 
 /* jshint ignore: end */

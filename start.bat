@@ -2,4 +2,4 @@ cd spoti-vote
 start npm start
 cd ..
 cd spoti-vote-backend
-start npm server.js
+start nodemon server.js
