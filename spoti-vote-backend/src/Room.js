@@ -252,6 +252,9 @@ method.getRandomTracks = function(playlistId, activeTrack) {
 	this.activeTracks = selectedTracks;
 
 	console.log('-rT- [' +selectedTracks[0].name+','+selectedTracks[1].name+','+selectedTracks[2].name+','+selectedTracks[3].name+','+ '] have been selected');
+
+	// this.isSkipping = false;
+	// console.log('Reset Skip Cooldown');
 	return true;
 };
 
@@ -373,6 +376,7 @@ method.update = async function(isHost) {
 		fetchData = null;
 	}
 
+	//TODO: Clean this up
 	if (fetchData !== null) {
 		if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
 			this.activePlayer = {
@@ -388,17 +392,9 @@ method.update = async function(isHost) {
 				}
 			};
 		} else if (this.activePlayer !== undefined && this.activePlayer !== null) {
-			if (this.activePlayer.track !== undefined) {
-				this.activePlayer = {
-					volume: this.activePlayer.volume,
-					progress: this.activePlayer.progress,
-					isPlaying: fetchData.is_playing,
-					track: this.activePlayer.track
-				};
-			} else {
+			if (this.activePlayer.track === undefined) {
 				this.activePlayer = null;
 			}
-
 		} else {
 			this.activePlayer = null;
 		}
@@ -410,17 +406,10 @@ method.update = async function(isHost) {
 		if (this.activePlayer.progress > 98 && this.isChanging === false) {
 			this.isChanging = true;
 			await this.play();
-		} else if (Math.round(this.activePlayer.progress % 5) == 0 && isHost == true && this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isSkipping === false && this.isChanging === false) {
-			//Check if skip
-			this.isSkipping = true;
-			await this.skip();
 		} else if (this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isChanging === true) {
 			//Reset cooldown
 			console.log('Reset Cooldown');
 			this.isChanging = false;
-		} else if (Math.round(this.activePlayer.progress % 5) == 2 && this.isSkipping == true) {
-			console.log('Skip Cooldown Reset');
-			this.isSkipping = false;
 		}
 	}
     return true;
@@ -436,7 +425,7 @@ method.update = async function(isHost) {
 * @param {string} trackId The track whomst the user has voted for
 * @return {boolean} True if the vote was successfully changed
 */
-method.vote = function(trackId, isHost, name) {
+method.vote = async function(trackId, isHost, name) {
 	let user = this.getUserByName(name);
 
 	if (isHost == true) {
@@ -470,6 +459,14 @@ method.vote = function(trackId, isHost, name) {
 			return true;
 		}
 	}
+
+	//If skip logic
+	if (trackId == 'skip' && this.activePlayer.progress <= 90) { //&& this.isSkipping == false) {
+		if (await this.skip() == true) {
+			//this.isSkipping = true;
+		}
+	}
+
 	return false;
 };
 
