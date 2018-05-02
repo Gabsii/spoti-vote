@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import '../../css/selectors.css';
 
 let constants = require('../../js/constants');
-const ipAddress = window.location.host || 'localhost';
+const ipAddress = window.location.hostname || 'localhost';
 const portFront = window.location.port || 80;
 const portBack = 8888;
 
