@@ -39,7 +39,10 @@ open a second commandline and run the following code:\
 `SETX SPOTIFY_CLIENT_SECRET 'BAR'`\
 `npm start`\
 
-If you are using a MAC replace `SET` with `EXPORT`.
+If you are using a MAC or Linux replace `SET` with `EXPORT`.
+
+If you have trouble with setting the varibles on Linux, try adding them to /etc/environment.
+
 Thanks to [MPJ](https://github.com/mpj/oauth-bridge-template) for providing a framework for the backend-logic.
 
 Congratulations! You now are able to use my webpage.
