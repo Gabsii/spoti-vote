@@ -8,7 +8,10 @@ module.exports = {
     // First application
     {
       name      : 'FrontEnd',
-      script    : './spoti-vote/index.js',
+      cwd       : './spoti-vote',
+      script    : 'npm',
+      args      : 'start',
+      watch     : true,
       env: {
         COMMON_VARIABLE: 'true'
       },
@@ -20,7 +23,10 @@ module.exports = {
     // Second application
     {
       name      : 'BackEnd',
-      script    : './spoti-vote-backend/server.js'
-    }
+      cwd       : './spoti-vote-backend/',
+      script    : 'node',
+      args      : 'server.js',
+      watch     : true 
+   }
   ]
 };
