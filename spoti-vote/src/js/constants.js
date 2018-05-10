@@ -8,6 +8,8 @@ let iterateCardColors = function(index) {
 			return colors.redCard;
 		case 3:
 			return colors.yellowCard;
+		case 4:
+			return colors.skip;
 		default:
 			return null;
 	}
@@ -29,6 +31,7 @@ let colors = {
 	blueCard: "#3498DB", // tint for card
 	redCard: "#E74C3C", // tint for card
 	yellowCard: "#F1C40F", // tint for card
+	skip: "#8E44AD", // skip color
 	font: "#FFFFFF", // all texts
 	fontSecondary: "#B3B3B3", // text color for UI elements
 	barBackground: "#404040" // background color for bar elements

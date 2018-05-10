@@ -139,7 +139,7 @@ class CardContainer extends Component {
 			if (this.props.isPhone) {
 				return (<main style={{
 						...defaultStyle,
-						height: 'calc(100vh - 150px)', // top bar should be 75px high
+						height: 'calc(100% - 150px)', // top bar should be 75px high
 						top: '75px',
 						width: '100vw',
 						padding: 0
@@ -171,7 +171,7 @@ class CardContainer extends Component {
 			if (this.props.isPhone) {
 				return (<main style={{
 						...defaultStyle,
-						height: 'calc(100vh - 150px)', // top bar should be 75px high
+						height: 'calc(100% - 150px)', // top bar should be 75px high
 						top: '75px',
 						width: '100vw',
 						padding: 0
@@ -186,11 +186,11 @@ class CardContainer extends Component {
 							color: constants.colors.font
 						}}>
 						<h1 style={{
-								fontSize: '5em',
+								fontSize: '3.5em',
 								textAlign: 'center'
 							}}>Select a playlist first!</h1><br/><br/>
 						<h2 style={{
-								fontSize: '2em'
+								fontSize: '1.5em'
 							}}>Users can connect with
 							<b style={{
 									fontFamily: 'Circular Bold'
