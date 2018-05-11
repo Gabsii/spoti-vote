@@ -1,14 +1,6 @@
 # spoti-vote
 Web application to vote for the next song in Spotify Queue
 
-- [Project Description:](#project-description)
-	- [Requirements:](#requirements)
-	- [Usage](#usage)
-- [Credits](#credits)
-	- [Frameworks/Tools](#frameworkstools)
-	- [Useful links](#useful-links)
-	- [Images](#images)
-
 # Project Description:
 
 The idea for this project resulted as we have a Spotify class playlist with great songs we listen to in our breaks.
@@ -52,8 +44,6 @@ Thanks to [MPJ](https://github.com/mpj/oauth-bridge-template) for providing a fr
 Congratulations! You now are able to use my webpage.
 
 # Credits
-
-None
 
 ## Frameworks/Tools
 * Atom
