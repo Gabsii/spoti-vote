@@ -11,21 +11,6 @@ a {
     text-decoration: none;
 }
 
-/* parallax */
-
-.background2 {
-    height: auto;
-    background-image: url("../img/andre-benz-276974-unsplash.jpg");
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    overflow: hidden;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-}
-
 /* height */
 
 .fullheight {

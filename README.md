@@ -17,7 +17,7 @@ To solve this problem I thought about creating a website where users could choos
 
 ## Requirements:
 * [Node v6.0 and higher](https://nodejs.org/en/)
-* [Spotify Premium Account](https://www.spotify.com/at/) for the DJ or normal Spotify Account for the User
+* [Spotify Premium Account](https://www.spotify.com/at/) for the DJ
 
 ## Usage
 
@@ -72,6 +72,9 @@ None
 ## Images
 
 * Credits to Austin Neill for his picture (found on [Unsplash](https://unsplash.com))
-* Credits to Andre Benz for his picture (found on [Unsplash](https://unsplash.com))
+* Credits to Samantha Gades for her picture (found on [Unsplash](https://unsplash.com))
+* Credits to Eric Nopanen for his picture (found on [Unsplash](https://unsplash.com))
+* Credits to Etienne Boulanger for his picture (found on [Unsplash](https://unsplash.com))
+* Credits to Cory Bouthillette for his picture (found on [Unsplash](https://unsplash.com))
 * Credits to [Michiocre](https://github.com/Michiocre) for the Logo and Button Animation
 * Credits to Treer for his icon (found on [openclipart](https://openclipart.org/detail/247324/abstract-user-icon-1))

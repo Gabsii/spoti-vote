@@ -1,0 +1,998 @@
+> node server.js
+
+Server started on port: 8888
+-r - [LZBBQ] created
+-r - [AMYXS] created
+Request to roomId:
+{ roomId: 'AMYXS', token: null }
+-c - Host connected
+Request to changePlaylist:
+{ playlistId: '6uuMgmuKrZ8M5vx15mLqCV' }
+-pC- Playlist changed to: [6uuMgmuKrZ8M5vx15mLqCV]
+-rT- [Concrete - VIP,Skatta - Macky Gee Remix,Pure Gold,Worlds End,] have been selected
+Request to roomId:
+{ roomId: 'AMYXS', token: null }
+Request to nameEvent:
+{ name: 'MOMO' }
+-c - [MOMO] connected
+Request to roomId:
+{ roomId: 'AMYXS', token: null }
+Request to nameEvent:
+{ name: 'Jan ' }
+-c - [Jan ] connected
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- [MOMO] voted for: [6jaalLTrI845gJuP46TERW]
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [MOMO] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [MOMO] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '0p4Pnysf7owSDggi5aarGu' }
+-vo- [MOMO] voted for: [0p4Pnysf7owSDggi5aarGu]
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- [MOMO] voted for: [6jaalLTrI845gJuP46TERW]
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [MOMO] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [MOMO] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '0p4Pnysf7owSDggi5aarGu' }
+-vo- [MOMO] voted for: [0p4Pnysf7owSDggi5aarGu]
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- [MOMO] voted for: [6jaalLTrI845gJuP46TERW]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [MOMO] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '0p4Pnysf7owSDggi5aarGu' }
+-vo- [MOMO] voted for: [0p4Pnysf7owSDggi5aarGu]
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- [MOMO] voted for: [6jaalLTrI845gJuP46TERW]
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [Jan ] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [Jan ] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [Jan ] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- the host voted for: [6jaalLTrI845gJuP46TERW]
+-r - [AABFV] created
+Request to roomId:
+{ roomId: 'AABFV', token: null }
+-c - Host connected
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [MOMO] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+Request to vote:
+{ trackId: '0p4Pnysf7owSDggi5aarGu' }
+-vo- [MOMO] voted for: [0p4Pnysf7owSDggi5aarGu]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [MOMO] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- [MOMO] voted for: [6jaalLTrI845gJuP46TERW]
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [MOMO] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+Request to vote:
+{ trackId: '0p4Pnysf7owSDggi5aarGu' }
+-vo- [MOMO] voted for: [0p4Pnysf7owSDggi5aarGu]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [MOMO] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- [MOMO] voted for: [6jaalLTrI845gJuP46TERW]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [MOMO] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '0p4Pnysf7owSDggi5aarGu' }
+-vo- [MOMO] voted for: [0p4Pnysf7owSDggi5aarGu]
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- [MOMO] voted for: [6jaalLTrI845gJuP46TERW]
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [MOMO] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [Jan ] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '0p4Pnysf7owSDggi5aarGu' }
+-vo- [MOMO] voted for: [0p4Pnysf7owSDggi5aarGu]
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- [MOMO] voted for: [6jaalLTrI845gJuP46TERW]
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- [Jan ] voted for: [6jaalLTrI845gJuP46TERW]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [Jan ] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [MOMO] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+-d - Host disconnected from [AABFV]
+Request to vote:
+{ trackId: '0p4Pnysf7owSDggi5aarGu' }
+-vo- [MOMO] voted for: [0p4Pnysf7owSDggi5aarGu]
+Request to vote:
+{ trackId: '0p4Pnysf7owSDggi5aarGu' }
+-vo- [Jan ] voted for: [0p4Pnysf7owSDggi5aarGu]
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [Jan ] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [MOMO] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [MOMO] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [Jan ] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- [MOMO] voted for: [6jaalLTrI845gJuP46TERW]
+Request to vote:
+{ trackId: '0p4Pnysf7owSDggi5aarGu' }
+-vo- [MOMO] voted for: [0p4Pnysf7owSDggi5aarGu]
+Request to vote:
+{ trackId: '0p4Pnysf7owSDggi5aarGu' }
+-vo- [Jan ] voted for: [0p4Pnysf7owSDggi5aarGu]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [MOMO] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [MOMO] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [Jan ] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- [MOMO] voted for: [6jaalLTrI845gJuP46TERW]
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [MOMO] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to vote:
+{ trackId: '0p4Pnysf7owSDggi5aarGu' }
+-vo- [MOMO] voted for: [0p4Pnysf7owSDggi5aarGu]
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [MOMO] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+Request to vote:
+{ trackId: '6jaalLTrI845gJuP46TERW' }
+-vo- [MOMO] voted for: [6jaalLTrI845gJuP46TERW]
+-r - [KGCZK] created
+Request to vote:
+{ trackId: '7JbEO66T2aBBlscNt8Sqt5' }
+-vo- [MOMO] voted for: [7JbEO66T2aBBlscNt8Sqt5]
+-de- Deleting [LZBBQ] due to inactivity
+Request to vote:
+{ trackId: '4e8HA75HNIfEH4GCwIBXaS' }
+-vo- [MOMO] voted for: [4e8HA75HNIfEH4GCwIBXaS]
+Request to roomId:
+{ roomId: 'KGCZK', token: null }
+-c - Host connected
+Request to logout:
+undefined
+-lo- room [AMYXS] was closed by host
+-d - User was auto-disconnected from [AMYXS]
+-d - User was auto-disconnected from [AMYXS]
+Request to changePlaylist:
+{ playlistId: '01LpzsvtQXWNTyZsGZmi1o' }
+-pC- Playlist changed to: [01LpzsvtQXWNTyZsGZmi1o]
+-r - [QHDHG] created
+-rT- [MIND OVER MATTER,Shooting Stars,Raise Your Fist,Right Through Your Head,] have been selected
+Request to roomId:
+{ roomId: 'QHDHG', token: null }
+-c - Host connected
+-d - User was auto-disconnected from [AMYXS]
+-d - Host disconnected from [QHDHG]
+Request to roomId:
+{ roomId: 'QHDHG', token: null }
+Request to roomId:
+{ roomId: 'QPMDK', token: null }
+-d - [null] disconnected from [QHDHG]
+Request to roomId:
+{ roomId: 'QHDHG', token: null }
+-d - User was auto-disconnected from [null]
+-d - [null] disconnected from [QHDHG]
+-r - [CYOPN] created
+Request to roomId:
+{ roomId: 'CYOPN', token: null }
+-c - Host connected
+-de- Deleting [AABFV] due to inactivity
+Request to changePlaylist:
+{ playlistId: '01LpzsvtQXWNTyZsGZmi1o' }
+-pC- Playlist changed to: [01LpzsvtQXWNTyZsGZmi1o]
+-rT- [The Voice Of Mayhem,Wenn ich jodle bin ich glucklich,Vive La Frenchcore Anthem - Original Mix,Super Bass,] have been selected
+Request to roomId:
+{ roomId: 'QPMDK', token: null }
+-d - Host disconnected from [KGCZK]
+Request to logout:
+undefined
+-lo- room [CYOPN] was closed by host
+-d - User was auto-disconnected from [CYOPN]
+-r - [OJGNO] created
+Request to roomId:
+{ roomId: 'OJGNO', token: null }
+-c - Host connected
+-d - User was auto-disconnected from [null]
+Request to roomId:
+{ roomId: 'AMYXS', token: null }
+-d - Host disconnected from [OJGNO]
+Request to roomId:
+{ roomId: 'OJGNO', token: null }
+-d - User was auto-disconnected from [null]
+-d - [null] disconnected from [OJGNO]
+-r - [FLATC] created
+Request to roomId:
+{ roomId: 'FLATC', token: null }
+-c - Host connected
+Request to changePlaylist:
+{ playlistId: '6JM0osAdF2pNvka3clNtxw' }
+-pC- Playlist changed to: [6JM0osAdF2pNvka3clNtxw]
+-rT- [Load It,Likkle Fassy,No Mercy,Sway,] have been selected
+Request to roomId:
+{ roomId: 'QPMDK', token: null }
+-r - [YNCFC] created
+-de- Deleting [QHDHG] due to inactivity
+Request to roomId:
+{ roomId: 'YNCFC', token: null }
+-c - Host connected
+Request to vote:
+{ trackId: '0G4O904MziGe38aRMY8mkk' }
+-vo- the host voted for: [0G4O904MziGe38aRMY8mkk]
+Request to changePlaylist:
+{ playlistId: '7J0QF382XPVEO6vKd56k47' }
+-pC- Playlist changed to: [7J0QF382XPVEO6vKd56k47]
+-de- Deleting [KGCZK] due to inactivity
+-rT- [Trip to Thailand - Remastered,Anthem (VIP),New Order V.I.P.,Oscillator,] have been selected
+-d - User was auto-disconnected from [null]
+-r - [GSDYC] created
+-r - [EHGJG] created
+Request to roomId:
+{ roomId: 'QPMDK', token: null }
+Request to roomId:
+{ roomId: 'EHGJG', token: null }
+-c - Host connected
+Request to roomId:
+{ roomId: 'QPMDK', token: null }
+Request to changePlaylist:
+{ playlistId: '5CEQaz8dvKM7ZEcnSUJKhM' }
+-pC- Playlist changed to: [5CEQaz8dvKM7ZEcnSUJKhM]
+-rT- [rock + roll,Only Nineteen,Powerful (feat. Ellie Goulding & Tarrus Riley),GOT IT GOOD,] have been selected
+Request to roomId:
+{ roomId: 'EHGJG', token: null }
+Request to roomId:
+{ roomId: 'KGCZK', token: null }
+Request to roomId:
+{ roomId: 'QPMDK', token: null }
+Request to roomId:
+{ roomId: 'QPMDK', token: null }
+-d - User was auto-disconnected from [null]
+Request to roomId:
+{ roomId: 'QPMDK', token: null }
+Request to nameEvent:
+{ name: 'dankkatze' }
+-c - [dankkatze] connected
+Request to vote:
+{ trackId: '32hc0TYud2KzDkE0QggvHO' }
+-vo- [dankkatze] voted for: [32hc0TYud2KzDkE0QggvHO]
+-r - [SMONK] created
+Request to roomId:
+{ roomId: 'SMONK', token: null }
+-c - Host connected
+-de- Deleting [OJGNO] due to inactivity
+Request to roomId:
+{ roomId: 'YNCFC', token: null }
+Request to vote:
+{ trackId: '1Q4bvauduT1hsEMNM76Qay' }
+-vo- the host voted for: [1Q4bvauduT1hsEMNM76Qay]
+-d - User was auto-disconnected from [null]
+Request to vote:
+{ trackId: '33pDV90OLUgkI6EJufm3rH' }
+-vo- the host voted for: [33pDV90OLUgkI6EJufm3rH]
+Request to nameEvent:
+{ name: 'Jan' }
+-c - [Jan] connected
+-d - User was auto-disconnected from [null]
+Request to logout:
+undefined
+-lo- room [FLATC] was closed by host
+Request to roomId:
+{ roomId: 'QPMDK', token: null }
+-d - User was auto-disconnected from [FLATC]
+-d - User was auto-disconnected from [null]
+-d - User was auto-disconnected from [null]
+Request to roomId:
+{ roomId: 'EHGJG', token: null }
+-d - User was auto-disconnected from [null]
+-d - User was auto-disconnected from [null]
+-d - User was auto-disconnected from [null]
+Request to vote:
+{ trackId: '32hc0TYud2KzDkE0QggvHO' }
+-vo- the host voted for: [32hc0TYud2KzDkE0QggvHO]
+Request to nameEvent:
+{ name: 'FLO' }
+-c - [FLO] connected
+Request to roomId:
+{ roomId: 'QPMDK', token: null }
+-r - [XLNCC] created
+Request to roomId:
+{ roomId: 'XLNCC', token: null }
+-c - Host connected
+Request to vote:
+{ trackId: '33pDV90OLUgkI6EJufm3rH' }
+-vo- [Jan] voted for: [33pDV90OLUgkI6EJufm3rH]
+Request to vote:
+{ trackId: '32hc0TYud2KzDkE0QggvHO' }
+-vo- [FLO] voted for: [32hc0TYud2KzDkE0QggvHO]
+-de- Deleting [GSDYC] due to inactivity
+Request to vote:
+{ trackId: '4oyWrvyORD6uCSYCLSRF6W' }
+-vo- [FLO] voted for: [4oyWrvyORD6uCSYCLSRF6W]
+Request to vote:
+{ trackId: '32hc0TYud2KzDkE0QggvHO' }
+-vo- [FLO] voted for: [32hc0TYud2KzDkE0QggvHO]
+-d - User was auto-disconnected from [null]
+Request to vote:
+{ trackId: '1Q4bvauduT1hsEMNM76Qay' }
+-vo- [Jan] voted for: [1Q4bvauduT1hsEMNM76Qay]
+Request to vote:
+{ trackId: '4oyWrvyORD6uCSYCLSRF6W' }
+-vo- [FLO] voted for: [4oyWrvyORD6uCSYCLSRF6W]
+Request to vote:
+{ trackId: '32hc0TYud2KzDkE0QggvHO' }
+-vo- [FLO] voted for: [32hc0TYud2KzDkE0QggvHO]
+Request to vote:
+{ trackId: '33pDV90OLUgkI6EJufm3rH' }
+-vo- [Jan] voted for: [33pDV90OLUgkI6EJufm3rH]
+Request to changePlaylist:
+{ playlistId: '4VIUnvqm5G2qM6LZpiOKxq' }
+-pC- Playlist changed to: [4VIUnvqm5G2qM6LZpiOKxq]
+-rT- [No Control - Radio Edit,Fckd-Up Nation - Radio Edit,The Lighthousekeeper,Still Nr One,] have been selected
+Request to changePlaylist:
+{ playlistId: '7ttM9ddN8RKwQ9rCMgRpB2' }
+-pC- Playlist changed to: [7ttM9ddN8RKwQ9rCMgRpB2]
+-rT- [Avada Kadabra,Oracle,I Don't Have A Job - Original Mix,Great Spirit,] have been selected
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 929)
+(node:129184) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 930)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 931)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 932)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 933)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 934)
+-d - [FLO] disconnected from [EHGJG]
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 935)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 936)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 937)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 938)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 939)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 940)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 941)
+-d - User was auto-disconnected from [null]
+Request to roomId:
+{ roomId: 'EHGJG', token: null }
+Request to nameEvent:
+{ name: 'FLO' }
+-c - [FLO] connected
+Request to vote:
+{ trackId: '32hc0TYud2KzDkE0QggvHO' }
+-vo- [FLO] voted for: [32hc0TYud2KzDkE0QggvHO]
+-d - [dankkatze] disconnected from [EHGJG]
+Request to roomId:
+{ roomId: 'EHGJG', token: null }
+Request to roomId:
+{ roomId: 'EHGJG', token: null }
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1005)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1006)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1007)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1008)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1009)
+Request to nameEvent:
+{ name: 'dankdood' }
+-c - [dankdood] connected
+Request to changePlaylist:
+{ playlistId: '2ouieCJiuUCPF9kjMVRLSE' }
+-pC- Playlist changed to: [2ouieCJiuUCPF9kjMVRLSE]
+-d - [Jan] disconnected from [YNCFC]
+-rT- [We Will Rock You - Remastered,Viva La Vida,Should I Stay or Should I Go - Remastered,The Bad Touch,] have been selected
+Request to vote:
+{ trackId: '32hc0TYud2KzDkE0QggvHO' }
+-vo- [dankdood] voted for: [32hc0TYud2KzDkE0QggvHO]
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1023)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1024)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1025)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1026)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1027)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1028)
+-r - [KWQWV] created
+Request to vote:
+{ trackId: '2qUZliZ9NHUYIAZqRNe6pZ' }
+-vo- [dankdood] voted for: [2qUZliZ9NHUYIAZqRNe6pZ]
+Request to roomId:
+{ roomId: 'KWQWV', token: null }
+-c - Host connected
+Request to vote:
+{ trackId: '32hc0TYud2KzDkE0QggvHO' }
+-vo- [dankdood] voted for: [32hc0TYud2KzDkE0QggvHO]
+Request to vote:
+{ trackId: '3ztKdoGzaI7gUvncpjdgfy' }
+-vo- the host voted for: [3ztKdoGzaI7gUvncpjdgfy]
+Request to vote:
+{ trackId: '3Nku6gLNqnwUuq8GLkqyhW' }
+-vo- the host voted for: [3Nku6gLNqnwUuq8GLkqyhW]
+Request to vote:
+{ trackId: '2IavT15tYiFl0WCHMJ8HUM' }
+-vo- the host voted for: [2IavT15tYiFl0WCHMJ8HUM]
+Request to vote:
+{ trackId: '2lBhQDBX4kbNrWQOS5HCk0' }
+-vo- the host voted for: [2lBhQDBX4kbNrWQOS5HCk0]
+Request to vote:
+{ trackId: '3Nku6gLNqnwUuq8GLkqyhW' }
+-vo- the host voted for: [3Nku6gLNqnwUuq8GLkqyhW]
+Request to vote:
+{ trackId: '2lBhQDBX4kbNrWQOS5HCk0' }
+-vo- the host voted for: [2lBhQDBX4kbNrWQOS5HCk0]
+Request to vote:
+{ trackId: '2IavT15tYiFl0WCHMJ8HUM' }
+-vo- the host voted for: [2IavT15tYiFl0WCHMJ8HUM]
+Request to vote:
+{ trackId: '3ztKdoGzaI7gUvncpjdgfy' }
+-vo- the host voted for: [3ztKdoGzaI7gUvncpjdgfy]
+Request to vote:
+{ trackId: '3Nku6gLNqnwUuq8GLkqyhW' }
+-vo- the host voted for: [3Nku6gLNqnwUuq8GLkqyhW]
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1060)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1062)
+Request to vote:
+{ trackId: '3ztKdoGzaI7gUvncpjdgfy' }
+-vo- the host voted for: [3ztKdoGzaI7gUvncpjdgfy]
+Request to vote:
+{ trackId: '3Nku6gLNqnwUuq8GLkqyhW' }
+-vo- the host voted for: [3Nku6gLNqnwUuq8GLkqyhW]
+Request to vote:
+{ trackId: '3ztKdoGzaI7gUvncpjdgfy' }
+-vo- the host voted for: [3ztKdoGzaI7gUvncpjdgfy]
+-d - [null] disconnected from [EHGJG]
+Request to vote:
+{ trackId: '2IavT15tYiFl0WCHMJ8HUM' }
+-vo- the host voted for: [2IavT15tYiFl0WCHMJ8HUM]
+Request to vote:
+{ trackId: '3Nku6gLNqnwUuq8GLkqyhW' }
+-vo- the host voted for: [3Nku6gLNqnwUuq8GLkqyhW]
+-d - Host disconnected from [XLNCC]
+Request to vote:
+{ trackId: '2ypT0w7jeCwcEQQvNE5o92' }
+-vo- the host voted for: [2ypT0w7jeCwcEQQvNE5o92]
+Request to vote:
+{ trackId: '6SjbzGo7arjfM5cXpXhc5B' }
+-vo- the host voted for: [6SjbzGo7arjfM5cXpXhc5B]
+Request to vote:
+{ trackId: '4pbJqGIASGPr0ZpGpnWkDn' }
+-vo- the host voted for: [4pbJqGIASGPr0ZpGpnWkDn]
+Request to vote:
+{ trackId: '3Fcfwhm8oRrBvBZ8KGhtea' }
+-vo- the host voted for: [3Fcfwhm8oRrBvBZ8KGhtea]
+Request to vote:
+{ trackId: '2ypT0w7jeCwcEQQvNE5o92' }
+-vo- the host voted for: [2ypT0w7jeCwcEQQvNE5o92]
+Request to vote:
+{ trackId: '6SjbzGo7arjfM5cXpXhc5B' }
+-vo- the host voted for: [6SjbzGo7arjfM5cXpXhc5B]
+Request to vote:
+{ trackId: '4pbJqGIASGPr0ZpGpnWkDn' }
+-vo- the host voted for: [4pbJqGIASGPr0ZpGpnWkDn]
+Request to vote:
+{ trackId: '6SjbzGo7arjfM5cXpXhc5B' }
+-vo- the host voted for: [6SjbzGo7arjfM5cXpXhc5B]
+Request to vote:
+{ trackId: '2ypT0w7jeCwcEQQvNE5o92' }
+-vo- the host voted for: [2ypT0w7jeCwcEQQvNE5o92]
+-d - [FLO] disconnected from [EHGJG]
+Request to vote:
+{ trackId: '3Fcfwhm8oRrBvBZ8KGhtea' }
+-vo- the host voted for: [3Fcfwhm8oRrBvBZ8KGhtea]
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1087)
+Request to roomId:
+{ roomId: 'EHGJG', token: null }
+Request to vote:
+{ trackId: '2ypT0w7jeCwcEQQvNE5o92' }
+-vo- the host voted for: [2ypT0w7jeCwcEQQvNE5o92]
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1088)
+Request to vote:
+{ trackId: '4pbJqGIASGPr0ZpGpnWkDn' }
+-vo- the host voted for: [4pbJqGIASGPr0ZpGpnWkDn]
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1089)
+Request to vote:
+{ trackId: '2ypT0w7jeCwcEQQvNE5o92' }
+-vo- the host voted for: [2ypT0w7jeCwcEQQvNE5o92]
+Request to vote:
+{ trackId: '3Fcfwhm8oRrBvBZ8KGhtea' }
+-vo- the host voted for: [3Fcfwhm8oRrBvBZ8KGhtea]
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1090)
+-r - [OWJRT] created
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1091)
+Request to nameEvent:
+{ name: 'FLO' }
+-c - [FLO] connected
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1092)
+Request to roomId:
+{ roomId: 'XLNCC', token: null }
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1116)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1117)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1118)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1119)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1120)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1121)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1122)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1123)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1124)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1125)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1126)
+Request to vote:
+{ trackId: '1Q4bvauduT1hsEMNM76Qay' }
+-vo- the host voted for: [1Q4bvauduT1hsEMNM76Qay]
+-d - Host disconnected from [KWQWV]
+Request to vote:
+{ trackId: '33pDV90OLUgkI6EJufm3rH' }
+-vo- the host voted for: [33pDV90OLUgkI6EJufm3rH]
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1170)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1171)
+Request to roomId:
+{ roomId: 'YNCFC', token: null }
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1225)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1226)
+-r - [CNFUF] created
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1227)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1228)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1229)
+Request to nameEvent:
+{ name: 'jan' }
+-c - [jan] connected
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1230)
+-d - [jan] disconnected from [YNCFC]
+-r - [WGOEL] created
+-de- Deleting [XLNCC] due to inactivity
+-r - [SIJNG] created
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'volume' of null
+    at Room.method.update (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:380:31)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1231)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1232)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1233)
+-d - User was auto-disconnected from [XLNCC]
+-de- Deleting [KWQWV] due to inactivity
+Request to roomId:
+{ roomId: 'YNCFC', token: null }
+Request to nameEvent:
+{ name: 'jan' }
+-c - [jan] connected
+Request to vote:
+{ trackId: '33pDV90OLUgkI6EJufm3rH' }
+-vo- [jan] voted for: [33pDV90OLUgkI6EJufm3rH]
+-d - [jan] disconnected from [YNCFC]
+-pl- [Trip to Thailand - Remastered] has been selected, since it had [1] votes
+-rT- [Mass Surveillance,Executor,Triple B,Until The World Ends,] have been selected
+Reset Cooldown
+-pl- [rock + roll] has been selected, since it had [2] votes
+-rT- [The Loser,Powerful (feat. Ellie Goulding & Tarrus Riley),All About It (feat. Ed Sheeran),do re mi,] have been selected
+Request to vote:
+{ trackId: '3t5VHCQEtgUey1HQpPRt1i' }
+-vo- the host voted for: [3t5VHCQEtgUey1HQpPRt1i]
+Request to roomId:
+{ roomId: 'YNCFC', token: null }
+Request to nameEvent:
+{ name: 'jan' }
+-c - [jan] connected
+Reset Cooldown
+-r - [OPOQG] created
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1235)
+Request to vote:
+{ trackId: '3t5VHCQEtgUey1HQpPRt1i' }
+-vo- [jan] voted for: [3t5VHCQEtgUey1HQpPRt1i]
+Request to vote:
+{ trackId: '5lI9NlJ2hOsBmWSVhC0cPx' }
+-vo- [jan] voted for: [5lI9NlJ2hOsBmWSVhC0cPx]
+Request to vote:
+{ trackId: '51PUBDDXa3DJtztaEQ0LEV' }
+-vo- [jan] voted for: [51PUBDDXa3DJtztaEQ0LEV]
+Request to vote:
+{ trackId: '2QCG1sAWymlPc6SErcSfEX' }
+-vo- [jan] voted for: [2QCG1sAWymlPc6SErcSfEX]
+Request to vote:
+{ trackId: '3t5VHCQEtgUey1HQpPRt1i' }
+-vo- [jan] voted for: [3t5VHCQEtgUey1HQpPRt1i]
+Request to vote:
+{ trackId: '2MX30RliaxJDgmQ3C3rrJX' }
+-vo- [dankdood] voted for: [2MX30RliaxJDgmQ3C3rrJX]
+Request to vote:
+{ trackId: '51PUBDDXa3DJtztaEQ0LEV' }
+-vo- the host voted for: [51PUBDDXa3DJtztaEQ0LEV]
+Request to vote:
+{ trackId: '6SjbzGo7arjfM5cXpXhc5B' }
+-vo- the host voted for: [6SjbzGo7arjfM5cXpXhc5B]
+Request to vote:
+{ trackId: '4pbJqGIASGPr0ZpGpnWkDn' }
+-vo- the host voted for: [4pbJqGIASGPr0ZpGpnWkDn]
+Request to vote:
+{ trackId: '2ypT0w7jeCwcEQQvNE5o92' }
+-vo- the host voted for: [2ypT0w7jeCwcEQQvNE5o92]
+Request to vote:
+{ trackId: '6SjbzGo7arjfM5cXpXhc5B' }
+-vo- the host voted for: [6SjbzGo7arjfM5cXpXhc5B]
+Request to vote:
+{ trackId: '4pbJqGIASGPr0ZpGpnWkDn' }
+-vo- the host voted for: [4pbJqGIASGPr0ZpGpnWkDn]
+Request to vote:
+{ trackId: '3Fcfwhm8oRrBvBZ8KGhtea' }
+-vo- the host voted for: [3Fcfwhm8oRrBvBZ8KGhtea]
+Request to vote:
+{ trackId: '2ypT0w7jeCwcEQQvNE5o92' }
+-vo- the host voted for: [2ypT0w7jeCwcEQQvNE5o92]
+Request to vote:
+{ trackId: '3Fcfwhm8oRrBvBZ8KGhtea' }
+-vo- the host voted for: [3Fcfwhm8oRrBvBZ8KGhtea]
+Request to vote:
+{ trackId: '2ypT0w7jeCwcEQQvNE5o92' }
+-vo- the host voted for: [2ypT0w7jeCwcEQQvNE5o92]
+Request to vote:
+{ trackId: '3u0kNxqOOC8SdoODpkmoZO' }
+-vo- [dankdood] voted for: [3u0kNxqOOC8SdoODpkmoZO]
+Request to vote:
+{ trackId: '6SjbzGo7arjfM5cXpXhc5B' }
+-vo- the host voted for: [6SjbzGo7arjfM5cXpXhc5B]
+Request to vote:
+{ trackId: '2MX30RliaxJDgmQ3C3rrJX' }
+-vo- [dankdood] voted for: [2MX30RliaxJDgmQ3C3rrJX]
+Request to vote:
+{ trackId: '4pbJqGIASGPr0ZpGpnWkDn' }
+-vo- the host voted for: [4pbJqGIASGPr0ZpGpnWkDn]
+Request to vote:
+{ trackId: '6SjbzGo7arjfM5cXpXhc5B' }
+-vo- the host voted for: [6SjbzGo7arjfM5cXpXhc5B]
+Request to vote:
+{ trackId: '2ypT0w7jeCwcEQQvNE5o92' }
+-vo- the host voted for: [2ypT0w7jeCwcEQQvNE5o92]
+Request to vote:
+{ trackId: '3Fcfwhm8oRrBvBZ8KGhtea' }
+-vo- the host voted for: [3Fcfwhm8oRrBvBZ8KGhtea]
+Request to vote:
+{ trackId: '4oyWrvyORD6uCSYCLSRF6W' }
+-vo- [dankdood] voted for: [4oyWrvyORD6uCSYCLSRF6W]
+Request to vote:
+{ trackId: '2ypT0w7jeCwcEQQvNE5o92' }
+-vo- the host voted for: [2ypT0w7jeCwcEQQvNE5o92]
+Request to vote:
+{ trackId: '6SjbzGo7arjfM5cXpXhc5B' }
+-vo- the host voted for: [6SjbzGo7arjfM5cXpXhc5B]
+Request to vote:
+{ trackId: '3u0kNxqOOC8SdoODpkmoZO' }
+-vo- [dankdood] voted for: [3u0kNxqOOC8SdoODpkmoZO]
+Request to vote:
+{ trackId: '3Fcfwhm8oRrBvBZ8KGhtea' }
+-vo- the host voted for: [3Fcfwhm8oRrBvBZ8KGhtea]
+Request to vote:
+{ trackId: '2MX30RliaxJDgmQ3C3rrJX' }
+-vo- [dankdood] voted for: [2MX30RliaxJDgmQ3C3rrJX]
+Request to vote:
+{ trackId: '2ypT0w7jeCwcEQQvNE5o92' }
+-vo- the host voted for: [2ypT0w7jeCwcEQQvNE5o92]
+Request to vote:
+{ trackId: '7srepUr8w2sEEwTrmTsSye' }
+-vo- [dankdood] voted for: [7srepUr8w2sEEwTrmTsSye]
+Request to vote:
+{ trackId: '2QCG1sAWymlPc6SErcSfEX' }
+-vo- the host voted for: [2QCG1sAWymlPc6SErcSfEX]
+Request to vote:
+{ trackId: '2MX30RliaxJDgmQ3C3rrJX' }
+-vo- [dankdood] voted for: [2MX30RliaxJDgmQ3C3rrJX]
+Request to vote:
+{ trackId: '3t5VHCQEtgUey1HQpPRt1i' }
+-vo- the host voted for: [3t5VHCQEtgUey1HQpPRt1i]
+-pl- [The Bad Touch] has been selected, since it had [1] votes
+-rT- [No Diggity,Do You Want To Build A Snowman?,Everytime We Touch - Radio Edit,Africa,] have been selected
+-d - [jan] disconnected from [YNCFC]
+Reset Cooldown
+Request to roomId:
+{ roomId: 'YNCFC', token: null }
+Request to nameEvent:
+{ name: 'jan' }
+-c - [jan] connected
+-r - [DWLUU] created
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1236)
+-r - [VPIJG] created
+Request to vote:
+{ trackId: '2QCG1sAWymlPc6SErcSfEX' }
+-vo- [jan] voted for: [2QCG1sAWymlPc6SErcSfEX]
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1237)
+Request to vote:
+{ trackId: '51PUBDDXa3DJtztaEQ0LEV' }
+-vo- [jan] voted for: [51PUBDDXa3DJtztaEQ0LEV]
+Request to vote:
+{ trackId: '3t5VHCQEtgUey1HQpPRt1i' }
+-vo- [jan] voted for: [3t5VHCQEtgUey1HQpPRt1i]
+-r - [ISVOU] created
+-r - [SCBPN] created
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1238)
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1239)
+-r - [NGUUU] created
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1240)
+-r - [RYIJE] created
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1241)
+-r - [VRBOM] created
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1242)
+Request to vote:
+{ trackId: '51PUBDDXa3DJtztaEQ0LEV' }
+-vo- the host voted for: [51PUBDDXa3DJtztaEQ0LEV]
+-r - [AMDPF] created
+(node:129184) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'spotify' of undefined
+    at Room.method.fetchData (D:\GitHub\spoti-vote\spoti-vote-backend\src\Room.js:285:55)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:118:7)
+(node:129184) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1243)
+Request to vote:
+{ trackId: '2QCG1sAWymlPc6SErcSfEX' }
+-vo- the host voted for: [2QCG1sAWymlPc6SErcSfEX]
