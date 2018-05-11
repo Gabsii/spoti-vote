@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import {faStepForward} from '@fortawesome/fontawesome-free-solid';
+import {faRandom} from '@fortawesome/fontawesome-free-solid';
 
 let constants = require('../../js/constants');
 
@@ -29,9 +29,7 @@ class SkipButton extends Component {
 	}
 
 	skip() {
-		this.props.socket.emit('vote', {
-			trackId: 'skip'
-		});
+		this.props.socket.emit('vote', {trackId: 'skip'});
 	}
 
 	render() {
@@ -48,7 +46,7 @@ class SkipButton extends Component {
 				...buttonStyle,
 				...linkStyle
 			}} onClick={this.skip.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-			<FontAwesomeIcon icon={faStepForward} size="2x"/>
+			<FontAwesomeIcon icon={faRandom} size="2x"/>
 		</button>);
 	}
 }
