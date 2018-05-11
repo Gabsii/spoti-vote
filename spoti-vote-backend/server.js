@@ -57,7 +57,6 @@ app.get('/login', (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/callback', async (req, res) => {
-	console.log("There was a callback request");
 	let code = req.query.code || null;
 	let authOptions = {
 		url: 'https://accounts.spotify.com/api/token',

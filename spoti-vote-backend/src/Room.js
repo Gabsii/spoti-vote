@@ -279,7 +279,7 @@ method.getActiveTrackById = function(id) {
 * Fetches the data of the host, and all his playlists
 *
 * @author: Michiocre
-* @return: boolean if completed zuccsessfully
+* @return: boolean if completed successfull
 */
 method.fetchData = async function() {
 	let hostRequest = await fetch('https://api.spotify.com/v1/me', {
