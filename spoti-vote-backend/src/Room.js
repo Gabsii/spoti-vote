@@ -279,6 +279,7 @@ method.getActiveTrackById = function(id) {
 * Fetches the data of the host, and all his playlists
 *
 * @author: Michiocre
+* @return: boolean if completed zuccsessfully
 */
 method.fetchData = async function() {
 	let hostRequest = await fetch('https://api.spotify.com/v1/me', {
@@ -287,6 +288,10 @@ method.fetchData = async function() {
 		}
 	});
 	let hostRequestData = await hostRequest.json();
+
+	if (hostRequestData.error !== undefined){
+		return false;
+	}
 
 	this.host.name = hostRequestData.display_name || hostRequestData.id;
 	this.host.id = hostRequestData.id;
@@ -321,6 +326,7 @@ method.fetchData = async function() {
 
 		this.playlists = this.playlists.concat(playlistRequestData.items);
 	}
+	return true;
 };
 
 /**
