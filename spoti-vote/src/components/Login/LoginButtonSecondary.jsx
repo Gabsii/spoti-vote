@@ -17,19 +17,22 @@ let defaultStyle = {
 	maxHeight: "50px",
 	textTransform: "uppercase",
 	whiteSpace: "normal",
-	backgroundColor: constants.colors.green,
-	marginTop: '1.5em'
+	backgroundColor: 'rgba(0,0,0,0)',
+	boxShadow: '0 0 0 2px ' + constants.colors.green + ' inset',
+	color: constants.colors.green,
+	marginTop: '1.5em',
+	marginLeft: '2em'
 }
-class LoginButton extends Component {
+class LoginButtonSecondary extends Component {
 
 	login() {
 		window.location.href = 'http://' + ipAddress + ':' + portBack + '/login';
 	}
 
 	render() {
-		return (<button id="loginbutton" style={defaultStyle} onClick={this.login.bind(this)} tabIndex="0">
-			Host
+		return (<button id="loginbuttonsecondary" style={defaultStyle} onClick={this.login.bind(this)} tabIndex="0">
+			Join
 		</button>);
 	}
 }
-export default LoginButton;
+export default LoginButtonSecondary;
