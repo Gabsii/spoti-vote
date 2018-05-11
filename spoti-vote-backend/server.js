@@ -75,10 +75,13 @@ app.get('/callback', async (req, res) => {
 		let uri = 'http://' + ipAddress + ':' + portFront + '/app';
 		let room = new Room(body.access_token, rooms, 4);
 
-		await room.fetchData();
-		rooms.push(room);
-
-		res.redirect(uri + '/' + room.id); // + '?token=' + body.access_token);
+		if (await room.fetchData() == true) {
+			rooms.push(room);
+			console.log(uri + '/' + room.id);
+			res.redirect(uri + '/' + room.id); // + '?token=' + body.access_token);
+		} else {
+			res.redirect('http://' + ipAddress + ':' + portFront);
+		}
 	});
 });
 
