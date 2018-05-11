@@ -25,21 +25,27 @@ To use my webpage, you first want to download [NodeJS](https://nodejs.org/en/).
 Then clone my repository using:\
 `git clone https://github.com/Gabsii/spoti-vote.git`
 
-After successfully cloning the repository, you want to startup a commandline in its folder and run:\
+The following Environment Variables are key for the usage of this app. You want to set them using `SET` on Windows or `EXPORT` on a OSX. If this doesn't work try to set them in `/etc/environment`.
 \
-`cd spoti-vote`\
-`npm install`\
-`npm start`\
+`PORT=80`\
+`ADDRESS="localhost"`\
+`SPOTIFY_CLIENT_ID="FOO"`\
+`SPOTIFY_CLIENT_SECRET="BAR"`
 \
-open a second commandline and run the following code:\
+After successfully cloning the repository, you want to startup a commandline in its folder and run `npm install` in:\
 \
-`cd spoti-vote-backend`\
-`npm install`\
-`SETX SPOTIFY_CLIENT_ID 'FOO'`\
-`SETX SPOTIFY_CLIENT_SECRET 'BAR'`\
-`npm start`\
-
-If you are using a MAC replace `SET` with `EXPORT`.
+`.`\
+`+-- spoti-vote`\
+`|   +-- execute command here`\
+`+-- spoti-vote-backend`\
+`|   +-- execute command here`\
+\
+then manover back to the root folder and run:\
+\
+`npm install pm2 -g`\
+`pm2 start ecosystem.config.js`\
+\
+If you are using a UNIX-based System such as OSX or Linux replace `SET` with `EXPORT`.
 Thanks to [MPJ](https://github.com/mpj/oauth-bridge-template) for providing a framework for the backend-logic.
 
 Congratulations! You now are able to use my webpage.
