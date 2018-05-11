@@ -45,7 +45,6 @@ then manover back to the root folder and run:\
 `npm install pm2 -g`\
 `pm2 start ecosystem.config.js`\
 \
-If you are using a UNIX-based System such as OSX or Linux replace `SET` with `EXPORT`.
 Thanks to [MPJ](https://github.com/mpj/oauth-bridge-template) for providing a framework for the backend-logic.
 
 Congratulations! You now are able to use my webpage.
