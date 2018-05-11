@@ -26,6 +26,7 @@ let colors = {
 	background: "#191414", // main background
 	backgroundLite: "#282828", // background for elements
 	green: "#1DB954", // main color
+	greenHover: "#1ED760", // main color when hovered
 	greenDarker: "#002000", // text shadow for green
 	greenCard: "#2ECC71", // tint for card
 	blueCard: "#3498DB", // tint for card

@@ -25,12 +25,40 @@ let defaultStyle = {
 }
 class LoginButtonSecondary extends Component {
 
+	constructor() {
+		super();
+		this.state = {
+			hover: false
+		}
+	}
+
+	toggleHover() {
+		this.setState({
+			hover: !this.state.hover
+		})
+	}
+
 	login() {
-		window.location.href = 'http://' + ipAddress + ':' + portBack + '/login';
+		window.location.href = 'http://' + ipAddress + ':' + portBack + '/join';
 	}
 
 	render() {
-		return (<button id="loginbuttonsecondary" style={defaultStyle} onClick={this.login.bind(this)} tabIndex="0">
+		let linkStyle;
+		if (this.state.hover) {
+			linkStyle = {
+				cursor: 'pointer',
+				backgroundColor: constants.colors.green,
+				color: constants.colors.background
+			}
+		} else {
+			linkStyle = {
+				cursor: 'context-menu'
+			}
+		}
+		return (<button id="loginbuttonsecondary" style={{
+				...defaultStyle,
+				...linkStyle
+			}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} onClick={this.login.bind(this)} tabIndex="0">
 			Join
 		</button>);
 	}

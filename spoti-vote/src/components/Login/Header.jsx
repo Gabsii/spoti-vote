@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
 import logo from '../../img/spotiLogo.svg';
-let constants = require('../../js/constants');
 
+let constants = require('../../js/constants');
 let backgroundColor = constants.colors.background;
+const ipAddress = window.location.hostname || 'localhost';
+const portFront = window.location.port || 80;
+const portBack = 8888;
+
 let defaultDimensions = {
 	height: '5em',
 	width: '5em',
@@ -35,12 +39,33 @@ let linkStyle = {
 
 class Header extends Component {
 
-	hover() {
-		{/* onHover change font colors */
+	constructor() {
+		super();
+		this.state = {
+			hover: false,
+			target: null
 		}
 	}
 
+	toggleHover(event) {
+		console.log(event.target);
+		this.setState({
+			hover: !this.state.hover,
+			target: event.target
+		})
+	}
+
 	render() {
+		if (this.state.hover) {
+			if (this.state.target !== null) {
+				this.state.target.style.color = constants.colors.green
+			}
+		} else {
+			if (this.state.target !== null) {
+				this.state.target.style.color = constants.colors.font
+			}
+		}
+
 		return (<header style={{
 				backgroundColor,
 				height: '90px',
@@ -60,31 +85,30 @@ class Header extends Component {
 					color: constants.colors.font,
 					fontSize: "2em"
 				}}>Spoti Vote</b>
-			{/* TODO: Logo + text as one image */}
+			{/* TODO: Logo (b/w) + text as one image */}
 			<nav style={{
 					flexGrow: 1,
 					marginRight: '20px'
 				}}>
 				<ul style={navStyle}>
 					{/* TODO: if too few space change to faBars */}
-					<li style={itemStyle}>
+					<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
 						<a style={linkStyle} href="#features">Features</a>
 					</li>
-					<li style={itemStyle}>
-						<a style={linkStyle} href="/usage">Usage</a>
+					<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+						<a style={linkStyle} href="/">Usage</a>
 					</li>
-					<li style={itemStyle}>
-						<a style={linkStyle} href="/contact">Contact</a>
+					<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+						<a style={linkStyle} href="/">Contact</a>
 					</li>
 					<li style={divider}></li>
-					<li style={itemStyle}>
-						<a style={linkStyle} href="TBA">Host</a>
-						{/* TODO: add real adress */}
+					<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+						<a style={linkStyle} href={'http://' + ipAddress + ':' + portBack + '/login'}>Host</a>
 					</li>
 					<li style={{
 							...itemStyle,
 							marginRight: '2em'
-						}}>
+						}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
 						<a style={linkStyle} href="/join">Join</a>
 					</li>
 				</ul>

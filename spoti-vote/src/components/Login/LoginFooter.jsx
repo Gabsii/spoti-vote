@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 let constants = require('../../js/constants');
 let defaultStyle = {
+	color: constants.colors.font,
 	height: '100px',
 	width: '100%',
 	backgroundColor: constants.colors.backgroundLite,
@@ -15,7 +16,9 @@ class LoginFooter extends Component {
 
 	render() {
 
-		return (<footer style={defaultStyle}></footer>);
+		return (<footer style={defaultStyle}>Help us to keep Spoti-Vote running
+			<br/>
+			&copy; Lukas Gabsi, Michael Blank</footer>);
 	}
 }
 export default LoginFooter;
