@@ -30,7 +30,7 @@ function makeid(length) {
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function Room(token, rooms, cardNum) {
+function Room(token, room) {
 	//The host object
 	this.host = {
 		token: token,
@@ -41,7 +41,6 @@ function Room(token, rooms, cardNum) {
 		country: ''
 	};
 	this.firstConnection = true;
-	this.cardNum = cardNum;
 	this.activeTracks = [];
 	this.activePlaylist = null;
 	this.connectedUser = [];
@@ -64,8 +63,6 @@ function Room(token, rooms, cardNum) {
 			this.id = makeid(5);
 		}
 	}
-
-	console.log('-r - [' + this.id + '] created');
 }
 
 /**
@@ -139,7 +136,7 @@ method.getPlaylists = function() {
 	let returnPlaylists = [];
 	for (let i = 0; i < this.playlists.length; i++) {
 		if (Array.isArray(this.playlists[i].tracks) !== true) {
-			if (this.playlists[i].tracks.total > this.cardNum) {
+			if (this.playlists[i].tracks.total > 4) {
 				returnPlaylists.push({
 					id: this.playlists[i].id,
 					name: this.playlists[i].name
@@ -191,7 +188,7 @@ method.changePlaylist = async function(playlistId) {
 	}
 
 	//If the playlist is smaller than 5 tracks, it will not change -> Because there has to be one active and 4 voteable tracks
-	if (playlist.tracks.length < this.cardNum+1) {
+	if (playlist.tracks.length < 5) {
 		return false;
 	}
 
@@ -233,7 +230,7 @@ method.getRandomTracks = function(playlistId, activeTrack) {
 	}
 
 	let selectedTracks = [];
-	for (let i = 0; i < this.cardNum; i++) {
+	for (let i = 0; i < 4; i++) {
 		let track;
 		let active;
 		do {
@@ -251,10 +248,8 @@ method.getRandomTracks = function(playlistId, activeTrack) {
 
 	this.activeTracks = selectedTracks;
 
-	console.log('-rT- [' +selectedTracks[0].name+','+selectedTracks[1].name+','+selectedTracks[2].name+','+selectedTracks[3].name+','+ '] have been selected');
+	console.log('INFO-[ROOM: '+this.id+']: NewTracks: [' +selectedTracks[0].name+','+selectedTracks[1].name+','+selectedTracks[2].name+','+selectedTracks[3].name+ '] have been selected.');
 
-	// this.isSkipping = false;
-	// console.log('Reset Skip Cooldown');
 	return true;
 };
 
@@ -298,7 +293,6 @@ method.fetchData = async function() {
 	this.host.profileUrl = hostRequestData.external_urls.spotify;
 	this.host.country = hostRequestData.country;
 
-	//Gets all the hosts playlists TODO: This should probably loop (now max 50 playlists will be returned)
 	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
 		headers: {
 			"Authorization": "Bearer " + this.host.token
@@ -371,7 +365,7 @@ method.update = async function(isHost) {
 	        }
 	    });
 	} catch (e) {
-		console.log('Error getting the ActivePlayer');
+		console.error('ERROR-[ROOM: '+this.id+']: THERE WAS AN ERROR GETTING THE ACTIVE PLAYER.');
 	}
 
 
@@ -382,7 +376,7 @@ method.update = async function(isHost) {
 		fetchData = null;
 	}
 
-	//TODO: Clean this up
+	this.activePlayer = null;
 	if (fetchData !== null) {
 		if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
 			this.activePlayer = {
@@ -397,15 +391,7 @@ method.update = async function(isHost) {
 					name: fetchData.item.name
 				}
 			};
-		} else if (this.activePlayer !== undefined && this.activePlayer !== null) {
-			if (this.activePlayer.track === undefined) {
-				this.activePlayer = null;
-			}
-		} else {
-			this.activePlayer = null;
 		}
-	} else {
-		this.activePlayer = null;
 	}
 
 	if (this.activePlayer !== null && this.activePlaylist !== null) {
@@ -413,8 +399,7 @@ method.update = async function(isHost) {
 			this.isChanging = true;
 			await this.play();
 		} else if (this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isChanging === true) {
-			//Reset cooldown
-			console.log('Reset Cooldown');
+			console.log('INFO-[ROOM: '+this.id+']: Reset Cooldown');
 			this.isChanging = false;
 		}
 	}
@@ -438,11 +423,7 @@ method.vote = async function(trackId, isHost, name) {
 		user = this.host;
 	}
 
-	if (user === undefined) {
-		user = null;
-	}
-
-	if (user !== null) {
+	if (user !== null && user !== undefined) {
 		let oldVote = user.voted;
 		user.voted = trackId;
 
@@ -462,15 +443,12 @@ method.vote = async function(trackId, isHost, name) {
 			} else {
 				newTrack.votes = newTrack.votes + 1;
 			}
-			return true;
-		}
-	}
 
-	//If skip logic
-	if (trackId == 'skip' && this.activePlayer.progress <= 90) { //&& this.isSkipping == false) {
-		if (await this.skip() == true) {
-			//this.isSkipping = true;
 		}
+		if (trackId == 'skip' && this.activePlayer.progress <= 90) { //&& this.isSkipping == false) {
+			await this.skip();
+		}
+		return true;
 	}
 
 	return false;
@@ -503,7 +481,7 @@ method.play = async function() {
 
 	track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
 
-	console.log('-pl- ['+track.name+'] has been selected, since it had ['+track.votes+'] votes');
+	console.log('INFO-[ROOM: '+this.id+']: ['+track.name+'] is now playing, since it had ['+track.votes+'] votes.');
 
 	let payload = {
 		uris: ['spotify:track:' + track.id]
@@ -540,8 +518,9 @@ method.skip = async function() {
 		skips += 1;
 	}
 
-	console.log('Skips: ['+skips+'] vs NoSkip: ['+((this.connectedUser.length+1)-skips)+'] has to be at least: ['+(2 * (this.connectedUser.length+1) / 3)+']');
+	console.log('INFO-[ROOM: '+this.id+']: Skips/NoSkip: ['+skips+'/'+((this.connectedUser.length+1)-skips)+'].');
 	if (skips >= (2 * (this.connectedUser.length+1) / 3)) {
+		console.log('INFO-[ROOM: '+this.id+']: Skipped.');
 		this.getRandomTracks(this.activePlaylist.id, track);
 		return true;
 	}
