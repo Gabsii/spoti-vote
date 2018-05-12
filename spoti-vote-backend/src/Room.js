@@ -30,7 +30,7 @@ function makeid(length) {
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function Room(token, rooms, cardNum) {
+function Room(token, room) {
 	//The host object
 	this.host = {
 		token: token,
@@ -41,7 +41,6 @@ function Room(token, rooms, cardNum) {
 		country: ''
 	};
 	this.firstConnection = true;
-	this.cardNum = cardNum;
 	this.activeTracks = [];
 	this.activePlaylist = null;
 	this.connectedUser = [];
@@ -137,7 +136,7 @@ method.getPlaylists = function() {
 	let returnPlaylists = [];
 	for (let i = 0; i < this.playlists.length; i++) {
 		if (Array.isArray(this.playlists[i].tracks) !== true) {
-			if (this.playlists[i].tracks.total > this.cardNum) {
+			if (this.playlists[i].tracks.total > 4) {
 				returnPlaylists.push({
 					id: this.playlists[i].id,
 					name: this.playlists[i].name
@@ -189,7 +188,7 @@ method.changePlaylist = async function(playlistId) {
 	}
 
 	//If the playlist is smaller than 5 tracks, it will not change -> Because there has to be one active and 4 voteable tracks
-	if (playlist.tracks.length < this.cardNum+1) {
+	if (playlist.tracks.length < 5) {
 		return false;
 	}
 
@@ -231,7 +230,7 @@ method.getRandomTracks = function(playlistId, activeTrack) {
 	}
 
 	let selectedTracks = [];
-	for (let i = 0; i < this.cardNum; i++) {
+	for (let i = 0; i < 4; i++) {
 		let track;
 		let active;
 		do {
@@ -294,7 +293,6 @@ method.fetchData = async function() {
 	this.host.profileUrl = hostRequestData.external_urls.spotify;
 	this.host.country = hostRequestData.country;
 
-	//Gets all the hosts playlists TODO: This should probably loop (now max 50 playlists will be returned)
 	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
 		headers: {
 			"Authorization": "Bearer " + this.host.token
@@ -378,7 +376,7 @@ method.update = async function(isHost) {
 		fetchData = null;
 	}
 
-	//TODO: Clean this up
+	this.activePlayer = null;
 	if (fetchData !== null) {
 		if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
 			this.activePlayer = {
@@ -393,15 +391,7 @@ method.update = async function(isHost) {
 					name: fetchData.item.name
 				}
 			};
-		} else if (this.activePlayer !== undefined && this.activePlayer !== null) {
-			if (this.activePlayer.track === undefined) {
-				this.activePlayer = null;
-			}
-		} else {
-			this.activePlayer = null;
 		}
-	} else {
-		this.activePlayer = null;
 	}
 
 	if (this.activePlayer !== null && this.activePlaylist !== null) {

@@ -74,7 +74,7 @@ app.get('/callback', async (req, res) => {
 	};
 	request.post(authOptions, async (error, response, body) => {
 		let uri = 'http://' + ipAddress + ':' + portFront + '/app';
-		let room = new Room(body.access_token, rooms, 4);
+		let room = new Room(body.access_token, rooms);
 
 		if (await room.fetchData() == true) {
 			rooms.push(room);
@@ -206,8 +206,6 @@ io.on('connection', (socket) => {
 	* @param {string} name Name of the user
     */
 	socket.on('nameEvent', data => {
-		console.warn('Request to nameEvent:');
-		console.error(data);
 		let room = getRoomById(roomId);
 		if (room !== null) {
 			console.log('INFO-[ROOM: '+roomId+']: ['+data.name+'] has connected.');
@@ -313,7 +311,6 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 	if (room !== null) {
 		room.update(isHost);
 		socket.emit('update', room);
-		//console.log('-u -');
 	} else {
 		socket.emit('errorEvent', {message: null});
 	}
