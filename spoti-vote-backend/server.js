@@ -22,7 +22,7 @@ const redirect_uri = 'http://' + ipAddress + ':' + portBack + '/callback';
 
 const secTillDelete = 60;
 
-console.log(redirect_uri);
+console.log('INFO: Redirect URL: ' + redirect_uri);
 let rooms = [];
 let allClients = {};
 
@@ -49,6 +49,7 @@ function getRoomById(roomId) {
 * Login using the Spotify API (This is only a Redirect)
 */
 app.get('/login', (req, res) => {
+	console.log('INFO: User was sent to Spotify login');
 	res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state playlist-read-collaborative playlist-read-private', redirect_uri}));
 });
 
@@ -77,7 +78,9 @@ app.get('/callback', async (req, res) => {
 
 		if (await room.fetchData() == true) {
 			rooms.push(room);
-			console.log(uri + '/' + room.id);
+
+			console.log('INFO-[ROOM: '+room.id+']: This room has been created');
+
 			res.redirect(uri + '/' + room.id); // + '?token=' + body.access_token);
 		} else {
 			res.redirect('http://' + ipAddress + ':' + portFront);
@@ -92,6 +95,7 @@ app.get('/callback', async (req, res) => {
 * @Returns content Array of all the rooms
 */
 app.get('/rooms', async (req, res) => {
+	console.log('INFO: /rooms has been called.');
 	res.setHeader('Access-Control-Allow-Origin', '*');
 
 	let roomIds = [];
@@ -149,7 +153,7 @@ io.on('connection', (socket) => {
 				}
 			}
 			for (let i = 0; i < toBeDeleted.length; i++) {
-				console.log('-de- Deleting [' + toBeDeleted[i].id + '] due to inactivity');
+				console.log('INFO-[ROOM: '+toBeDeleted[i].id+']: This room has been deleted due to inactivity.');
 				rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
 				if (i == x) {
 					x = -1;
@@ -162,38 +166,36 @@ io.on('connection', (socket) => {
 				});
 				rooms.splice(rooms.indexOf(room), 1);
 			} else {
-				if (room !== null) {
-					roomId = room.id;
-					if (room.firstConnection === true) {
-						room.firstConnection = false;
-						console.log('-c - Host connected');
+				roomId = room.id;
+				name = room.host.name;
+				if (room.firstConnection === true) {
+					room.firstConnection = false;
+					console.log('INFO-[ROOM: '+roomId+']: The host ['+name+'] has connected (Sending Token).');
+					isHost = true;
+					socket.emit('initData', {
+						playlists: room.getPlaylists(),
+						hostName: room.host.name,
+						isHost: isHost,
+						token: room.host.token
+					});
+					room.hostDisconnect = null;
+				} else {
+					if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
+						console.log('INFO-[ROOM: '+roomId+']: The host ['+name+'] has connected.');
 						isHost = true;
 						socket.emit('initData', {
 							playlists: room.getPlaylists(),
 							hostName: room.host.name,
-							isHost: isHost,
-							token: room.host.token
+							isHost: isHost
 						});
 						room.hostDisconnect = null;
 					} else {
-						if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
-							console.log('-c - Host connected');
-							isHost = true;
-							socket.emit('initData', {
-								playlists: room.getPlaylists(),
-								hostName: room.host.name,
-								isHost: isHost
-							});
-							room.hostDisconnect = null;
-						} else {
-							socket.emit('nameEvent', {userNames: room.getUserNames()});
-						}
+						socket.emit('nameEvent', {userNames: room.getUserNames()});
 					}
-
-				} else {
-					socket.emit('errorEvent', {message: 'Room has been closed'});
 				}
 			}
+		} else {
+			socket.emit('errorEvent', {message: 'Room has been closed'});
 		}
 	});
 
@@ -208,7 +210,7 @@ io.on('connection', (socket) => {
 		console.error(data);
 		let room = getRoomById(roomId);
 		if (room !== null) {
-			console.log('-c - [' + data.name + '] connected');
+			console.log('INFO-[ROOM: '+roomId+']: ['+data.name+'] has connected.');
 			name = data.name;
 			if (name !== null) {
 				room.addUser(name);
@@ -225,11 +227,9 @@ io.on('connection', (socket) => {
 	* @param {int} volume Volume in percent
     */
 	socket.on('changeVolume', data => {
-		console.warn('Request to changeVolume:');
-		console.error(data);
 		let room = getRoomById(roomId);
 		if (room !== null) {
-			console.log('-vl- The volume was changed to: [' + data.volume + ']');
+			console.log('INFO-[ROOM: '+roomId+']: Volume changed to ['+data.volume+'].');
 			room.changeVolume(data.volume);
 		} else {
 			socket.emit('errorEvent', {message: 'Room was closed'});
@@ -238,14 +238,12 @@ io.on('connection', (socket) => {
 
 	/**
     * Called when the host changes the playlist
-	* @param {string} playlistId Name of the user
+	* @param {string} playlistId Id of the Playlist
     */
 	socket.on('changePlaylist', data => {
-		console.warn('Request to changePlaylist:');
-		console.error(data);
 		let room = getRoomById(roomId);
 		if (room !== null) {
-			console.log('-pC- Playlist changed to: [' + data.playlistId + ']');
+			console.log('INFO-[ROOM: '+roomId+']: Playlist changed to ['+data.playlistId+'].');
 			room.changePlaylist(data.playlistId);
 		} else {
 			socket.emit('errorEvent', {message: 'Room was closed'});
@@ -257,15 +255,9 @@ io.on('connection', (socket) => {
 	* @param {string} trackId Id of the track
     */
 	socket.on('vote', data => {
-		console.warn('Request to vote:');
-		console.error(data);
 		let room = getRoomById(roomId);
 		if (room !== null) {
-			if (isHost === true) {
-				console.log('-vo- the host voted for: [' + data.trackId + ']');
-			} else {
-				console.log('-vo- [' + name + '] voted for: [' + data.trackId + ']');
-			}
+			console.log('INFO-[ROOM: '+roomId+']: ['+name+'] voted for ['+data.trackId+'].');
 			room.vote(data.trackId, isHost, name);
 		} else {
 			socket.emit('errorEvent', {message: 'Room was closed'});
@@ -276,11 +268,9 @@ io.on('connection', (socket) => {
     * Called when the host wants to close the room
     */
 	socket.on('logout', data => {
-		console.warn('Request to logout:');
-		console.error(data);
 		let room = getRoomById(roomId);
 		if (room !== null) {
-			console.log('-lo- room [' + room.id + '] was closed by host');
+			console.log('INFO-[ROOM: '+toBeDeleted[i].id+']: This room has been deleted by host.');
 			let i = rooms.indexOf(room);
 			rooms.splice(i, 1);
 		} else {
@@ -298,17 +288,14 @@ io.on('connection', (socket) => {
 		clearInterval(updateInterval);
 		/* jshint ignore: end */
 		if (room !== null) {
+			console.log('INFO-[ROOM: '+roomId+']: ['+name+'] disconnected.');
 			if (isHost === false) {
 				room.removeUser(name);
-
-				console.log('-d - [' + name + '] disconnected from [' + room.id + ']');
 			} else {
 				room.hostDisconnect = Date.now();
-
-				console.log('-d - Host disconnected from [' + room.id + ']');
 			}
 		} else {
-			console.log('-d - User was auto-disconnected from [' + roomId + ']');
+			console.log('INFO-[ROOM: '+roomId+']: ['+name+'] auto-disconnected.');
 		}
 	});
 });
@@ -340,7 +327,7 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 			}
 		}
 		for (var i = 0; i < toBeDeleted.length; i++) {
-			console.log('-de- Deleting [' + toBeDeleted[i].id + '] due to inactivity');
+			console.log('INFO-[ROOM: '+toBeDeleted[i].id+']: This room has been deleted due to inactivity.');
 			rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
 		}
 		updateCounter.amount = 0;
@@ -353,5 +340,5 @@ async function theUpdateFunction(socket, roomId, isHost, updateCounter) {
 * Starts the server
 */
 server.listen(portBack, () => {
-	console.log('Server started on port: ' + server.address().port);
+	console.log('INFO: Server started on port: ' + server.address().port);
 });

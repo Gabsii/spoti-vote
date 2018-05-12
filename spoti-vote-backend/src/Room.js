@@ -64,8 +64,6 @@ function Room(token, rooms, cardNum) {
 			this.id = makeid(5);
 		}
 	}
-
-	console.log('-r - [' + this.id + '] created');
 }
 
 /**
@@ -251,10 +249,8 @@ method.getRandomTracks = function(playlistId, activeTrack) {
 
 	this.activeTracks = selectedTracks;
 
-	console.log('-rT- [' +selectedTracks[0].name+','+selectedTracks[1].name+','+selectedTracks[2].name+','+selectedTracks[3].name+','+ '] have been selected');
+	console.log('INFO-[ROOM: '+this.id+']: NewTracks: [' +selectedTracks[0].name+','+selectedTracks[1].name+','+selectedTracks[2].name+','+selectedTracks[3].name+ '] have been selected.');
 
-	// this.isSkipping = false;
-	// console.log('Reset Skip Cooldown');
 	return true;
 };
 
@@ -371,7 +367,7 @@ method.update = async function(isHost) {
 	        }
 	    });
 	} catch (e) {
-		console.log('Error getting the ActivePlayer');
+		console.error('ERROR-[ROOM: '+this.id+']: THERE WAS AN ERROR GETTING THE ACTIVE PLAYER.');
 	}
 
 
@@ -413,8 +409,7 @@ method.update = async function(isHost) {
 			this.isChanging = true;
 			await this.play();
 		} else if (this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isChanging === true) {
-			//Reset cooldown
-			console.log('Reset Cooldown');
+			console.log('INFO-[ROOM: '+this.id+']: Reset Cooldown');
 			this.isChanging = false;
 		}
 	}
@@ -438,11 +433,7 @@ method.vote = async function(trackId, isHost, name) {
 		user = this.host;
 	}
 
-	if (user === undefined) {
-		user = null;
-	}
-
-	if (user !== null) {
+	if (user !== null && user !== undefined) {
 		let oldVote = user.voted;
 		user.voted = trackId;
 
@@ -462,15 +453,12 @@ method.vote = async function(trackId, isHost, name) {
 			} else {
 				newTrack.votes = newTrack.votes + 1;
 			}
-			return true;
-		}
-	}
 
-	//If skip logic
-	if (trackId == 'skip' && this.activePlayer.progress <= 90) { //&& this.isSkipping == false) {
-		if (await this.skip() == true) {
-			//this.isSkipping = true;
 		}
+		if (trackId == 'skip' && this.activePlayer.progress <= 90) { //&& this.isSkipping == false) {
+			await this.skip();
+		}
+		return true;
 	}
 
 	return false;
@@ -503,7 +491,7 @@ method.play = async function() {
 
 	track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
 
-	console.log('-pl- ['+track.name+'] has been selected, since it had ['+track.votes+'] votes');
+	console.log('INFO-[ROOM: '+this.id+']: ['+track.name+'] is now playing, since it had ['+track.votes+'] votes.');
 
 	let payload = {
 		uris: ['spotify:track:' + track.id]
@@ -540,8 +528,9 @@ method.skip = async function() {
 		skips += 1;
 	}
 
-	console.log('Skips: ['+skips+'] vs NoSkip: ['+((this.connectedUser.length+1)-skips)+'] has to be at least: ['+(2 * (this.connectedUser.length+1) / 3)+']');
+	console.log('INFO-[ROOM: '+this.id+']: Skips/NoSkip: ['+skips+'/'+((this.connectedUser.length+1)-skips)+'].');
 	if (skips >= (2 * (this.connectedUser.length+1) / 3)) {
+		console.log('INFO-[ROOM: '+this.id+']: Skipped.');
 		this.getRandomTracks(this.activePlaylist.id, track);
 		return true;
 	}
