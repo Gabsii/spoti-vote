@@ -4,7 +4,6 @@ import logo from '../../img/spotiLogo.svg';
 let constants = require('../../js/constants');
 let backgroundColor = constants.colors.background;
 const ipAddress = window.location.hostname || 'localhost';
-const portFront = window.location.port || 80;
 const portBack = 8888;
 
 let defaultDimensions = {
@@ -58,10 +57,12 @@ class Header extends Component {
 	render() {
 		if (this.state.hover) {
 			if (this.state.target !== null) {
+				// eslint-disable-next-line
 				this.state.target.style.color = constants.colors.green
 			}
 		} else {
 			if (this.state.target !== null) {
+				// eslint-disable-next-line
 				this.state.target.style.color = constants.colors.font
 			}
 		}

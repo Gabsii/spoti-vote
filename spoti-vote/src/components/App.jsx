@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import MediaQuery from 'react-responsive';
-import queryString from 'query-string';
+// import queryString from 'query-string';
 import socketIOClient from 'socket.io-client'
 import Cookies from 'universal-cookie';
 import ReactGA from 'react-ga';

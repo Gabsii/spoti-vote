@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-let constants = require('../../js/constants');
 
 class SocialIcon extends Component {
 

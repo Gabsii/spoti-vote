@@ -51,6 +51,9 @@ class Login extends Component {
 			case 3:
 				this.setState({image: for3});
 				break;
+			default:
+				this.setState({image: null});
+				break;
 		}
 
 		console.log("Google Analytics init");

@@ -4,9 +4,6 @@ import LoginCode from './Login/LoginCode.jsx';
 import LoginButton from './Login/LoginButton.jsx';
 
 const constants = require('../js/constants');
-const ipAddress = window.location.host || 'localhost';
-const portFront = window.location.port || 80;
-const portBack = 8888;
 
 class Join extends Component {
 

@@ -3,7 +3,6 @@ import '../../css/selectors.css';
 
 let constants = require('../../js/constants');
 const ipAddress = window.location.hostname || 'localhost';
-const portFront = window.location.port || 80;
 const portBack = 8888;
 
 let defaultStyle = {
