@@ -4,6 +4,7 @@ import MediaQuery from 'react-responsive';
 import socketIOClient from 'socket.io-client'
 import Cookies from 'universal-cookie';
 import ReactGA from 'react-ga';
+import swal from 'sweetalert2';
 import Footer from './Footer.jsx';
 import Sidebar from './Sidebar.jsx';
 import CardContainer from './Cards/CardContainer.jsx';
@@ -85,23 +86,34 @@ class App extends Component {
 		});
 
 		//When the server asks for a name, the user is prompted with popups
-		this.socket.on('nameEvent', data => {
-			let name = window.prompt('Enter Name:');
-			if (name !== null) {
-				while (data.userNames.indexOf(name) !== -1 || name.length > 15) {
-					if (name.length > 15) {
-						name = window.prompt('This Name is to long, choose another with a maximum of 15 characters:');
-					} else {
-						name = window.prompt('This Name is already taken, choose another:');
-					}
+		this.socket.on('nameEvent', data => { // SWAL
+			swal({
+				title: 'What is your name?',
+				type: 'question',
+				allowOutsideClick: false,
+				allowEscapeKey: false,
+				input: 'text',
+				inputPlaceholder: 'Enter your name or nickname',
+				inputValidator: (value) => {
+					return new Promise((resolve) => {
+						console.log(data.userNames.indexOf(value));
+						if (!value || value === "") {
+							return resolve('You need to write something!');
+						}
+						if (data.userNames.indexOf(value) !== -1 || value.length > 15) {
+							if (value.length > 15) {
+								return resolve('This Name is too long, choose another with a maximum of 15 characters!');
+							} else {
+								return resolve('This Name is already taken, choose another!');
+							}
+						}
+						return resolve();
+					});
 				}
-			}
-			if (name === null || name === '') {
-				window.alert('You have to enter a Name.');
-				window.location.pathname = '/';
-			} else {
-				this.socket.emit('nameEvent', {name: name});
-			}
+			}).then((result) => {
+				console.log(result);
+				this.socket.emit('nameEvent', {name: result.value});
+			})
 		});
 
 		this.socket.on('initData', data => {
@@ -156,7 +168,7 @@ class App extends Component {
 
 		this.socket.on('errorEvent', data => {
 			if (data.message !== null && data.message !== undefined) {
-				window.alert(data.message);
+				swal({type: 'error', title: 'Oops...', text: data.message})
 			}
 			window.location.pathname = '/';
 		});
