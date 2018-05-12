@@ -1,7 +1,14 @@
 import React, {Component} from 'react';
 import MediaQuery from 'react-responsive';
 import ReactGA from 'react-ga';
-import {faUsers, faCar, faHome, faHeadphones} from '@fortawesome/fontawesome-free-solid';
+import {
+	faUsers,
+	faPiggyBank,
+	faUnlink,
+	faCar,
+	faHome,
+	faHeadphones
+} from '@fortawesome/fontawesome-free-solid';
 import {faTwitter, faGithub} from '@fortawesome/fontawesome-free-brands';
 import image from '../img/samantha-gades-540989-unsplash.jpg';
 import for1 from '../img/etienne-boulanger-409520-unsplash.jpg'; //car
@@ -149,9 +156,9 @@ class Login extends Component {
 							display: 'flex',
 							flexDirection: 'row'
 						}}>
-						<Reason icon={faUsers} title="Users" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"/>
-						<Reason icon={faUsers} title="Users" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"/>
-						<Reason icon={faUsers} title="Users" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"/>
+						<Reason icon={faPiggyBank} title="No Costs" text="Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!"/>
+						<Reason icon={faUsers} title="No Dictatorship" text="We empower the users! The DJ plays a song you don't like? Use your voice and just skip it!"/>
+						<Reason icon={faUnlink} title="No Registration" text="You have no strings on you! Just log in with your Spotify Premium account and invite your friends to join your room!"/>
 					</div>
 				</div>
 			</section>
@@ -168,6 +175,7 @@ class Login extends Component {
 				}}>
 				<div style={{
 						...containerStyle,
+						minHeight: '500px',
 						background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
 					}}>
 					<div style={{
@@ -183,9 +191,9 @@ class Login extends Component {
 							display: 'flex',
 							flexDirection: 'row'
 						}}>
-						<Reason icon={faCar} title="Road Trips" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"/>
-						<Reason icon={faHome} title="House Parties" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"/>
-						<Reason icon={faHeadphones} title="DJs/Streamer" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"/>
+						<Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
+						<Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
+						<Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
 					</div>
 				</div>
 			</section>

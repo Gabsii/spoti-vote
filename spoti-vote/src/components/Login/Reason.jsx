@@ -19,7 +19,7 @@ class Reason extends Component {
 				<FontAwesomeIcon icon={this.props.icon} size="4x"/>
 			</div>
 			<div style={{
-					fontSize: '1.5em',
+					fontSize: '2em',
 					fontFamily: 'Circular Book',
 					marginTop: '0.5em',
 					marginBottom: '0.5em',
@@ -28,7 +28,8 @@ class Reason extends Component {
 				{this.props.title}
 			</div>
 			<div style={{
-					textAlign: 'center'
+					textAlign: 'center',
+					fontSize: '1.1em'
 				}}>
 				{this.props.text}
 			</div>
