@@ -59,7 +59,7 @@ class Header extends Component {
 
 	showNav() {
 		let nav = document.getElementById("nav");
-		if (nav.style.display == "none") {
+		if (nav.style.display === "none") {
 			nav.style.display = 'flex';
 		} else {
 			nav.style.display = "none";
@@ -136,14 +136,14 @@ class Header extends Component {
 								</ul>
 							</nav>);
 						} else {
-							return (<div style={{
+							return (<a style={{
 									...navStyle,
 									color: constants.colors.font,
 									flexGrow: 1,
 									marginRight: '20px'
-								}}>
-								<FontAwesomeIcon icon={faBars} size="3x" onClick={this.showNav.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}/>
-							</div>);
+								}} href="#">
+								<FontAwesomeIcon icon={faBars} size="3x" onClick={this.showNav.bind(this)}/>
+							</a>);
 						}
 					}
 				}
