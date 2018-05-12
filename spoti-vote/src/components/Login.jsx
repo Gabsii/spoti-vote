@@ -152,14 +152,32 @@ class Login extends Component {
 							marginTop: '1.5em',
 							marginBottom: '2em'
 						}}>Why Spoti-Vote?</div>
-					<div style={{
-							display: 'flex',
-							flexDirection: 'row'
-						}}>
-						<Reason icon={faPiggyBank} title="No Costs" text="Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!"/>
-						<Reason icon={faUsers} title="No Dictatorship" text="We empower the users! The DJ plays a song you don't like? Use your voice and just skip it!"/>
-						<Reason icon={faUnlink} title="No Registration" text="You have no strings on you! Just log in with your Spotify Premium account and invite your friends to join your room!"/>
-					</div>
+					<MediaQuery minWidth={constants.breakpoints.medium}>
+						{
+							(matches) => {
+								if (matches) {
+									return (<div style={{
+											display: 'flex',
+											flexDirection: 'row'
+										}}>
+										<Reason icon={faPiggyBank} title="No Costs" text="Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!"/>
+										<Reason icon={faUsers} title="No Dictatorship" text="We empower the users! The DJ plays a song you don't like? Use your voice and just skip it!"/>
+										<Reason icon={faUnlink} title="No Registration" text="We have no strings on you! Just log in with your Spotify Premium account and invite your friends to join your room!"/>
+									</div>);
+								} else {
+									return (<div style={{
+											display: 'flex',
+											flexDirection: 'column',
+											alignItems: 'center'
+										}}>
+										<Reason icon={faPiggyBank} title="No Costs" text="Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!"/>
+										<Reason icon={faUsers} title="No Dictatorship" text="We empower the users! The DJ plays a song you don't like? Use your voice and just skip it!"/>
+										<Reason icon={faUnlink} title="No Registration" text="We have no strings on you! Just log in with your Spotify Premium account and invite your friends to join your room!"/>
+									</div>);
+								}
+							}
+						}
+					</MediaQuery>
 				</div>
 			</section>
 			<section style={{
@@ -173,29 +191,63 @@ class Login extends Component {
 					backgroundAttachment: 'fixed',
 					color: constants.colors.font
 				}}>
-				<div style={{
-						...containerStyle,
-						minHeight: '500px',
-						background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
-					}}>
-					<div style={{
-							display: 'flex',
-							justifyContent: 'center',
-							fontSize: '2em',
-							fontFamily: 'Circular Book',
-							marginTop: '1.5em',
-							marginBottom: '2em',
-							textAlign: 'center'
-						}}>Spoti-Vote is perfect for...</div>
-					<div style={{
-							display: 'flex',
-							flexDirection: 'row'
-						}}>
-						<Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
-						<Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
-						<Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
-					</div>
-				</div>
+
+				<MediaQuery minWidth={constants.breakpoints.medium}>
+					{
+						(matches) => {
+							if (matches) {
+								return (<div style={{
+										...containerStyle,
+										minHeight: '500px',
+										background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
+									}}>
+									<div style={{
+											display: 'flex',
+											justifyContent: 'center',
+											fontSize: '2em',
+											fontFamily: 'Circular Book',
+											marginTop: '1.5em',
+											marginBottom: '2em',
+											textAlign: 'center'
+										}}>Spoti-Vote is perfect for...</div>
+									<div style={{
+											display: 'flex',
+											flexDirection: 'row'
+										}}>
+										<Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
+										<Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
+										<Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
+									</div>
+								</div>);
+							} else {
+								return (<div style={{
+										...containerStyle,
+										minHeight: '500px',
+										background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
+									}}>
+									<div style={{
+											display: 'flex',
+											justifyContent: 'center',
+											fontSize: '2em',
+											fontFamily: 'Circular Book',
+											marginTop: '1.5em',
+											marginBottom: '2em',
+											textAlign: 'center'
+										}}>Spoti-Vote is perfect for...</div>
+									<div style={{
+											display: 'flex',
+											flexDirection: 'column',
+											alignItems: 'center'
+										}}>
+										<Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
+										<Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
+										<Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
+									</div>
+								</div>);
+							}
+						}
+					}
+				</MediaQuery>
 			</section>
 			<section style={{
 					...sectionStyle,

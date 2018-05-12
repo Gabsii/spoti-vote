@@ -23,13 +23,6 @@ let defaultStyle = {
 	marginRight: "0"
 }
 
-let formStyle = {
-	display: 'inline-block',
-	marginTop: "1.5em",
-	border: '1px solid black',
-	borderRadius: '500px'
-}
-
 class LoginCode extends Component {
 
 	constructor() {
@@ -78,40 +71,31 @@ class LoginCode extends Component {
 	}
 
 	render() {
-		let borderStyle;
-
-		if (this.props.isPhone) {
-			borderStyle = {
-				borderRadius: '500px'
-			}
-		} else {
-			borderStyle = {
-				borderTopLeftRadius: '500px',
-				borderBottomLeftRadius: '500px',
-				borderTopRightRadius: '0px',
-				borderBottomRightRadius: '0px'
-			};
-			ReallySmoothScroll.shim();
+		let borderStyle = {
+			borderRadius: '500px'
 		}
 
-		return (<div>
-			<form style={formStyle} onSubmit={this.submitHandler.bind(this)}>
+		return (<div style={{
+				display: 'flex',
+				textAlign: 'center',
+				justifyContent: 'center',
+				alignItems: 'center'
+			}}>
+			<form onSubmit={this.submitHandler.bind(this)}>
 				<input type="text" id="code" maxLength="5" placeholder="Room Code" style={{
 						...defaultStyle,
 						...borderStyle,
+						marginTop: '1em',
 						textAlign: "center",
 						backgroundColor: constants.colors.background,
 						color: constants.colors.font
 					}} autoComplete="off" onChange={this.checkRoom.bind(this)} pattern="[A-Za-z]{5}"/>
-				<MediaQuery minWidth={constants.breakpoints.medium}>
-
-					<input type="submit" id="loginCode" value="join" style={{
-							...defaultStyle,
-							fontFamily: 'Circular Bold',
-							borderTopRightRadius: "500px",
-							borderBottomRightRadius: "500px"
-						}}/>
-				</MediaQuery>
+				<input type="submit" id="loginCode" value="join" style={{
+						...defaultStyle,
+						...borderStyle,
+						marginTop: '0.5em',
+						fontFamily: 'Circular Bold'
+					}}/>
 			</form>
 			{
 				this.state.room === false && this.state.roomExists === false
