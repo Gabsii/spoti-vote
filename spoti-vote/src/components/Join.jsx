@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import ReactGA from 'react-ga';
 import LoginCode from './Login/LoginCode.jsx';
 import LoginButton from './Login/LoginButton.jsx';
 
@@ -8,6 +9,14 @@ const portFront = window.location.port || 80;
 const portBack = 8888;
 
 class Join extends Component {
+
+	componentDidMount() {
+		console.log("Google Analytics init");
+		ReactGA.initialize('UA-119126759-1');
+		ReactGA.set({page: window.location.pathname});
+		ReactGA.pageview(window.location.pathname);
+	}
+
 	render() {
 		return (<main style={{
 				width: '100%',

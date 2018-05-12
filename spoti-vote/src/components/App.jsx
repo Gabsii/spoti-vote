@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import MediaQuery from 'react-responsive';
 import queryString from 'query-string';
 import socketIOClient from 'socket.io-client'
+import Cookies from 'universal-cookie';
+import ReactGA from 'react-ga';
 import Footer from './Footer.jsx';
 import Sidebar from './Sidebar.jsx';
 import CardContainer from './Cards/CardContainer.jsx';
-import Cookies from 'universal-cookie';
-
 
 const constants = require('../js/constants');
 const ipAddress = window.location.host || 'localhost';
@@ -72,6 +72,10 @@ class App extends Component {
 	}
 
 	componentDidMount() {
+		console.log("Google Analytics init");
+		ReactGA.initialize('UA-119126759-1');
+		ReactGA.set({page: window.location.pathname});
+		ReactGA.pageview(window.location.pathname);
 		//When the server asks for the id, it will return the id and the token
 		this.socket.on('roomId', data => {
 			this.socket.emit('roomId', {
@@ -102,7 +106,7 @@ class App extends Component {
 
 		this.socket.on('initData', data => {
 			if (data.token !== null && data.token !== undefined) {
-				cookies.set('token', data.token, { path: '/' });
+				cookies.set('token', data.token, {path: '/'});
 				this.setState({
 					host: {
 						name: data.hostName,
