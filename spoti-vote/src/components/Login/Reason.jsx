@@ -10,7 +10,7 @@ class Reason extends Component {
 				alignItems: 'center',
 				flexDirection: 'column',
 				width: '33.33%',
-				padding: '25px 75px'
+				padding: '25px 5%'
 			}}>
 			<div style={{
 					marginTop: '0.5em',
@@ -22,7 +22,8 @@ class Reason extends Component {
 					fontSize: '1.5em',
 					fontFamily: 'Circular Book',
 					marginTop: '0.5em',
-					marginBottom: '0.5em'
+					marginBottom: '0.5em',
+					textAlign: 'center'
 				}}>
 				{this.props.title}
 			</div>

@@ -16,15 +16,15 @@ import SocialIcon from './Login/SocialIcon.jsx';
 
 let constants = require('../js/constants');
 let sectionStyle = {
-	height: '600px',
 	width: '100%'
 }
 let containerStyle = {
 	height: '100%',
 	width: '100%',
 	alignItems: 'center',
-	padding: '10px 100px',
-	boxSizing: 'border-box'
+	padding: '10px 10%',
+	boxSizing: 'border-box',
+	overflow: 'hidden'
 }
 
 class Login extends Component {
@@ -101,16 +101,39 @@ class Login extends Component {
 								fontSize: '1.5em',
 								marginTop: '0.25em'
 							}}>All you need is Spotify</div>
-						<div>
-							<LoginButton/>
-							<LoginButtonSecondary/>
-						</div>
+						<MediaQuery maxWidth={constants.breakpoints.medium}>
+							{
+								(matches) => {
+									if (matches) {
+										return (<div style={{
+												display: 'flex',
+												flexDirection: 'column'
+											}}>
+											<LoginButton/>
+											<LoginButtonSecondary/>
+										</div>);
+									} else {
+										return (<div style={{
+												display: 'flex',
+												flexDirection: 'row'
+											}}>
+											<LoginButton/>
+											<div style={{
+													marginLeft: '2em'
+												}}></div>
+											<LoginButtonSecondary/>
+										</div>);
+									}
+								}
+							}
+
+						</MediaQuery>
 					</div>
 				</div>
 			</section>
 			<section style={{
 					...sectionStyle,
-					height: '500px',
+					minHeight: '500px',
 					backgroundColor: constants.colors.font
 				}}>
 				<div style={containerStyle}>
@@ -134,7 +157,7 @@ class Login extends Component {
 			</section>
 			<section style={{
 					...sectionStyle,
-					height: '500px',
+					minHeight: '500px',
 					backgroundColor: constants.colors.backgroundLite,
 					backgroundImage: 'url(' + this.state.image + ')',
 					backgroundSize: 'cover',
@@ -153,7 +176,8 @@ class Login extends Component {
 							fontSize: '2em',
 							fontFamily: 'Circular Book',
 							marginTop: '1.5em',
-							marginBottom: '2em'
+							marginBottom: '2em',
+							textAlign: 'center'
 						}}>Spoti-Vote is perfect for...</div>
 					<div style={{
 							display: 'flex',
