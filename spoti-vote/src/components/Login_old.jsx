@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import MediaQuery from 'react-responsive';
+// import MediaQuery from 'react-responsive';
 import '../css/parallax.css';
 import FullscreenImage from './Login/FullscreenImage.jsx';
 import LoginButton from './Login/LoginButton.jsx';
@@ -7,8 +7,6 @@ import LoginButton from './Login/LoginButton.jsx';
 import LoginTitle from './Login/LoginTitle.jsx';
 // import Header from './Header.jsx';
 import pictureOne from '../img/austin-neill-247237-unsplash.jpg';
-
-let constants = require('../js/constants');
 
 class Login extends Component {
 	componentDidMount() {
@@ -18,9 +16,7 @@ class Login extends Component {
 	}
 
 	render() {
-		window.addEventListener('touchmove', event => {
-			console.log(event)
-		}, {passive: true});
+		window.addEventListener('touchmove', event => {}, {passive: true});
 		return (<section>
 			<FullscreenImage id="parallax" source={pictureOne}>
 				<LoginButton/>

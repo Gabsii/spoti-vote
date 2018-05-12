@@ -1,14 +1,6 @@
 # spoti-vote
 Web application to vote for the next song in Spotify Queue
 
-- [Project Description:](#project-description)
-	- [Requirements:](#requirements)
-	- [Usage](#usage)
-- [Credits](#credits)
-	- [Frameworks/Tools](#frameworkstools)
-	- [Useful links](#useful-links)
-	- [Images](#images)
-
 # Project Description:
 
 The idea for this project resulted as we have a Spotify class playlist with great songs we listen to in our breaks.
@@ -22,38 +14,35 @@ To solve this problem I thought about creating a website where users could choos
 ## Usage
 
 To use my webpage, you first want to download [NodeJS](https://nodejs.org/en/).
-Then clone my repository using:\
+Then clone my repository using:
 `git clone https://github.com/Gabsii/spoti-vote.git`
 
 The following Environment Variables are key for the usage of this app. You want to set them using `SET` on Windows or `EXPORT` on a OSX. If this doesn't work try to set them in `/etc/environment`.
-\
+
 `PORT=80`\
 `ADDRESS="localhost"`\
 `SPOTIFY_CLIENT_ID="FOO"`\
 `SPOTIFY_CLIENT_SECRET="BAR"`
-\
-After successfully cloning the repository, you want to startup a commandline in its folder and run `npm install` in:\
-\
+
+After successfully cloning the repository, you want to startup a commandline in its folder and run `npm install` in:
+
 `.`\
 `+-- spoti-vote`\
 `|   +-- execute command here`\
 `+-- spoti-vote-backend`\
-`|   +-- execute command here`\
-\
-then manover back to the root folder and run:\
-\
+`|   +-- execute command here`
+
+then manover back to the root folder and run:
+
 `npm install pm2 -g`\
-`pm2 start ecosystem.config.js`\
-\
-=======
+`pm2 start ecosystem.config.js`
+
 If you can't run a port below 1024 without root permission see [this](http://pm2.keymetrics.io/docs/usage/specifics/).
 Thanks to [MPJ](https://github.com/mpj/oauth-bridge-template) for providing a framework for the backend-logic.
 
 Congratulations! You now are able to use my webpage.
 
 # Credits
-
-None
 
 ## Frameworks/Tools
 * Atom

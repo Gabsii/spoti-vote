@@ -3,7 +3,6 @@ import '../../css/selectors.css';
 
 let constants = require('../../js/constants');
 const ipAddress = window.location.hostname || 'localhost';
-const portFront = window.location.port || 80;
 const portBack = 8888;
 
 let defaultStyle = {
@@ -21,7 +20,7 @@ let defaultStyle = {
 	boxShadow: '0 0 0 2px ' + constants.colors.green + ' inset',
 	color: constants.colors.green,
 	marginTop: '1.5em',
-	marginLeft: '2em'
+	// marginLeft: '2em'
 }
 class LoginButtonSecondary extends Component {
 

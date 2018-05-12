@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
+import MediaQuery from 'react-responsive';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import {faBars} from '@fortawesome/fontawesome-free-solid';
+import NavItem from './NavItem.jsx';
 import logo from '../../img/spotiLogo.svg';
 
 let constants = require('../../js/constants');
 let backgroundColor = constants.colors.background;
 const ipAddress = window.location.hostname || 'localhost';
-const portFront = window.location.port || 80;
 const portBack = 8888;
 
 let defaultDimensions = {
@@ -48,21 +51,36 @@ class Header extends Component {
 	}
 
 	toggleHover(event) {
-		console.log(event.target);
 		this.setState({
 			hover: !this.state.hover,
 			target: event.target
 		})
 	}
 
+	showNav() {
+		let nav = document.getElementById("nav");
+		if (nav.style.display === "none") {
+			nav.style.display = 'flex';
+		} else {
+			nav.style.display = "none";
+		}
+	}
+
 	render() {
 		if (this.state.hover) {
 			if (this.state.target !== null) {
-				this.state.target.style.color = constants.colors.green
+				// eslint-disable-next-line
+				this.state.target.style.color = constants.colors.green;
+				// eslint-disable-next-line
+				this.state.target.style.cursor = 'pointer';
+
 			}
 		} else {
 			if (this.state.target !== null) {
-				this.state.target.style.color = constants.colors.font
+				// eslint-disable-next-line
+				this.state.target.style.color = constants.colors.font;
+				// eslint-disable-next-line
+				this.state.target.style.cursor = 'context-menu';
 			}
 		}
 
@@ -86,33 +104,71 @@ class Header extends Component {
 					fontSize: "2em"
 				}}>Spoti Vote</b>
 			{/* TODO: Logo (b/w) + text as one image */}
-			<nav style={{
-					flexGrow: 1,
-					marginRight: '20px'
-				}}>
-				<ul style={navStyle}>
-					{/* TODO: if too few space change to faBars */}
-					<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-						<a style={linkStyle} href="#features">Features</a>
-					</li>
-					<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-						<a style={linkStyle} href="/">Usage</a>
-					</li>
-					<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-						<a style={linkStyle} href="/">Contact</a>
-					</li>
-					<li style={divider}></li>
-					<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-						<a style={linkStyle} href={'http://' + ipAddress + ':' + portBack + '/login'}>Host</a>
-					</li>
-					<li style={{
-							...itemStyle,
-							marginRight: '2em'
-						}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-						<a style={linkStyle} href="/join">Join</a>
-					</li>
+
+			<MediaQuery minWidth={constants.breakpoints.medium}>
+				{
+					(matches) => {
+						if (matches) {
+							return (<nav style={{
+									flexGrow: 1,
+									marginRight: '20px'
+								}}>
+								<ul style={navStyle}>
+									<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+										<a style={linkStyle} href="#features">Features</a>
+									</li>
+									<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+										<a style={linkStyle} href="/">Usage</a>
+									</li>
+									<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+										<a style={linkStyle} href="/">Contact</a>
+									</li>
+									<li style={divider}></li>
+									<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+										<a style={linkStyle} href={'http://' + ipAddress + ':' + portBack + '/login'}>Host</a>
+									</li>
+									<li style={{
+											...itemStyle,
+											marginRight: '2em'
+										}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+										<a style={linkStyle} href="/join">Join</a>
+									</li>
+								</ul>
+							</nav>);
+						} else {
+							return (<a style={{
+									...navStyle,
+									color: constants.colors.font,
+									flexGrow: 1,
+									marginRight: '20px'
+								}} href="#">
+								<FontAwesomeIcon icon={faBars} size="3x" onClick={this.showNav.bind(this)}/>
+							</a>);
+						}
+					}
+				}
+
+			</MediaQuery>
+			<MediaQuery maxWidth={constants.breakpoints.medium}>
+				<ul id="nav" style={{
+						width: '100%',
+						position: 'absolute',
+						top: '90px',
+						// display: 'flex',
+						display: 'none',
+						flexDirection: 'column',
+						alignItems: 'center',
+						fontSize: '1.2em',
+						color: constants.colors.font,
+						backgroundColor: constants.colors.background
+					}}>
+					<NavItem name="Host" href={'http://' + ipAddress + ':' + portBack + '/login'}/>
+					<NavItem name="Join" href={'/join'}/>
+					<NavItem name="Features" href={'#features'}/>
+					<NavItem name="Usage" href={'/'}/>
+					<NavItem name="Contact Us" href={'/'}/>
 				</ul>
-			</nav>
+			</MediaQuery>
 		</header>);
 	}
 }

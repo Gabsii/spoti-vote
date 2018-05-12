@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-let constants = require('../../js/constants');
 
 class Reason extends Component {
 
@@ -11,7 +10,7 @@ class Reason extends Component {
 				alignItems: 'center',
 				flexDirection: 'column',
 				width: '33.33%',
-				padding: '25px 75px'
+				padding: '25px 5%'
 			}}>
 			<div style={{
 					marginTop: '0.5em',
@@ -20,15 +19,17 @@ class Reason extends Component {
 				<FontAwesomeIcon icon={this.props.icon} size="4x"/>
 			</div>
 			<div style={{
-					fontSize: '1.5em',
+					fontSize: '2em',
 					fontFamily: 'Circular Book',
 					marginTop: '0.5em',
-					marginBottom: '0.5em'
+					marginBottom: '0.5em',
+					textAlign: 'center'
 				}}>
 				{this.props.title}
 			</div>
 			<div style={{
-					textAlign: 'center'
+					textAlign: 'center',
+					fontSize: '1.1em'
 				}}>
 				{this.props.text}
 			</div>

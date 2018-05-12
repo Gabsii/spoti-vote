@@ -1,29 +1,37 @@
 import React, {Component} from 'react';
 import MediaQuery from 'react-responsive';
+import ReactGA from 'react-ga';
+import {
+	faUsers,
+	faPiggyBank,
+	faUnlink,
+	faCar,
+	faHome,
+	faHeadphones
+} from '@fortawesome/fontawesome-free-solid';
+import {faTwitter, faGithub} from '@fortawesome/fontawesome-free-brands';
+import image from '../img/samantha-gades-540989-unsplash.jpg';
+import for1 from '../img/etienne-boulanger-409520-unsplash.jpg'; //car
+import for2 from '../img/eric-nopanen-624212-unsplash.jpg'; //home
+import for3 from '../img/austin-neill-247237-unsplash.jpg'; //dj
 import Header from './Login/Header.jsx';
 import LoginFooter from './Login/LoginFooter.jsx';
 import LoginButton from './Login/LoginButton.jsx';
 import LoginButtonSecondary from './Login/LoginButtonSecondary.jsx';
 import Reason from './Login/Reason.jsx';
 import SocialIcon from './Login/SocialIcon.jsx';
-import image from '../img/samantha-gades-540989-unsplash.jpg';
-import for1 from '../img/etienne-boulanger-409520-unsplash.jpg'; //car
-import for2 from '../img/eric-nopanen-624212-unsplash.jpg'; //home
-import for3 from '../img/austin-neill-247237-unsplash.jpg'; //dj
-import {faUsers, faCar, faHome, faHeadphones} from '@fortawesome/fontawesome-free-solid';
-import {faTwitter, faGithub} from '@fortawesome/fontawesome-free-brands';
 
 let constants = require('../js/constants');
 let sectionStyle = {
-	height: '600px',
 	width: '100%'
 }
 let containerStyle = {
 	height: '100%',
 	width: '100%',
 	alignItems: 'center',
-	padding: '10px 100px',
-	boxSizing: 'border-box'
+	padding: '10px 10%',
+	boxSizing: 'border-box',
+	overflow: 'hidden'
 }
 
 class Login extends Component {
@@ -50,7 +58,15 @@ class Login extends Component {
 			case 3:
 				this.setState({image: for3});
 				break;
+			default:
+				this.setState({image: null});
+				break;
 		}
+
+		console.log("Google Analytics init");
+		ReactGA.initialize('UA-119126759-1');
+		ReactGA.set({page: window.location.pathname});
+		ReactGA.pageview(window.location.pathname);
 	}
 
 	render() {
@@ -92,16 +108,39 @@ class Login extends Component {
 								fontSize: '1.5em',
 								marginTop: '0.25em'
 							}}>All you need is Spotify</div>
-						<div>
-							<LoginButton/>
-							<LoginButtonSecondary/>
-						</div>
+						<MediaQuery maxWidth={constants.breakpoints.medium}>
+							{
+								(matches) => {
+									if (matches) {
+										return (<div style={{
+												display: 'flex',
+												flexDirection: 'column'
+											}}>
+											<LoginButton/>
+											<LoginButtonSecondary/>
+										</div>);
+									} else {
+										return (<div style={{
+												display: 'flex',
+												flexDirection: 'row'
+											}}>
+											<LoginButton/>
+											<div style={{
+													marginLeft: '2em'
+												}}></div>
+											<LoginButtonSecondary/>
+										</div>);
+									}
+								}
+							}
+
+						</MediaQuery>
 					</div>
 				</div>
 			</section>
 			<section style={{
 					...sectionStyle,
-					height: '500px',
+					minHeight: '500px',
 					backgroundColor: constants.colors.font
 				}}>
 				<div style={containerStyle}>
@@ -117,15 +156,15 @@ class Login extends Component {
 							display: 'flex',
 							flexDirection: 'row'
 						}}>
-						<Reason icon={faUsers} title="Users" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"/>
-						<Reason icon={faUsers} title="Users" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"/>
-						<Reason icon={faUsers} title="Users" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"/>
+						<Reason icon={faPiggyBank} title="No Costs" text="Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!"/>
+						<Reason icon={faUsers} title="No Dictatorship" text="We empower the users! The DJ plays a song you don't like? Use your voice and just skip it!"/>
+						<Reason icon={faUnlink} title="No Registration" text="You have no strings on you! Just log in with your Spotify Premium account and invite your friends to join your room!"/>
 					</div>
 				</div>
 			</section>
 			<section style={{
 					...sectionStyle,
-					height: '500px',
+					minHeight: '500px',
 					backgroundColor: constants.colors.backgroundLite,
 					backgroundImage: 'url(' + this.state.image + ')',
 					backgroundSize: 'cover',
@@ -136,6 +175,7 @@ class Login extends Component {
 				}}>
 				<div style={{
 						...containerStyle,
+						minHeight: '500px',
 						background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
 					}}>
 					<div style={{
@@ -144,15 +184,16 @@ class Login extends Component {
 							fontSize: '2em',
 							fontFamily: 'Circular Book',
 							marginTop: '1.5em',
-							marginBottom: '2em'
+							marginBottom: '2em',
+							textAlign: 'center'
 						}}>Spoti-Vote is perfect for...</div>
 					<div style={{
 							display: 'flex',
 							flexDirection: 'row'
 						}}>
-						<Reason icon={faCar} title="Road Trips" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"/>
-						<Reason icon={faHome} title="House Parties" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"/>
-						<Reason icon={faHeadphones} title="DJs/Streamer" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"/>
+						<Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
+						<Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
+						<Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
 					</div>
 				</div>
 			</section>
