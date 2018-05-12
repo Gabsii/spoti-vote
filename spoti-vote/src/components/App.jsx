@@ -22,7 +22,7 @@ let defaultActivePlayer = {
 		album: {
 			images: [
 				{
-					url: 'http://via.placeholder.com/75x75'
+					url: 'https://via.placeholder.com/75x75'
 				}
 			]
 		},
@@ -37,7 +37,7 @@ let defaultActivePlaylist = {
 	name: 'Host is selecting',
 	images: [
 		{
-			url: 'http://via.placeholder.com/152x152'
+			url: 'https://via.placeholder.com/152x152'
 		}
 	],
 	external_urls: {

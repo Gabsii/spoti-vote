@@ -54,7 +54,6 @@ class LoginCode extends Component {
 			fetch('http://' + ipAddress + ':' + portBack + '/rooms').then((response) => response.json().then(data => {
 				for (var i = 0; i < data.content.length; i++) {
 					if (data.content[i] === str) {
-						console.log("exists");
 						exists = true
 						this.setState({room: str, roomExists: true});
 					}

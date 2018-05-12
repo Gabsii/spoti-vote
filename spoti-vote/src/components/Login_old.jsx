@@ -16,9 +16,7 @@ class Login extends Component {
 	}
 
 	render() {
-		window.addEventListener('touchmove', event => {
-			console.log(event)
-		}, {passive: true});
+		window.addEventListener('touchmove', event => {}, {passive: true});
 		return (<section>
 			<FullscreenImage id="parallax" source={pictureOne}>
 				<LoginButton/>
