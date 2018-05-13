@@ -70,23 +70,8 @@ class SettingsBar extends Component {
 		return (<div style={{
 				...defaultStyle,
 				...marginStyle
-			}}>{
-				this.props.isHost
-					? <button style={{
-								...buttonStyle,
-								...linkStyle
-							}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-							<FontAwesomeIcon icon={faCog} size="2x"/>
-						</button>
-					: <SkipButton socket={this.props.socket}/>
-			}{
-				this.props.isHost
-					? !this.props.isPhone
-						? <SkipButton socket={this.props.socket}/>
-						: ''
-					: ''
-
-			}
+			}}>
+			<SkipButton socket={this.props.socket}/>
 			<button style={{
 					...buttonStyle,
 					...linkStyle

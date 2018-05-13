@@ -75,8 +75,8 @@ class Infos extends Component {
 			}
 		}
 		if (this.props.host.voted === 'skip') {
-	iconColor.color = constants.colors.skip;
-}
+			iconColor.color = constants.colors.skip;
+		}
 
 		let roomName = ": " + window.location.pathname.split('/')[2];
 
