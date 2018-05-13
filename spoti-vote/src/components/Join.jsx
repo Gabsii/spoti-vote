@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import ReactGA from 'react-ga';
 import LoginCode from './Login/LoginCode.jsx';
-import LoginButton from './Login/LoginButton.jsx';
 
 const constants = require('../js/constants');
 const ipAddress = window.location.hostname || 'localhost';

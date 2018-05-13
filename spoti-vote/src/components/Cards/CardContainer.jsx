@@ -1,16 +1,13 @@
 import React, {Component} from 'react';
-import Card from './Card.jsx';
 import Notification from 'react-web-notification';
+import Card from './Card.jsx';
+import ShareButton from './ShareButton.jsx';
 import logo from '../../img/spotiLogo.png';
 
 let constants = require('../../js/constants');
 
 let defaultStyle = {
-	// height: 'calc(100vh - 125px)',
-	// maxWidth: 'calc(100vw - 200px)',
-	// minWidth: 'calc(100vw - 250px)',
 	position: 'absolute',
-	// top: 0,
 	left: 0,
 	display: 'flex',
 	flexWrap: 'wrap',
@@ -190,7 +187,8 @@ class CardContainer extends Component {
 								textAlign: 'center'
 							}}>Select a playlist first!</h1><br/><br/>
 						<h2 style={{
-								fontSize: '1.5em'
+								fontSize: '1.5em',
+								textAlign: 'center'
 							}}>Users can connect with
 							<b style={{
 									fontFamily: 'Circular Bold'
@@ -198,6 +196,7 @@ class CardContainer extends Component {
 								{' ' + this.props.room + ' '}
 							</b>
 							as Code!</h2>
+						<ShareButton/>
 					</div>
 				</main>);
 			} else {
@@ -221,7 +220,8 @@ class CardContainer extends Component {
 								textAlign: 'center'
 							}}>Select a playlist first!</h1><br/><br/>
 						<h2 style={{
-								fontSize: '2em'
+								fontSize: '2em',
+								textAlign: 'center'
 							}}>Users can connect with
 							<b style={{
 									fontFamily: 'Circular Bold'
