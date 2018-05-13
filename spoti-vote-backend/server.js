@@ -268,7 +268,7 @@ io.on('connection', (socket) => {
 	socket.on('logout', data => {
 		let room = getRoomById(roomId);
 		if (room !== null) {
-			console.log('INFO-[ROOM: '+toBeDeleted[i].id+']: This room has been deleted by host.');
+			console.log('INFO-[ROOM: '+room.id+']: This room has been deleted by host.');
 			let i = rooms.indexOf(room);
 			rooms.splice(i, 1);
 		} else {
