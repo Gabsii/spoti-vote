@@ -74,6 +74,9 @@ class Infos extends Component {
 				iconColor.color = constants.iterateCardColors(j);
 			}
 		}
+		if (this.props.host.voted === 'skip') {
+	iconColor.color = constants.colors.skip;
+}
 
 		let roomName = ": " + window.location.pathname.split('/')[2];
 

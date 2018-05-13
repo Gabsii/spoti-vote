@@ -30,6 +30,9 @@ class UserContainer extends Component {
 					this.props.connectedUser[i].color = constants.iterateCardColors(j);
 				}
 			}
+			if (this.props.connectedUser[i].voted === 'skip') {
+				this.props.connectedUser[i].color = constants.colors.skip;
+			}
 		}
 
 		return (<div style={defaultStyle}>
