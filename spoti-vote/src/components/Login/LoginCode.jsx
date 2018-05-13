@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import MediaQuery from 'react-responsive';
-import ReallySmoothScroll from 'really-smooth-scroll';
 import '../../css/selectors.css';
 
 let constants = require('../../js/constants.js');
