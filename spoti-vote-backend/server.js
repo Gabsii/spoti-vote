@@ -257,6 +257,7 @@ io.on('connection', (socket) => {
 		if (room !== null) {
 			console.log('INFO-[ROOM: '+roomId+']: ['+name+'] voted for ['+data.trackId+'].');
 			room.vote(data.trackId, isHost, name);
+			socket.emit('update', room);
 		} else {
 			socket.emit('errorEvent', {message: 'Room was closed'});
 		}
