@@ -33,7 +33,8 @@ class SkipButton extends Component {
 	}
 
 	render() {
-		let linkStyle;
+		let linkStyle,
+			flexStyle;
 		this.state.hover
 			? linkStyle = {
 				cursor: 'pointer'
@@ -41,12 +42,39 @@ class SkipButton extends Component {
 			: linkStyle = {
 				cursor: 'context-menu'
 			}
+		console.log(this.props.isPhone);
+		this.props.isPhone
+			? flexStyle = {
+				flexDirection: 'column'
+			}
+			: flexStyle = {
+				flexDirection: 'row'
+			}
+
+		let users = this.props.connectedUser.length + 1;
+		let skips = 0;
+		for (let j = 0; j < this.props.connectedUser.length; j++) {
+			if (this.props.connectedUser[j].voted === 'skip') {
+				skips++;
+			}
+		}
+		if (this.props.host.voted === 'skip') {
+			skips++;
+		}
 
 		return (<button style={{
 				...buttonStyle,
-				...linkStyle
+				...linkStyle,
+				...flexStyle
 			}} onClick={this.skip.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
 			<FontAwesomeIcon icon={faRandom} size="2x"/>
+			<div style={this.props.isPhone
+					? {
+						marginLeft: 0
+					}
+					: {
+						marginLeft: '1em'
+					}}>{skips + "/" + users}</div>
 		</button>);
 	}
 }
