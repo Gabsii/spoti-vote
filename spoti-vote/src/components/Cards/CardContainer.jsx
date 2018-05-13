@@ -229,6 +229,7 @@ class CardContainer extends Component {
 								{' ' + this.props.room + ' '}
 							</b>
 							as Code!</h2>
+						<ShareButton/>
 						<Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} onClick={this.handleNotificationOnClick.bind(this)} onClose={this.handleNotificationOnClose.bind(this)} onError={this.handleNotificationOnError.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
 					</div>
 				</main>);
