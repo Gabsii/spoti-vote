@@ -190,7 +190,7 @@ io.on('connection', (socket) => {
 						});
 						room.hostDisconnect = null;
 					} else {
-						socket.emit('nameEvent', {userNames: room.getUserNames()});
+						socket.emit('nameEvent', {title: 'What is your name?'});
 					}
 				}
 			}
@@ -208,12 +208,21 @@ io.on('connection', (socket) => {
 	socket.on('nameEvent', data => {
 		let room = getRoomById(roomId);
 		if (room !== null) {
-			console.log('INFO-[ROOM: '+roomId+']: ['+data.name+'] has connected.');
-			name = data.name;
-			if (name !== null) {
-				room.addUser(name);
-				socket.emit('initData', {hostName: room.host.name});
+			if (room.getUserNames().includes(data.name) == true) {
+				socket.emit('nameEvent', {title: 'This name is already taken, enter a different name.'});
+			} else if (data.name.trim() == '') {
+				socket.emit('nameEvent', {title: 'This name can´t be emtpy, enter a different name.'});
+			} else if (data.name.length > 15) {
+				socket.emit('nameEvent', {title: 'This name is too long, enter a different name.'});
+			} else {
+				console.log('INFO-[ROOM: '+roomId+']: ['+data.name+'] has connected.');
+				name = data.name;
+				if (name !== null) {
+					room.addUser(name);
+					socket.emit('initData', {hostName: room.host.name});
+				}
 			}
+			console.log(room.connectedUser);
 		} else {
 			socket.emit('errorEvent', {message: 'Room was closed'});
 		}

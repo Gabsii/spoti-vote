@@ -88,7 +88,7 @@ class App extends Component {
 		//When the server asks for a name, the user is prompted with popups
 		this.socket.on('nameEvent', data => { // SWAL
 			swal({
-				title: 'What is your name?',
+				title: data.title,
 				type: 'question',
 				allowOutsideClick: false,
 				allowEscapeKey: false,
@@ -96,17 +96,17 @@ class App extends Component {
 				inputPlaceholder: 'Enter your name or nickname',
 				inputValidator: (value) => {
 					return new Promise((resolve) => {
-						console.log(data.userNames.indexOf(value));
-						if (!value || value === "") {
-							return resolve('You need to write something!');
-						}
-						if (data.userNames.indexOf(value) !== -1 || value.length > 15) {
-							if (value.length > 15) {
-								return resolve('This Name is too long, choose another with a maximum of 15 characters!');
-							} else {
-								return resolve('This Name is already taken, choose another!');
-							}
-						}
+						// console.log(data.userNames.indexOf(value));
+						// if (!value || value === "") {
+						// 	return resolve('You need to write something!');
+						// }
+						// if (data.userNames.indexOf(value) !== -1 || value.length > 15) {
+						// 	if (value.length > 15) {
+						// 		return resolve('This Name is too long, choose another with a maximum of 15 characters!');
+						// 	} else {
+						// 		return resolve('This Name is already taken, choose another!');
+						// 	}
+						// }
 						return resolve();
 					});
 				}
