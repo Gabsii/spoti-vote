@@ -141,29 +141,16 @@ class App extends Component {
 		});
 
 		this.socket.on('update', data => {
-			if (data === null) {
-				this.setState({
-					connectedUser: [],
-					host: {
-						name: 'No host found',
-						voted: null
-					},
-					activePlaylist: this.state.activePlaylist,
-					activeTracks: [],
-					activePlayer: defaultActivePlayer
-				});
-			} else {
-				this.setState({
-					connectedUser: data.connectedUser || [],
-					host: data.host || {
-						name: 'No host found',
-						voted: null
-					},
-					activePlaylist: data.activePlaylist || this.state.activePlaylist,
-					activeTracks: data.activeTracks || [],
-					activePlayer: data.activePlayer || defaultActivePlayer
-				});
-			}
+			this.setState({
+				connectedUser: data.connectedUser || [],
+				host: {
+					name: this.state.host.name,
+					voted: data.host.voted
+				},
+				activeTracks: data.activeTracks || [],
+				activePlaylist: data.activePlaylist || this.state.activePlaylist,
+				activePlayer: data.activePlayer || defaultActivePlayer
+			});
 		});
 
 		this.socket.on('errorEvent', data => {
