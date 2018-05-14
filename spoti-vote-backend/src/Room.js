@@ -144,34 +144,63 @@ method.getDifference = function(oldRoom) {
 		if (deepEqual(oldRoom.activeTracks, this.activeTracks) === false) {
 			update.activeTracks = [];
 			for (var i = 0; i < this.activeTracks.length; i++) {
-				update.activeTracks[i] = {
-					album: {images: [{url: this.activeTracks[i].album.images[0].url}]},
-					id: this.activeTracks[i].id,
-					name: this.activeTracks[i].name,
-					votes: this.activeTracks[i].votes
-				};
-				update.activeTracks[i].artists = [];
-				for (var j = 0; j < this.activeTracks[i].artists.length; j++) {
-					update.activeTracks[i].artists[j] = {
-						name: this.activeTracks[i].artists[j].name
+				update.activeTracks[i] = null;
+				if (deepEqual(oldRoom.activeTracks[i], this.activeTracks[i]) === false) {
+					if (oldRoom.activeTracks[i] !== null && oldRoom.activeTracks[i] !== undefined) {
+						if (deepEqual(oldRoom.activeTracks[i].album, this.activeTracks[i].album) === false
+						|| deepEqual(oldRoom.activeTracks[i].id, this.activeTracks[i].id) === false
+						|| deepEqual(oldRoom.activeTracks[i].name, this.activeTracks[i].name) === false
+						|| deepEqual(oldRoom.activeTracks[i].artists, this.activeTracks[i].artists) === false) {
+							update.activeTracks[i] = {
+								album: {images: [{url: this.activeTracks[i].album.images[0].url}]},
+								id: this.activeTracks[i].id,
+								name: this.activeTracks[i].name,
+								votes: this.activeTracks[i].votes
+							};
+							update.activeTracks[i].artists = [];
+							for (var j = 0; j < this.activeTracks[i].artists.length; j++) {
+								update.activeTracks[i].artists[j] = {
+									name: this.activeTracks[i].artists[j].name
+								}
+							}
+						} else {
+							update.activeTracks[i] = {
+								votes: this.activeTracks[i].votes
+							};
+						}
+					} else {
+						update.activeTracks[i] = {
+							album: {images: [{url: this.activeTracks[i].album.images[0].url}]},
+							id: this.activeTracks[i].id,
+							name: this.activeTracks[i].name,
+							votes: this.activeTracks[i].votes
+						};
+						update.activeTracks[i].artists = [];
+						for (var j = 0; j < this.activeTracks[i].artists.length; j++) {
+							update.activeTracks[i].artists[j] = {
+								name: this.activeTracks[i].artists[j].name
+							}
+						}
 					}
 				}
 			}
 		}
 
 		//update.activePlaylist = null;
-		if (deepEqual(oldRoom.activePlaylist, this.activePlaylist) === false) {
-			update.activePlaylist = {
-				name: 'Host is selecting',
-				images: [{url: 'https://via.placeholder.com/152x152'}],
-				external_urls: {spotify: ''}
-			};
-			if (this.activePlaylist !== null) {
+		if (deepEqual(oldRoom.activePlaylist, this.activePlaylist) === false && oldRoom.activePlaylist !== null) {
+			if (deepEqual(oldRoom.activePlaylist.name, this.activePlaylist.name) === false) {
 				update.activePlaylist = {
-					name: this.activePlaylist.name,
-					images: [{url: this.activePlaylist.images[0].url}],
-					external_urls: {spotify: this.activePlaylist.external_urls.spotify}
+					name: 'Host is selecting',
+					images: [{url: 'https://via.placeholder.com/152x152'}],
+					external_urls: {spotify: ''}
 				};
+				if (this.activePlaylist !== null) {
+					update.activePlaylist = {
+						name: this.activePlaylist.name,
+						images: [{url: this.activePlaylist.images[0].url}],
+						external_urls: {spotify: this.activePlaylist.external_urls.spotify}
+					};
+				}
 			}
 		}
 
@@ -224,6 +253,8 @@ method.getDifference = function(oldRoom) {
 	if ((update.host === null && update.activeTracks === null && update.activePlaylist === null && update.connectedUser === null && update.activePlayer === null) || Object.keys(update).length === 0) {
 		return null;
 	}
+	console.log(update);
+	console.log(JSON.stringify(update).length);
 	return update;
 }
 
