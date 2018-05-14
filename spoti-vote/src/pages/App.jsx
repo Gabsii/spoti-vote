@@ -93,6 +93,7 @@ class App extends Component {
 		});
 
 		this.socket.on('initData', data => {
+			console.log(data);
 			if (data.token !== null && data.token !== undefined) {
 				cookies.set('token', data.token, {path: '/'});
 
@@ -122,7 +123,7 @@ class App extends Component {
 
 		this.socket.on('update', data => {
 			let newState = {};
-			if (data.host !== null) {
+			if (data.host !== null && data.host !== undefined) {
 				console.log('Changing host');
 				newState.host = {
 					name: this.state.host.name,
@@ -131,28 +132,30 @@ class App extends Component {
 				}
 			}
 
-			if (data.activeTracks !== null) {
-				console.log('Changing activeTracks');
+			if (data.activeTracks !== null && data.activeTracks !== undefined) {
 				newState.activeTracks = data.activeTracks;
 			}
 
-			if (data.activePlaylist !== null) {
-				console.log('Changing activePlaylist');
+			if (data.activePlaylist !== null && data.activePlaylist !== undefined) {
 				newState.activePlaylist = data.activePlaylist;
 			}
 
-			if (data.connectedUser !== null) {
-				console.log('Changing connectedUser');
+			if (data.connectedUser !== null && data.connectedUser !== undefined) {
 				newState.connectedUser = data.connectedUser;
 			}
 
-			if (data.activePlayer !== null) {
-				console.log('Changing activePlayer');
-				newState.activePlayer = data.activePlayer;
+			if (data.activePlayer !== null && data.activePlayer !== undefined) {
+				if (data.activePlayer.track !== null && data.activePlayer.track !== undefined) {
+					newState.activePlayer = data.activePlayer;
+				} else {
+					newState.activePlayer = {
+						progress: data.activePlayer.progress,
+						track: this.state.activePlayer.track
+					}
+				}
 			}
 
 			if (Object.keys(newState).length > 0) {
-				console.log('Doin it');
 				this.setState({
 					host: newState.host || this.state.host,
 					activeTracks: newState.activeTracks || this.state.activeTracks,
@@ -165,9 +168,10 @@ class App extends Component {
 
 		this.socket.on('errorEvent', data => {
 			if (data.message !== null && data.message !== undefined) {
-				swal({type: 'error', title: 'Oops...', text: data.message})
+				swal({type: 'error', title: 'Oops...', text: data.message}).then((value) => {
+				  window.location.pathname = '/';
+				});
 			}
-			window.location.pathname = '/';
 		});
 	}
 
@@ -179,6 +183,7 @@ class App extends Component {
 	}
 
 	render() {
+		console.log(this.state.activePlaylist);
 		return (<section style={{
 				backgroundColor: constants.colors.background,
 				height: '100vh',

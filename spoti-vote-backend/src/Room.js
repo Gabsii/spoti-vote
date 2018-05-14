@@ -133,14 +133,14 @@ method.getDifference = function(oldRoom) {
 			}
 		}
 	} else {
-		update.host = null;
+		//update.host = null;
 		if (deepEqual(oldRoom.host, this.host) === false) {
 			update.host = {
 				voted: this.host.voted
 			}
 		}
 
-		update.activeTracks = null;
+		//update.activeTracks = null;
 		if (deepEqual(oldRoom.activeTracks, this.activeTracks) === false) {
 			update.activeTracks = [];
 			for (var i = 0; i < this.activeTracks.length; i++) {
@@ -159,7 +159,7 @@ method.getDifference = function(oldRoom) {
 			}
 		}
 
-		update.activePlaylist = null;
+		//update.activePlaylist = null;
 		if (deepEqual(oldRoom.activePlaylist, this.activePlaylist) === false) {
 			update.activePlaylist = {
 				name: 'Host is selecting',
@@ -175,12 +175,12 @@ method.getDifference = function(oldRoom) {
 			}
 		}
 
-		update.connectedUser = null;
+		//update.connectedUser = null;
 		if (deepEqual(oldRoom.connectedUser, this.connectedUser) === false) {
 			update.connectedUser = this.connectedUser;
 		}
 
-		update.activePlayer = null;
+		//update.activePlayer = null;
 		if (deepEqual(oldRoom.activePlayer, this.activePlayer) === false) {
 			update.activePlayer = {
 				progress: 0,
@@ -205,10 +205,23 @@ method.getDifference = function(oldRoom) {
 					};
 				}
 			}
+
+			if (oldRoom.activePlayer !== null && this.activePlayer !== null) {
+				if (deepEqual(oldRoom.activePlayer.track, this.activePlayer.track) === true) {
+					update.activePlayer = {
+						progress: 0
+					};
+					if (this.activePlayer !== null) {
+						update.activePlayer = {
+							progress: this.activePlayer.progress
+						};
+					}
+				}
+			}
 		}
 	}
 
-	if (update.host === null && update.activeTracks === null && update.activePlaylist === null && update.connectedUser === null && update.activePlayer === null) {
+	if ((update.host === null && update.activeTracks === null && update.activePlaylist === null && update.connectedUser === null && update.activePlayer === null) || Object.keys(update).length === 0) {
 		return null;
 	}
 	return update;
@@ -534,7 +547,7 @@ method.update = async function(isHost) {
 		if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
 			this.activePlayer = {
 				volume: fetchData.device.volume_percent,
-				progress: (Math.floor((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0 * 1.5)/1.5),
+				progress: (Math.round((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0 * 1.5)/1.5).toFixed(2),
 				isPlaying: fetchData.is_playing,
 				track: {
 					album: fetchData.item.album,
