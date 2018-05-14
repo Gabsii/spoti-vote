@@ -182,36 +182,38 @@ method.getDifference = function(oldRoom) {
 
 		//update.activePlayer = null;
 		if (deepEqual(oldRoom.activePlayer, this.activePlayer) === false) {
-			if (deepEqual(oldRoom.activePlayer.track, this.activePlayer.track) === true) {
-				update.activePlayer = {
-					progress: 0
-				};
-				if (this.activePlayer !== null) {
-					update.activePlayer = {
-						progress: this.activePlayer.progress
-					};
+			update.activePlayer = {
+				progress: 0,
+				track: {
+					name: 'Spotify isn\'t running',
+					album: {images: [{url: 'https://via.placeholder.com/75x75'}]},
+					artists: [{name: 'Start Spotify'}]
 				}
-			} else {
+			};
+			if (this.activePlayer !== null) {
 				update.activePlayer = {
-					progress: 0,
+					progress: this.activePlayer.progress,
 					track: {
-						name: 'Spotify isn\'t running',
-						album: {images: [{url: 'https://via.placeholder.com/75x75'}]},
-						artists: [{name: 'Start Spotify'}]
+						name: this.activePlayer.track.name,
+						album: {images: [{url: this.activePlayer.track.album.images[0].url}]},
 					}
 				};
-				if (this.activePlayer !== null) {
-					update.activePlayer = {
-						progress: this.activePlayer.progress,
-						track: {
-							name: this.activePlayer.track.name,
-							album: {images: [{url: this.activePlayer.track.album.images[0].url}]},
-						}
+				update.activePlayer.track.artists = [];
+				for (var i = 0; i < this.activePlayer.track.artists.length; i++) {
+					update.activePlayer.track.artists[i] = {
+							name: this.activePlayer.track.artists[i].name
 					};
-					update.activePlayer.track.artists = [];
-					for (var i = 0; i < this.activePlayer.track.artists.length; i++) {
-						update.activePlayer.track.artists[i] = {
-								name: this.activePlayer.track.artists[i].name
+				}
+			}
+
+			if (oldRoom.activePlayer !== null) {
+				if (deepEqual(oldRoom.activePlayer.track, this.activePlayer.track) === true) {
+					update.activePlayer = {
+						progress: 0
+					};
+					if (this.activePlayer !== null) {
+						update.activePlayer = {
+							progress: this.activePlayer.progress
 						};
 					}
 				}
