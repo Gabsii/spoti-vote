@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Marquee from 'react-text-marquee'
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 let defaultStyle = {
 	height: '75px',
 	width: '150px',

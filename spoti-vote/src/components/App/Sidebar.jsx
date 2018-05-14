@@ -4,7 +4,7 @@ import Infos from './Sidebar/Infos.jsx';
 import UserContainer from './Sidebar/UserContainer.jsx';
 import SettingsBar from './Sidebar/SettingsBar.jsx';
 
-let constants = require('../js/constants');
+let constants = require('../../js/constants');
 
 class Sidebar extends Component {
 
@@ -60,9 +60,9 @@ class Sidebar extends Component {
 			<MediaQuery maxWidth={constants.breakpoints.medium}>{
 					(matches) => {
 						if (matches) {
-							return (<SettingsBar isPhone={true} isHost={this.props.isHost} socket={this.props.socket}/>);
+							return (<SettingsBar isPhone={true} isHost={this.props.isHost} socket={this.props.socket} connectedUser={this.props.connectedUser} host={this.props.host}/>);
 						} else {
-							return (<SettingsBar isPhone={false} isHost={this.props.isHost} socket={this.props.socket}/>);
+							return (<SettingsBar isPhone={false} isHost={this.props.isHost} socket={this.props.socket} connectedUser={this.props.connectedUser} host={this.props.host}/>);
 						}
 					}
 				}</MediaQuery>

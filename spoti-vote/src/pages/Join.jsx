@@ -1,19 +1,11 @@
 import React, {Component} from 'react';
-import ReactGA from 'react-ga';
-import LoginCode from './Login/LoginCode.jsx';
+import LoginCode from '../components/Login/LoginCode.jsx';
 
 const constants = require('../js/constants');
 const ipAddress = window.location.hostname || 'localhost';
 const portBack = 8888;
 
 class Join extends Component {
-
-	componentDidMount() {
-		console.log("Google Analytics init");
-		ReactGA.initialize('UA-119126759-1');
-		ReactGA.set({page: window.location.pathname});
-		ReactGA.pageview(window.location.pathname);
-	}
 
 	render() {
 		return (<main style={{

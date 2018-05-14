@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import {faCog, faSignOutAlt} from '@fortawesome/fontawesome-free-solid';
+import {faSignOutAlt} from '@fortawesome/fontawesome-free-solid';
 import SkipButton from './SkipButton.jsx';
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 
 let defaultStyle = {
 	width: '100%',
@@ -70,23 +70,8 @@ class SettingsBar extends Component {
 		return (<div style={{
 				...defaultStyle,
 				...marginStyle
-			}}>{
-				this.props.isHost
-					? <button style={{
-								...buttonStyle,
-								...linkStyle
-							}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-							<FontAwesomeIcon icon={faCog} size="2x"/>
-						</button>
-					: <SkipButton socket={this.props.socket}/>
-			}{
-				this.props.isHost
-					? !this.props.isPhone
-						? <SkipButton socket={this.props.socket}/>
-						: ''
-					: ''
-
-			}
+			}}>
+			<SkipButton socket={this.props.socket} isPhone={this.props.isPhone} connectedUser={this.props.connectedUser} host={this.props.host}/>
 			<button style={{
 					...buttonStyle,
 					...linkStyle

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import User from './User.jsx';
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 let defaultStyle = {
 	height: 'calc(100% - 340px)',
 	width: '100%',
@@ -29,6 +29,9 @@ class UserContainer extends Component {
 				if (this.props.activeTracks[j].id === this.props.connectedUser[i].voted) {
 					this.props.connectedUser[i].color = constants.iterateCardColors(j);
 				}
+			}
+			if (this.props.connectedUser[i].voted === 'skip') {
+				this.props.connectedUser[i].color = constants.colors.skip;
 			}
 		}
 
