@@ -253,8 +253,6 @@ method.getDifference = function(oldRoom) {
 	if ((update.host === null && update.activeTracks === null && update.activePlaylist === null && update.connectedUser === null && update.activePlayer === null) || Object.keys(update).length === 0) {
 		return null;
 	}
-	console.log(update);
-	console.log(JSON.stringify(update).length);
 	return update;
 }
 
