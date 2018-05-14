@@ -16,36 +16,6 @@ const portBack = 8888;
 
 const cookies = new Cookies();
 
-let defaultActivePlayer = {
-	progress: 0,
-	track: {
-		name: 'Spotify isn\'t running',
-		album: {
-			images: [
-				{
-					url: 'https://via.placeholder.com/75x75'
-				}
-			]
-		},
-		artists: [
-			{
-				name: 'Start Spotify'
-			}
-		]
-	}
-};
-let defaultActivePlaylist = {
-	name: 'Host is selecting',
-	images: [
-		{
-			url: 'https://via.placeholder.com/152x152'
-		}
-	],
-	external_urls: {
-		spotify: ''
-	}
-};
-
 class App extends Component {
 	constructor() {
 		super();
@@ -66,9 +36,9 @@ class App extends Component {
 				name: null,
 				voted: null
 			},
-			activePlaylist: defaultActivePlaylist,
+			activePlaylist: {name: 'Loading', external_urls:{spotify: ''}, images:[{url: ''}]},
 			activeTracks: {},
-			activePlayer: defaultActivePlayer
+			activePlayer: null
 		}
 	}
 
@@ -88,27 +58,14 @@ class App extends Component {
 		//When the server asks for a name, the user is prompted with popups
 		this.socket.on('nameEvent', data => { // SWAL
 			swal({
-				title: 'What is your name?',
+				title: data.title,
 				type: 'question',
 				allowOutsideClick: false,
 				allowEscapeKey: false,
 				input: 'text',
 				inputPlaceholder: 'Enter your name or nickname',
 				inputValidator: (value) => {
-					return new Promise((resolve) => {
-						console.log(data.userNames.indexOf(value));
-						if (!value || value === "") {
-							return resolve('You need to write something!');
-						}
-						if (data.userNames.indexOf(value) !== -1 || value.length > 15) {
-							if (value.length > 15) {
-								return resolve('This Name is too long, choose another with a maximum of 15 characters!');
-							} else {
-								return resolve('This Name is already taken, choose another!');
-							}
-						}
-						return resolve();
-					});
+					return new Promise((resolve) => {return resolve();});
 				}
 			}).then((result) => {
 				console.log(result);
@@ -117,40 +74,77 @@ class App extends Component {
 		});
 
 		this.socket.on('initData', data => {
+			console.log(data);
 			if (data.token !== null && data.token !== undefined) {
 				cookies.set('token', data.token, {path: '/'});
+
 				this.setState({
-					host: {
-						name: data.hostName,
-						voted: this.state.host.voted
-					},
 					playlists: data.playlists,
 					isHost: data.isHost,
-					token: data.token
+					token: data.token,
+					host: data.host,
+					activeTracks: data.activeTracks,
+					activePlaylist: data.activePlaylist,
+					connectedUser: data.connectedUser,
+					activePlayer: data.activePlayer,
 				});
 			} else {
 				this.setState({
-					host: {
-						name: data.hostName,
-						voted: this.state.host.voted
-					},
 					playlists: data.playlists,
-					isHost: data.isHost
+					isHost: data.isHost,
+					token: data.token,
+					host: data.host,
+					activeTracks: data.activeTracks,
+					activePlaylist: data.activePlaylist,
+					connectedUser: data.connectedUser,
+					activePlayer: data.activePlayer,
 				});
 			}
 		});
 
 		this.socket.on('update', data => {
-			this.setState({
-				connectedUser: data.connectedUser || [],
-				host: {
+			let newState = {};
+			if (data.host !== null && data.host !== undefined) {
+				console.log('Changing host');
+				newState.host = {
 					name: this.state.host.name,
+					img: this.state.host.img,
 					voted: data.host.voted
-				},
-				activeTracks: data.activeTracks || [],
-				activePlaylist: data.activePlaylist || this.state.activePlaylist,
-				activePlayer: data.activePlayer || defaultActivePlayer
-			});
+				}
+			}
+
+			if (data.activeTracks !== null && data.activeTracks !== undefined) {
+				newState.activeTracks = data.activeTracks;
+			}
+
+			if (data.activePlaylist !== null && data.activePlaylist !== undefined) {
+				newState.activePlaylist = data.activePlaylist;
+			}
+
+			if (data.connectedUser !== null && data.connectedUser !== undefined) {
+				newState.connectedUser = data.connectedUser;
+			}
+
+			if (data.activePlayer !== null && data.activePlayer !== undefined) {
+				if (data.activePlayer.track !== null && data.activePlayer.track !== undefined) {
+					newState.activePlayer = data.activePlayer;
+				} else {
+					newState.activePlayer = {
+						progress: data.activePlayer.progress,
+						track: this.state.activePlayer.track
+					}
+				}
+			}
+
+			if (Object.keys(newState).length > 0) {
+				this.setState({
+					host: newState.host || this.state.host,
+					activeTracks: newState.activeTracks || this.state.activeTracks,
+					activePlaylist: newState.activePlaylist || this.state.activePlaylist,
+					connectedUser: newState.connectedUser || this.state.connectedUser,
+					activePlayer: newState.activePlayer || this.state.activePlayer
+				})
+			}
 		});
 
 		this.socket.on('errorEvent', data => {
@@ -169,6 +163,7 @@ class App extends Component {
 	}
 
 	render() {
+		console.log(this.state.activePlaylist);
 		return (<section style={{
 				backgroundColor: constants.colors.background,
 				height: '100vh',
