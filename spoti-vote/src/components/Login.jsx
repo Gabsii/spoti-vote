@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import MediaQuery from 'react-responsive';
-import ReactGA from 'react-ga';
 import {
 	faUsers,
 	faPiggyBank,
@@ -62,11 +61,6 @@ class Login extends Component {
 				this.setState({image: null});
 				break;
 		}
-
-		console.log("Google Analytics init");
-		ReactGA.initialize('UA-119126759-1');
-		ReactGA.set({page: window.location.pathname});
-		ReactGA.pageview(window.location.pathname);
 	}
 
 	render() {
