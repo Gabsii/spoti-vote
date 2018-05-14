@@ -138,16 +138,10 @@ io.on('connection', (socket) => {
 	socket.on('roomId', data => {
 		let room = getRoomById(data.roomId);
 
-		//Check if this user is already hosting a room
 		if (room !== null) {
-			let x = -1;
-			for (let i = 0; i < rooms.length; i++) {
-				if (rooms[i].host.id == room.host.id && rooms[i].id !== room.id) {
-					x = i;
-				}
-			}
+			socket.roomId = room.id;
 
-			//Check if its old
+			//Delete if old
 			let toBeDeleted = [];
 			for (let i = 0; i < rooms.length; i++) {
 				if (Date.now() - rooms[i].hostDisconnect > 1000 * secTillDelete && rooms[i].hostDisconnect !== null) {
@@ -157,18 +151,21 @@ io.on('connection', (socket) => {
 			for (let i = 0; i < toBeDeleted.length; i++) {
 				console.log('INFO-[ROOM: '+toBeDeleted[i].id+']: This room has been deleted due to inactivity.');
 				rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
-				if (i == x) {
-					x = -1;
+			}
+
+			//Count how many rooms this user is already hosting
+			let x = -1;
+			for (let i = 0; i < rooms.length; i++) {
+				if (rooms[i].host.id == room.host.id && rooms[i].id !== room.id) {
+					x = i;
 				}
 			}
 
 			if (x >= 0) {
-				socket.emit('errorEvent', {
-					message: 'You are already hosting a Room, try joining: [' + rooms[x].id + ']'
+				socket.emit('twoRooms', {
+					oldRoom: rooms[x].id
 				});
-				rooms.splice(rooms.indexOf(room), 1);
 			} else {
-				socket.roomId = room.id;
 				socket.name = room.host.name;
 
 				if (room.firstConnection === true) {
@@ -207,6 +204,63 @@ io.on('connection', (socket) => {
 				}
 			}
 		} else {
+			socket.emit('errorEvent', {message: 'Room has been closed'});
+		}
+	});
+
+	/**
+    * Called when a user has decided wether to delete the oldRoom or use the new one
+	*
+	* Will delete the old room, or the new one
+	* @param {boolean} value True if the old room will be deleted
+	* @param {boolean} roomId Id of the old room
+    */
+	socket.on('twoRooms', data => {
+		let oldRoom = getRoomById(data.roomId);
+		let room = getRoomById(socket.roomId);
+		if (data.value === true) {
+			console.log('INFO-[ROOM: '+oldRoom.id+']: This room has been deleted due to host creating a new one.');
+			rooms.splice(rooms.indexOf(oldRoom), 1);
+
+			socket.name = room.host.name;
+
+			if (room.firstConnection === true) {
+				room.firstConnection = false;
+				console.log('INFO-[ROOM: '+socket.roomId+']: The host ['+socket.name+'] has connected (Sending Token).');
+
+				socket.isHost = true;
+
+				let update = room.getDifference(null);
+				socket.oldUpdate = _.cloneDeep(room);
+
+				update.playlists = room.getPlaylists();
+				update.isHost= socket.isHost;
+
+				update.token = room.host.token;
+
+				socket.emit('initData', update);
+				room.hostDisconnect = null;
+			} else {
+				if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
+					console.log('INFO-[ROOM: '+socket.roomId+']: The host ['+socket.name+'] has connected.');
+
+					socket.isHost = true;
+
+					let update = room.getDifference(null);
+					socket.oldUpdate = _.cloneDeep(room);
+
+					update.playlists = room.getPlaylists();
+					update.isHost= socket.isHost;
+
+					socket.emit('initData', update);
+					room.hostDisconnect = null;
+				} else {
+					socket.emit('nameEvent', {title: 'What is your name?'});
+				}
+			}
+		} else {
+			console.log('INFO-[ROOM: '+room.id+']: This room has been deleted due to more then 1 room (Host choose the old room).');
+			rooms.splice(rooms.indexOf(room), 1);
 			socket.emit('errorEvent', {message: 'Room has been closed'});
 		}
 	});

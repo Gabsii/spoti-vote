@@ -49,6 +49,14 @@ class App extends Component {
 			});
 		});
 
+		//When the server asks for what room to delete, it will return the answer of the user
+		this.socket.on('twoRooms', data => {
+			this.socket.emit('twoRooms', {
+				value: true,
+				roomId: data.oldRoom
+			});
+		});
+
 		//When the server asks for a name, the user is prompted with popups
 		this.socket.on('nameEvent', data => { // SWAL
 			swal({
@@ -97,47 +105,49 @@ class App extends Component {
 		});
 
 		this.socket.on('update', data => {
-			let newState = {};
-			if (data.host !== null && data.host !== undefined) {
-				console.log('Changing host');
-				newState.host = {
-					name: this.state.host.name,
-					img: this.state.host.img,
-					voted: data.host.voted
-				}
-			}
-
-			if (data.activeTracks !== null && data.activeTracks !== undefined) {
-				newState.activeTracks = data.activeTracks;
-			}
-
-			if (data.activePlaylist !== null && data.activePlaylist !== undefined) {
-				newState.activePlaylist = data.activePlaylist;
-			}
-
-			if (data.connectedUser !== null && data.connectedUser !== undefined) {
-				newState.connectedUser = data.connectedUser;
-			}
-
-			if (data.activePlayer !== null && data.activePlayer !== undefined) {
-				if (data.activePlayer.track !== null && data.activePlayer.track !== undefined) {
-					newState.activePlayer = data.activePlayer;
-				} else {
-					newState.activePlayer = {
-						progress: data.activePlayer.progress,
-						track: this.state.activePlayer.track
+			if (data !== null && data !== undefined) {
+				let newState = {};
+				if (data.host !== null && data.host !== undefined) {
+					console.log('Changing host');
+					newState.host = {
+						name: this.state.host.name,
+						img: this.state.host.img,
+						voted: data.host.voted
 					}
 				}
-			}
 
-			if (Object.keys(newState).length > 0) {
-				this.setState({
-					host: newState.host || this.state.host,
-					activeTracks: newState.activeTracks || this.state.activeTracks,
-					activePlaylist: newState.activePlaylist || this.state.activePlaylist,
-					connectedUser: newState.connectedUser || this.state.connectedUser,
-					activePlayer: newState.activePlayer || this.state.activePlayer
-				})
+				if (data.activeTracks !== null && data.activeTracks !== undefined) {
+					newState.activeTracks = data.activeTracks;
+				}
+
+				if (data.activePlaylist !== null && data.activePlaylist !== undefined) {
+					newState.activePlaylist = data.activePlaylist;
+				}
+
+				if (data.connectedUser !== null && data.connectedUser !== undefined) {
+					newState.connectedUser = data.connectedUser;
+				}
+
+				if (data.activePlayer !== null && data.activePlayer !== undefined) {
+					if (data.activePlayer.track !== null && data.activePlayer.track !== undefined) {
+						newState.activePlayer = data.activePlayer;
+					} else {
+						newState.activePlayer = {
+							progress: data.activePlayer.progress,
+							track: this.state.activePlayer.track
+						}
+					}
+				}
+
+				if (Object.keys(newState).length > 0) {
+					this.setState({
+						host: newState.host || this.state.host,
+						activeTracks: newState.activeTracks || this.state.activeTracks,
+						activePlaylist: newState.activePlaylist || this.state.activePlaylist,
+						connectedUser: newState.connectedUser || this.state.connectedUser,
+						activePlayer: newState.activePlayer || this.state.activePlayer
+					})
+				}
 			}
 		});
 
