@@ -206,7 +206,7 @@ method.getDifference = function(oldRoom) {
 				}
 			}
 
-			if (oldRoom.activePlayer !== null) {
+			if (oldRoom.activePlayer !== null && this.activePlayer !== null) {
 				if (deepEqual(oldRoom.activePlayer.track, this.activePlayer.track) === true) {
 					update.activePlayer = {
 						progress: 0
