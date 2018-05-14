@@ -34,13 +34,26 @@ class App extends Component {
 				name: null,
 				voted: null
 			},
-			activePlaylist: {name: 'Loading', external_urls:{spotify: ''}, images:[{url: ''}]},
+			activePlaylist: {
+				name: 'Loading',
+				external_urls: {
+					spotify: ''
+				},
+				images: [
+					{
+						url: ''
+					}
+				]
+			},
 			activeTracks: {},
 			activePlayer: null
 		}
 	}
 
 	componentDidMount() {
+		document.title = "Spoti-Vote | " + this.state.roomId;
+		document.getElementsByTagName("META")[2].content = "";
+
 		//When the server asks for the id, it will return the id and the token
 		this.socket.on('roomId', data => {
 			this.socket.emit('roomId', {
@@ -59,7 +72,9 @@ class App extends Component {
 				input: 'text',
 				inputPlaceholder: 'Enter your name or nickname',
 				inputValidator: (value) => {
-					return new Promise((resolve) => {return resolve();});
+					return new Promise((resolve) => {
+						return resolve();
+					});
 				}
 			}).then((result) => {
 				console.log(result);
@@ -79,7 +94,7 @@ class App extends Component {
 					activeTracks: data.activeTracks,
 					activePlaylist: data.activePlaylist,
 					connectedUser: data.connectedUser,
-					activePlayer: data.activePlayer,
+					activePlayer: data.activePlayer
 				});
 			} else {
 				this.setState({
@@ -90,7 +105,7 @@ class App extends Component {
 					activeTracks: data.activeTracks,
 					activePlaylist: data.activePlaylist,
 					connectedUser: data.connectedUser,
-					activePlayer: data.activePlayer,
+					activePlayer: data.activePlayer
 				});
 			}
 		});

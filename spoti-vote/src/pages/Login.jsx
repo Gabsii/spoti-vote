@@ -46,6 +46,8 @@ class Login extends Component {
 		if (window.location.search !== '') {
 			window.location.search = '';
 		}
+		document.title = "Spoti-Vote";
+		document.getElementsByTagName("META")[2].content = "Spoti Vote provides you with a party mode for Spotify. Let your friends choose the music!";
 		var random = Math.floor((Math.random() * 3) + 1);
 		switch (random) {
 			case 1:
@@ -81,6 +83,7 @@ class Login extends Component {
 				}}>
 				<div style={{
 						...containerStyle,
+						alignItems: 'flex-start',
 						display: 'flex',
 						background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,1))'
 					}}>
@@ -89,7 +92,7 @@ class Login extends Component {
 							display: 'flex',
 							alignItems: 'flex-start',
 							flexDirection: 'column',
-							marginTop: '-100px'
+							marginTop: '25%'
 						}}>
 						<div>
 							<strong style={{
