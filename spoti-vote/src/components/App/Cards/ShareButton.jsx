@@ -51,7 +51,7 @@ class ShareButton extends Component {
 				}}>Share</div>
 			<input id="myInput" style={{
 					display: 'none'
-				}} value={window.location.href}/>
+				}} value={window.location.href} readOnly={true}/>
 			<FontAwesomeIcon icon={faShareAlt} size="3x"/>
 		</button>);
 	}

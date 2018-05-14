@@ -54,6 +54,16 @@ class App extends Component {
 		document.title = "Spoti-Vote | " + this.state.roomId;
 		document.getElementsByTagName("META")[2].content = "";
 
+		// window.addEventListener("beforeunload", function(e) {
+		// 	var confirmationMessage = "\o/";
+		//
+		// 	this.props.socket.emit('logout');
+		// 	console.log(confirmationMessage);
+		//
+		// 	e.returnValue = confirmationMessage;  Gecko, Trident, Chrome 34+
+		// 	return confirmationMessage;  Gecko, WebKit, Chrome <34
+		// });
+
 		//When the server asks for the id, it will return the id and the token
 		this.socket.on('roomId', data => {
 			this.socket.emit('roomId', {
