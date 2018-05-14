@@ -143,9 +143,10 @@ class App extends Component {
 
 		this.socket.on('errorEvent', data => {
 			if (data.message !== null && data.message !== undefined) {
-				swal({type: 'error', title: 'Oops...', text: data.message})
+				swal({type: 'error', title: 'Oops...', text: data.message}).then((value) => {
+				  window.location.pathname = '/';
+				});
 			}
-			window.location.pathname = '/';
 		});
 	}
 
