@@ -3,7 +3,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import swal from 'sweetalert2';
 import {faShareAlt} from '@fortawesome/fontawesome-free-solid';
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 
 let defaultStyle = {
 	padding: "10px 25px",

@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import MediaQuery from 'react-responsive';
-// import queryString from 'query-string';
 import socketIOClient from 'socket.io-client'
 import Cookies from 'universal-cookie';
 import swal from 'sweetalert2';
-import Footer from './Footer.jsx';
-import Sidebar from './Sidebar.jsx';
-import CardContainer from './Cards/CardContainer.jsx';
+import Footer from '../components/App/Footer.jsx';
+import Sidebar from '../components/App/Sidebar.jsx';
+import CardContainer from '../components/App/Cards/CardContainer.jsx';
 
 const constants = require('../js/constants');
 const ipAddress = window.location.host || 'localhost';

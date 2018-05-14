@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import {faCog, faSignOutAlt} from '@fortawesome/fontawesome-free-solid';
+import {faSignOutAlt} from '@fortawesome/fontawesome-free-solid';
 import SkipButton from './SkipButton.jsx';
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 
 let defaultStyle = {
 	width: '100%',

@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import Notification from 'react-web-notification';
 import Card from './Card.jsx';
 import ShareButton from './ShareButton.jsx';
-import logo from '../../img/spotiLogo.png';
+import logo from '../../../img/spotiLogo.png';
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 
 let defaultStyle = {
 	position: 'absolute',

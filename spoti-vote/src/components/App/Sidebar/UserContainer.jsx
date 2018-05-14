@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import User from './User.jsx';
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 let defaultStyle = {
 	height: 'calc(100% - 340px)',
 	width: '100%',

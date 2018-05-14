@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faRandom} from '@fortawesome/fontawesome-free-solid';
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 
 let buttonStyle = {
 	border: 0,

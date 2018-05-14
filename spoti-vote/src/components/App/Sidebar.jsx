@@ -4,7 +4,7 @@ import Infos from './Sidebar/Infos.jsx';
 import UserContainer from './Sidebar/UserContainer.jsx';
 import SettingsBar from './Sidebar/SettingsBar.jsx';
 
-let constants = require('../js/constants');
+let constants = require('../../js/constants');
 
 class Sidebar extends Component {
 

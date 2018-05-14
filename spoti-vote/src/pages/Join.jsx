@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import LoginCode from './Login/LoginCode.jsx';
+import LoginCode from '../components/Login/LoginCode.jsx';
 
 const constants = require('../js/constants');
 const ipAddress = window.location.hostname || 'localhost';

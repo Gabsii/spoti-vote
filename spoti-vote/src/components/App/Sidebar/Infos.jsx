@@ -3,7 +3,7 @@ import MediaQuery from 'react-responsive';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faHeadphones} from '@fortawesome/fontawesome-free-solid';
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 
 let defaultStyle = {
 	height: '300px',
