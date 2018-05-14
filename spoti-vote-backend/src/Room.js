@@ -3,6 +3,8 @@ let method = Room.prototype; //This is used when programming object oriented in 
 /*jshint ignore: start */
 const request = require('request');
 const fetch = require('node-fetch');
+const shallowEqual = require('shallow-equals');
+const deepEqual = require('deep-equal');
 /*jshint ignore: end */
 /**
 * Return a randomly generated string with a specified length, based on the possible symbols
@@ -38,7 +40,8 @@ function Room(token, room) {
 		id: '',
 		profileUrl: '',
 		voted: null,
-		country: ''
+		country: '',
+		img: ''
 	};
 	this.firstConnection = true;
 	this.activeTracks = [];
@@ -63,6 +66,152 @@ function Room(token, room) {
 			this.id = makeid(5);
 		}
 	}
+}
+
+method.getDifference = function(oldRoom) {
+	let update = {};
+
+	if (oldRoom === null) {
+		update.host = {
+			name: this.host.name,
+			voted: this.host.voted,
+			img: this.host.img
+		}
+		update.activeTracks = [];
+		for (var i = 0; i < this.activeTracks.length; i++) {
+			update.activeTracks[i] = {
+				album: {images: [{url: this.activeTracks[i].album.images[0].url}]},
+				id: this.activeTracks[i].id,
+				name: this.activeTracks[i].name,
+				votes: this.activeTracks[i].votes
+			};
+			update.activeTracks[i].artists = [];
+			for (var j = 0; j < this.activeTracks[i].artists.length; j++) {
+				update.activeTracks[i].artists[j] = {
+					name: this.activeTracks[i].artists[j].name
+				}
+			}
+		}
+
+		update.activePlaylist = {
+			name: 'Host is selecting',
+			images: [{url: 'https://via.placeholder.com/152x152'}],
+			external_urls: {spotify: ''}
+		};
+		if (this.activePlaylist !== null) {
+			update.activePlaylist = {
+				name: this.activePlaylist.name,
+				images: [{url: this.activePlaylist.images[0].url}],
+				external_urls: {spotify: this.activePlaylist.external_urls.spotify}
+			};
+		}
+
+		update.connectedUser = this.connectedUser;
+
+		update.activePlayer = {
+			progress: 0,
+			track: {
+				name: 'Spotify isn\'t running',
+				album: {images: [{url: 'https://via.placeholder.com/75x75'}]},
+				artists: [{name: 'Start Spotify'}]
+			}
+		};
+
+		if (this.activePlayer !== null && Object.keys(this.activePlayer).length > 0) {
+			update.activePlayer = {
+				progress: this.activePlayer.progress,
+				track: {
+					name: this.activePlayer.track.name,
+					album: {images: [{url: this.activePlayer.track.album.images[0].url}]},
+				}
+			};
+			update.activePlayer.track.artists = [];
+			for (var i = 0; i < this.activePlayer.track.artists.length; i++) {
+				update.activePlayer.track.artists[i] = {
+						name: this.activePlayer.track.artists[i].name
+				};
+			}
+		}
+	} else {
+		update.host = null;
+		if (deepEqual(oldRoom.host, this.host) === false) {
+			update.host = {
+				voted: this.host.voted
+			}
+		}
+
+		update.activeTracks = null;
+		if (deepEqual(oldRoom.activeTracks, this.activeTracks) === false) {
+			update.activeTracks = [];
+			for (var i = 0; i < this.activeTracks.length; i++) {
+				update.activeTracks[i] = {
+					album: {images: [{url: this.activeTracks[i].album.images[0].url}]},
+					id: this.activeTracks[i].id,
+					name: this.activeTracks[i].name,
+					votes: this.activeTracks[i].votes
+				};
+				update.activeTracks[i].artists = [];
+				for (var j = 0; j < this.activeTracks[i].artists.length; j++) {
+					update.activeTracks[i].artists[j] = {
+						name: this.activeTracks[i].artists[j].name
+					}
+				}
+			}
+		}
+
+		update.activePlaylist = null;
+		if (deepEqual(oldRoom.activePlaylist, this.activePlaylist) === false) {
+			update.activePlaylist = {
+				name: 'Host is selecting',
+				images: [{url: 'https://via.placeholder.com/152x152'}],
+				external_urls: {spotify: ''}
+			};
+			if (this.activePlaylist !== null) {
+				update.activePlaylist = {
+					name: this.activePlaylist.name,
+					images: [{url: this.activePlaylist.images[0].url}],
+					external_urls: {spotify: this.activePlaylist.external_urls.spotify}
+				};
+			}
+		}
+
+		update.connectedUser = null;
+		if (deepEqual(oldRoom.connectedUser, this.connectedUser) === false) {
+			update.connectedUser = this.connectedUser;
+		}
+
+		update.activePlayer = null;
+		if (deepEqual(oldRoom.activePlayer, this.activePlayer) === false) {
+			update.activePlayer = {
+				progress: 0,
+				track: {
+					name: 'Spotify isn\'t running',
+					album: {images: [{url: 'https://via.placeholder.com/75x75'}]},
+					artists: [{name: 'Start Spotify'}]
+				}
+			};
+			if (this.activePlayer !== null) {
+				update.activePlayer = {
+					progress: this.activePlayer.progress,
+					track: {
+						name: this.activePlayer.track.name,
+						album: {images: [{url: this.activePlayer.track.album.images[0].url}]},
+					}
+				};
+				update.activePlayer.track.artists = [];
+				for (var i = 0; i < this.activePlayer.track.artists.length; i++) {
+					update.activePlayer.track.artists[i] = {
+							name: this.activePlayer.track.artists[i].name
+					};
+				}
+			}
+		}
+	}
+
+	if (update.host === null && update.activeTracks === null && update.activePlaylist === null && update.connectedUser === null && update.activePlayer === null) {
+		return null;
+	}
+	return update;
 }
 
 /**
@@ -118,7 +267,7 @@ method.removeUser = function(name) {
 	let user = this.getUserByName(name);
 	let i = this.connectedUser.indexOf(user);
 	if (i >= 0) {
-		if (user.voted !== null) {
+		if (user.voted !== null && user.voted !== 'skip') {
 			let track = this.getActiveTrackById(user.voted);
 			track.votes -= 1;
 		}
@@ -288,6 +437,10 @@ method.fetchData = async function() {
 		return false;
 	}
 
+	if (hostRequestData.images[0] !== undefined && hostRequestData.images[0] !== null) {
+		this.host.img = hostRequestData.images[0].url;
+	}
+
 	this.host.name = hostRequestData.display_name || hostRequestData.id;
 	this.host.id = hostRequestData.id;
 	this.host.profileUrl = hostRequestData.external_urls.spotify;
@@ -381,7 +534,7 @@ method.update = async function(isHost) {
 		if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
 			this.activePlayer = {
 				volume: fetchData.device.volume_percent,
-				progress: ((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0),
+				progress: (Math.floor((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0 * 1.5)/1.5),
 				isPlaying: fetchData.is_playing,
 				track: {
 					album: fetchData.item.album,

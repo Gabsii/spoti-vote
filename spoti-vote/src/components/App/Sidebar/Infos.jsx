@@ -3,7 +3,7 @@ import MediaQuery from 'react-responsive';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faHeadphones} from '@fortawesome/fontawesome-free-solid';
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 
 let defaultStyle = {
 	height: '300px',
@@ -73,6 +73,9 @@ class Infos extends Component {
 			if (this.props.activeTracks[j].id === this.props.host.voted) {
 				iconColor.color = constants.iterateCardColors(j);
 			}
+		}
+		if (this.props.host.voted === 'skip') {
+			iconColor.color = constants.colors.skip;
 		}
 
 		let roomName = ": " + window.location.pathname.split('/')[2];

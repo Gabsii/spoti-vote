@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import swal from 'sweetalert2';
 import {faShareAlt} from '@fortawesome/fontawesome-free-solid';
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 
 let defaultStyle = {
 	padding: "10px 25px",
@@ -27,18 +28,17 @@ class ShareButton extends Component {
 		if (navigator.share) {
 			navigator.share({title: 'Spoti-Vote', text: 'Join my room!', url: window.location.href}).then(() => console.log('Successful share')).catch((error) => console.log('Error sharing', error));
 		} else {
-
-			/* Get the text field */
-			var copyText = document.getElementById("myInput");
-
-			/* Select the text field */
+			let copyText = document.getElementById("myInput");
 			copyText.select();
-
-			/* Copy the text inside the text field */
 			document.execCommand("Copy");
-
-			/* Alert the copied text */
-			alert("Copied the text: " + copyText.value);
+			swal({
+				type: 'info',
+				title: 'Link copied to clipboard!',
+				toast: true,
+				position: 'bottom',
+				showConfirmButton: false,
+				timer: 2000
+			});
 		}
 
 	}

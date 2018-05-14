@@ -4,7 +4,7 @@ import SongAggregation from './Footer/SongAggregation.jsx';
 import VolumeBar from './Footer/VolumeBar.jsx';
 import Progressbar from './Footer/ProgressBar.jsx';
 
-let constants = require('../js/constants');
+let constants = require('../../js/constants');
 let defaultStyle = {
 	height: '75px',
 	width: '100vw',

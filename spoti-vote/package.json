@@ -13,7 +13,6 @@
     "react": "^16.2.0",
     "react-cookie": "^2.1.4",
     "react-dom": "^16.2.0",
-    "react-ga": "^2.5.0",
     "react-responsive": "^4.1.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.1",

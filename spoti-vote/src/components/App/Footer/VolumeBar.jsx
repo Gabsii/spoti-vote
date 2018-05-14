@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faVolumeDown, faVolumeUp} from '@fortawesome/fontawesome-free-solid';
-import '../../css/Volumebar.css';
+import '../../../css/Volumebar.css';
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 let defaultStyle = {
 	height: '75px',
 	maxWidth: '250px',
@@ -27,9 +27,7 @@ class VolumeBar extends Component {
 
 	volumeHandler(event) {
 		if (event.target.value !== this.props.activePlayer.volume) {
-			this.props.socket.emit('changeVolume', {
-				volume: event.target.value
-			});
+			this.props.socket.emit('changeVolume', {volume: event.target.value});
 		}
 	}
 

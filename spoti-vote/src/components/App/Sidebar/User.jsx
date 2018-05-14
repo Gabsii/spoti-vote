@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import icon from "../../img/userIcon.svg";
+import icon from "../../../img/userIcon.svg";
 import Marquee from 'react-text-marquee'
 
 let defaultStyle = {

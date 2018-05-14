@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import MediaQuery from 'react-responsive';
-import ReactGA from 'react-ga';
 import {
 	faUsers,
 	faPiggyBank,
@@ -14,12 +13,12 @@ import image from '../img/samantha-gades-540989-unsplash.jpg';
 import for1 from '../img/etienne-boulanger-409520-unsplash.jpg'; //car
 import for2 from '../img/eric-nopanen-624212-unsplash.jpg'; //home
 import for3 from '../img/austin-neill-247237-unsplash.jpg'; //dj
-import Header from './Login/Header.jsx';
-import LoginFooter from './Login/LoginFooter.jsx';
-import LoginButton from './Login/LoginButton.jsx';
-import LoginButtonSecondary from './Login/LoginButtonSecondary.jsx';
-import Reason from './Login/Reason.jsx';
-import SocialIcon from './Login/SocialIcon.jsx';
+import Header from '../components/Login/Header.jsx';
+import LoginFooter from '../components/Login/LoginFooter.jsx';
+import LoginButton from '../components/Login/LoginButton.jsx';
+import LoginButtonSecondary from '../components/Login/LoginButtonSecondary.jsx';
+import Reason from '../components/Login/Reason.jsx';
+import SocialIcon from '../components/Login/SocialIcon.jsx';
 
 let constants = require('../js/constants');
 let sectionStyle = {
@@ -62,11 +61,6 @@ class Login extends Component {
 				this.setState({image: null});
 				break;
 		}
-
-		console.log("Google Analytics init");
-		ReactGA.initialize('UA-119126759-1');
-		ReactGA.set({page: window.location.pathname});
-		ReactGA.pageview(window.location.pathname);
 	}
 
 	render() {

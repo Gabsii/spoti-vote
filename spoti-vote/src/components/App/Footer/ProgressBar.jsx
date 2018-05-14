@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import MediaQuery from 'react-responsive';
 
-let constants = require('../../js/constants');
+let constants = require('../../../js/constants');
 
 let borderStyle = {
 	width: '25%',
