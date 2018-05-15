@@ -49,6 +49,24 @@ class App extends Component {
 			});
 		});
 
+		//When the server asks for what room to delete, it will return the answer of the user
+		this.socket.on('twoRooms', data => {
+			swal({
+				title: 'You are already hosting a room.',
+				text: 'You are currently hosting room ['+data.oldRoom+']. Do you want to delete it?',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Yes, delete it!',
+				cancelButtonText: 'No, dont do it!',
+			}).then((result) => {
+				this.socket.emit('twoRooms', {
+					value: result.value,
+					roomId: data.oldRoom
+				});
+			});
+
+		});
+
 		//When the server asks for a name, the user is prompted with popups
 		this.socket.on('nameEvent', data => { // SWAL
 			swal({
@@ -62,13 +80,11 @@ class App extends Component {
 					return new Promise((resolve) => {return resolve();});
 				}
 			}).then((result) => {
-				console.log(result);
 				this.socket.emit('nameEvent', {name: result.value});
 			})
 		});
 
 		this.socket.on('initData', data => {
-			console.log(data);
 			if (data.token !== null && data.token !== undefined) {
 				cookies.set('token', data.token, {path: '/'});
 
@@ -97,47 +113,65 @@ class App extends Component {
 		});
 
 		this.socket.on('update', data => {
-			let newState = {};
-			if (data.host !== null && data.host !== undefined) {
-				console.log('Changing host');
-				newState.host = {
-					name: this.state.host.name,
-					img: this.state.host.img,
-					voted: data.host.voted
-				}
-			}
-
-			if (data.activeTracks !== null && data.activeTracks !== undefined) {
-				newState.activeTracks = data.activeTracks;
-			}
-
-			if (data.activePlaylist !== null && data.activePlaylist !== undefined) {
-				newState.activePlaylist = data.activePlaylist;
-			}
-
-			if (data.connectedUser !== null && data.connectedUser !== undefined) {
-				newState.connectedUser = data.connectedUser;
-			}
-
-			if (data.activePlayer !== null && data.activePlayer !== undefined) {
-				if (data.activePlayer.track !== null && data.activePlayer.track !== undefined) {
-					newState.activePlayer = data.activePlayer;
-				} else {
-					newState.activePlayer = {
-						progress: data.activePlayer.progress,
-						track: this.state.activePlayer.track
+			if (data !== null && data !== undefined) {
+				let newState = {};
+				if (data.host !== null && data.host !== undefined) {
+					newState.host = {
+						name: this.state.host.name,
+						img: this.state.host.img,
+						voted: data.host.voted
 					}
 				}
-			}
 
-			if (Object.keys(newState).length > 0) {
-				this.setState({
-					host: newState.host || this.state.host,
-					activeTracks: newState.activeTracks || this.state.activeTracks,
-					activePlaylist: newState.activePlaylist || this.state.activePlaylist,
-					connectedUser: newState.connectedUser || this.state.connectedUser,
-					activePlayer: newState.activePlayer || this.state.activePlayer
-				})
+				if (data.activeTracks !== null && data.activeTracks !== undefined) {
+					newState.activeTracks = [];
+					for (var i = 0; i < data.activeTracks.length; i++) {
+						if (data.activeTracks[i] !== null && data.activeTracks[i] !== undefined) {
+							if (data.activeTracks[i].id === null || data.activeTracks[i].id === undefined) {
+								newState.activeTracks[i] = {
+									id: this.state.activeTracks[i].id,
+									name: this.state.activeTracks[i].name,
+									album: this.state.activeTracks[i].album,
+									votes: data.activeTracks[i].votes,
+									artists: this.state.activeTracks[i].artists
+								}
+							} else {
+								newState.activeTracks[i] = data.activeTracks[i];
+							}
+						} else {
+							newState.activeTracks[i] = this.state.activeTracks[i];
+						}
+					}
+				}
+
+				if (data.activePlaylist !== null && data.activePlaylist !== undefined) {
+					newState.activePlaylist = data.activePlaylist;
+				}
+
+				if (data.connectedUser !== null && data.connectedUser !== undefined) {
+					newState.connectedUser = data.connectedUser;
+				}
+
+				if (data.activePlayer !== null && data.activePlayer !== undefined) {
+					if (data.activePlayer.track !== null && data.activePlayer.track !== undefined) {
+						newState.activePlayer = data.activePlayer;
+					} else {
+						newState.activePlayer = {
+							progress: data.activePlayer.progress,
+							track: this.state.activePlayer.track
+						}
+					}
+				}
+
+				if (Object.keys(newState).length > 0) {
+					this.setState({
+						host: newState.host || this.state.host,
+						activeTracks: newState.activeTracks || this.state.activeTracks,
+						activePlaylist: newState.activePlaylist || this.state.activePlaylist,
+						connectedUser: newState.connectedUser || this.state.connectedUser,
+						activePlayer: newState.activePlayer || this.state.activePlayer
+					})
+				}
 			}
 		});
 
@@ -158,7 +192,6 @@ class App extends Component {
 	}
 
 	render() {
-		console.log(this.state.activePlaylist);
 		return (<section style={{
 				backgroundColor: constants.colors.background,
 				height: '100vh',
