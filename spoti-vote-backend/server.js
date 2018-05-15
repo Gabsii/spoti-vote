@@ -16,14 +16,10 @@ const io = socketIo(server);
 
 //Global Varibles
 
-const addressOutside = process.env.ADDRESS || 'spoti-vote.com';
-const portOutside = process.env.PORTOUTSIDE || 443;
-const backendExtension = '/b';
-
-const addressInside = process.env.INTERNALADDRESS || 'localhost';
-const portFront = process.env.PORT || 8080;
+const ipAddress = process.env.ADDRESS || 'localhost';
+const portFront = process.env.PORT || 80;
 const portBack = process.env.PORTBACK || 8888;
-const redirect_uri = 'https://' + addressOutside + ':' + portOutside + backendExtension + '/callback';
+const redirect_uri = 'http://' + ipAddress + ':' + portBack + '/callback';
 
 const secTillDelete = 60;
 
@@ -53,7 +49,7 @@ function getRoomById(roomId) {
 /**
 * Login using the Spotify API (This is only a Redirect)
 */
-app.get(backendExtension + '/login', (req, res) => {
+app.get('/login', (req, res) => {
 	console.log('INFO: User was sent to Spotify login');
 	res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state playlist-read-collaborative playlist-read-private', redirect_uri}));
 });
@@ -62,7 +58,7 @@ app.get(backendExtension + '/login', (req, res) => {
 * The callback that will be called when the Login with the Spotify API is completed
 * Will redirect the user to the newly created room
 */
-app.get(backendExtension + '/callback', async (req, res) => {
+app.get('/callback', async (req, res) => {
 	let code = req.query.code || null;
 	let authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
@@ -78,7 +74,7 @@ app.get(backendExtension + '/callback', async (req, res) => {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-		let uri = 'https://' + addressOutside + ':' + portOutside + '/app';
+		let uri = 'http://' + ipAddress + ':' + portFront + '/app';
 		let room = new Room(body.access_token, rooms);
 
 		if (await room.fetchData() == true) {
@@ -88,7 +84,7 @@ app.get(backendExtension + '/callback', async (req, res) => {
 
 			res.redirect(uri + '/' + room.id); // + '?token=' + body.access_token);
 		} else {
-			res.redirect('https//' + addressOutside + ':' + portOutside);
+			res.redirect('http://' + ipAddress + ':' + portFront);
 		}
 	});
 });
@@ -99,7 +95,7 @@ app.get(backendExtension + '/callback', async (req, res) => {
 * @Returns ResponseCode of 200
 * @Returns content Array of all the rooms
 */
-app.get(backendExtension + '/rooms', async (req, res) => {
+app.get('/rooms', async (req, res) => {
 	console.log('INFO: /rooms has been called.');
 	res.setHeader('Access-Control-Allow-Origin', '*');
 
