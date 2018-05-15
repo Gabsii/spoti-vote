@@ -640,8 +640,13 @@ method.vote = async function(trackId, isHost, name) {
 			}
 
 		}
-		if (this.activePlayer != null) {
-			if (trackId == 'skip' && this.activePlayer.progress <= 90) { //&& this.isSkipping == false) {
+
+		if (trackId == 'skip') {
+			if (this.activePlayer != null) {
+				if (this.activePlayer.progress <= 90) {
+					await this.skip();
+				}
+			} else {
 				await this.skip();
 			}
 		}
