@@ -708,7 +708,10 @@ method.play = async function() {
 * @return {boolean} True if new tracks were chosen
 */
 method.skip = async function() {
-	let track = this.activePlayer.track;
+	let track = null;
+	if (this.activePlayer !== null && this.activePlayer !== undefined) {
+		track = this.activePlayer.track;
+	}
 
 	let skips = 0;
 	for (var i = 0; i < this.connectedUser.length; i++) {
