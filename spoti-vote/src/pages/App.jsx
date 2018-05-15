@@ -54,16 +54,6 @@ class App extends Component {
 		document.title = "Spoti-Vote | " + this.state.roomId;
 		document.getElementsByTagName("META")[2].content = "";
 
-		// window.addEventListener("beforeunload", function(e) {
-		// 	var confirmationMessage = "\o/";
-		//
-		// 	this.props.socket.emit('logout');
-		// 	console.log(confirmationMessage);
-		//
-		// 	e.returnValue = confirmationMessage;  Gecko, Trident, Chrome 34+
-		// 	return confirmationMessage;  Gecko, WebKit, Chrome <34
-		// });
-
 		//When the server asks for the id, it will return the id and the token
 		this.socket.on('roomId', data => {
 			this.socket.emit('roomId', {
@@ -87,13 +77,11 @@ class App extends Component {
 					});
 				}
 			}).then((result) => {
-				console.log(result);
 				this.socket.emit('nameEvent', {name: result.value});
 			})
 		});
 
 		this.socket.on('initData', data => {
-			console.log(data);
 			if (data.token !== null && data.token !== undefined) {
 				cookies.set('token', data.token, {path: '/'});
 
@@ -169,7 +157,9 @@ class App extends Component {
 		this.socket.on('errorEvent', data => {
 			if (data.message !== null && data.message !== undefined) {
 				swal({type: 'error', title: 'Oops...', text: data.message}).then((value) => {
-				  window.location.pathname = '/';
+					// console.log(value);
+					this.socket.emit('logout');
+					window.location.pathname = '/';
 				});
 			}
 		});
@@ -183,7 +173,6 @@ class App extends Component {
 	}
 
 	render() {
-		console.log(this.state.activePlaylist);
 		return (<section style={{
 				backgroundColor: constants.colors.background,
 				height: '100vh',
