@@ -42,7 +42,6 @@ class SkipButton extends Component {
 			: linkStyle = {
 				cursor: 'context-menu'
 			}
-		console.log(this.props.isPhone);
 		this.props.isPhone
 			? flexStyle = {
 				flexDirection: 'column'

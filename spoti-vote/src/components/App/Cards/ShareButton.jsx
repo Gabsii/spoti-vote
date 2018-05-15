@@ -28,7 +28,7 @@ class ShareButton extends Component {
 		if (navigator.share) {
 			navigator.share({title: 'Spoti-Vote', text: 'Join my room!', url: window.location.href}).then(() => console.log('Successful share')).catch((error) => console.log('Error sharing', error));
 		} else {
-			let copyText = document.getElementById("myInput");
+			const copyText = document.getElementById("share");
 			copyText.select();
 			document.execCommand("Copy");
 			swal({
@@ -40,7 +40,6 @@ class ShareButton extends Component {
 				timer: 2000
 			});
 		}
-
 	}
 
 	render() {
@@ -49,9 +48,10 @@ class ShareButton extends Component {
 					fontSize: '1.3em',
 					marginRight: '0.8em'
 				}}>Share</div>
-			<input id="myInput" style={{
-					display: 'none'
-				}} value={window.location.href} readOnly={true}/>
+			<input id='share' style={{
+					position: 'absolute',
+					left: '-9999px'
+				}} type='text' defaultValue={window.location.href} tabindex='-1' aria-hidden='true'/>
 			<FontAwesomeIcon icon={faShareAlt} size="3x"/>
 		</button>);
 	}
