@@ -708,26 +708,28 @@ method.play = async function() {
 * @return {boolean} True if new tracks were chosen
 */
 method.skip = async function() {
-	let track = null;
-	if (this.activePlayer !== null && this.activePlayer !== undefined) {
-		track = this.activePlayer.track;
-	}
+	if (this.activePlaylist !== null && this.activePlaylist !== undefined) {
+		let track = null;
+		if (this.activePlayer !== null && this.activePlayer !== undefined) {
+			track = this.activePlayer.track;
+		}
 
-	let skips = 0;
-	for (var i = 0; i < this.connectedUser.length; i++) {
-		if (this.connectedUser[i].voted == 'skip') {
+		let skips = 0;
+		for (var i = 0; i < this.connectedUser.length; i++) {
+			if (this.connectedUser[i].voted == 'skip') {
+				skips += 1;
+			}
+		}
+		if (this.host.voted == 'skip') {
 			skips += 1;
 		}
-	}
-	if (this.host.voted == 'skip') {
-		skips += 1;
-	}
 
-	console.log('INFO-[ROOM: '+this.id+']: Skips/NoSkip: ['+skips+'/'+((this.connectedUser.length+1)-skips)+'].');
-	if (skips >= (2 * (this.connectedUser.length+1) / 3)) {
-		console.log('INFO-[ROOM: '+this.id+']: Skipped.');
-		this.getRandomTracks(this.activePlaylist.id, track);
-		return true;
+		console.log('INFO-[ROOM: '+this.id+']: Skips/NoSkip: ['+skips+'/'+((this.connectedUser.length+1)-skips)+'].');
+		if (skips >= (2 * (this.connectedUser.length+1) / 3)) {
+			console.log('INFO-[ROOM: '+this.id+']: Skipped.');
+			this.getRandomTracks(this.activePlaylist.id, track);
+			return true;
+		}
 	}
 	return false;
 };
