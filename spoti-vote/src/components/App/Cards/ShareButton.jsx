@@ -51,7 +51,7 @@ class ShareButton extends Component {
 			<input id='share' style={{
 					position: 'absolute',
 					left: '-9999px'
-				}} type='text' defaultValue={window.location.href} tabindex='-1' aria-hidden='true'/>
+				}} type='text' defaultValue={window.location.href} tabIndex='-1' aria-hidden='true'/>
 			<FontAwesomeIcon icon={faShareAlt} size="3x"/>
 		</button>);
 	}

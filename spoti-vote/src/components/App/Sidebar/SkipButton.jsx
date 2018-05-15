@@ -30,6 +30,10 @@ class SkipButton extends Component {
 
 	skip() {
 		this.props.socket.emit('vote', {trackId: 'skip'});
+		const cards = document.getElementsByClassName('card');
+		for (var i = 0; i < cards.length; i++) {
+			cards[i].style.opacity = 1;
+		}
 	}
 
 	render() {

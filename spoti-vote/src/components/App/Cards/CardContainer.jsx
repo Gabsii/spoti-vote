@@ -31,7 +31,7 @@ class CardContainer extends Component {
 	}
 
 	handlePermissionGranted() {
-		console.log('Permission Granted');
+		// console.log('Permission Granted');
 		this.setState({
 			notification: {
 				ignore: false
@@ -39,7 +39,7 @@ class CardContainer extends Component {
 		});
 	}
 	handlePermissionDenied() {
-		console.log('Permission Denied');
+		// console.log('Permission Denied');
 		this.setState({
 			notification: {
 				ignore: true
@@ -47,7 +47,7 @@ class CardContainer extends Component {
 		});
 	}
 	handleNotSupported() {
-		console.log('Web Notification not Supported');
+		// console.log('Web Notification not Supported');
 		this.setState({
 			notification: {
 				ignore: true
@@ -55,13 +55,13 @@ class CardContainer extends Component {
 		});
 	}
 	handleNotificationOnClick(e, tag) {
-		console.log(e, 'Notification clicked tag:' + tag);
+		// console.log(e, 'Notification clicked tag:' + tag);
 	}
 	handleNotificationOnError(e, tag) {
-		console.log(e, 'Notification error tag:' + tag);
+		// console.log(e, 'Notification error tag:' + tag);
 	}
 	handleNotificationOnClose(e, tag) {
-		console.log(e, 'Notification closed tag:' + tag);
+		// console.log(e, 'Notification closed tag:' + tag);
 	}
 
 	/**
@@ -85,7 +85,6 @@ class CardContainer extends Component {
 		event.target.closest('button').style.opacity = 1;
 		for (let i = 0; i < buttons.length; i++) {
 			buttons[i].style.opacity = 0.5;
-			//fade opacity??
 		}
 		if (this.state.voted !== trackId) {
 			this.setState({voted: trackId});
