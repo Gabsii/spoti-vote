@@ -72,6 +72,7 @@ method.getDifference = function(oldRoom) {
 	let update = {};
 
 	if (oldRoom === null) {
+		//THIS IS FOR THE INIT DATA
 		update.host = {
 			name: this.host.name,
 			voted: this.host.voted,
@@ -133,14 +134,13 @@ method.getDifference = function(oldRoom) {
 			}
 		}
 	} else {
-		//update.host = null;
+		//THIS IS FOR AN UPDATE (IF NOTHING ELSE TODO REWORK THIS)
 		if (deepEqual(oldRoom.host, this.host) === false) {
 			update.host = {
 				voted: this.host.voted
 			}
 		}
 
-		//update.activeTracks = null;
 		if (deepEqual(oldRoom.activeTracks, this.activeTracks) === false) {
 			update.activeTracks = [];
 			for (var i = 0; i < this.activeTracks.length; i++) {
@@ -186,9 +186,12 @@ method.getDifference = function(oldRoom) {
 			}
 		}
 
-		//update.activePlaylist = null;
-		if (deepEqual(oldRoom.activePlaylist, this.activePlaylist) === false && oldRoom.activePlaylist !== null) {
-			if (deepEqual(oldRoom.activePlaylist.name, this.activePlaylist.name) === false) {
+		if (deepEqual(oldRoom.activePlaylist, this.activePlaylist) === false) {
+			let oldName = null;
+			if (oldRoom.activePlaylist !== null && oldRoom.activePlaylist !== undefined) {
+				oldName = oldRoom.activePlaylist.name;
+			}
+			if (deepEqual(oldName, this.activePlaylist.name) === false) {
 				update.activePlaylist = {
 					name: 'Host is selecting',
 					images: [{url: 'https://via.placeholder.com/152x152'}],
@@ -204,12 +207,10 @@ method.getDifference = function(oldRoom) {
 			}
 		}
 
-		//update.connectedUser = null;
 		if (deepEqual(oldRoom.connectedUser, this.connectedUser) === false) {
 			update.connectedUser = this.connectedUser;
 		}
 
-		//update.activePlayer = null;
 		if (deepEqual(oldRoom.activePlayer, this.activePlayer) === false) {
 			update.activePlayer = {
 				progress: 0,
