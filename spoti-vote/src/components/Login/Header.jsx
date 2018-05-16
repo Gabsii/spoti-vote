@@ -3,6 +3,7 @@ import MediaQuery from 'react-responsive';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faBars} from '@fortawesome/fontawesome-free-solid';
 import NavItem from './NavItem.jsx';
+import BarItem from './BarItem.jsx';
 import logo from '../../img/spotiLogo.svg';
 
 let constants = require('../../js/constants');
@@ -25,7 +26,9 @@ let navStyle = {
 	margin: 0,
 	display: 'flex',
 	justifyContent: 'flex-end',
-	alignItems: 'center'
+	alignItems: 'center',
+	marginRight: '2em'
+
 }
 let itemStyle = {
 	listStyle: 'none',
@@ -114,25 +117,12 @@ class Header extends Component {
 									marginRight: '20px'
 								}}>
 								<ul style={navStyle}>
-									<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-										<a style={linkStyle} href="#features">Features</a>
-									</li>
-									<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-										<a style={linkStyle} href="/">Usage</a>
-									</li>
-									<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-										<a style={linkStyle} href="/">Contact</a>
-									</li>
+									<BarItem url="#features" name="Features"/>
+									<BarItem url="/" name="Usage"/>
+									<BarItem url="/" name="Contact"/>
 									<li style={divider}></li>
-									<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-										<a style={linkStyle} href={'http://' + ipAddress + ':' + portBack + '/login'}>Host</a>
-									</li>
-									<li style={{
-											...itemStyle,
-											marginRight: '2em'
-										}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-										<a style={linkStyle} href="/join">Join</a>
-									</li>
+									<BarItem url={'http://' + ipAddress + ':' + portBack + '/login'} name="Host"/>
+									<BarItem url="/join" name="Join"/>
 								</ul>
 							</nav>);
 						} else {

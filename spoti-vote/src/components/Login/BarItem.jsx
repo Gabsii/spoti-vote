@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+
 let constants = require('../../js/constants');
 
 let itemStyle = {
@@ -12,7 +13,7 @@ let linkStyle = {
 	letterSpacing: '1px'
 }
 
-class NavItem extends Component {
+class BarItem extends Component {
 
 	constructor() {
 		super();
@@ -28,6 +29,7 @@ class NavItem extends Component {
 	}
 
 	render() {
+
 		let hoverStyle;
 		if (this.state.hover) {
 			hoverStyle = {
@@ -41,23 +43,12 @@ class NavItem extends Component {
 			}
 		}
 
-		return (<li style={{
-				...itemStyle,
-				...hoverStyle,
-				width: '100%',
-				height: '50px',
-				margin: '5px 0',
-				display: 'flex',
-				justifyContent: 'center',
-				alignItems: 'center',
-				padding: '10px',
-				borderTop: '1px solid rgba(255,255,255,0.1)'
-			}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+		return (<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
 			<a style={{
 					...linkStyle,
 					...hoverStyle
-				}} href={this.props.href}>{this.props.name}</a>
+				}} href={this.props.url}>{this.props.name}</a>
 		</li>);
 	}
 }
-export default NavItem;
+export default BarItem;

@@ -8,7 +8,7 @@ import {
 	faHome,
 	faHeadphones
 } from '@fortawesome/fontawesome-free-solid';
-import {faTwitter, faGithub} from '@fortawesome/fontawesome-free-brands';
+import {faFacebook, faTwitter, faGithub} from '@fortawesome/fontawesome-free-brands';
 import image from '../img/samantha-gades-540989-unsplash.jpg';
 import for1 from '../img/etienne-boulanger-409520-unsplash.jpg'; //car
 import for2 from '../img/eric-nopanen-624212-unsplash.jpg'; //home
@@ -264,12 +264,9 @@ class Login extends Component {
 							flexDirection: 'row',
 							justifyContent: 'center'
 						}}>
-						<a href="https://twitter.com/SpotiVote">
-							<SocialIcon icon={faTwitter}/>
-						</a>
-						<a href="https://github.com/Gabsii/spoti-vote">
-							<SocialIcon icon={faGithub}/>
-						</a>
+						<SocialIcon icon={faFacebook} url={"https://www.facebook.com/Spoti-Vote-600357846990340/"}/>
+						<SocialIcon icon={faTwitter} url={"https://twitter.com/SpotiVote"}/>
+						<SocialIcon icon={faGithub} url={"https://github.com/Gabsii/spoti-vote"}/>
 					</div>
 				</div>
 			</section>
