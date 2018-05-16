@@ -31,7 +31,7 @@ class CardContainer extends Component {
 	}
 
 	handlePermissionGranted() {
-		console.log('Permission Granted');
+		// console.log('Permission Granted');
 		this.setState({
 			notification: {
 				ignore: false
@@ -39,7 +39,7 @@ class CardContainer extends Component {
 		});
 	}
 	handlePermissionDenied() {
-		console.log('Permission Denied');
+		// console.log('Permission Denied');
 		this.setState({
 			notification: {
 				ignore: true
@@ -47,7 +47,7 @@ class CardContainer extends Component {
 		});
 	}
 	handleNotSupported() {
-		console.log('Web Notification not Supported');
+		// console.log('Web Notification not Supported');
 		this.setState({
 			notification: {
 				ignore: true
@@ -55,44 +55,14 @@ class CardContainer extends Component {
 		});
 	}
 	handleNotificationOnClick(e, tag) {
-		console.log(e, 'Notification clicked tag:' + tag);
+		// console.log(e, 'Notification clicked tag:' + tag);
 	}
 	handleNotificationOnError(e, tag) {
-		console.log(e, 'Notification error tag:' + tag);
+		// console.log(e, 'Notification error tag:' + tag);
 	}
 	handleNotificationOnClose(e, tag) {
-		console.log(e, 'Notification closed tag:' + tag);
+		// console.log(e, 'Notification closed tag:' + tag);
 	}
-
-	/**
-	 * Get siblings of an element
-	 * @author cferdinandi
-	 * @param  {Element} elem
-	 * @return {Object}
-	 */
-	getSiblings(elem) {
-		let siblings = [];
-		let sibling = elem.parentNode.firstChild;
-		let skipMe = elem;
-		for (; sibling; sibling = sibling.nextSibling) 
-			if (sibling.nodeType === 1 && sibling !== skipMe) 
-				siblings.push(sibling);
-	return siblings;
-	}
-
-	voteHandler(trackId, event) {
-		let buttons = this.getSiblings(event.target.closest('button'));
-		event.target.closest('button').style.opacity = 1;
-		for (let i = 0; i < buttons.length; i++) {
-			buttons[i].style.opacity = 0.5;
-			//fade opacity??
-		}
-		if (this.state.voted !== trackId) {
-			this.setState({voted: trackId});
-			this.props.socket.emit('vote', {trackId: trackId});
-		}
-	}
-
 	componentWillReceiveProps(nextProps) {
 		if (this.props.activeTracks[0] !== undefined && this.props.activeTracks[1] !== undefined && this.props.activeTracks[2] !== undefined && this.props.activeTracks[3] !== undefined) {
 			if (nextProps.activeTracks[0].id !== this.props.activeTracks[0].id && nextProps.activeTracks[1].id !== this.props.activeTracks[1].id && nextProps.activeTracks[2].id !== this.props.activeTracks[2].id && nextProps.activeTracks[3].id !== this.props.activeTracks[3].id) {
@@ -144,7 +114,7 @@ class CardContainer extends Component {
 					}}>
 					{
 						this.props.activeTracks.map((track, index) => {
-							return <Card isPhone={true} randomTrack={track} onClick={this.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
+							return <Card isPhone={true} randomTrack={track} onClick={this.props.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
 						})
 					}
 				</main>);
@@ -158,7 +128,7 @@ class CardContainer extends Component {
 					}}>
 					{
 						this.props.activeTracks.map((track, index) => {
-							return <Card isPhone={false} randomTrack={track} onClick={this.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
+							return <Card isPhone={false} randomTrack={track} onClick={this.props.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>
 						})
 					}
 					<Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} onClick={this.handleNotificationOnClick.bind(this)} onClose={this.handleNotificationOnClose.bind(this)} onError={this.handleNotificationOnError.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>

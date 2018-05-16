@@ -7,6 +7,11 @@ const portBack = 8888;
 
 class Join extends Component {
 
+	componentDidMount() {
+		document.title = "Spoti-Vote | Join a room";
+		document.getElementsByTagName("META")[2].content = "Join a room to fulfill your wish of musically democracy";
+	}
+
 	render() {
 		return (<main style={{
 				width: '100%',
