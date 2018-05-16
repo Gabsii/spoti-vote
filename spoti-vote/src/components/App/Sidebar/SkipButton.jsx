@@ -28,14 +28,6 @@ class SkipButton extends Component {
 		})
 	}
 
-	skip() {
-		this.props.socket.emit('vote', {trackId: 'skip'});
-		const cards = document.getElementsByClassName('card');
-		for (var i = 0; i < cards.length; i++) {
-			cards[i].style.opacity = 1;
-		}
-	}
-
 	render() {
 		let linkStyle,
 			flexStyle;
@@ -69,7 +61,7 @@ class SkipButton extends Component {
 				...buttonStyle,
 				...linkStyle,
 				...flexStyle
-			}} onClick={this.skip.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+			}} onClick={this.props.skipHandler} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
 			<FontAwesomeIcon icon={faRandom} size="2x"/>
 			<div style={this.props.isPhone
 					? {
