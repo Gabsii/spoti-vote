@@ -95,16 +95,16 @@ class Login extends Component {
 							marginTop: '25%'
 						}}>
 						<div>
-							<strong style={{
+							<h1 style={{
 									fontFamily: 'Circular Bold',
 									fontSize: '3em'
 								}}>Let your friends
-								<br/>choose the music</strong>
+								<br/>choose the music</h1>
 						</div>
-						<div style={{
+						<h2 style={{
 								fontSize: '1.5em',
 								marginTop: '0.25em'
-							}}>All you need is Spotify</div>
+							}}>All you need is Spotify</h2>
 						<MediaQuery maxWidth={constants.breakpoints.medium}>
 							{
 								(matches) => {
@@ -141,14 +141,14 @@ class Login extends Component {
 					backgroundColor: constants.colors.font
 				}}>
 				<div style={containerStyle}>
-					<div id="features" style={{
+					<h2 id="features" style={{
 							display: 'flex',
 							justifyContent: 'center',
 							fontSize: '2em',
 							fontFamily: 'Circular Book',
 							marginTop: '1.5em',
 							marginBottom: '2em'
-						}}>Why Spoti-Vote?</div>
+						}}>Why Spoti-Vote?</h2>
 					<MediaQuery minWidth={constants.breakpoints.medium}>
 						{
 							(matches) => {
@@ -198,7 +198,7 @@ class Login extends Component {
 										minHeight: '500px',
 										background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
 									}}>
-									<div style={{
+									<h2 style={{
 											display: 'flex',
 											justifyContent: 'center',
 											fontSize: '2em',
@@ -206,7 +206,7 @@ class Login extends Component {
 											marginTop: '1.5em',
 											marginBottom: '2em',
 											textAlign: 'center'
-										}}>Spoti-Vote is perfect for...</div>
+										}}>Spoti-Vote is perfect for...</h2>
 									<div style={{
 											display: 'flex',
 											flexDirection: 'row'
@@ -222,7 +222,7 @@ class Login extends Component {
 										minHeight: '500px',
 										background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
 									}}>
-									<div style={{
+									<h2 style={{
 											display: 'flex',
 											justifyContent: 'center',
 											fontSize: '2em',
@@ -230,7 +230,7 @@ class Login extends Component {
 											marginTop: '1.5em',
 											marginBottom: '2em',
 											textAlign: 'center'
-										}}>Spoti-Vote is perfect for...</div>
+										}}>Spoti-Vote is perfect for...</h2>
 									<div style={{
 											display: 'flex',
 											flexDirection: 'column',
@@ -252,13 +252,13 @@ class Login extends Component {
 					backgroundColor: constants.colors.font
 				}}>
 				<div style={containerStyle}>
-					<div style={{
+					<h2 style={{
 							display: 'flex',
 							justifyContent: 'center',
 							fontSize: '2em',
 							fontFamily: 'Circular Book',
 							marginTop: '1.5em'
-						}}>Connect with us</div>
+						}}>Connect with us</h2>
 					<div style={{
 							display: 'flex',
 							flexDirection: 'row',
