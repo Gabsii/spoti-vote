@@ -189,49 +189,34 @@ class Login extends Component {
 					color: constants.colors.font
 				}}>
 
-				<MediaQuery minWidth={constants.breakpoints.medium}>
-					{
-						(matches) => {
-							if (matches) {
-								return (<div style={{
-										...containerStyle,
-										minHeight: '500px',
-										background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
-									}}>
-									<h2 style={{
-											display: 'flex',
-											justifyContent: 'center',
-											fontSize: '2em',
-											fontFamily: 'Circular Book',
-											marginTop: '1.5em',
-											marginBottom: '2em',
-											textAlign: 'center'
-										}}>Spoti-Vote is perfect for...</h2>
-									<div style={{
+				<div style={{
+						...containerStyle,
+						minHeight: '500px',
+						background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
+					}}>
+					<h2 style={{
+							display: 'flex',
+							justifyContent: 'center',
+							fontSize: '2em',
+							fontFamily: 'Circular Book',
+							marginTop: '1.5em',
+							marginBottom: '2em',
+							textAlign: 'center'
+						}}>Spoti-Vote is perfect for...</h2>
+					<MediaQuery minWidth={constants.breakpoints.medium}>
+						{
+							(matches) => {
+								if (matches) {
+									return (<div style={{
 											display: 'flex',
 											flexDirection: 'row'
 										}}>
 										<Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
 										<Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
 										<Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
-									</div>
-								</div>);
-							} else {
-								return (<div style={{
-										...containerStyle,
-										minHeight: '500px',
-										background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
-									}}>
-									<h2 style={{
-											display: 'flex',
-											justifyContent: 'center',
-											fontSize: '2em',
-											fontFamily: 'Circular Book',
-											marginTop: '1.5em',
-											marginBottom: '2em',
-											textAlign: 'center'
-										}}>Spoti-Vote is perfect for...</h2>
-									<div style={{
+									</div>);
+								} else {
+									return (<div style={{
 											display: 'flex',
 											flexDirection: 'column',
 											alignItems: 'center'
@@ -239,12 +224,13 @@ class Login extends Component {
 										<Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
 										<Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
 										<Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
-									</div>
-								</div>);
+									</div>);
+								}
 							}
 						}
-					}
-				</MediaQuery>
+					</MediaQuery>
+				</div>
+
 			</section>
 			<section style={{
 					...sectionStyle,
