@@ -8,7 +8,7 @@ import {
 	faHome,
 	faHeadphones
 } from '@fortawesome/fontawesome-free-solid';
-import {faTwitter, faGithub} from '@fortawesome/fontawesome-free-brands';
+import {faFacebook, faTwitter, faGithub} from '@fortawesome/fontawesome-free-brands';
 import image from '../img/samantha-gades-540989-unsplash.jpg';
 import for1 from '../img/etienne-boulanger-409520-unsplash.jpg'; //car
 import for2 from '../img/eric-nopanen-624212-unsplash.jpg'; //home
@@ -95,16 +95,16 @@ class Login extends Component {
 							marginTop: '25%'
 						}}>
 						<div>
-							<strong style={{
+							<h1 style={{
 									fontFamily: 'Circular Bold',
 									fontSize: '3em'
 								}}>Let your friends
-								<br/>choose the music</strong>
+								<br/>choose the music</h1>
 						</div>
-						<div style={{
+						<h2 style={{
 								fontSize: '1.5em',
 								marginTop: '0.25em'
-							}}>All you need is Spotify</div>
+							}}>All you need is Spotify</h2>
 						<MediaQuery maxWidth={constants.breakpoints.medium}>
 							{
 								(matches) => {
@@ -141,14 +141,14 @@ class Login extends Component {
 					backgroundColor: constants.colors.font
 				}}>
 				<div style={containerStyle}>
-					<div id="features" style={{
+					<h2 id="features" style={{
 							display: 'flex',
 							justifyContent: 'center',
 							fontSize: '2em',
 							fontFamily: 'Circular Book',
 							marginTop: '1.5em',
 							marginBottom: '2em'
-						}}>Why Spoti-Vote?</div>
+						}}>Why Spoti-Vote?</h2>
 					<MediaQuery minWidth={constants.breakpoints.medium}>
 						{
 							(matches) => {
@@ -189,49 +189,34 @@ class Login extends Component {
 					color: constants.colors.font
 				}}>
 
-				<MediaQuery minWidth={constants.breakpoints.medium}>
-					{
-						(matches) => {
-							if (matches) {
-								return (<div style={{
-										...containerStyle,
-										minHeight: '500px',
-										background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
-									}}>
-									<div style={{
-											display: 'flex',
-											justifyContent: 'center',
-											fontSize: '2em',
-											fontFamily: 'Circular Book',
-											marginTop: '1.5em',
-											marginBottom: '2em',
-											textAlign: 'center'
-										}}>Spoti-Vote is perfect for...</div>
-									<div style={{
+				<div style={{
+						...containerStyle,
+						minHeight: '500px',
+						background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
+					}}>
+					<h2 style={{
+							display: 'flex',
+							justifyContent: 'center',
+							fontSize: '2em',
+							fontFamily: 'Circular Book',
+							marginTop: '1.5em',
+							marginBottom: '2em',
+							textAlign: 'center'
+						}}>Spoti-Vote is perfect for...</h2>
+					<MediaQuery minWidth={constants.breakpoints.medium}>
+						{
+							(matches) => {
+								if (matches) {
+									return (<div style={{
 											display: 'flex',
 											flexDirection: 'row'
 										}}>
 										<Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
 										<Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
 										<Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
-									</div>
-								</div>);
-							} else {
-								return (<div style={{
-										...containerStyle,
-										minHeight: '500px',
-										background: 'linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.4), rgba(0,0,0,1))'
-									}}>
-									<div style={{
-											display: 'flex',
-											justifyContent: 'center',
-											fontSize: '2em',
-											fontFamily: 'Circular Book',
-											marginTop: '1.5em',
-											marginBottom: '2em',
-											textAlign: 'center'
-										}}>Spoti-Vote is perfect for...</div>
-									<div style={{
+									</div>);
+								} else {
+									return (<div style={{
 											display: 'flex',
 											flexDirection: 'column',
 											alignItems: 'center'
@@ -239,12 +224,13 @@ class Login extends Component {
 										<Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
 										<Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
 										<Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
-									</div>
-								</div>);
+									</div>);
+								}
 							}
 						}
-					}
-				</MediaQuery>
+					</MediaQuery>
+				</div>
+
 			</section>
 			<section style={{
 					...sectionStyle,
@@ -252,24 +238,21 @@ class Login extends Component {
 					backgroundColor: constants.colors.font
 				}}>
 				<div style={containerStyle}>
-					<div style={{
+					<h2 style={{
 							display: 'flex',
 							justifyContent: 'center',
 							fontSize: '2em',
 							fontFamily: 'Circular Book',
 							marginTop: '1.5em'
-						}}>Connect with us</div>
+						}}>Connect with us</h2>
 					<div style={{
 							display: 'flex',
 							flexDirection: 'row',
 							justifyContent: 'center'
 						}}>
-						<a href="https://twitter.com/SpotiVote">
-							<SocialIcon icon={faTwitter}/>
-						</a>
-						<a href="https://github.com/Gabsii/spoti-vote">
-							<SocialIcon icon={faGithub}/>
-						</a>
+						<SocialIcon icon={faFacebook} url={"https://www.facebook.com/Spoti-Vote-600357846990340/"}/>
+						<SocialIcon icon={faTwitter} url={"https://twitter.com/SpotiVote"}/>
+						<SocialIcon icon={faGithub} url={"https://github.com/Gabsii/spoti-vote"}/>
 					</div>
 				</div>
 			</section>
