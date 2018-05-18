@@ -392,8 +392,7 @@ async function theUpdateFunction(socket) {
 	if (room !== null) {
 		await room.update(socket.isHost);
 
-		if (socket.updateCounter.amount % 30 == 0) {
-			console.log('PlaylistUpdate');
+		if (socket.updateCounter.amount % 300 == 0) {
 			let newPlaylists = await room.fetchPlaylists();
 
 			if (newPlaylists.length > room.playlists.length) {
