@@ -106,5 +106,8 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "devDependencies": {
+    "image-webpack-loader": "^4.2.0"
   }
 }

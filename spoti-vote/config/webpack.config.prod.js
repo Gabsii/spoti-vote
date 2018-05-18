@@ -145,15 +145,11 @@ module.exports = {
 				oneOf: [
 					// "url" loader works just like "file" loader but it also embeds
 					// assets smaller than specified size as data URLs to avoid requests.
+					// src of images: https://medium.com/@rahuldsharma/adding-scss-font-loader-image-webpack-loader-to-create-react-app-bd0b8cee4c49
 					{
-						test: [
-							/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/
-						],
-						loader: require.resolve('url-loader'),
-						options: {
-							limit: 10000,
-							name: 'static/media/[name].[hash:8].[ext]'
-						}
+						test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
+						exclude: /\/favicon.ico$/,
+						loader: 'file-loader?name=static/media/[name].[hash:8].[ext]!image-webpack-loader'
 					},
 					// Process JS with Babel.
 					{
