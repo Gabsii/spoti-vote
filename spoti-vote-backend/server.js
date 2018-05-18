@@ -177,7 +177,6 @@ io.on('connection', (socket) => {
 					let update = room.getDifference(null);
 					socket.oldUpdate = _.cloneDeep(room);
 
-					update.playlists = room.getPlaylists();
 					update.isHost= socket.isHost;
 
 					update.token = room.host.token;
@@ -193,7 +192,6 @@ io.on('connection', (socket) => {
 						let update = room.getDifference(null);
 						socket.oldUpdate = _.cloneDeep(room);
 
-						update.playlists = room.getPlaylists();
 						update.isHost= socket.isHost;
 
 						socket.emit('initData', update);
@@ -233,7 +231,6 @@ io.on('connection', (socket) => {
 				let update = room.getDifference(null);
 				socket.oldUpdate = _.cloneDeep(room);
 
-				update.playlists = room.getPlaylists();
 				update.isHost= socket.isHost;
 
 				update.token = room.host.token;
@@ -249,7 +246,6 @@ io.on('connection', (socket) => {
 					let update = room.getDifference(null);
 					socket.oldUpdate = _.cloneDeep(room);
 
-					update.playlists = room.getPlaylists();
 					update.isHost= socket.isHost;
 
 					socket.emit('initData', update);
@@ -388,8 +384,32 @@ io.on('connection', (socket) => {
 */
 async function theUpdateFunction(socket) {
 	let room = getRoomById(socket.roomId);
+
+	socket.updateCounter.amount += 1;
+
+
+
 	if (room !== null) {
 		await room.update(socket.isHost);
+
+		if (socket.updateCounter.amount % 30 == 0) {
+			console.log('PlaylistUpdate');
+			let newPlaylists = await room.fetchPlaylists();
+
+			if (newPlaylists.length > room.playlists.length) {
+				for (var i = 0; i < newPlaylists.length; i++) {
+					let x = 0;
+					for (var j = 0; j < room.playlists.length; j++) {
+						if (newPlaylists[i].id == room.playlists[j]) {
+							x = 1;
+						}
+					}
+					if (x == 0) {
+						room.playlists.push(newPlaylists[i]);
+					}
+				}
+			}
+		}
 
 		let update = room.getDifference(socket.oldUpdate);
 
@@ -401,8 +421,7 @@ async function theUpdateFunction(socket) {
 		socket.emit('errorEvent', {message: null});
 	}
 
-	socket.updateCounter.amount += 1;
-	if (socket.updateCounter.amount > 30) {
+	if (socket.updateCounter.amount % 30 == 0) {
 		let toBeDeleted = [];
 		for (var i = 0; i < rooms.length; i++) {
 			if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
@@ -413,6 +432,9 @@ async function theUpdateFunction(socket) {
 			console.log('INFO-[ROOM: '+toBeDeleted[i].id+']: This room has been deleted due to inactivity.');
 			rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
 		}
+	}
+
+	if (socket.updateCounter.amount > 300) {
 		socket.updateCounter.amount = 0;
 	}
 };

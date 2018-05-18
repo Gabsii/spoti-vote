@@ -167,13 +167,18 @@ class App extends Component {
 					}
 				}
 
+				if (data.playlists !== null && data.playlists !== undefined) {
+					newState.playlists = data.playlists;
+				}
+
 				if (Object.keys(newState).length > 0) {
 					this.setState({
 						host: newState.host || this.state.host,
 						activeTracks: newState.activeTracks || this.state.activeTracks,
 						activePlaylist: newState.activePlaylist || this.state.activePlaylist,
 						connectedUser: newState.connectedUser || this.state.connectedUser,
-						activePlayer: newState.activePlayer || this.state.activePlayer
+						activePlayer: newState.activePlayer || this.state.activePlayer,
+						playlists: newState.playlists || this.state.playlists
 					})
 				}
 			}

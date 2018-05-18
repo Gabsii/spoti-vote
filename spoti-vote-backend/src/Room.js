@@ -133,6 +133,15 @@ method.getDifference = function(oldRoom) {
 				};
 			}
 		}
+
+		update.playlists = [];
+		for (var i = 0; i < this.playlists.length; i++) {
+			update.playlists.push({
+				name: this.playlists[i].name,
+				id: this.playlists[i].id
+			});
+		}
+
 	} else {
 		//THIS IS FOR AN UPDATE (IF NOTHING ELSE TODO REWORK THIS)
 		if (deepEqual(oldRoom.host, this.host) === false) {
@@ -249,9 +258,22 @@ method.getDifference = function(oldRoom) {
 				}
 			}
 		}
+
+		if (oldRoom.playlists.length < this.playlists.length) {
+			update.playlists = [];
+			for (var i = 0; i < this.playlists.length; i++) {
+				update.playlists.push({
+					name: this.playlists[i].name,
+					id: this.playlists[i].id
+				});
+			}
+		}
+
 	}
 
-	if ((update.host === null && update.activeTracks === null && update.activePlaylist === null && update.connectedUser === null && update.activePlayer === null) || Object.keys(update).length === 0) {
+
+
+	if ((update.host === null && update.activeTracks === null && update.activePlaylist === null && update.connectedUser === null && update.activePlayer === null && update.playlists === null) || Object.keys(update).length === 0) {
 		return null;
 	}
 	return update;
@@ -316,34 +338,6 @@ method.removeUser = function(name) {
 		}
 		this.connectedUser.splice(i,1);
 	}
-};
-
-/**
-* Returns all the playlists of the host
-*
-* @author: Michiocre
-* @return {array} Array of all the playlist objects
-*/
-method.getPlaylists = function() {
-	let returnPlaylists = [];
-	for (let i = 0; i < this.playlists.length; i++) {
-		if (Array.isArray(this.playlists[i].tracks) !== true) {
-			if (this.playlists[i].tracks.total > 4) {
-				returnPlaylists.push({
-					id: this.playlists[i].id,
-					name: this.playlists[i].name
-				});
-				this.playlists[i].tracks = [];
-			}
-		} else {
-			returnPlaylists.push({
-				id: this.playlists[i].id,
-				name: this.playlists[i].name
-			});
-		}
-
-	}
-	return returnPlaylists;
 };
 
 /**
@@ -489,6 +483,18 @@ method.fetchData = async function() {
 	this.host.profileUrl = hostRequestData.external_urls.spotify;
 	this.host.country = hostRequestData.country;
 
+	this.playlists = await this.fetchPlaylists();
+
+	return true;
+};
+
+/**
+* Fetches all the playlists of a user
+*
+* @author: Michiocre
+* @return: array All the playlists
+*/
+method.fetchPlaylists = async function() {
 	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
 		headers: {
 			"Authorization": "Bearer " + this.host.token
@@ -502,7 +508,7 @@ method.fetchData = async function() {
 		playlistRequestData.items
 	}
 
-	this.playlists = playlistRequestData.items;
+	let playlists = playlistRequestData.items;
 
 	while (next !== null) {
 		playlistRequest = await fetch(next, {
@@ -514,10 +520,19 @@ method.fetchData = async function() {
 		playlistRequestData = await playlistRequest.json();
 		next = playlistRequestData.next;
 
-		this.playlists = this.playlists.concat(playlistRequestData.items);
+		playlists = playlists.concat(playlistRequestData.items);
 	}
-	return true;
-};
+
+	let returnPlaylists = [];
+
+	for (var i = 0; i < playlists.length; i++) {
+		if (playlists[i].tracks.total > 4) {
+			playlists[i].tracks = [];
+			returnPlaylists.push(playlists[i]);
+		}
+	}
+	return returnPlaylists;
+}
 
 /**
 * Recursive function, in each iteration it will get up to 100 tracks of the playlist, and if there are more to get it will also return the url for the next batch of up to 100 tracks
