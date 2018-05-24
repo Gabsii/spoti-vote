@@ -102,7 +102,7 @@ class Card extends Component {
 				...linkStyle,
 				...marginStyle,
 				backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url + ')'
-			}} id={this.props.randomTrack.id}>
+			}} id={this.props.randomTrack.id} className='card'>
 			<div style={{
 					...imgStyle,
 					borderRadius: '3px',

@@ -71,7 +71,7 @@ class SettingsBar extends Component {
 				...defaultStyle,
 				...marginStyle
 			}}>
-			<SkipButton socket={this.props.socket} isPhone={this.props.isPhone} connectedUser={this.props.connectedUser} host={this.props.host}/>
+			<SkipButton socket={this.props.socket} skipHandler={this.props.skipHandler} isPhone={this.props.isPhone} connectedUser={this.props.connectedUser} host={this.props.host}/>
 			<button style={{
 					...buttonStyle,
 					...linkStyle

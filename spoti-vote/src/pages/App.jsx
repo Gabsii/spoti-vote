@@ -35,13 +35,27 @@ class App extends Component {
 				name: null,
 				voted: null
 			},
-			activePlaylist: {name: 'Loading', external_urls:{spotify: ''}, images:[{url: ''}]},
+			activePlaylist: {
+				name: 'Loading',
+				external_urls: {
+					spotify: ''
+				},
+				images: [
+					{
+						url: ''
+					}
+				]
+			},
 			activeTracks: {},
-			activePlayer: null
+			activePlayer: null,
+			voted: null
 		}
 	}
 
 	componentDidMount() {
+		document.title = "Spoti-Vote | " + this.state.roomId;
+		document.getElementsByTagName("META")[2].content = "";
+
 		//When the server asks for the id, it will return the id and the token
 		this.socket.on('roomId', data => {
 			this.socket.emit('roomId', {
@@ -54,11 +68,11 @@ class App extends Component {
 		this.socket.on('twoRooms', data => {
 			swal({
 				title: 'You are already hosting a room.',
-				text: 'You are currently hosting room ['+data.oldRoom+']. Do you want to delete it?',
+				text: 'You are currently hosting room [' + data.oldRoom + ']. Do you want to delete it?',
 				type: 'warning',
 				showCancelButton: true,
 				confirmButtonText: 'Yes, delete it!',
-				cancelButtonText: 'No, dont do it!',
+				cancelButtonText: 'No, dont do it!'
 			}).then((result) => {
 				this.socket.emit('twoRooms', {
 					value: result.value,
@@ -78,7 +92,9 @@ class App extends Component {
 				input: 'text',
 				inputPlaceholder: 'Enter your name or nickname',
 				inputValidator: (value) => {
-					return new Promise((resolve) => {return resolve();});
+					return new Promise((resolve) => {
+						return resolve();
+					});
 				}
 			}).then((result) => {
 				this.socket.emit('nameEvent', {name: result.value});
@@ -100,7 +116,7 @@ class App extends Component {
 					activeTracks: data.activeTracks,
 					activePlaylist: data.activePlaylist,
 					connectedUser: data.connectedUser,
-					activePlayer: data.activePlayer,
+					activePlayer: data.activePlayer
 				});
 			} else {
 				this.setState({
@@ -111,7 +127,7 @@ class App extends Component {
 					activeTracks: data.activeTracks,
 					activePlaylist: data.activePlaylist,
 					connectedUser: data.connectedUser,
-					activePlayer: data.activePlayer,
+					activePlayer: data.activePlayer
 				});
 			}
 		});
@@ -187,7 +203,9 @@ class App extends Component {
 		this.socket.on('errorEvent', data => {
 			if (data.message !== null && data.message !== undefined) {
 				swal({type: 'error', title: 'Oops...', text: data.message}).then((value) => {
-				  window.location.pathname = '/';
+					// console.log(value);
+					this.socket.emit('logout');
+					window.location.pathname = '/';
 				});
 			}
 		});
@@ -200,6 +218,45 @@ class App extends Component {
 		}
 	}
 
+	/**
+	 * Get siblings of an element
+	 * @author cferdinandi
+	 * @param  {Element} elem
+	 * @return {Object}
+	 */
+	getSiblings(elem) {
+		let siblings = [];
+		let sibling = elem.parentNode.firstChild;
+		let skipMe = elem;
+		for (; sibling; sibling = sibling.nextSibling) 
+			if (sibling.nodeType === 1 && sibling !== skipMe) 
+				siblings.push(sibling);
+	return siblings;
+	}
+
+	voteHandler(trackId, event) {
+		let buttons = this.getSiblings(event.target.closest('button'));
+		event.target.closest('button').style.opacity = 1;
+		for (let i = 0; i < buttons.length; i++) {
+			buttons[i].style.opacity = 0.5;
+		}
+		if (this.state.voted !== trackId) {
+			this.setState({voted: trackId});
+			this.socket.emit('vote', {trackId: trackId});
+		}
+	}
+
+	skipHandler(socket) {
+		const cards = document.getElementsByClassName('card');
+		if (cards.length > 0) {
+			this.setState({voted: null});
+			this.socket.emit('vote', {trackId: 'skip'});
+			for (var i = 0; i < cards.length; i++) {
+				cards[i].style.opacity = 1;
+			}
+		}
+	}
+
 	render() {
 		return (<section style={{
 				backgroundColor: constants.colors.background,
@@ -209,9 +266,9 @@ class App extends Component {
 			<MediaQuery minWidth={constants.breakpoints.medium}>{
 					(matches) => {
 						if (matches) {
-							return (<Sidebar isPhone={false} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>);
+							return (<Sidebar skipHandler={this.skipHandler.bind(this)} isPhone={false} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>);
 						} else {
-							return (<Sidebar isPhone={true} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>);
+							return (<Sidebar skipHandler={this.skipHandler.bind(this)} isPhone={true} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>);
 						}
 					}
 				}
@@ -219,9 +276,9 @@ class App extends Component {
 			<MediaQuery minWidth={constants.breakpoints.medium}>{
 					(matches) => {
 						if (matches) { // = tablet^
-							return <CardContainer isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
+							return <CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
 						} else { // = phone
-							return <CardContainer isPhone={true} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
+							return <CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={true} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
 						}
 					}
 				}

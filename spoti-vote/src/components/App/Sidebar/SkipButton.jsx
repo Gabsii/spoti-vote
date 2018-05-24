@@ -28,10 +28,6 @@ class SkipButton extends Component {
 		})
 	}
 
-	skip() {
-		this.props.socket.emit('vote', {trackId: 'skip'});
-	}
-
 	render() {
 		let linkStyle,
 			flexStyle;
@@ -42,7 +38,6 @@ class SkipButton extends Component {
 			: linkStyle = {
 				cursor: 'context-menu'
 			}
-		console.log(this.props.isPhone);
 		this.props.isPhone
 			? flexStyle = {
 				flexDirection: 'column'
@@ -66,7 +61,7 @@ class SkipButton extends Component {
 				...buttonStyle,
 				...linkStyle,
 				...flexStyle
-			}} onClick={this.skip.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+			}} onClick={this.props.skipHandler} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
 			<FontAwesomeIcon icon={faRandom} size="2x"/>
 			<div style={this.props.isPhone
 					? {

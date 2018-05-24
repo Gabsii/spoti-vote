@@ -3,6 +3,7 @@ import MediaQuery from 'react-responsive';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faBars} from '@fortawesome/fontawesome-free-solid';
 import NavItem from './NavItem.jsx';
+import BarItem from './BarItem.jsx';
 import logo from '../../img/spotiLogo.svg';
 
 let constants = require('../../js/constants');
@@ -25,18 +26,8 @@ let navStyle = {
 	margin: 0,
 	display: 'flex',
 	justifyContent: 'flex-end',
-	alignItems: 'center'
-}
-let itemStyle = {
-	listStyle: 'none',
-	margin: '0 0 0 1em',
-	textShadow: '0 2px 0 darken(#fff, 50%)'
-}
-let linkStyle = {
-	textDecoration: 'none',
-	color: constants.colors.font,
-	fontSize: '1.2em',
-	letterSpacing: '1px'
+	alignItems: 'center',
+	marginRight: '2em'
 
 }
 
@@ -44,46 +35,35 @@ class Header extends Component {
 
 	constructor() {
 		super();
-		this.state = {
-			hover: false,
-			target: null
-		}
-	}
 
-	toggleHover(event) {
-		this.setState({
-			hover: !this.state.hover,
-			target: event.target
-		})
+		this.showNav = this.showNav.bind(this);
+		this.handleOutsideClick = this.handleOutsideClick.bind(this);
+		this.state = {
+			popupVisible: false
+		};
 	}
 
 	showNav() {
-		let nav = document.getElementById("nav");
-		if (nav.style.display === "none") {
-			nav.style.display = 'flex';
+
+		if (!this.state.popupVisible) {
+			document.addEventListener('click', this.handleOutsideClick, false);
 		} else {
-			nav.style.display = "none";
+			document.removeEventListener('click', this.handleOutsideClick, false);
 		}
+		this.setState(prevState => ({
+			popupVisible: !prevState.popupVisible
+		}));
+	}
+
+	handleOutsideClick(e) {
+		// ignore clicks on the component itself
+		if (this.node.contains(e.target)) {
+			return;
+		}
+		this.showNav();
 	}
 
 	render() {
-		if (this.state.hover) {
-			if (this.state.target !== null) {
-				// eslint-disable-next-line
-				this.state.target.style.color = constants.colors.green;
-				// eslint-disable-next-line
-				this.state.target.style.cursor = 'pointer';
-
-			}
-		} else {
-			if (this.state.target !== null) {
-				// eslint-disable-next-line
-				this.state.target.style.color = constants.colors.font;
-				// eslint-disable-next-line
-				this.state.target.style.cursor = 'context-menu';
-			}
-		}
-
 		return (<header style={{
 				backgroundColor,
 				height: '90px',
@@ -114,25 +94,12 @@ class Header extends Component {
 									marginRight: '20px'
 								}}>
 								<ul style={navStyle}>
-									<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-										<a style={linkStyle} href="#features">Features</a>
-									</li>
-									<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-										<a style={linkStyle} href="/">Usage</a>
-									</li>
-									<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-										<a style={linkStyle} href="/">Contact</a>
-									</li>
+									<BarItem url="#features" name="Features"/>
+									<BarItem url="/" name="Usage"/>
+									<BarItem url="/" name="Contact"/>
 									<li style={divider}></li>
-									<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-										<a style={linkStyle} href={'http://' + ipAddress + ':' + portBack + '/login'}>Host</a>
-									</li>
-									<li style={{
-											...itemStyle,
-											marginRight: '2em'
-										}} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-										<a style={linkStyle} href="/join">Join</a>
-									</li>
+									<BarItem url={'http://' + ipAddress + ':' + portBack + '/login'} name="Host"/>
+									<BarItem url="/join" name="Join"/>
 								</ul>
 							</nav>);
 						} else {
@@ -141,8 +108,8 @@ class Header extends Component {
 									color: constants.colors.font,
 									flexGrow: 1,
 									marginRight: '20px'
-								}} href="#">
-								<FontAwesomeIcon icon={faBars} size="3x" onClick={this.showNav.bind(this)}/>
+								}} href="#" onClick={this.showNav}>
+								<FontAwesomeIcon icon={faBars} size="3x"/>
 							</a>);
 						}
 					}
@@ -150,24 +117,33 @@ class Header extends Component {
 
 			</MediaQuery>
 			<MediaQuery maxWidth={constants.breakpoints.medium}>
-				<ul id="nav" style={{
-						width: '100%',
-						position: 'absolute',
-						top: '90px',
-						// display: 'flex',
-						display: 'none',
-						flexDirection: 'column',
-						alignItems: 'center',
-						fontSize: '1.2em',
-						color: constants.colors.font,
-						backgroundColor: constants.colors.background
-					}}>
-					<NavItem name="Host" href={'http://' + ipAddress + ':' + portBack + '/login'}/>
-					<NavItem name="Join" href={'/join'}/>
-					<NavItem name="Features" href={'#features'}/>
-					<NavItem name="Usage" href={'/'}/>
-					<NavItem name="Contact Us" href={'/'}/>
-				</ul>
+				{
+					(matches) => {
+						if (this.state.popupVisible && matches) {
+							return (<ul id="nav" style={{
+									width: '100%',
+									position: 'absolute',
+									top: '90px',
+									display: 'flex',
+									flexDirection: 'column',
+									alignItems: 'center',
+									fontSize: '1.2em',
+									color: constants.colors.font,
+									backgroundColor: constants.colors.background
+								}} ref={node => {
+									this.node = node;
+								}}>
+								<NavItem name="Host" href={'http://' + ipAddress + ':' + portBack + '/login'}/>
+								<NavItem name="Join" href={'/join'}/>
+								<NavItem name="Features" href={'#features'}/>
+								<NavItem name="Usage" href={'/'}/>
+								<NavItem name="Contact Us" href={'/'}/>
+							</ul>);
+						} else {
+							return ('');
+						}
+					}
+				}
 			</MediaQuery>
 		</header>);
 	}
