@@ -5,6 +5,7 @@ const request = require('request');
 const fetch = require('node-fetch');
 const shallowEqual = require('shallow-equals');
 const deepEqual = require('deep-equal');
+const _ = require('lodash');
 /*jshint ignore: end */
 /**
 * Return a randomly generated string with a specified length, based on the possible symbols
@@ -259,13 +260,15 @@ method.getDifference = function(oldRoom) {
 			}
 		}
 
-		if (oldRoom.playlists.length < this.playlists.length) {
-			update.playlists = [];
-			for (var i = 0; i < this.playlists.length; i++) {
-				update.playlists.push({
-					name: this.playlists[i].name,
-					id: this.playlists[i].id
-				});
+		if (oldRoom.playlists !== null && this.playlists !== null) {
+			if (deepEqual(oldRoom.playlists,this.playlists) === false) {
+				update.playlists = [];
+				for (var i = 0; i < this.playlists.length; i++) {
+					update.playlists.push({
+						name: this.playlists[i].name,
+						id: this.playlists[i].id
+					});
+				}
 			}
 		}
 
@@ -367,25 +370,52 @@ method.getPlaylistById = function(playlistId) {
 method.changePlaylist = async function(playlistId) {
 	let playlist = this.getPlaylistById(playlistId);
 
-		//Load tracks into Playlist if its empty
-	if (playlist.tracks.length === 0) {
-		let nextTracks = playlist.href + '/tracks?fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal'; //%2Cmarket='+this.host.country
-		playlist.tracks = await this.loadOneBatch(nextTracks);
-	}
-
-	//If the playlist is smaller than 5 tracks, it will not change -> Because there has to be one active and 4 voteable tracks
-	if (playlist.tracks.length < 5) {
-		return false;
-	}
-
 	//Generate 4 new songs if the playlist changed
 	if (playlist != this.activePlaylist) {
 		await this.getRandomTracks(playlist.id);
 	}
 
 	this.activePlaylist = playlist;
+	console.log('INFO-[ROOM: '+this.id+']: Playlist changed to ['+playlist.name+'].');
 	return true;
 };
+
+method.updatePlaylists = async function() {
+	let newPlaylists = await this.fetchPlaylists();
+	let toBeRemoved = _.cloneDeep(this.playlists);
+
+	for (var i = 0; i < newPlaylists.length; i++) {
+		let playlist = this.getPlaylistById(newPlaylists[i].id);
+		if (playlist === null) {
+			this.playlists.push(newPlaylists[i]);
+			console.log('INFO-[ROOM: '+this.id+']: Added new Playlist: ['+newPlaylists[i].name+'].');
+		} else {
+			toBeRemoved[this.playlists.indexOf(playlist)] = null;
+			//LOGIC FOR CHANGING A PLAYLIST
+			if (Array.isArray(playlist.tracks) === false) {
+				if (playlist.tracks.total !== newPlaylists[i].tracks.total) {
+					this.playlists[this.playlists.indexOf(playlist)] = newPlaylists[i];
+					console.log('INFO-[ROOM: '+this.id+']: Changed Playlist: ['+newPlaylists[i].name+'].');
+				}
+			} else {
+				if (playlist.tracks.length !== newPlaylists[i].tracks.total) {
+					this.playlists[this.playlists.indexOf(playlist)] = newPlaylists[i];
+					console.log('INFO-[ROOM: '+this.id+']: Changed Playlist: ['+newPlaylists[i].name+'].');
+				}
+			}
+		}
+	}
+	for (var i = 0; i < toBeRemoved.length; i++) {
+		if (toBeRemoved[i] !== null) {
+			let playlist = this.getPlaylistById(toBeRemoved[i].id);
+			if (playlist.id !== this.activePlaylist.id) {
+				this.playlists.splice(this.playlists.indexOf(playlist),1);
+				console.log('INFO-[ROOM: '+this.id+']: Deleted Playlist: ['+playlist.name+'].');
+			}
+		}
+	}
+	return true;
+}
 
 /*jshint ignore: end */
 
@@ -396,8 +426,13 @@ method.changePlaylist = async function(playlistId) {
 * @param {string} playlistId The id that identifies the playlist
 * @return {boolean} True if completed
 */
-method.getRandomTracks = function(playlistId, activeTrack) {
+method.getRandomTracks = async function(playlistId, activeTrack) {
 	let playlist = this.getPlaylistById(playlistId);
+	//Load tracks into Playlist if its empty
+	if (Array.isArray(playlist.tracks) === false) {
+		playlist.tracks = await this.fetchPlaylistTracks(playlist);
+	}
+
 	if (activeTrack === null || activeTrack === undefined) {
 		if (this.activePlayer !== null) {
 			activeTrack = this.activePlayer.track;
@@ -428,8 +463,8 @@ method.getRandomTracks = function(playlistId, activeTrack) {
 					active = true;
 				}
 			}
-		} while (selectedTracks.includes(track) === true || active === true);
-		selectedTracks.push(track);
+		} while (selectedTracks.some(t => t.id === track.id) === true || active === true);
+		selectedTracks.push(_.cloneDeep(track));
 	}
 
 	this.activeTracks = selectedTracks;
@@ -504,10 +539,6 @@ method.fetchPlaylists = async function() {
 	let playlistRequestData = await playlistRequest.json();
 	next = playlistRequestData.next;
 
-	for (let i = 0; i < playlistRequestData.items.length; i++) {
-		playlistRequestData.items
-	}
-
 	let playlists = playlistRequestData.items;
 
 	while (next !== null) {
@@ -526,12 +557,41 @@ method.fetchPlaylists = async function() {
 	let returnPlaylists = [];
 
 	for (var i = 0; i < playlists.length; i++) {
-		if (playlists[i].tracks.total > 4) {
-			playlists[i].tracks = [];
+		if (playlists[i].tracks.total > 5) {
 			returnPlaylists.push(playlists[i]);
 		}
 	}
 	return returnPlaylists;
+}
+
+method.fetchPlaylistTracks = async function(playlist) {
+	let trackRequest = await fetch(playlist.href + '/tracks?fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal', { //%2Cmarket='+this.host.country
+		headers: {
+			"Authorization": "Bearer " + this.host.token
+		}
+	});
+
+	let trackRequestData = await trackRequest.json();
+	next = trackRequestData.next;
+
+	let tracks = trackRequestData.items;
+
+	while (next !== null) {
+		trackRequest = await fetch(next, {
+			headers: {
+				"Authorization": "Bearer " + this.host.token
+			}
+		});
+
+		trackRequestData = await trackRequest.json();
+		next = trackRequestData.next;
+
+		tracks = tracks.concat(trackRequestData.items);
+	}
+
+
+
+	return tracks;
 }
 
 /**

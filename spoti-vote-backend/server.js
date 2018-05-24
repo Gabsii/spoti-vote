@@ -27,6 +27,30 @@ console.log('INFO: Redirect URL: ' + redirect_uri);
 let rooms = [];
 let allClients = {};
 
+///////DEGUG/////////
+var stdin = process.openStdin();
+
+stdin.addListener("data", function(d) {
+	switch (d.toString().trim().split(' ')[0]) {
+		case "rooms":
+			for (var i = 0; i < rooms.length; i++) {
+				console.log(rooms[i].id);
+			}
+			break;
+		case "refresh":
+			let room = getRoomById(d.toString().trim().split(' ')[1]);
+			if (room !== null && room !== undefined) {
+				room.updatePlaylists();
+			}
+			break;
+		default:
+			break;
+	}
+});
+
+//////END DEBUG////////
+
+
 /**
 * Return the room with the specified id
 *
@@ -314,7 +338,6 @@ io.on('connection', (socket) => {
 	socket.on('changePlaylist', data => {
 		let room = getRoomById(socket.roomId);
 		if (room !== null) {
-			console.log('INFO-[ROOM: '+socket.roomId+']: Playlist changed to ['+data.playlistId+'].');
 			room.changePlaylist(data.playlistId);
 		} else {
 			socket.emit('errorEvent', {message: 'Room was closed'});
@@ -393,21 +416,7 @@ async function theUpdateFunction(socket) {
 		await room.update(socket.isHost);
 
 		if (socket.updateCounter.amount % 300 == 0) {
-			let newPlaylists = await room.fetchPlaylists();
-
-			if (newPlaylists.length > room.playlists.length) {
-				for (var i = 0; i < newPlaylists.length; i++) {
-					let x = 0;
-					for (var j = 0; j < room.playlists.length; j++) {
-						if (newPlaylists[i].id == room.playlists[j]) {
-							x = 1;
-						}
-					}
-					if (x == 0) {
-						room.playlists.push(newPlaylists[i]);
-					}
-				}
-			}
+			room.updatePlaylists();
 		}
 
 		let update = room.getDifference(socket.oldUpdate);
