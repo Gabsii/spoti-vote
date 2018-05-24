@@ -31,6 +31,7 @@ class App extends Component {
 			connectedUser: [],
 			playlists: [],
 			host: {
+				img: '',	//You now have the user icon in here
 				name: null,
 				voted: null
 			},
@@ -101,6 +102,9 @@ class App extends Component {
 		});
 
 		this.socket.on('initData', data => {
+
+			//Would be nice to have a loading screen until this is called -> then the user wont see the voting page until he has choosen to delete the old room ...
+
 			if (data.token !== null && data.token !== undefined) {
 				cookies.set('token', data.token, {path: '/'});
 
@@ -179,13 +183,18 @@ class App extends Component {
 					}
 				}
 
+				if (data.playlists !== null && data.playlists !== undefined) {
+					newState.playlists = data.playlists;
+				}
+
 				if (Object.keys(newState).length > 0) {
 					this.setState({
 						host: newState.host || this.state.host,
 						activeTracks: newState.activeTracks || this.state.activeTracks,
 						activePlaylist: newState.activePlaylist || this.state.activePlaylist,
 						connectedUser: newState.connectedUser || this.state.connectedUser,
-						activePlayer: newState.activePlayer || this.state.activePlayer
+						activePlayer: newState.activePlayer || this.state.activePlayer,
+						playlists: newState.playlists || this.state.playlists
 					})
 				}
 			}

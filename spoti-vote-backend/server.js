@@ -27,6 +27,30 @@ console.log('INFO: Redirect URL: ' + redirect_uri);
 let rooms = [];
 let allClients = {};
 
+///////DEGUG/////////
+var stdin = process.openStdin();
+
+stdin.addListener("data", function(d) {
+	switch (d.toString().trim().split(' ')[0]) {
+		case "rooms":
+			for (var i = 0; i < rooms.length; i++) {
+				console.log(rooms[i].id);
+			}
+			break;
+		case "refresh":
+			let room = getRoomById(d.toString().trim().split(' ')[1]);
+			if (room !== null && room !== undefined) {
+				room.updatePlaylists();
+			}
+			break;
+		default:
+			break;
+	}
+});
+
+//////END DEBUG////////
+
+
 /**
 * Return the room with the specified id
 *
@@ -177,7 +201,6 @@ io.on('connection', (socket) => {
 					let update = room.getDifference(null);
 					socket.oldUpdate = _.cloneDeep(room);
 
-					update.playlists = room.getPlaylists();
 					update.isHost= socket.isHost;
 
 					update.token = room.host.token;
@@ -193,7 +216,6 @@ io.on('connection', (socket) => {
 						let update = room.getDifference(null);
 						socket.oldUpdate = _.cloneDeep(room);
 
-						update.playlists = room.getPlaylists();
 						update.isHost= socket.isHost;
 
 						socket.emit('initData', update);
@@ -233,7 +255,6 @@ io.on('connection', (socket) => {
 				let update = room.getDifference(null);
 				socket.oldUpdate = _.cloneDeep(room);
 
-				update.playlists = room.getPlaylists();
 				update.isHost= socket.isHost;
 
 				update.token = room.host.token;
@@ -249,7 +270,6 @@ io.on('connection', (socket) => {
 					let update = room.getDifference(null);
 					socket.oldUpdate = _.cloneDeep(room);
 
-					update.playlists = room.getPlaylists();
 					update.isHost= socket.isHost;
 
 					socket.emit('initData', update);
@@ -318,7 +338,6 @@ io.on('connection', (socket) => {
 	socket.on('changePlaylist', data => {
 		let room = getRoomById(socket.roomId);
 		if (room !== null) {
-			console.log('INFO-[ROOM: '+socket.roomId+']: Playlist changed to ['+data.playlistId+'].');
 			room.changePlaylist(data.playlistId);
 		} else {
 			socket.emit('errorEvent', {message: 'Room was closed'});
@@ -388,8 +407,17 @@ io.on('connection', (socket) => {
 */
 async function theUpdateFunction(socket) {
 	let room = getRoomById(socket.roomId);
+
+	socket.updateCounter.amount += 1;
+
+
+
 	if (room !== null) {
 		await room.update(socket.isHost);
+
+		if (socket.updateCounter.amount % 300 == 0) {
+			room.updatePlaylists();
+		}
 
 		let update = room.getDifference(socket.oldUpdate);
 
@@ -401,8 +429,7 @@ async function theUpdateFunction(socket) {
 		socket.emit('errorEvent', {message: null});
 	}
 
-	socket.updateCounter.amount += 1;
-	if (socket.updateCounter.amount > 30) {
+	if (socket.updateCounter.amount % 30 == 0) {
 		let toBeDeleted = [];
 		for (var i = 0; i < rooms.length; i++) {
 			if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
@@ -413,6 +440,9 @@ async function theUpdateFunction(socket) {
 			console.log('INFO-[ROOM: '+toBeDeleted[i].id+']: This room has been deleted due to inactivity.');
 			rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
 		}
+	}
+
+	if (socket.updateCounter.amount > 300) {
 		socket.updateCounter.amount = 0;
 	}
 };
