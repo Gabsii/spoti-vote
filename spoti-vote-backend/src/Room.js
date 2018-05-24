@@ -541,7 +541,9 @@ method.fetchPlaylists = async function() {
 
 	let playlists = playlistRequestData.items;
 
-	while (next !== null) {
+	console.log(next);
+
+	while (next !== null && next !== undefined) {
 		playlistRequest = await fetch(next, {
 			headers: {
 				"Authorization": "Bearer " + this.host.token
