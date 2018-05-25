@@ -33,10 +33,13 @@ function makeid(length) {
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function Room(token, room) {
+function Room(token, refreshToken, clientId, clientSecret, room) {
 	//The host object
 	this.host = {
 		token: token,
+		clientId: clientId,
+		clientSecret: clientSecret,
+		refreshToken: refreshToken,
 		name: '',
 		id: '',
 		profileUrl: '',
@@ -492,6 +495,32 @@ method.getActiveTrackById = function(id) {
 /*jshint ignore: start */
 
 /**
+* Refreshes the Hosts API Token
+*
+* @author: Michiocre
+* @return: boolean if completed successfull
+*/
+method.refreshToken = async function() {
+	let authOptions = {
+		url: 'https://accounts.spotify.com/api/token',
+		form: {
+			grant_type: 'refresh_token',
+			refresh_token: this.host.refreshToken
+		},
+		headers: {
+			'Authorization': 'Basic ' + (new Buffer(this.host.clientId + ':' + this.host.clientSecret).toString('base64'))
+		},
+		json: true
+	};
+	request.post(authOptions, async (error, response, body) => {
+		this.host.access_token = body.access_token;
+		this.host.refresh_token = body.refresh_token;
+
+		return true;
+	});
+};
+
+/**
 * Fetches the data of the host, and all his playlists
 *
 * @author: Michiocre
@@ -540,8 +569,6 @@ method.fetchPlaylists = async function() {
 	next = playlistRequestData.next;
 
 	let playlists = playlistRequestData.items;
-
-	console.log(next);
 
 	while (next !== null && next !== undefined) {
 		playlistRequest = await fetch(next, {

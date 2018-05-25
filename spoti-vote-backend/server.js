@@ -41,6 +41,7 @@ stdin.addListener("data", function(d) {
 			let room = getRoomById(d.toString().trim().split(' ')[1]);
 			if (room !== null && room !== undefined) {
 				room.updatePlaylists();
+				room.refreshToken();
 			}
 			break;
 		default:
@@ -99,7 +100,7 @@ app.get('/callback', async (req, res) => {
 	};
 	request.post(authOptions, async (error, response, body) => {
 		let uri = 'http://' + ipAddress + ':' + portFront + '/app';
-		let room = new Room(body.access_token, rooms);
+		let room = new Room(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET, rooms);
 
 		if (await room.fetchData() == true) {
 			rooms.push(room);
@@ -410,13 +411,15 @@ async function theUpdateFunction(socket) {
 
 	socket.updateCounter.amount += 1;
 
-
-
 	if (room !== null) {
 		await room.update(socket.isHost);
 
-		if (socket.updateCounter.amount % 300 == 0) {
+		if (socket.updateCounter.amount % 300 == 0 && socket.isHost === true) {
 			room.updatePlaylists();
+		}
+
+		if (socket.updateCounter.amount % 3600 == 0 && socket.isHost === true) {
+			room.refreshToken();
 		}
 
 		let update = room.getDifference(socket.oldUpdate);
@@ -425,26 +428,28 @@ async function theUpdateFunction(socket) {
 			socket.emit('update', update);
 		}
 		socket.oldUpdate = _.cloneDeep(room);
+
+		if (socket.updateCounter.amount % 30 == 0) {
+			let toBeDeleted = [];
+			for (var i = 0; i < rooms.length; i++) {
+				if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
+					toBeDeleted.push(rooms[i]);
+				}
+			}
+			for (var i = 0; i < toBeDeleted.length; i++) {
+				console.log('INFO-[ROOM: '+toBeDeleted[i].id+']: This room has been deleted due to inactivity.');
+				rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
+			}
+		}
+
+		if (socket.updateCounter.amount > 30000) {
+			socket.updateCounter.amount = 0;
+		}
 	} else {
 		socket.emit('errorEvent', {message: null});
 	}
 
-	if (socket.updateCounter.amount % 30 == 0) {
-		let toBeDeleted = [];
-		for (var i = 0; i < rooms.length; i++) {
-			if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
-				toBeDeleted.push(rooms[i]);
-			}
-		}
-		for (var i = 0; i < toBeDeleted.length; i++) {
-			console.log('INFO-[ROOM: '+toBeDeleted[i].id+']: This room has been deleted due to inactivity.');
-			rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
-		}
-	}
 
-	if (socket.updateCounter.amount > 300) {
-		socket.updateCounter.amount = 0;
-	}
 };
 
 /* jshint ignore: end */
