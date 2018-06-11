@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Notification from 'react-web-notification';
 import Card from './Card.jsx';
 import ShareButton from './ShareButton.jsx';
-import logo from '../../../img/spotiLogo.png';
+import logo from '../../../img/spotiLogo.svg';
 
 let constants = require('../../../js/constants');
 
@@ -80,7 +80,6 @@ class CardContainer extends Component {
 				const body = 'New Songs were loaded!';
 				const tag = now;
 				const icon = logo;
-				// const icon = 'http://localhost:3000/Notifications_button_24.png';
 
 				// Available options
 				// See https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification

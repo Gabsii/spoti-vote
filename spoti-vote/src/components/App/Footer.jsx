@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import MediaQuery from 'react-responsive';
 import SongIcon from './Footer/SongIcon.jsx';
 import SongAggregation from './Footer/SongAggregation.jsx';
 import VolumeBar from './Footer/VolumeBar.jsx';
@@ -39,12 +40,22 @@ class Footer extends Component {
 		return (<footer style={defaultStyle}>
 			<SongIcon background={track.img}/>
 			<SongAggregation songName={track.name} artists={track.artists}/>
-			<Progressbar activePlayer={this.props.activePlayer}/> {
-				this.props.isHost
-					? <VolumeBar activePlayer={this.props.activePlayer} socket={this.props.socket}/>
-					: ''
-			}
-
+			<MediaQuery minWidth={constants.breakpoints.medium}>
+				<Progressbar activePlayer={this.props.activePlayer}/>
+			</MediaQuery>
+			< MediaQuery minWidth={constants.breakpoints.medium}>{
+					(matches) => {
+						if (this.props.isHost) {
+							if (matches) {
+								return (<VolumeBar activePlayer={this.props.activePlayer} socket={this.props.socket}/>);
+							} else {
+								return '';
+							}
+						} else {
+							return '';
+						}
+					}
+				}</MediaQuery>
 		</footer>);
 	}
 }
