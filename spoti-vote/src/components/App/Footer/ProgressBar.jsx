@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import MediaQuery from 'react-responsive';
 
 let constants = require('../../../js/constants');
 
@@ -52,22 +51,12 @@ class Progressbar extends Component {
 			}
 		}
 
-		return (<MediaQuery maxWidth={constants.breakpoints.medium}>
-			{
-				(matches) => {
-					if (matches) { //isPhone
-						return '';
-					} else { //isLaptop
-						return (<div style={borderStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-							<div role="progressbar" style={{
-									...progressStyle,
-									...linkStyle
-								}}></div>
-						</div>);
-					}
-				}
-			}
-		</MediaQuery>);
+		return (<div style={borderStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+			<div role="progressbar" style={{
+					...progressStyle,
+					...linkStyle
+				}}></div>
+		</div>);
 	}
 }
 export default Progressbar;
