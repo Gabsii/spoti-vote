@@ -56,6 +56,7 @@ function Room(token, refreshToken, clientId, clientSecret, room) {
 	this.hostDisconnect = Date.now();
 	this.isChanging = false;
 	this.isSkipping = false;
+	this.hostPhone = false;
 
 	//Makes sure the id is unique
 	let counter;
