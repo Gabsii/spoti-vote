@@ -32,14 +32,14 @@ class VolumeBar extends Component {
     }
 
     render() { //onChange={this.props.volumeHandler}
-        return (<div style={defaultStyle} id="player">
+        return (<div style={defaultStyle} id='player'>
             <FontAwesomeIcon icon={faVolumeDown} style={{
                     color: constants.colors.fontSecondary
-                }} size="lg"/>
-            <input onChange={this.volumeHandler.bind(this)} type="range" min="0" step="2" max="100" defaultValue={this.props.activePlayer.volume} id="volume" style={sliderStyle}/>
+                }} size='lg'/>
+            <input onChange={this.volumeHandler.bind(this)} type='range' min='0' step='2' max='100' defaultValue={this.props.activePlayer.volume} id='volume' style={sliderStyle}/>
             <FontAwesomeIcon icon={faVolumeUp} style={{
                     color: constants.colors.fontSecondary
-                }} size="lg"/>
+                }} size='lg'/>
         </div>);
     }
 }

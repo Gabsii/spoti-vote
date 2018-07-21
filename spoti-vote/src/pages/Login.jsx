@@ -158,19 +158,18 @@ class Login extends Component {
                                             flexDirection: 'row'
                                         }}>
                                         <Reason icon={faPiggyBank} title='No Costs' text='Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!'/>
-                                        <Reaso icon={faUsers} title='No Dictatorship' text='We empower the users! The DJ plays a song you don' t="t" like?="like?" Use="Use" your="your" voice="voice" and="and" just="just" skip="skip" it!'/>
-                                        <Reason icon={faUnlink} title=' No="No" Registration' text=' We="We" have="have" no="no" strings="strings" on="on" you!="you!" Just="Just" log="log" in="in" with="with" Spotify="Spotify" Premium="Premium" account="account" invite="invite" friends="friends" to="to" join="join">);
-                                } else {
-                                    return (<div style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: 'center'
-                                        }}>
-                                        <Reason icon={faPiggyBank} title='No Costs' text='Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!'/>
-                                        <Reaso icon={faUsers} title='No Dictatorship' text='We empower the users! The DJ plays a song you don' t="t" like?="like?" Use="Use" your="your" voice="voice" and="and" just="just" skip="skip" it!'/>
-                                        <Reason icon={faUnlink} title=' No="No" Registration' text=' We="We" have="have" no="no" strings="strings" on="on" you!="you!" Just="Just" log="log" in="in" with="with" Spotify="Spotify" Premium="Premium" account="account" invite="invite" friends="friends" to="to" join="join">);
+                                        <Reaso icon={faUsers} title='No Dictatorship' text='We empower the users! The DJ plays a song you don' t='t' like?='like?' Use='Use' your='your' voice='voice' and='and' just='just' skip='skip' it!'/>
+                                        <Reason icon={faUnlink} title=' No='No' Registration' text=' We='We' have='have' no='no' strings='strings' on='on' you!='you!' Just='Just' log='log' in='in' with='with' Spotify='Spotify' Premium='Premium' account='account' invite='invite' friends='friends' to='to' join='join'>); } else {
+                                                return (<div style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                    <Reason icon={faPiggyBank} title='No Costs' text='Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!'/>
+                                                    <Reaso icon={faUsers} title='No Dictatorship' text='We empower the users! The DJ plays a song you don' t='t' like?='like?' Use='Use' your='your' voice='voice' and='and' just='just' skip='skip' it!'/>
+                                        <Reason icon={faUnlink} title=' No='No' Registration' text=' We='We' have='have' no='no' strings='strings' on='on' you!='you!' Just='Just' log='log' in='in' with='with' Spotify='Spotify' Premium='Premium' account='account' invite='invite' friends='friends' to='to' join='join'>);
                                 }
-                            }
+                                            }
                         }
                     </MediaQuery>
                 </div>
@@ -209,20 +208,19 @@ class Login extends Component {
                                             display: 'flex',
                                             flexDirection: 'row'
                                         }}>
-                                        <Reaso icon={faCar} title='Road Trips' text='You' re="re" feeling="feeling" like="like" James="James" Corden,="Corden," do="do" you?="you?" Sing="Sing" along="along" with="with" your="your" friends="friends" to="to" favourite="favourite" songs'/>
-                                        <Reason icon={faHome} title=' House="House" Parties' text=' Create="Create" a="a" collabarative="collabarative" playlist="playlist" and="and" party="party" finest="finest" tunes'/>
-                                        <Reason icon={faHeadphones} title=' DJs/Streamer' text=' Let="Let" crowd="crowd" set="set" the="the" tone="tone" while="while" you="you" lean="lean" back="back">);
-                                } else {
-                                    return (<div style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: 'center'
-                                        }}>
-                                        <Reaso icon={faCar} title='Road Trips' text='You' re="re" feeling="feeling" like="like" James="James" Corden,="Corden," do="do" you?="you?" Sing="Sing" along="along" with="with" your="your" friends="friends" to="to" favourite="favourite" songs'/>
-                                        <Reason icon={faHome} title=' House="House" Parties' text=' Create="Create" a="a" collabarative="collabarative" playlist="playlist" and="and" party="party" finest="finest" tunes'/>
-                                        <Reason icon={faHeadphones} title=' DJs/Streamer' text=' Let="Let" crowd="crowd" set="set" the="the" tone="tone" while="while" you="you" lean="lean" back="back">);
+                                        <Reaso icon={faCar} title='Road Trips' text='You' re='re' feeling='feeling' like='like' James='James' Corden,='Corden,' do='do' you?='you?' Sing='Sing' along='along' with='with' your='your' friends='friends' to='to' favourite='favourite' songs'/>
+                                        <Reason icon={faHome} title=' House='House' Parties' text=' Create='Create' a='a' collabarative='collabarative' playlist='playlist' and='and' party='party' finest='finest' tunes'/>
+                                        <Reason icon={faHeadphones} title=' DJs/Streamer' text=' Let='Let' crowd='crowd' set='set' the='the' tone='tone' while='while' you='you' lean='lean' back='back'>); } else {
+                                                return (<div style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                    <Reaso icon={faCar} title='Road Trips' text='You' re='re' feeling='feeling' like='like' James='James' Corden,='Corden,' do='do' you?='you?' Sing='Sing' along='along' with='with' your='your' friends='friends' to='to' favourite='favourite' songs'/>
+                                        <Reason icon={faHome} title=' House='House' Parties' text=' Create='Create' a='a' collabarative='collabarative' playlist='playlist' and='and' party='party' finest='finest' tunes'/>
+                                        <Reason icon={faHeadphones} title=' DJs/Streamer' text=' Let='Let' crowd='crowd' set='set' the='the' tone='tone' while='while' you='you' lean='lean' back='back'>);
                                 }
-                            }
+                                            }
                         }
                     </MediaQuery>
                 </div>

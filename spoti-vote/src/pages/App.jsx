@@ -53,8 +53,8 @@ class App extends Component {
     }
 
     componentDidMount() {
-        document.title = "Spoti-Vote | " + this.state.roomId;
-        document.getElementsByTagName("META")[2].content = "";
+        document.title = 'Spoti-Vote | ' + this.state.roomId;
+        document.getElementsByTagName('META')[2].content = '';
 
         //When the server asks for the id, it will return the id and the token
         this.socket.on('roomId', data => {
