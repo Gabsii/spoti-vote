@@ -20,7 +20,7 @@ let defaultStyle = {
     letterSpacing: '2px',
     textTransform: 'uppercase',
     whiteSpace: 'normal'
-}
+};
 
 class ShareButton extends Component {
 

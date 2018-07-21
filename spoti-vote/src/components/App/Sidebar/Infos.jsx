@@ -53,7 +53,7 @@ class Infos extends Component {
             }
             : heightStyle = {
                 height: '300px'
-            }
+            };
         let option = <div>Playlist:{' ' + this.props.activePlaylist.name}</div>;
 
         if (this.props.isHost === true) {

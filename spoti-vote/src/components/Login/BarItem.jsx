@@ -35,12 +35,12 @@ class BarItem extends Component {
             hoverStyle = {
                 cursor: 'pointer',
                 color: constants.colors.green
-            }
+            };
         } else {
             hoverStyle = {
                 cursor: 'context-menu',
                 color: constants.colors.font
-            }
+            };
         }
 
         return (<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>

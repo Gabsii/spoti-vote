@@ -37,14 +37,14 @@ class SkipButton extends Component {
             }
             : linkStyle = {
                 cursor: 'context-menu'
-            }
+            };
         this.props.isPhone
             ? flexStyle = {
                 flexDirection: 'column'
             }
             : flexStyle = {
                 flexDirection: 'row'
-            }
+            };
 
         let users = this.props.connectedUser.length + 1;
         let skips = 0;

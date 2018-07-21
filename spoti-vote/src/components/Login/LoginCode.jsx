@@ -45,7 +45,7 @@ class LoginCode extends Component {
             fetch('http://' + ipAddress + ':' + portBack + '/rooms').then((response) => response.json().then(data => {
                 for (var i = 0; i < data.content.length; i++) {
                     if (data.content[i] === str) {
-                        exists = true
+                        exists = true;
                         this.setState({room: str, roomExists: true});
                     }
                 }
@@ -71,7 +71,7 @@ class LoginCode extends Component {
     render() {
         let borderStyle = {
             borderRadius: '500px'
-        }
+        };
 
         return (<div style={{
                 display: 'flex',

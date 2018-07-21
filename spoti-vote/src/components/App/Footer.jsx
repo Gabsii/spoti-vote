@@ -33,7 +33,7 @@ class Footer extends Component {
                     img: this.props.activePlayer.track.album.images[this.props.activePlayer.track.album.images.length - 1].url,
                     name: this.props.activePlayer.track.name,
                     artists: this.props.activePlayer.track.artists
-                }
+                };
             }
         }
 

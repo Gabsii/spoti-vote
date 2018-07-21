@@ -65,23 +65,23 @@ class Card extends Component {
         if (this.state.hover) {
             linkStyle = {
                 cursor: 'pointer'
-            }
+            };
         } else {
             linkStyle = {
                 cursor: 'context-menu'
-            }
+            };
         }
 
         if (this.props.isPhone) {
             marginStyle = {
                 flexBasis: 'calc(50% - 10px)',
                 margin: '5px'
-            }
+            };
         } else {
             marginStyle = {
                 flexBasis: 'calc(50% - 40px)',
                 margin: '20px'
-            }
+            };
         }
 
         let votes = this.props.randomTrack.votes;

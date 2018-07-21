@@ -58,7 +58,7 @@ class SettingsBar extends Component {
             }
             : linkStyle = {
                 cursor: 'context-menu'
-            }
+            };
 
         this.props.isPhone
             ? marginStyle = {
@@ -66,7 +66,7 @@ class SettingsBar extends Component {
             }
             : marginStyle = {
                 marginBottom: 0
-            }
+            };
         return (<div style={{
                 ...defaultStyle,
                 ...marginStyle

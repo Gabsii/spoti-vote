@@ -28,11 +28,11 @@ class Progressbar extends Component {
         if (this.state.hover) {
             linkStyle = {
                 background: constants.colors.green
-            }
+            };
         } else {
             linkStyle = {
                 background: constants.colors.fontSecondary
-            }
+            };
         }
 
         let progressStyle = {
@@ -44,7 +44,7 @@ class Progressbar extends Component {
             margin: '1px',
             animation: 'width 3s ease-out infinite',
             width: '0%'
-        }
+        };
         if (this.props.activePlayer !== null) {
             if (this.props.activePlayer.progress !== undefined) {
                 progressStyle.width = this.props.activePlayer.progress + '%';

@@ -15,7 +15,7 @@ let defaultStyle = {
     padding: '25px',
     overflow: 'hidden',
     backgroundColor: constants.colors.background
-}
+};
 
 class CardContainer extends Component {
 
@@ -27,7 +27,7 @@ class CardContainer extends Component {
                 ignore: true,
                 title: ''
             }
-        }
+        };
     }
 
     handlePermissionGranted() {

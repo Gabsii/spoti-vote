@@ -23,7 +23,7 @@ import SocialIcon from '../components/Login/SocialIcon.jsx';
 let constants = require('../js/constants');
 let sectionStyle = {
     width: '100%'
-}
+};
 let containerStyle = {
     height: '100%',
     width: '100%',
@@ -31,7 +31,7 @@ let containerStyle = {
     padding: '10px 10%',
     boxSizing: 'border-box',
     overflow: 'hidden'
-}
+};
 
 class Login extends Component {
 
@@ -39,7 +39,7 @@ class Login extends Component {
         super();
         this.state = {
             image: image
-        }
+        };
     }
 
     componentDidMount() {
@@ -66,9 +66,7 @@ class Login extends Component {
     }
 
     render() {
-        window.addEventListener('touchmove', event => {
-            console.log(event)
-        }, {passive: true});
+        window.addEventListener('touchmove', event => {}, {passive: true});
         return (<main>
             <Header/>
             <section style={{

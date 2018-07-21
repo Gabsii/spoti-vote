@@ -19,20 +19,21 @@ let defaultStyle = {
     whiteSpace: 'normal',
     backgroundColor: constants.colors.green,
     marginTop: '1.5em'
-}
+};
+
 class LoginButton extends Component {
 
     constructor() {
         super();
         this.state = {
             hover: false
-        }
+        };
     }
 
     toggleHover() {
         this.setState({
             hover: !this.state.hover
-        })
+        });
     }
 
     login() {
@@ -45,11 +46,11 @@ class LoginButton extends Component {
             linkStyle = {
                 cursor: 'pointer',
                 backgroundColor: constants.colors.greenHover
-            }
+            };
         } else {
             linkStyle = {
                 cursor: 'context-menu'
-            }
+            };
         }
         return (<button id='loginbutton' style={{
                 ...defaultStyle,
