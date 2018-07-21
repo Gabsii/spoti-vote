@@ -27,7 +27,7 @@ class LoginButtonSecondary extends Component {
         super();
         this.state = {
             hover: false
-        }
+        };
     }
 
     toggleHover() {
@@ -47,11 +47,11 @@ class LoginButtonSecondary extends Component {
                 cursor: 'pointer',
                 backgroundColor: constants.colors.green,
                 color: constants.colors.background
-            }
+            };
         } else {
             linkStyle = {
                 cursor: 'context-menu'
-            }
+            };
         }
         return (<button id='loginbuttonsecondary' style={{
                 ...defaultStyle,

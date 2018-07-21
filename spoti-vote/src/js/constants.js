@@ -1,20 +1,3 @@
-let iterateCardColors = function(index) {
-    switch (index % 4) {
-        case 0:
-            return colors.greenCard;
-        case 1:
-            return colors.blueCard;
-        case 2:
-            return colors.redCard;
-        case 3:
-            return colors.yellowCard;
-        case 4:
-            return colors.skip;
-        default:
-            return null;
-    }
-};
-
 let codes = {
     SUCCESS: 200,
     NOTFOUND: 404,
@@ -46,6 +29,23 @@ let breakpoints = {
     medium: 760, // ]375;760] large Smartphones
     large: 980, // ]760;980] Tablets
     xlarge: 1280 // ]980;1280] Laptops (everything else is DESKTOP FIRST)
+};
+
+let iterateCardColors = function(index) {
+    switch (index % 4) {
+        case 0:
+            return colors.greenCard;
+        case 1:
+            return colors.blueCard;
+        case 2:
+            return colors.redCard;
+        case 3:
+            return colors.yellowCard;
+        case 4:
+            return colors.skip;
+        default:
+            return null;
+    }
 };
 
 module.exports = {
