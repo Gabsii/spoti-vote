@@ -101,7 +101,7 @@ class Header extends Component {
                                 }}>
                                 <ul style={navStyle}>
                                     <BarItem url="/#features" name="Features"/>
-                                    <BarItem url="/" name="Usage"/>
+                                    <BarItem url="/usage" name="Usage"/>
                                     <li style={divider}></li>
                                     <BarItem url={'http://' + ipAddress + ':' + portBack + '/login'} name="Host"/>
                                     <BarItem url="/join" name="Join"/>
@@ -142,7 +142,7 @@ class Header extends Component {
                                 <NavItem name="Host" href={'http://' + ipAddress + ':' + portBack + '/login'}/>
                                 <NavItem name="Join" href={'/join'}/>
                                 <NavItem name="Features" href={'#features'}/>
-                                <NavItem name="Usage" href={'/'}/>
+                                <NavItem name="Usage" href={'/usage'}/>
                                 <NavItem name="Contact Us" href={'/'}/>
                             </ul>);
                         } else {
