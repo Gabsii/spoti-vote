@@ -46,8 +46,8 @@ class Login extends Component {
         if (window.location.search !== '') {
             window.location.search = '';
         }
-        document.title = "Spoti-Vote";
-        document.getElementsByTagName("META")[2].content = "Spoti Vote provides you with a party mode for Spotify. Let your friends choose the music!";
+        document.title = 'Spoti-Vote';
+        document.getElementsByTagName('META')[2].content = 'Spoti Vote provides you with a party mode for Spotify. Let your friends choose the music!';
         var random = Math.floor((Math.random() * 3) + 1);
         switch (random) {
             case 1:
@@ -141,7 +141,7 @@ class Login extends Component {
                     backgroundColor: constants.colors.font
                 }}>
                 <div style={containerStyle}>
-                    <h2 id="features" style={{
+                    <h2 id='features' style={{
                             display: 'flex',
                             justifyContent: 'center',
                             fontSize: '2em',
@@ -157,20 +157,18 @@ class Login extends Component {
                                             display: 'flex',
                                             flexDirection: 'row'
                                         }}>
-                                        <Reason icon={faPiggyBank} title="No Costs" text="Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!"/>
-                                        <Reason icon={faUsers} title="No Dictatorship" text="We empower the users! The DJ plays a song you don't like? Use your voice and just skip it!"/>
-                                        <Reason icon={faUnlink} title="No Registration" text="We have no strings on you! Just log in with your Spotify Premium account and invite your friends to join your room!"/>
-                                    </div>);
+                                        <Reason icon={faPiggyBank} title='No Costs' text='Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!'/>
+                                        <Reaso icon={faUsers} title='No Dictatorship' text='We empower the users! The DJ plays a song you don' t="t" like?="like?" Use="Use" your="your" voice="voice" and="and" just="just" skip="skip" it!'/>
+                                        <Reason icon={faUnlink} title=' No="No" Registration' text=' We="We" have="have" no="no" strings="strings" on="on" you!="you!" Just="Just" log="log" in="in" with="with" Spotify="Spotify" Premium="Premium" account="account" invite="invite" friends="friends" to="to" join="join">);
                                 } else {
                                     return (<div style={{
                                             display: 'flex',
                                             flexDirection: 'column',
                                             alignItems: 'center'
                                         }}>
-                                        <Reason icon={faPiggyBank} title="No Costs" text="Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!"/>
-                                        <Reason icon={faUsers} title="No Dictatorship" text="We empower the users! The DJ plays a song you don't like? Use your voice and just skip it!"/>
-                                        <Reason icon={faUnlink} title="No Registration" text="We have no strings on you! Just log in with your Spotify Premium account and invite your friends to join your room!"/>
-                                    </div>);
+                                        <Reason icon={faPiggyBank} title='No Costs' text='Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!'/>
+                                        <Reaso icon={faUsers} title='No Dictatorship' text='We empower the users! The DJ plays a song you don' t="t" like?="like?" Use="Use" your="your" voice="voice" and="and" just="just" skip="skip" it!'/>
+                                        <Reason icon={faUnlink} title=' No="No" Registration' text=' We="We" have="have" no="no" strings="strings" on="on" you!="you!" Just="Just" log="log" in="in" with="with" Spotify="Spotify" Premium="Premium" account="account" invite="invite" friends="friends" to="to" join="join">);
                                 }
                             }
                         }
@@ -211,20 +209,18 @@ class Login extends Component {
                                             display: 'flex',
                                             flexDirection: 'row'
                                         }}>
-                                        <Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
-                                        <Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
-                                        <Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
-                                    </div>);
+                                        <Reaso icon={faCar} title='Road Trips' text='You' re="re" feeling="feeling" like="like" James="James" Corden,="Corden," do="do" you?="you?" Sing="Sing" along="along" with="with" your="your" friends="friends" to="to" favourite="favourite" songs'/>
+                                        <Reason icon={faHome} title=' House="House" Parties' text=' Create="Create" a="a" collabarative="collabarative" playlist="playlist" and="and" party="party" finest="finest" tunes'/>
+                                        <Reason icon={faHeadphones} title=' DJs/Streamer' text=' Let="Let" crowd="crowd" set="set" the="the" tone="tone" while="while" you="you" lean="lean" back="back">);
                                 } else {
                                     return (<div style={{
                                             display: 'flex',
                                             flexDirection: 'column',
                                             alignItems: 'center'
                                         }}>
-                                        <Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
-                                        <Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
-                                        <Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
-                                    </div>);
+                                        <Reaso icon={faCar} title='Road Trips' text='You' re="re" feeling="feeling" like="like" James="James" Corden,="Corden," do="do" you?="you?" Sing="Sing" along="along" with="with" your="your" friends="friends" to="to" favourite="favourite" songs'/>
+                                        <Reason icon={faHome} title=' House="House" Parties' text=' Create="Create" a="a" collabarative="collabarative" playlist="playlist" and="and" party="party" finest="finest" tunes'/>
+                                        <Reason icon={faHeadphones} title=' DJs/Streamer' text=' Let="Let" crowd="crowd" set="set" the="the" tone="tone" while="while" you="you" lean="lean" back="back">);
                                 }
                             }
                         }
@@ -250,9 +246,9 @@ class Login extends Component {
                             flexDirection: 'row',
                             justifyContent: 'center'
                         }}>
-                        <SocialIcon icon={faFacebook} url={"https://www.facebook.com/Spoti-Vote-600357846990340/"}/>
-                        <SocialIcon icon={faTwitter} url={"https://twitter.com/SpotiVote"}/>
-                        <SocialIcon icon={faGithub} url={"https://github.com/Gabsii/spoti-vote"}/>
+                        <SocialIcon icon={faFacebook} url={'https://www.facebook.com/Spoti-Vote-600357846990340/'}/>
+                        <SocialIcon icon={faTwitter} url={'https://twitter.com/SpotiVote'}/>
+                        <SocialIcon icon={faGithub} url={'https://github.com/Gabsii/spoti-vote'}/>
                     </div>
                 </div>
             </section>

@@ -78,7 +78,7 @@ class Header extends Component {
                         textDecoration: 'none',
                         letterSpacing: '1px'
                     }}>
-                    <img style={defaultDimensions} src={logo} alt={"logo"}></img>
+                    <img style={defaultDimensions} src={logo} alt={'logo'}></img>
                 </a>
             </div>
             <a href='/' style={{
@@ -87,7 +87,7 @@ class Header extends Component {
                 }}>
                 <b style={{
                         color: constants.colors.font,
-                        fontSize: "2em"
+                        fontSize: '2em'
                     }}>Spoti Vote</b>
                 {/* TODO: Logo (b/w) + text as one image */}
             </a>
@@ -100,11 +100,11 @@ class Header extends Component {
                                     marginRight: '20px'
                                 }}>
                                 <ul style={navStyle}>
-                                    <BarItem url="/#features" name="Features"/>
-                                    <BarItem url="/usage" name="Usage"/>
+                                    <BarItem url='/#features' name='Features'/>
+                                    <BarItem url='/usage' name='Usage'/>
                                     <li style={divider}></li>
-                                    <BarItem url={'http://' + ipAddress + ':' + portBack + '/login'} name="Host"/>
-                                    <BarItem url="/join" name="Join"/>
+                                    <BarItem url={'http://' + ipAddress + ':' + portBack + '/login'} name='Host'/>
+                                    <BarItem url='/join' name='Join'/>
                                 </ul>
                             </nav>);
                         } else {
@@ -114,8 +114,8 @@ class Header extends Component {
                                     color: constants.colors.font,
                                     flexGrow: 1,
                                     marginRight: '20px'
-                                }} href="#" onClick={this.showNav}>
-                                <FontAwesomeIcon icon={faBars} size="3x"/>
+                                }} href='#' onClick={this.showNav}>
+                                <FontAwesomeIcon icon={faBars} size='3x'/>
                             </a>);
                         }
                     }
@@ -126,7 +126,7 @@ class Header extends Component {
                 {
                     (matches) => {
                         if (this.state.popupVisible && matches) {
-                            return (<ul id="nav" style={{
+                            return (<ul id='nav' style={{
                                     width: '100%',
                                     position: 'absolute',
                                     top: '90px',
@@ -139,11 +139,11 @@ class Header extends Component {
                                 }} ref={node => {
                                     this.node = node;
                                 }}>
-                                <NavItem name="Host" href={'http://' + ipAddress + ':' + portBack + '/login'}/>
-                                <NavItem name="Join" href={'/join'}/>
-                                <NavItem name="Features" href={'#features'}/>
-                                <NavItem name="Usage" href={'/usage'}/>
-                                <NavItem name="Contact Us" href={'/'}/>
+                                <NavItem name='Host' href={'http://' + ipAddress + ':' + portBack + '/login'}/>
+                                <NavItem name='Join' href={'/join'}/>
+                                <NavItem name='Features' href={'#features'}/>
+                                <NavItem name='Usage' href={'/usage'}/>
+                                <NavItem name='Contact Us' href={'/'}/>
                             </ul>);
                         } else {
                             return ('');

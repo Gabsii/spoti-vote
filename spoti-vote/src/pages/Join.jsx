@@ -8,8 +8,8 @@ const constants = require('../js/constants');
 class Join extends Component {
 
     componentDidMount() {
-        document.title = "Spoti-Vote | Join a room";
-        document.getElementsByTagName("META")[2].content = "Join a room to fulfill your wish of musically democracy";
+        document.title = 'Spoti-Vote | Join a room';
+        document.getElementsByTagName('META')[2].content = 'Join a room to fulfill your wish of musically democracy';
     }
 
     render() {
@@ -32,8 +32,8 @@ class Join extends Component {
                     padding: '20px'
                 }}>
                 <div style={{
-                        fontSize: "2em",
-                        marginTop: "1.5em",
+                        fontSize: '2em',
+                        marginTop: '1.5em',
                         textAlign: 'center'
                     }}>Join a Spoti-Vote Room</div><br/>
                 <br/>
@@ -44,7 +44,7 @@ class Join extends Component {
                 <br/>
                 <br/>
                 <div style={{
-                        fontSize: "1.5em"
+                        fontSize: '1.5em'
                     }}>Room Code</div>
                 <LoginCode/>
             </div>
