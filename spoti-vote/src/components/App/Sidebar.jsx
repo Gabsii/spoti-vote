@@ -23,7 +23,7 @@ class Sidebar extends Component {
                 flexFlow: 'row',
                 color: 'white',
                 backgroundColor: constants.colors.backgroundLite
-            }
+            };
         } else {
             defaultStyle = {
                 height: 'calc(100vh - 75px)',
@@ -38,7 +38,7 @@ class Sidebar extends Component {
                 flexFlow: 'column',
                 color: 'white',
                 backgroundColor: constants.colors.backgroundLite
-            }
+            };
         }
         return (<div id='sidebar' style={defaultStyle}>
             <MediaQuery maxWidth={constants.breakpoints.medium}>{

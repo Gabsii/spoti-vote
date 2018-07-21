@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import icon from '../../../img/userIcon.svg';
-import Marquee from 'react-text-marquee'
+import Marquee from 'react-text-marquee';
 
 let defaultStyle = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '5px'
-}
+};
+
 let imgStyle = {
     height: '32px',
     width: '32px',
@@ -15,7 +16,7 @@ let imgStyle = {
     marginRight: '20px',
     marginTop: '5px',
     marginBottom: '5px'
-}
+};
 
 class User extends Component {
 

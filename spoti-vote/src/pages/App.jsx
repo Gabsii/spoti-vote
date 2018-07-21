@@ -49,7 +49,7 @@ class App extends Component {
             activeTracks: {},
             activePlayer: null,
             voted: null
-        }
+        };
     }
 
     componentDidMount() {
@@ -98,7 +98,7 @@ class App extends Component {
                 }
             }).then((result) => {
                 this.socket.emit('nameEvent', {name: result.value});
-            })
+            });
         });
 
         this.socket.on('initData', data => {
@@ -278,9 +278,9 @@ class App extends Component {
             <MediaQuery minWidth={constants.breakpoints.medium}>{
                     (matches) => {
                         if (matches) { // = tablet^
-                            return <CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
+                            return (<CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>);
                         } else { // = phone
-                            return <CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={true} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
+                            return (<CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={true} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>);
                         }
                     }
                 }

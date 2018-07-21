@@ -5,7 +5,7 @@ let defaultStyle = {
     position: 'absolute',
     bottom: 0,
     left: 0
-}
+};
 
 class SongIcon extends Component {
     render() {

@@ -18,7 +18,7 @@ let defaultStyle = {
     borderRadius: '3px',
     WebKitUserSelect: 'none',
     MozUserSelect: 'none'
-}
+};
 
 let imgStyle = {
     width: '100%',
@@ -30,7 +30,7 @@ let imgStyle = {
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column'
-}
+};
 
 class Card extends Component {
 
@@ -38,13 +38,13 @@ class Card extends Component {
         super();
         this.state = {
             hover: false
-        }
+        };
     }
 
     toggleHover() {
         this.setState({
             hover: !this.state.hover
-        })
+        });
     }
 
     hexToRgb(hex) {

@@ -28,7 +28,7 @@ class LoginCode extends Component {
         this.state = {
             roomExists: '',
             room: false
-        }
+        };
     }
 
     submitHandler(event) {

@@ -19,7 +19,7 @@ class BarItem extends Component {
         super();
         this.state = {
             hover: false
-        }
+        };
     }
 
     toggleHover(event) {

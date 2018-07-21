@@ -16,11 +16,13 @@ let defaultDimensions = {
     width: '5em',
     marginLeft: '5px'
 };
+
 let divider = { // TODO: display:none if screen too small
     height: '19px',
     margin: '0px 9px 0px 1.5em',
     borderLeft: '1px solid #5b5a5a'
-}
+};
+
 let navStyle = {
     padding: 0,
     margin: 0,
@@ -28,8 +30,7 @@ let navStyle = {
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginRight: '2em'
-
-}
+};
 
 class Header extends Component {
 

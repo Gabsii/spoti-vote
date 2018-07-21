@@ -6,7 +6,7 @@ let borderStyle = {
     width: '25%',
     backgroundColor: constants.colors.barBackground,
     borderRadius: '11px'
-}
+};
 
 class Progressbar extends Component {
 
@@ -14,13 +14,13 @@ class Progressbar extends Component {
         super();
         this.state = {
             hover: false
-        }
+        };
     }
 
     toggleHover() {
         this.setState({
             hover: !this.state.hover
-        })
+        });
     }
 
     render() {

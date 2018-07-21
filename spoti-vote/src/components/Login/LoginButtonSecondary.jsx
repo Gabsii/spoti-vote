@@ -33,7 +33,7 @@ class LoginButtonSecondary extends Component {
     toggleHover() {
         this.setState({
             hover: !this.state.hover
-        })
+        });
     }
 
     login() {
