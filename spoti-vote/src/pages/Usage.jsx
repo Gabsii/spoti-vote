@@ -26,9 +26,6 @@ let paragraphStyle = {
     height: 'calc( 50vh - 100px )',
     fontSize: '1.25em'
 }
-let noteStyle = {
-    fontSize: '.75em'
-}
 let imgStyle = { // TODO: scale images better
     maxWidth: '60%',
     maxHeight: '50vh'
@@ -83,7 +80,7 @@ class Usage extends Component {
                         </div>
                     </div>
                 </div>
-                <img style={imgStyle} src={step1}></img>
+                <img alt="Login with Spotify" style={imgStyle} src={step1}></img>
             </section>
             <section style={{
                     ...sectionStyle,
@@ -103,7 +100,7 @@ class Usage extends Component {
                             {' '}Join</a>
                     </div>
                 </div>
-                <img style={imgStyle} src={step2}></img>
+                <img alt="Share with your friends" style={imgStyle} src={step2}></img>
             </section>
             <section style={{
                     ...sectionStyle,
@@ -120,7 +117,7 @@ class Usage extends Component {
                         }}>3.&nbsp;Select a playlist, vote and enjoy!</h1>
                     <div>Select the playlist you want on the dropdown list, which displays all playlists you follow. As soon as the playlist finished loading 4 different Cards with songs should appear, by pressing on one of them you vote for them. The song with the most votes gets played after the current song finishes. If multiple songs have an equal amount of votes SpotiVote itself will decide which one would suit better</div>
                 </div>
-                <img style={imgStyle} src={step4}></img>
+                <img alt="Select playlist and songs" style={imgStyle} src={step4}></img>
             </section>
             <section style={{
                     ...sectionStyle,
@@ -138,7 +135,7 @@ class Usage extends Component {
                     <div>No problem, just use the {' '}
                         <FontAwesomeIcon icon={faRandom} size="1x"/>-Button, get more than 66% of your friends to also vote and reroll the current Cards.</div>
                 </div>
-                <img style={imgStyle} src={step4}></img>
+                <img alt="Reroll" style={imgStyle} src={step4}></img>
             </section>
 
         </main>);
