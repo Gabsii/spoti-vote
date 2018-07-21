@@ -13,7 +13,7 @@ let defaultStyle = {
     alignItems: 'center',
     justifyContent: 'center',
     flexFlow: 'column'
-}
+};
 
 let imgStyle = {
     height: '150px',
@@ -26,14 +26,14 @@ let imgStyle = {
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     border: '1px solid black'
-}
+};
 
 let nameContainer = {
     marginBottom: '15px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
-}
+};
 
 let centerContainer = {
     display: 'flex',
@@ -41,7 +41,8 @@ let centerContainer = {
     justifyContent: 'center',
     marginTop: '10px',
     marginBottom: '5px'
-}
+};
+
 class Infos extends Component {
 
     render() {

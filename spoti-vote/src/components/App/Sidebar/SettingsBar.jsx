@@ -15,13 +15,13 @@ let defaultStyle = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between'
-}
+};
 
 let buttonStyle = {
     border: 0,
     color: constants.colors.fontSecondary,
     background: 'none'
-}
+};
 
 class SettingsBar extends Component {
 
@@ -29,13 +29,13 @@ class SettingsBar extends Component {
         super();
         this.state = {
             hover: false
-        }
+        };
     }
 
     toggleHover() {
         this.setState({
             hover: !this.state.hover
-        })
+        });
     }
 
     logoutHandler() {

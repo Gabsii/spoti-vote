@@ -19,13 +19,13 @@ class SkipButton extends Component {
         super();
         this.state = {
             hover: false
-        }
+        };
     }
 
     toggleHover() {
         this.setState({
             hover: !this.state.hover
-        })
+        });
     }
 
     render() {

@@ -67,7 +67,7 @@ class Usage extends Component {
                         }}>SpotiVote controls your party playlist, while Spotify is used to play the playlist. Connect an existing or new Spotify account by clicking
                         <a style={linkStyle} href={'http://' + ipAddress + ':' + portBack + '/login'}>
                             {' '}Host</a>
-                        . {'Don' t worry about your data.We save as little about you as we need(in fact we don 't save anything about your account). We are not Facebook, you are save with us.'}
+                        . {"Don' t worry about your data.We save as little about you as we need(in fact we don 't save anything about your account). We are not Facebook, you are save with us."}
                         <div style={{
                                 fontSize: '0.75em',
                                 position: 'absolute',
