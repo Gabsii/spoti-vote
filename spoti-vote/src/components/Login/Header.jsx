@@ -74,14 +74,23 @@ class Header extends Component {
 					...defaultDimensions,
 					marginRight: '20px'
 				}}>
-				<img style={defaultDimensions
-} src={logo} alt={"logo"}></img>
+				<a href='/' style={{
+					textDecoration: 'none',
+					letterSpacing: '1px'
+				}}>
+				<img style={defaultDimensions} src={logo} alt={"logo"}></img>
+				</a>
 			</div>
-			<b style={{
-					color: constants.colors.font,
-					fontSize: "2em"
-				}}>Spoti Vote</b>
-			{/* TODO: Logo (b/w) + text as one image */}
+			<a href='/' style={{
+				textDecoration: 'none',
+				letterSpacing: '1px'
+			}}>
+				<b style={{
+						color: constants.colors.font,
+						fontSize: "2em"
+					}}>Spoti Vote</b>
+				{/* TODO: Logo (b/w) + text as one image */}
+			</a>
 			<MediaQuery minWidth={constants.breakpoints.medium}>
 				{
 					(matches) => {
@@ -91,9 +100,8 @@ class Header extends Component {
 									marginRight: '20px'
 								}}>
 								<ul style={navStyle}>
-									<BarItem url="#features" name="Features"/>
+									<BarItem url="/#features" name="Features"/>
 									<BarItem url="/" name="Usage"/>
-									<BarItem url="/" name="Contact"/>
 									<li style={divider}></li>
 									<BarItem url={'http://' + ipAddress + ':' + portBack + '/login'} name="Host"/>
 									<BarItem url="/join" name="Join"/>

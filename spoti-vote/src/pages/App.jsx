@@ -228,8 +228,8 @@ class App extends Component {
 		let siblings = [];
 		let sibling = elem.parentNode.firstChild;
 		let skipMe = elem;
-		for (; sibling; sibling = sibling.nextSibling) 
-			if (sibling.nodeType === 1 && sibling !== skipMe) 
+		for (; sibling; sibling = sibling.nextSibling)
+			if (sibling.nodeType === 1 && sibling !== skipMe)
 				siblings.push(sibling);
 	return siblings;
 	}
