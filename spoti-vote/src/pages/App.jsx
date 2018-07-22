@@ -200,7 +200,7 @@ class App extends Component {
             }
         });
 
-        this.socket.on('errorEvent', data => {
+        this.socket.on('errorEvent', (data) => {
             if (data.message !== null && data.message !== undefined) {
                 swal({type: 'error', title: 'Oops...', text: data.message}).then((value) => {
                     // console.log(value);

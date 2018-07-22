@@ -62,14 +62,14 @@ class SkipButton extends Component {
                 ...linkStyle,
                 ...flexStyle
             }} onClick={this.props.skipHandler} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-            <FontAwesomeIcon icon={faRandom} size="2x"/>
+            <FontAwesomeIcon icon={faRandom} size='2x'/>
             <div style={this.props.isPhone
                     ? {
                         marginLeft: 0
                     }
                     : {
                         marginLeft: '1em'
-                    }}>{skips + "/" + users}</div>
+                    }}>{skips + '/' + users}</div>
         </button>);
     }
 }
