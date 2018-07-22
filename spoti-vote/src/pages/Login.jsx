@@ -66,7 +66,7 @@ class Login extends Component {
     }
 
     render() {
-        window.addEventListener('touchmove', event => {}, {passive: true});
+        window.addEventListener('touchmove', (event) => {}, {passive: true});
         return (<main>
             <Header/>
             <section style={{
