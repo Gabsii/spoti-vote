@@ -37,8 +37,12 @@ stdin.addListener("data", function(d) {
 				console.log(rooms[i].id);
 			}
 			break;
-		case "refresh":
-			let room = getRoomById(d.toString().trim().split(' ')[1]);
+		case "refresh": //refresh CODE
+			let room = rooms[0];
+			if (rooms.length > 1) {
+				let room = getRoomById(d.toString().trim().split(' ')[1]);
+			}
+
 			if (room !== null && room !== undefined) {
 				room.updatePlaylists();
 				room.refreshToken();
@@ -424,7 +428,7 @@ async function theUpdateFunction(socket) {
 			room.updatePlaylists();
 		}
 
-		if (socket.updateCounter.amount % 3600 == 0 && socket.isHost === true) {
+		if (socket.updateCounter.amount % 3500 == 0 && socket.isHost === true) {
 			room.refreshToken();
 		}
 

@@ -502,6 +502,9 @@ method.getActiveTrackById = function(id) {
 * @return: boolean if completed successfull
 */
 method.refreshToken = async function() {
+	console.log("Before REFRESH:");
+	console.log("  - Refresh Token: " + this.host.refreshToken);
+	console.log("  - Accsess Token: " + this.host.access_token);
 	let authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
 		form: {
@@ -517,6 +520,9 @@ method.refreshToken = async function() {
 		this.host.access_token = body.access_token;
 		this.host.refresh_token = body.refresh_token;
 
+		console.log("After REFRESH:");
+		console.log("  - Refresh Token: " + this.host.refreshToken);
+		console.log("  - Accsess Token: " + this.host.access_token);
 		return true;
 	});
 };
