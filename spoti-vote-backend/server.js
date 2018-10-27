@@ -201,7 +201,7 @@ io.on('connection', (socket) => {
 
 				if (room.firstConnection === true) {
 					room.firstConnection = false;
-					console.log('INFO-[ROOM: '+socket.roomId+']: The host ['+socket.name+'] has connected (Sending Token). [Phone: '+data.isPhone+']');
+					Console.log('INFO-[ROOM: '+socket.roomId+']: The host ['+socket.name+'] has connected (Sending Token). [Phone: '+data.isPhone+']');
 
 					socket.isHost = true;
 					room.hostPhone = data.isPhone;
@@ -217,7 +217,7 @@ io.on('connection', (socket) => {
 					room.hostDisconnect = null;
 				} else {
 					if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
-						console.log('INFO-[ROOM: '+socket.roomId+']: The host ['+socket.name+'] has connected. [Phone: '+data.isPhone+']');
+						Console.log('INFO-[ROOM: '+socket.roomId+']: The host ['+socket.name+'] has connected. [Phone: '+data.isPhone+']');
 
 						socket.isHost = true;
 						room.hostPhone = data.isPhone;
@@ -442,7 +442,7 @@ async function theUpdateFunction(socket) {
 		if (socket.updateCounter.amount % 30 == 0) {
 			let toBeDeleted = [];
 			for (let i = 0; i < rooms.length; i++) {
-				if (rooms[i].hostPhone == false) {
+				if (rooms[i].hostPhone === false) {
 					if (Date.now() - rooms[i].hostDisconnect > 1000 * secTillDelete && rooms[i].hostDisconnect !== null) {
 						toBeDeleted.push(rooms[i]);
 					}
