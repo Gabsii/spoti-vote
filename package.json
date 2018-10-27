@@ -2,9 +2,9 @@
   "name": "spoti-vote",
   "version": "1.0.0",
   "description": "Vote for Spotify Queue",
-    "scripts": {
+  "scripts": {
     "install-ui": "cd spoti-vote && npm install",
-    "install-backend": "cd spoti-vote-backend && npm install",
+    "install-backend": "cd ../spoti-vote-backend && npm install",
     "install": "npm run install-ui | npm run install-backend",
     "start-ui": "cd spoti-vote && npm start",
     "start-backend": "cd spoti-vote-backend && node server.js",
