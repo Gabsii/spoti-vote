@@ -24,7 +24,7 @@ class App extends Component {
         }
 
 		this.state = {
-			isPhone: (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1),
+			isPhone: (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1),
 			token: token,
 			roomId: window.location.pathname.split('/')[2],
 			loginPage: 'http://' + ipAddress + ':' + portFront,
@@ -232,8 +232,9 @@ class App extends Component {
 		let sibling = elem.parentNode.firstChild;
 		let skipMe = elem;
 		for (; sibling; sibling = sibling.nextSibling)
-			if (sibling.nodeType === 1 && sibling !== skipMe)
-				siblings.push(sibling);
+			if (sibling.nodeType === 1 && sibling !== skipMe) {
+                siblings.push(sibling);
+            }
 	return siblings;
 	}
 

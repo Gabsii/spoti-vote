@@ -36,10 +36,10 @@ function makeid(length) {
 function Room(token, refreshToken, clientId, clientSecret, room) {
 	//The host object
 	this.host = {
-		token: token,
-		clientId: clientId,
-		clientSecret: clientSecret,
-		refreshToken: refreshToken,
+		token,
+		clientId,
+		clientSecret,
+		refreshToken,
 		name: '',
 		id: '',
 		profileUrl: '',
