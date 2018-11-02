@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import MediaQuery from 'react-responsive';
+
 let constants = require('../../../js/constants');
 
 let borderStyle = {
@@ -51,12 +53,36 @@ class Progressbar extends Component {
             }
         }
 
-        return (<div style={borderStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-            <div role='progressbar' style={{
-                    ...progressStyle,
-                    ...linkStyle
-                }}></div>
-        </div>);
+        return (<MediaQuery minWidth={constants.breakpoints.medium}>
+            {
+                (matches) => {
+                    if (matches) {
+                        return (<div style={borderStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+                            <div role='progressbar' style={{
+                                    ...progressStyle,
+                                    ...linkStyle
+                                }}></div>
+                        </div>);
+                    } else {
+                        return (<div style={{
+                                ...borderStyle,
+                                width: '100%',
+                                display: 'flex',
+                                alignSelf: 'flex-start',
+                                position: 'relative',
+                                top: '-2px'
+                            }} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+                            <div role='progressbar' style={{
+                                    ...progressStyle,
+                                    ...linkStyle,
+                                    height: '3px',
+                                    borderRadius: 0
+                                }}></div>
+                        </div>);
+                    }
+                }
+            }
+        </MediaQuery>);
     }
 }
 export default Progressbar;

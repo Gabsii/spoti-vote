@@ -18,6 +18,7 @@ import LoginFooter from '../components/Login/LoginFooter.jsx';
 import LoginButton from '../components/Login/LoginButton.jsx';
 import LoginButtonSecondary from '../components/Login/LoginButtonSecondary.jsx';
 import Reason from '../components/Login/Reason.jsx';
+import CookieMessage from '../components/Login/CookieMessage.jsx';
 import SocialIcon from '../components/Login/SocialIcon.jsx';
 
 let constants = require('../js/constants');
@@ -69,6 +70,7 @@ class Login extends Component {
         window.addEventListener('touchmove', (event) => {}, {passive: true});
         return (<main>
             <Header/>
+            <CookieMessage/>
             <section style={{
                     ...sectionStyle,
                     height: '750px',

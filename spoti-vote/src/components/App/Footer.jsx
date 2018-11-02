@@ -40,10 +40,8 @@ class Footer extends Component {
         return (<footer style={defaultStyle}>
             <SongIcon background={track.img}/>
             <SongAggregation songName={track.name} artists={track.artists}/>
-            <MediaQuery minWidth={constants.breakpoints.medium}>
-                <Progressbar activePlayer={this.props.activePlayer}/>
-            </MediaQuery>
-            < MediaQuery minWidth={constants.breakpoints.medium}>{
+            <Progressbar activePlayer={this.props.activePlayer}/>
+            <MediaQuery minWidth={constants.breakpoints.medium}>{
                     (matches) => {
                         if (this.props.isHost) {
                             if (matches) {
