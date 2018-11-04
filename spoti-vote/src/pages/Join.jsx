@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
+import {css} from 'glamor';
 
 import Header from '../components/Login/Header.jsx';
 import LoginCode from '../components/Login/LoginCode.jsx';
+import bg from '../img/mohammad-metri-421904-unsplash.jpg';
 
 const constants = require('../js/constants');
 
@@ -13,43 +15,46 @@ class Join extends Component {
     }
 
     render() {
-        return (<main style={{
-                width: '100%',
-                height: '100vh',
-                backgroundColor: constants.colors.backgroundLite,
-                color: constants.colors.font
-
-            }}>
+        return (<main className={`${styles.main}`}>
             <Header/>
-            <div style={{
-                    width: 'calc(100% - 40px)',
-                    backgroundColor: constants.colors.backgroundLite,
-                    boxSizing: 'borderBox',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    padding: '20px'
-                }}>
-                <div style={{
-                        fontSize: '2em',
-                        marginTop: '1.5em',
-                        textAlign: 'center'
-                    }}>Join a Spoti-Vote Room</div><br/>
+            <div className={`${styles.wrapper}`}>
+                <h1 className={`${styles.heading}`}>Join a Spoti-Vote Room</h1><br/>
                 <br/>
-                <div style={{
-                        textAlign: 'center'
-                    }}>Ask your friend for the Room Code and enter it below:</div>
+                <div className={`${styles.text}`}>Ask your friend for the Room Code and enter it below:</div>
                 <br/>
                 <br/>
                 <br/>
-                <div style={{
-                        fontSize: '1.5em'
-                    }}>Room Code</div>
+                <h2 className={`${styles.subHeading}`}>Room Code</h2>
                 <LoginCode/>
             </div>
         </main>);
     }
+}
+
+const styles = {
+    main: css({
+        width: '100%',
+        height: '100vh',
+        backgroundColor: constants.colors.backgroundLite,
+        backgroundImage: 'url(' + bg + ')',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center top',
+        backgroundAttachment: 'fixed',
+        color: constants.colors.font
+    }),
+    wrapper: css({
+        backgroundColor: 'rgba(0,0,0, 0.4)',
+        boxSizing: 'borderBox',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        padding: '20px'
+    }),
+    heading: css({fontSize: '2em', marginTop: '1.5em', textAlign: 'center'}),
+    subheading: css({fontSize: '1.5em'}),
+    text: css({textAlign: 'center'})
 }
 
 export default Join;

@@ -2,20 +2,16 @@ import React, {Component} from 'react';
 import MediaQuery from 'react-responsive';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faBars} from '@fortawesome/fontawesome-free-solid';
+import {css} from 'glamor';
+
 import NavItem from './NavItem.jsx';
 import BarItem from './BarItem.jsx';
 import logo from '../../img/spotiLogo.svg';
-
 let constants = require('../../js/constants');
+
 let backgroundColor = constants.colors.background;
 const ipAddress = window.location.hostname || 'localhost';
 const portBack = 8888;
-
-let defaultDimensions = {
-    height: '5em',
-    width: '5em',
-    marginLeft: '5px'
-};
 
 let divider = { // TODO: display:none if screen too small
     height: '19px',
@@ -64,32 +60,14 @@ class Header extends Component {
     }
 
     render() {
-        return (<header style={{
-                backgroundColor,
-                height: '90px',
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center'
-            }}>
-            <div style={{
-                    ...defaultDimensions,
-                    marginRight: '20px'
-                }}>
-                <a href='/' style={{
-                        textDecoration: 'none',
-                        letterSpacing: '1px'
-                    }}>
-                    <img style={defaultDimensions} src={logo} alt={'logo'}></img>
+        return (<header className={`${styles.header}`}>
+            <div className={`${styles.logoWrapper}`}>
+                <a href='/' className={`${styles.link}`}>
+                    <img className={`${styles.logo}`} src={logo} alt={'logo'}></img>
                 </a>
             </div>
-            <a href='/' style={{
-                    textDecoration: 'none',
-                    letterSpacing: '1px'
-                }}>
-                <b style={{
-                        color: constants.colors.font,
-                        fontSize: '2em'
-                    }}>Spoti Vote</b>
+            <a href='/' className={`${styles.link}`}>
+                <b className={`${styles.title}`}>Spoti Vote</b>
                 {/* TODO: Logo (b/w) + text as one image */}
             </a>
             <MediaQuery minWidth={constants.breakpoints.medium}>
@@ -154,5 +132,13 @@ class Header extends Component {
             </MediaQuery>
         </header>);
     }
+}
+
+const styles = {
+    header: css({backgroundColor, height: '90px', overflow: 'hidden', display: 'flex', alignItems: 'center'}),
+    logoWrapper: css({height: '5em', width: '5em', marginLeft: '5px', marginRight: '20px'}),
+    link: css({textDecoration: 'none', letterSpacing: '1px'}),
+    title: css({color: constants.colors.font, fontSize: '2em'}),
+    logo: css({height: '5em', width: '5em', marginLeft: '5px'})
 }
 export default Header;

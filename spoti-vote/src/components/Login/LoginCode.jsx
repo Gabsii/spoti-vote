@@ -1,25 +1,11 @@
 import React, {Component} from 'react';
-import '../../css/selectors.css';
+import {css} from 'glamor';
 
+import '../../css/selectors.css';
 let constants = require('../../js/constants.js');
 const ipAddress = window.location.host || 'localhost';
 const portFront = window.location.port || 80;
 const portBack = 8888;
-
-let defaultStyle = {
-    padding: '17px 40px',
-    fontSize: '0.9em',
-    lineHeight: 1,
-    borderWidth: 0,
-    letterSpacing: '2px',
-    minWidth: '120px',
-    maxWidth: '150px',
-    maxHeight: '50px',
-    textTransform: 'uppercase',
-    whiteSpace: 'normal',
-    backgroundColor: constants.colors.green,
-    marginRight: '0'
-};
 
 class LoginCode extends Component {
 
@@ -69,43 +55,58 @@ class LoginCode extends Component {
     }
 
     render() {
-        let borderStyle = {
-            borderRadius: '500px'
-        };
-
-        return (<div style={{
-                display: 'flex',
-                textAlign: 'center',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
+        return (<div className={`${styles.wrapper}`}>
             <form onSubmit={this.submitHandler.bind(this)}>
-                <input type='text' id='code' maxLength='5' placeholder='Room Code' style={{
-                        ...defaultStyle,
-                        ...borderStyle,
-                        marginTop: '1em',
-                        textAlign: 'center',
-                        backgroundColor: constants.colors.background,
-                        color: constants.colors.font
-                    }} autoComplete='off' onChange={this.checkRoom.bind(this)} pattern='[A-Za-z]{5}'/>
-                <input type='submit' id='loginCode' value='join' style={{
-                        ...defaultStyle,
-                        ...borderStyle,
-                        marginTop: '0.5em',
-                        fontFamily: 'Circular Bold'
-                    }}/>
+                <input type='text' id='code' maxLength='5' placeholder='Room Code' className={`${styles.input}`} autoComplete='off' onChange={this.checkRoom.bind(this)} pattern='[A-Za-z]{5}'/>
+                <input type='submit' id='loginCode' value='join' className={`${styles.submit}`}/>
             </form>
             {
                 this.state.room === false && this.state.roomExists === false
-                    ? <h5 style={{
-                                color: constants.colors.redCard,
-                                marginTop: '5px',
-                                textShadow: 'none'
-                            }}>Room doesn't exist</h5>
+                    ? <h5 className={`${styles.error}`}>Room doesn't exist</h5>
                     : ''
             }
             </div>);
     }
+}
+
+const styles = {
+    wrapper: css({display: 'flex', textAlign: 'center', justifyContent: 'center', alignItems: 'center'}),
+    input: css({
+        marginTop: '1em',
+        textAlign: 'center',
+        backgroundColor: constants.colors.background,
+        color: constants.colors.font,
+        borderRadius: '500px',
+        padding: '17px 40px',
+        fontSize: '0.9em',
+        lineHeight: 1,
+        borderWidth: 0,
+        letterSpacing: '2px',
+        minWidth: '120px',
+        maxWidth: '150px',
+        maxHeight: '50px',
+        textTransform: 'uppercase',
+        whiteSpace: 'normal',
+        marginRight: '0'
+    }),
+    submit: css({
+        padding: '17px 40px',
+        fontSize: '0.9em',
+        lineHeight: 1,
+        borderWidth: 0,
+        letterSpacing: '2px',
+        minWidth: '120px',
+        maxWidth: '150px',
+        maxHeight: '50px',
+        textTransform: 'uppercase',
+        whiteSpace: 'normal',
+        backgroundColor: constants.colors.green,
+        marginRight: '0',
+        borderRadius: '500px',
+        marginTop: '0.5em',
+        fontFamily: 'Circular Bold'
+    }),
+    error: css({color: constants.colors.redCard, marginTop: '5px', textShadow: 'none'})
 }
 
 export default LoginCode;

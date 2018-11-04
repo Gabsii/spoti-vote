@@ -1,16 +1,7 @@
 import React, {Component} from 'react';
-let constants = require('../../js/constants');
+import {css} from 'glamor';
 
-let itemStyle = {
-    listStyle: 'none',
-    margin: '0 0 0 1em',
-    textShadow: '0 2px 0 darken(#fff, 50%)'
-};
-let linkStyle = {
-    textDecoration: 'none',
-    fontSize: '1.2em',
-    letterSpacing: '1px'
-};
+let constants = require('../../js/constants');
 
 class NavItem extends Component {
 
@@ -40,24 +31,23 @@ class NavItem extends Component {
                 color: constants.colors.font
             };
         }
-
-        return (<li style={{
-                ...itemStyle,
-                ...hoverStyle,
-                width: '100%',
-                height: '50px',
-                margin: '5px 0',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: '10px',
-                borderTop: '1px solid rgba(255,255,255,0.1)'
-            }} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-            <a style={{
-                    ...linkStyle,
-                    ...hoverStyle
-                }} href={this.props.href}>{this.props.name}</a>
+        return (<li className={`${styles.item}`} style={hoverStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+            <a className={`${styles.link}`} style={hoverStyle} href={this.props.href}>{this.props.name}</a>
         </li>);
     }
+}
+
+const styles = {
+    item: css({
+        width: '100%',
+        height: '50px',
+        margin: '5px 0',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '10px',
+        borderTop: '1px solid rgba(255,255,255,0.1)'
+    }),
+    link: css({textDecoration: 'none', fontSize: '1.2em', letterSpacing: '1px'})
 }
 export default NavItem;

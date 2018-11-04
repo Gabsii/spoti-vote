@@ -3,6 +3,8 @@ import MediaQuery from 'react-responsive';
 import socketIOClient from 'socket.io-client';
 import Cookies from 'universal-cookie';
 import swal from 'sweetalert2';
+import {css} from 'glamor';
+
 import Footer from '../components/App/Footer.jsx';
 import Sidebar from '../components/App/Sidebar.jsx';
 import CardContainer from '../components/App/Cards/CardContainer.jsx';
@@ -260,11 +262,7 @@ class App extends Component {
     }
 
     render() {
-        return (<section style={{
-                backgroundColor: constants.colors.background,
-                height: '100vh',
-                width: '100vw'
-            }}>
+        return (<section className={`${styles.section}`}>
             <MediaQuery minWidth={constants.breakpoints.medium}>{
                     (matches) => {
                         if (matches) {
@@ -288,6 +286,10 @@ class App extends Component {
             <Footer isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
         </section>);
     }
+}
+
+const styles = {
+    section: css({backgroundColor: constants.colors.background, height: '100vh', width: '100vw'})
 }
 
 export default App;

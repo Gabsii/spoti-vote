@@ -1,22 +1,13 @@
 import React, {Component} from 'react';
 import MediaQuery from 'react-responsive';
+import {css} from 'glamor';
+
 import SongIcon from './Footer/SongIcon.jsx';
 import SongAggregation from './Footer/SongAggregation.jsx';
 import VolumeBar from './Footer/VolumeBar.jsx';
 import Progressbar from './Footer/ProgressBar.jsx';
 
 let constants = require('../../js/constants');
-let defaultStyle = {
-    height: '75px',
-    width: '100vw',
-    position: 'absolute',
-    bottom: 0,
-    backgroundColor: constants.colors.backgroundLite,
-    textOverflow: 'ellipsis',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-};
 
 class Footer extends Component {
 
@@ -37,7 +28,7 @@ class Footer extends Component {
             }
         }
 
-        return (<footer style={defaultStyle}>
+        return (<footer className={`${styles.wrapper}`}>
             <SongIcon background={track.img}/>
             <SongAggregation songName={track.name} artists={track.artists}/>
             <Progressbar activePlayer={this.props.activePlayer}/>
@@ -56,5 +47,17 @@ class Footer extends Component {
                 }</MediaQuery>
         </footer>);
     }
+}
+
+const styles = {
+    wrapper: css({
+        height: '75px',
+        width: '100vw',
+        position: 'absolute',
+        bottom: 0,
+        backgroundColor: constants.colors.backgroundLite,
+        textOverflow: 'ellipsis',
+        display: 'flex'
+    })
 }
 export default Footer;

@@ -1,21 +1,12 @@
 import React, {Component} from 'react';
 import Notification from 'react-web-notification';
+import {css} from 'glamor';
+
 import Card from './Card.jsx';
 import ShareButton from './ShareButton.jsx';
+
 import logo from '../../../img/spotiLogo.svg';
-
 let constants = require('../../../js/constants');
-
-let defaultStyle = {
-    position: 'absolute',
-    left: 0,
-    display: 'flex',
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    padding: '25px',
-    overflow: 'hidden',
-    backgroundColor: constants.colors.background
-};
 
 class CardContainer extends Component {
 
@@ -102,109 +93,95 @@ class CardContainer extends Component {
 
     render() {
         if (this.props.activeTracks.length > 0) {
-            if (this.props.isPhone) {
-                return (<main style={{
-                        ...defaultStyle,
-                        height: 'calc(100% - 150px)', // top bar should be 75px high
-                        top: '75px',
-                        width: '100vw',
-                        padding: 0
-                        // minWidth: 'calc(100vw - 50px)'
-                    }}>
-                    {
-                        this.props.activeTracks.map((track, index) => {
-                            return (<Card isPhone={true} randomTrack={track} onClick={this.props.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>);
-                        })
-                    }
-                </main>);
-            } else {
-                return (<main style={{
-                        ...defaultStyle,
-                        height: 'calc(100vh - 125px)',
-                        top: 0,
-                        width: 'calc(100vw - 250px)',
-                        // minWidth: 'calc(100vw - 250px)'
-                    }}>
-                    {
-                        this.props.activeTracks.map((track, index) => {
-                            return (<Card isPhone={false} randomTrack={track} onClick={this.props.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>);
-                        })
-                    }
-                    <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} onClick={this.handleNotificationOnClick.bind(this)} onClose={this.handleNotificationOnClose.bind(this)} onError={this.handleNotificationOnError.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
-                </main>);
-            }
+            return (<main className={`${styles.tracksMain}`}>
+                {
+                    this.props.activeTracks.map((track, index) => {
+                        return (<Card isPhone={true} randomTrack={track} onClick={this.props.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>);
+                    })
+                }
+                <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} onClick={this.handleNotificationOnClick.bind(this)} onClose={this.handleNotificationOnClose.bind(this)} onError={this.handleNotificationOnError.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
+            </main>);
         } else {
-            if (this.props.isPhone) {
-                return (<main style={{
-                        ...defaultStyle,
-                        height: 'calc(100% - 150px)', // top bar should be 75px high
-                        top: '75px',
-                        width: '100vw',
-                        padding: 0
-                        // minWidth: 'calc(100vw - 50px)'
-                    }}>
-                    <div style={{
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'column',
-                            color: constants.colors.font
-                        }}>
-                        <h1 style={{
-                                fontSize: '3.5em',
-                                textAlign: 'center'
-                            }}>Select a playlist first!</h1><br/><br/>
-                        <h2 style={{
-                                fontSize: '1.5em',
-                                textAlign: 'center'
-                            }}>Users can connect with
-                            <b style={{
-                                    fontFamily: 'Circular Bold'
-                                }}>
-                                {' ' + this.props.room + ' '}
-                            </b>
-                            as Code!</h2>
-                        <ShareButton/>
-                    </div>
-                </main>);
-            } else {
-                return (<main style={{
-                        ...defaultStyle,
-                        height: 'calc(100vh - 125px)',
-                        top: 0,
-                        width: 'calc(100vw - 250px)',
-                        // minWidth: 'calc(100vw - 250px)'
-                    }}>
-                    <div style={{
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'column',
-                            color: constants.colors.font
-                        }}>
-                        <h1 style={{
-                                fontSize: '5em',
-                                textAlign: 'center'
-                            }}>Select a playlist first!</h1><br/><br/>
-                        <h2 style={{
-                                fontSize: '2em',
-                                textAlign: 'center'
-                            }}>Users can connect with
-                            <b style={{
-                                    fontFamily: 'Circular Bold'
-                                }}>
-                                {' ' + this.props.room + ' '}
-                            </b>
-                            as Code!</h2>
-                        <ShareButton/>
-                        <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} onClick={this.handleNotificationOnClick.bind(this)} onClose={this.handleNotificationOnClose.bind(this)} onError={this.handleNotificationOnError.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
-                    </div>
-                </main>);
-            }
+            return (<main className={`${styles.noTracksMain}`}>
+                <div className={`${styles.noTracksWrapper}`}>
+                    <h1 className={`${styles.noTracksHeading}`}>Select a playlist first!</h1><br/><br/>
+                    <h2 className={`${styles.noTracksSubheading}`}>Users can connect with
+                        <b style={{
+                                fontFamily: 'Circular Bold'
+                            }}>
+                            {' ' + this.props.room + ' '}
+                        </b>
+                        as Code!</h2>
+                    <ShareButton/>
+                    <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} onClick={this.handleNotificationOnClick.bind(this)} onClose={this.handleNotificationOnClose.bind(this)} onError={this.handleNotificationOnError.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
+
+                </div>
+            </main>);
         }
 
     }
 }
+
+const styles = {
+    tracksMain: css({
+        position: 'absolute',
+        left: 0,
+        display: 'flex',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        overflow: 'hidden',
+        backgroundColor: constants.colors.background,
+        height: 'calc(100% - 150px)', // top bar should be 75px high
+        top: '75px',
+        width: '100vw',
+        padding: 0,
+        '@media(min-width: 760px)': {
+            height: 'calc(100vh - 125px)',
+            top: 0,
+            width: 'calc(100vw - 250px)',
+            padding: '25px'
+        }
+    }),
+    noTracksMain: css({
+        position: 'absolute',
+        left: 0,
+        display: 'flex',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        overflow: 'hidden',
+        backgroundColor: constants.colors.background,
+        height: 'calc(100% - 150px)', // top bar should be 75px high
+        top: '75px',
+        width: '100vw',
+        padding: 0,
+        '@media(min-width: 760px)': {
+            height: 'calc(100vh - 125px)',
+            top: 0,
+            width: 'calc(100vw - 250px)'
+        }
+    }),
+    noTracksWrapper: css({
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        color: constants.colors.font
+    }),
+    noTracksHeading: css({
+        fontSize: '3.5em',
+        textAlign: 'center',
+        '@media(min-width: 760px)': {
+            fontSize: '5em'
+        }
+    }),
+    noTracksSubheading: css({
+        fontSize: '1.5em',
+        textAlign: 'center',
+        '@media(min-width: 760px)': {
+            fontSize: '2em'
+        }
+    })
+}
+
 export default CardContainer;

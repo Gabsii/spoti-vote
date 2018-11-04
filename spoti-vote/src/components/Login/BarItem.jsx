@@ -1,17 +1,7 @@
 import React, {Component} from 'react';
+import {css} from 'glamor';
 
 let constants = require('../../js/constants');
-
-let itemStyle = {
-    listStyle: 'none',
-    margin: '0 0 0 1em',
-    textShadow: '0 2px 0 darken(#fff, 50%)'
-};
-let linkStyle = {
-    textDecoration: 'none',
-    fontSize: '1.2em',
-    letterSpacing: '1px'
-};
 
 class BarItem extends Component {
 
@@ -43,12 +33,14 @@ class BarItem extends Component {
             };
         }
 
-        return (<li style={itemStyle} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-            <a style={{
-                    ...linkStyle,
-                    ...hoverStyle
-                }} href={this.props.url}>{this.props.name}</a>
+        return (<li className={`${styles.item}`} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+            <a style={hoverStyle} className={`${styles.link}`} href={this.props.url}>{this.props.name}</a>
         </li>);
     }
+}
+
+const styles = {
+    item: css({listStyle: 'none', margin: '0 0 0 1em', textShadow: '0 2px 0 darken(#fff, 50%)'}),
+    link: css({textDecoration: 'none', fontSize: '1.2em', letterSpacing: '1px'})
 }
 export default BarItem;
