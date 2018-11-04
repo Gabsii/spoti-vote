@@ -38,7 +38,6 @@ const styles = {
     hero: css({
         height: '100%',
         width: '100%',
-        alignItems: 'center',
         padding: '10px 10%',
         boxSizing: 'border-box',
         overflow: 'hidden',

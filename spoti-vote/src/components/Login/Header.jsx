@@ -41,10 +41,8 @@ const styles = {
     navButton: css({
         padding: 0,
         margin: 0,
-        display: 'flex',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        marginRight: '2em',
         color: constants.colors.font,
         flexGrow: 1,
         marginRight: '20px',
@@ -122,7 +120,7 @@ class Header extends Component {
             </a>
             {
                 this.state.popupVisible
-                    ? <ul id='nav' className={`${styles.navList}`} ref={node => {
+                    ? <ul id='nav' className={`${styles.navList}`} ref={(node) => {
                                 this.node = node;
                             }}>
                             <NavItem name='Host' href={'http://' + ipAddress + ':' + portBack + '/login'}/>
