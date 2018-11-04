@@ -4,6 +4,34 @@ import {css} from 'glamor';
 
 const cookies = new Cookies();
 const constants = require('../../js/constants');
+const styles = {
+    wrapper: css({
+        padding: '5%',
+        position: 'fixed',
+        bottom: 0,
+        height: '10%',
+        backgroundColor: 'black',
+        color: 'white',
+        width: 'calc(100% - 10%)'
+    }),
+    text: css({float: 'left', marginLeft: '20px'}),
+    button: css({
+        float: 'right',
+        padding: '12px 25px',
+        marginRight: '30px',
+        marginTop: '20px',
+        fontSize: '0.9em',
+        lineHeight: 1,
+        borderRadius: '500px',
+        borderWidth: 0,
+        letterSpacing: '2px',
+        minWidth: '160px',
+        maxHeight: '50px',
+        textTransform: 'uppercase',
+        whiteSpace: 'normal',
+        backgroundColor: constants.colors.green
+    })
+};
 
 class CookieMessage extends Component {
 
@@ -46,32 +74,4 @@ class CookieMessage extends Component {
     }
 }
 
-const styles = {
-    wrapper: css({
-        padding: '5%',
-        position: 'fixed',
-        bottom: 0,
-        height: '10%',
-        backgroundColor: 'black',
-        color: 'white',
-        width: 'calc(100% - 10%)'
-    }),
-    text: css({float: 'left', marginLeft: '20px'}),
-    button: css({
-        float: 'right',
-        padding: '12px 25px',
-        marginRight: '30px',
-        marginTop: '20px',
-        fontSize: '0.9em',
-        lineHeight: 1,
-        borderRadius: '500px',
-        borderWidth: 0,
-        letterSpacing: '2px',
-        minWidth: '160px',
-        maxHeight: '50px',
-        textTransform: 'uppercase',
-        whiteSpace: 'normal',
-        backgroundColor: constants.colors.green
-    })
-}
 export default CookieMessage;

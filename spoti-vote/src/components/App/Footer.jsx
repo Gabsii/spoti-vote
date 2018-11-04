@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import MediaQuery from 'react-responsive';
 import {css} from 'glamor';
 
 import SongIcon from './Footer/SongIcon.jsx';
@@ -8,6 +7,17 @@ import VolumeBar from './Footer/VolumeBar.jsx';
 import Progressbar from './Footer/ProgressBar.jsx';
 
 let constants = require('../../js/constants');
+const styles = {
+    wrapper: css({
+        height: '75px',
+        width: '100vw',
+        position: 'absolute',
+        bottom: 0,
+        backgroundColor: constants.colors.backgroundLite,
+        textOverflow: 'ellipsis',
+        display: 'flex'
+    })
+};
 
 class Footer extends Component {
 
@@ -31,33 +41,13 @@ class Footer extends Component {
         return (<footer className={`${styles.wrapper}`}>
             <SongIcon background={track.img}/>
             <SongAggregation songName={track.name} artists={track.artists}/>
-            <Progressbar activePlayer={this.props.activePlayer}/>
-            <MediaQuery minWidth={constants.breakpoints.medium}>{
-                    (matches) => {
-                        if (this.props.isHost) {
-                            if (matches) {
-                                return (<VolumeBar activePlayer={this.props.activePlayer} socket={this.props.socket}/>);
-                            } else {
-                                return '';
-                            }
-                        } else {
-                            return '';
-                        }
-                    }
-                }</MediaQuery>
+            <Progressbar activePlayer={this.props.activePlayer}/> {
+                this.props.isHost
+                    ? <VolumeBar activePlayer={this.props.activePlayer} socket={this.props.socket}/>
+                    : ''
+            }
         </footer>);
     }
 }
 
-const styles = {
-    wrapper: css({
-        height: '75px',
-        width: '100vw',
-        position: 'absolute',
-        bottom: 0,
-        backgroundColor: constants.colors.backgroundLite,
-        textOverflow: 'ellipsis',
-        display: 'flex'
-    })
-}
 export default Footer;

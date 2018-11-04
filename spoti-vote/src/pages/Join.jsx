@@ -6,31 +6,6 @@ import LoginCode from '../components/Login/LoginCode.jsx';
 import bg from '../img/mohammad-metri-421904-unsplash.jpg';
 
 const constants = require('../js/constants');
-
-class Join extends Component {
-
-    componentDidMount() {
-        document.title = 'Spoti-Vote | Join a room';
-        document.getElementsByTagName('META')[2].content = 'Join a room to fulfill your wish of musically democracy';
-    }
-
-    render() {
-        return (<main className={`${styles.main}`}>
-            <Header/>
-            <div className={`${styles.wrapper}`}>
-                <h1 className={`${styles.heading}`}>Join a Spoti-Vote Room</h1><br/>
-                <br/>
-                <div className={`${styles.text}`}>Ask your friend for the Room Code and enter it below:</div>
-                <br/>
-                <br/>
-                <br/>
-                <h2 className={`${styles.subHeading}`}>Room Code</h2>
-                <LoginCode/>
-            </div>
-        </main>);
-    }
-}
-
 const styles = {
     main: css({
         width: '100%',
@@ -55,6 +30,30 @@ const styles = {
     heading: css({fontSize: '2em', marginTop: '1.5em', textAlign: 'center'}),
     subheading: css({fontSize: '1.5em'}),
     text: css({textAlign: 'center'})
+};
+
+class Join extends Component {
+
+    componentDidMount() {
+        document.title = 'Spoti-Vote | Join a room';
+        document.getElementsByTagName('META')[2].content = 'Join a room to fulfill your wish of musically democracy';
+    }
+
+    render() {
+        return (<main className={`${styles.main}`}>
+            <Header/>
+            <div className={`${styles.wrapper}`}>
+                <h1 className={`${styles.heading}`}>Join a Spoti-Vote Room</h1><br/>
+                <br/>
+                <div className={`${styles.text}`}>Ask your friend for the Room Code and enter it below:</div>
+                <br/>
+                <br/>
+                <br/>
+                <h2 className={`${styles.subHeading}`}>Room Code</h2>
+                <LoginCode/>
+            </div>
+        </main>);
+    }
 }
 
 export default Join;

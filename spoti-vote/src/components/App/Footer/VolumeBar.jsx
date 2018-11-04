@@ -5,6 +5,24 @@ import {css} from 'glamor';
 
 import '../../../css/Volumebar.css';
 let constants = require('../../../js/constants');
+const styles = {
+    wrapper: css({
+        height: '75px',
+        maxWidth: '250px',
+        minWidth: '200px',
+        fontFamily: 'Circular Medium',
+        position: 'absolute',
+        right: 0,
+        display: 'none',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: constants.colors.backgroundLite,
+        '@media(min-width: 760px)': {
+            display: 'flex'
+        }
+    }),
+    slider: css({width: '50%!important', marginLeft: '10px!important', marginRight: '10px!important'})
+};
 
 class VolumeBar extends Component {
 
@@ -25,22 +43,6 @@ class VolumeBar extends Component {
                 }} size='lg'/>
         </div>);
     }
-}
-
-const styles = {
-    wrapper: css({
-        height: '75px',
-        maxWidth: '250px',
-        minWidth: '200px',
-        fontFamily: 'Circular Medium',
-        position: 'absolute',
-        right: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: constants.colors.backgroundLite
-    }),
-    slider: css({width: '50%!important', marginLeft: '10px!important', marginRight: '10px!important'})
 }
 
 export default VolumeBar;

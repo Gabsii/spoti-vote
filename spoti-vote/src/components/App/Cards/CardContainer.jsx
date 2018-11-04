@@ -7,6 +7,67 @@ import ShareButton from './ShareButton.jsx';
 
 import logo from '../../../img/spotiLogo.svg';
 let constants = require('../../../js/constants');
+const styles = {
+    tracksMain: css({
+        position: 'absolute',
+        left: 0,
+        display: 'flex',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        overflow: 'hidden',
+        backgroundColor: constants.colors.background,
+        height: 'calc(100% - 150px)', // top bar should be 75px high
+        top: '75px',
+        width: '100vw',
+        padding: 0,
+        '@media(min-width: 760px)': {
+            height: 'calc(100vh - 125px)',
+            top: 0,
+            width: 'calc(100vw - 250px)',
+            padding: '25px'
+        }
+    }),
+    noTracksMain: css({
+        position: 'absolute',
+        left: 0,
+        display: 'flex',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        overflow: 'hidden',
+        backgroundColor: constants.colors.background,
+        height: 'calc(100% - 150px)', // top bar should be 75px high
+        top: '75px',
+        width: '100vw',
+        padding: 0,
+        '@media(min-width: 760px)': {
+            height: 'calc(100vh - 125px)',
+            top: 0,
+            width: 'calc(100vw - 250px)'
+        }
+    }),
+    noTracksWrapper: css({
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        color: constants.colors.font
+    }),
+    noTracksHeading: css({
+        fontSize: '3.5em',
+        textAlign: 'center',
+        '@media(min-width: 760px)': {
+            fontSize: '5em'
+        }
+    }),
+    noTracksSubheading: css({
+        fontSize: '1.5em',
+        textAlign: 'center',
+        '@media(min-width: 760px)': {
+            fontSize: '2em'
+        }
+    })
+};
 
 class CardContainer extends Component {
 
@@ -120,68 +181,6 @@ class CardContainer extends Component {
         }
 
     }
-}
-
-const styles = {
-    tracksMain: css({
-        position: 'absolute',
-        left: 0,
-        display: 'flex',
-        flexWrap: 'wrap',
-        flexDirection: 'row',
-        overflow: 'hidden',
-        backgroundColor: constants.colors.background,
-        height: 'calc(100% - 150px)', // top bar should be 75px high
-        top: '75px',
-        width: '100vw',
-        padding: 0,
-        '@media(min-width: 760px)': {
-            height: 'calc(100vh - 125px)',
-            top: 0,
-            width: 'calc(100vw - 250px)',
-            padding: '25px'
-        }
-    }),
-    noTracksMain: css({
-        position: 'absolute',
-        left: 0,
-        display: 'flex',
-        flexWrap: 'wrap',
-        flexDirection: 'row',
-        overflow: 'hidden',
-        backgroundColor: constants.colors.background,
-        height: 'calc(100% - 150px)', // top bar should be 75px high
-        top: '75px',
-        width: '100vw',
-        padding: 0,
-        '@media(min-width: 760px)': {
-            height: 'calc(100vh - 125px)',
-            top: 0,
-            width: 'calc(100vw - 250px)'
-        }
-    }),
-    noTracksWrapper: css({
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column',
-        color: constants.colors.font
-    }),
-    noTracksHeading: css({
-        fontSize: '3.5em',
-        textAlign: 'center',
-        '@media(min-width: 760px)': {
-            fontSize: '5em'
-        }
-    }),
-    noTracksSubheading: css({
-        fontSize: '1.5em',
-        textAlign: 'center',
-        '@media(min-width: 760px)': {
-            fontSize: '2em'
-        }
-    })
 }
 
 export default CardContainer;

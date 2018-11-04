@@ -13,8 +13,10 @@ const constants = require('../js/constants');
 const ipAddress = window.location.host || 'localhost';
 const portFront = window.location.port || 80;
 const portBack = 8888;
-
 const cookies = new Cookies();
+const styles = {
+    main: css({backgroundColor: constants.colors.background, height: '100vh', width: '100vw'})
+};
 
 class App extends Component {
     constructor() {
@@ -262,34 +264,12 @@ class App extends Component {
     }
 
     render() {
-        return (<section className={`${styles.section}`}>
-            <MediaQuery minWidth={constants.breakpoints.medium}>{
-                    (matches) => {
-                        if (matches) {
-                            return (<Sidebar skipHandler={this.skipHandler.bind(this)} isPhone={false} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>);
-                        } else {
-                            return (<Sidebar skipHandler={this.skipHandler.bind(this)} isPhone={true} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>);
-                        }
-                    }
-                }
-            </MediaQuery>
-            <MediaQuery minWidth={constants.breakpoints.medium}>{
-                    (matches) => {
-                        if (matches) { // = tablet^
-                            return (<CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>);
-                        } else { // = phone
-                            return (<CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={true} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>);
-                        }
-                    }
-                }
-            </MediaQuery>
+        return (<main className={`${styles.main}`}>
+            <Sidebar skipHandler={this.skipHandler.bind(this)} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
+            <CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
             <Footer isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
-        </section>);
+        </main>);
     }
-}
-
-const styles = {
-    section: css({backgroundColor: constants.colors.background, height: '100vh', width: '100vw'})
 }
 
 export default App;

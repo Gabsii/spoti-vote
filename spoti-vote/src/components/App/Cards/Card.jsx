@@ -3,6 +3,44 @@ import Marquee from 'react-text-marquee';
 import {css} from 'glamor';
 
 let constants = require('../../../js/constants');
+const styles = {
+    button: css({
+        userSelect: 'none',
+        border: 0,
+        padding: 0,
+        position: 'relative',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        boxShadow: '10px 10px 5px 0px rgba(0,0,0,0.75)',
+        color: constants.colors.font,
+        borderRadius: '3px',
+        WebKitUserSelect: 'none',
+        MozUserSelect: 'none',
+        flexBasis: 'calc(50% - 10px)',
+        margin: '5px',
+        '@media(min-width: 760px)': {
+            flexBasis: 'calc(50% - 40px)',
+            margin: '20px'
+        }
+    }),
+    image: css({
+        width: '100%',
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        borderRadius: '3px'
+    }),
+    wrapper: css({width: '100%', padding: '15px 0px', textShadow: '2px 2px 8px #000000', background: 'rgba(0, 0, 0, 0.5)'}),
+    track: css({fontSize: '2em', textAlign: 'center', textOverflow: 'clip', whiteSpace: 'nowrap', overflow: 'hidden'}),
+    artist: css({textOverflow: 'clip', whiteSpace: 'nowrap', overflow: 'hidden'}),
+    votes: css({fontSize: '1.25em'})
+};
 
 class Card extends Component {
 
@@ -73,43 +111,4 @@ class Card extends Component {
     }
 }
 
-const styles = {
-    button: css({
-        userSelect: 'none',
-        border: 0,
-        padding: 0,
-        position: 'relative',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        boxShadow: '10px 10px 5px 0px rgba(0,0,0,0.75)',
-        color: constants.colors.font,
-        borderRadius: '3px',
-        WebKitUserSelect: 'none',
-        MozUserSelect: 'none',
-        flexBasis: 'calc(50% - 10px)',
-        margin: '5px',
-        '@media(min-width: 760px)': {
-            flexBasis: 'calc(50% - 40px)',
-            margin: '20px'
-        }
-    }),
-    image: css({
-        width: '100%',
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column',
-        borderRadius: '3px'
-    }),
-    wrapper: css({width: '100%', padding: '15px 0px', textShadow: '2px 2px 8px #000000', background: 'rgba(0, 0, 0, 0.5)'}),
-    track: css({fontSize: '2em', textAlign: 'center', textOverflow: 'clip', whiteSpace: 'nowrap', overflow: 'hidden'}),
-    artist: css({textOverflow: 'clip', whiteSpace: 'nowrap', overflow: 'hidden'}),
-    votes: css({fontSize: '1.25em'})
-
-}
 export default Card;

@@ -2,6 +2,10 @@ import React, {Component} from 'react';
 import {css} from 'glamor';
 
 let constants = require('../../js/constants');
+const styles = {
+    item: css({listStyle: 'none', margin: '0 0 0 1em', textShadow: '0 2px 0 darken(#fff, 50%)'}),
+    link: css({textDecoration: 'none', fontSize: '1.2em', letterSpacing: '1px'})
+};
 
 class BarItem extends Component {
 
@@ -39,8 +43,4 @@ class BarItem extends Component {
     }
 }
 
-const styles = {
-    item: css({listStyle: 'none', margin: '0 0 0 1em', textShadow: '0 2px 0 darken(#fff, 50%)'}),
-    link: css({textDecoration: 'none', fontSize: '1.2em', letterSpacing: '1px'})
-}
 export default BarItem;

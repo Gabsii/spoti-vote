@@ -6,6 +6,24 @@ import {css} from 'glamor';
 import SkipButton from './SkipButton.jsx';
 
 let constants = require('../../../js/constants');
+const styles = {
+    wrapper: css({
+        width: '100%',
+        minWidth: 0,
+        height: '32px',
+        boxSizing: 'border-box',
+        marginTop: 'auto',
+        padding: '4px 16px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 'auto',
+        '@media(min-width: 760px)': {
+            marginBottom: 0
+        }
+    }),
+    button: css({border: 0, color: constants.colors.fontSecondary, background: 'none'})
+};
 
 class SettingsBar extends Component {
 
@@ -52,22 +70,4 @@ class SettingsBar extends Component {
     }
 }
 
-const styles = {
-    wrapper: css({
-        width: '100%',
-        minWidth: 0,
-        height: '32px',
-        boxSizing: 'border-box',
-        marginTop: 'auto',
-        padding: '4px 16px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 'auto',
-        '@media(min-width: 760px)': {
-            marginBottom: 0
-        }
-    }),
-    button: css({border: 0, color: constants.colors.fontSecondary, background: 'none'})
-}
 export default SettingsBar;

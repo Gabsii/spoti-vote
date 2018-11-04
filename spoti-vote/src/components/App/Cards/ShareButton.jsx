@@ -5,6 +5,26 @@ import {faShareAlt} from '@fortawesome/fontawesome-free-solid';
 import {css} from 'glamor';
 
 let constants = require('../../../js/constants');
+const styles = {
+    button: css({
+        padding: '10px 25px',
+        marginTop: '2.5em',
+        color: constants.colors.fontSecondary,
+        backgroundColor: constants.colors.backgroundLite,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        lineHeight: 1,
+        borderRadius: '500px',
+        borderWidth: 0,
+        letterSpacing: '2px',
+        textTransform: 'uppercase',
+        whiteSpace: 'normal'
+
+    }),
+    text: css({fontSize: '1.3em', marginRight: '0.8em'}),
+    input: css({position: 'absolute', left: '-9999px'})
+};
 
 class ShareButton extends Component {
 
@@ -33,27 +53,6 @@ class ShareButton extends Component {
             <FontAwesomeIcon icon={faShareAlt} size='3x'/>
         </button>);
     }
-}
-
-const styles = {
-    button: css({
-        padding: '10px 25px',
-        marginTop: '2.5em',
-        color: constants.colors.fontSecondary,
-        backgroundColor: constants.colors.backgroundLite,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        lineHeight: 1,
-        borderRadius: '500px',
-        borderWidth: 0,
-        letterSpacing: '2px',
-        textTransform: 'uppercase',
-        whiteSpace: 'normal'
-
-    }),
-    text: css({fontSize: '1.3em', marginRight: '0.8em'}),
-    input: css({position: 'absolute', left: '-9999px'})
 }
 
 export default ShareButton;

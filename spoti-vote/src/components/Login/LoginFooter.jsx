@@ -2,17 +2,6 @@ import React, {Component} from 'react';
 import {css} from 'glamor';
 
 let constants = require('../../js/constants');
-
-class LoginFooter extends Component {
-
-    render() {
-
-        return (<footer className={`${styles.footer}`}>Help us to keep Spoti-Vote running
-            <br/>
-            &copy; Lukas Gabsi, Michael Blank</footer>);
-    }
-}
-
 const styles = {
     footer: css({
         color: constants.colors.font,
@@ -24,5 +13,16 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center'
     })
+};
+
+class LoginFooter extends Component {
+
+    render() {
+
+        return (<footer className={`${styles.footer}`}>Help us to keep Spoti-Vote running
+            <br/>
+            &copy; Lukas Gabsi, Michael Blank</footer>);
+    }
 }
+
 export default LoginFooter;

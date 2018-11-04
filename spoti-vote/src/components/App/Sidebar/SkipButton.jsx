@@ -4,6 +4,27 @@ import {faRandom} from '@fortawesome/fontawesome-free-solid';
 import {css} from 'glamor';
 
 let constants = require('../../../js/constants');
+const styles = {
+    button: css({
+        border: 0,
+        color: constants.colors.fontSecondary,
+        background: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexDirection: 'column',
+        '@media(min-width: 760px)': {
+            flexDirection: 'row'
+        }
+    }),
+    count: css({
+        marginLeft: 0,
+
+        '@media(min-width: 760px)': {
+            marginLeft: '1em'
+        }
+    })
+};
 
 class SkipButton extends Component {
 
@@ -48,25 +69,4 @@ class SkipButton extends Component {
     }
 }
 
-const styles = {
-    button: css({
-        border: 0,
-        color: constants.colors.fontSecondary,
-        background: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexDirection: 'column',
-        '@media(min-width: 760px)': {
-            flexDirection: 'row'
-        }
-    }),
-    count: css({
-        marginLeft: 0,
-
-        '@media(min-width: 760px)': {
-            marginLeft: '1em'
-        }
-    })
-}
 export default SkipButton;
