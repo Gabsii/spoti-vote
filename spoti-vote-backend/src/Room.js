@@ -149,22 +149,22 @@ method.getDifference = function(oldRoom) {
 
 	} else {
 		//THIS IS FOR AN UPDATE (IF NOTHING ELSE TODO REWORK THIS)
-		if (deepEqual(oldRoom.host, this.host) === false) {
+		if (!deepEqual(oldRoom.host, this.host)) {
 			update.host = {
 				voted: this.host.voted
 			}
 		}
 
-		if (deepEqual(oldRoom.activeTracks, this.activeTracks) === false) {
+		if (!deepEqual(oldRoom.activeTracks, this.activeTracks)) {
 			update.activeTracks = [];
 			for (var i = 0; i < this.activeTracks.length; i++) {
 				update.activeTracks[i] = null;
-				if (deepEqual(oldRoom.activeTracks[i], this.activeTracks[i]) === false) {
+				if (!deepEqual(oldRoom.activeTracks[i], this.activeTracks[i])) {
 					if (oldRoom.activeTracks[i] !== null && oldRoom.activeTracks[i] !== undefined) {
-						if (deepEqual(oldRoom.activeTracks[i].album, this.activeTracks[i].album) === false
-						|| deepEqual(oldRoom.activeTracks[i].id, this.activeTracks[i].id) === false
-						|| deepEqual(oldRoom.activeTracks[i].name, this.activeTracks[i].name) === false
-						|| deepEqual(oldRoom.activeTracks[i].artists, this.activeTracks[i].artists) === false) {
+						if (!deepEqual(oldRoom.activeTracks[i].album, this.activeTracks[i].album)
+						|| !deepEqual(oldRoom.activeTracks[i].id, this.activeTracks[i].id)
+						|| !deepEqual(oldRoom.activeTracks[i].name, this.activeTracks[i].name)
+						|| !deepEqual(oldRoom.activeTracks[i].artists, this.activeTracks[i].artists)) {
 							update.activeTracks[i] = {
 								album: {images: [{url: this.activeTracks[i].album.images[0].url}]},
 								id: this.activeTracks[i].id,
@@ -200,12 +200,12 @@ method.getDifference = function(oldRoom) {
 			}
 		}
 
-		if (deepEqual(oldRoom.activePlaylist, this.activePlaylist) === false) {
+		if (!deepEqual(oldRoom.activePlaylist, this.activePlaylist)) {
 			let oldName = null;
 			if (oldRoom.activePlaylist !== null && oldRoom.activePlaylist !== undefined) {
 				oldName = oldRoom.activePlaylist.name;
 			}
-			if (deepEqual(oldName, this.activePlaylist.name) === false) {
+			if (!deepEqual(oldName, this.activePlaylist.name)) {
 				update.activePlaylist = {
 					name: 'Host is selecting',
 					images: [{url: 'https://via.placeholder.com/152x152'}],
@@ -221,11 +221,11 @@ method.getDifference = function(oldRoom) {
 			}
 		}
 
-		if (deepEqual(oldRoom.connectedUser, this.connectedUser) === false) {
+		if (!deepEqual(oldRoom.connectedUser, this.connectedUser)) {
 			update.connectedUser = this.connectedUser;
 		}
 
-		if (deepEqual(oldRoom.activePlayer, this.activePlayer) === false) {
+		if (!deepEqual(oldRoom.activePlayer, this.activePlayer)) {
 			update.activePlayer = {
 				progress: 0,
 				track: {
@@ -251,7 +251,7 @@ method.getDifference = function(oldRoom) {
 			}
 
 			if (oldRoom.activePlayer !== null && this.activePlayer !== null) {
-				if (deepEqual(oldRoom.activePlayer.track, this.activePlayer.track) === true) {
+				if (deepEqual(oldRoom.activePlayer.track, this.activePlayer.track)) {
 					update.activePlayer = {
 						progress: 0
 					};
@@ -265,7 +265,7 @@ method.getDifference = function(oldRoom) {
 		}
 
 		if (oldRoom.playlists !== null && this.playlists !== null) {
-			if (deepEqual(oldRoom.playlists,this.playlists) === false) {
+			if (!deepEqual(oldRoom.playlists,this.playlists)) {
 				update.playlists = [];
 				for (var i = 0; i < this.playlists.length; i++) {
 					update.playlists.push({
@@ -433,7 +433,7 @@ method.updatePlaylists = async function() {
 method.getRandomTracks = async function(playlistId, activeTrack) {
 	let playlist = this.getPlaylistById(playlistId);
 	//Load tracks into Playlist if its empty
-	if (Array.isArray(playlist.tracks) === false) {
+	if (!Array.isArray(playlist.tracks)) {
 		playlist.tracks = await this.fetchPlaylistTracks(playlist);
 	}
 
@@ -467,7 +467,7 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
 					active = true;
 				}
 			}
-		} while (selectedTracks.some(t => t.id === track.id) === true || active === true);
+		} while (selectedTracks.some(t => t.id === track.id) || active);
 		selectedTracks.push(_.cloneDeep(track));
 	}
 
@@ -707,10 +707,10 @@ method.update = async function(isHost) {
 	}
 
 	if (this.activePlayer !== null && this.activePlaylist !== null) {
-		if (this.activePlayer.progress > 98 && this.isChanging === false) {
+		if (this.activePlayer.progress > 98 && !this.isChanging) {
 			this.isChanging = true;
 			await this.play();
-		} else if (this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isChanging === true) {
+		} else if (this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isChanging) {
 			console.log('INFO-[ROOM: '+this.id+']: Reset Cooldown');
 			this.isChanging = false;
 		}
