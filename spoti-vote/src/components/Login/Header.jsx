@@ -110,7 +110,7 @@ class Header extends Component {
                     <BarItem url='/#features' name='Features'/>
                     <BarItem url='/usage' name='Usage'/>
                     <li className={`${styles.divider}`}></li>
-                    <BarItem url={'http://' + ipAddress + ':' + portBack + '/login'} name='Host'/>
+                    <BarItem url={'http://' + ipAddress + ':' + portBack + '/login'} name='Login'/>
                     <BarItem url='/join' name='Join'/>
                 </ul>
             </nav>

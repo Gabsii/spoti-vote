@@ -31,6 +31,8 @@ let breakpoints = {
     xlarge: 1280 // ]980;1280] Laptops (everything else is DESKTOP FIRST)
 };
 
+let amountTopTracks = 5;
+
 let iterateCardColors = function(index) {
     switch (index % 4) {
         case 0:
@@ -51,6 +53,7 @@ let iterateCardColors = function(index) {
 module.exports = {
     colors: colors,
     iterateCardColors: iterateCardColors,
+    amountTopTracks: amountTopTracks,
     codes: codes,
     breakpoints: breakpoints
 };
