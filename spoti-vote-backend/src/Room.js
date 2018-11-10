@@ -33,10 +33,13 @@ function makeid(length) {
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function Room(token, room) {
+function Room(token, refreshToken, clientId, clientSecret, room) {
 	//The host object
 	this.host = {
-		token: token,
+		token,
+		clientId,
+		clientSecret,
+		refreshToken,
 		name: '',
 		id: '',
 		profileUrl: '',
@@ -53,6 +56,7 @@ function Room(token, room) {
 	this.hostDisconnect = Date.now();
 	this.isChanging = false;
 	this.isSkipping = false;
+	this.hostPhone = false;
 
 	//Makes sure the id is unique
 	let counter;
@@ -145,22 +149,22 @@ method.getDifference = function(oldRoom) {
 
 	} else {
 		//THIS IS FOR AN UPDATE (IF NOTHING ELSE TODO REWORK THIS)
-		if (deepEqual(oldRoom.host, this.host) === false) {
+		if (!deepEqual(oldRoom.host, this.host)) {
 			update.host = {
 				voted: this.host.voted
 			}
 		}
 
-		if (deepEqual(oldRoom.activeTracks, this.activeTracks) === false) {
+		if (!deepEqual(oldRoom.activeTracks, this.activeTracks)) {
 			update.activeTracks = [];
 			for (var i = 0; i < this.activeTracks.length; i++) {
 				update.activeTracks[i] = null;
-				if (deepEqual(oldRoom.activeTracks[i], this.activeTracks[i]) === false) {
+				if (!deepEqual(oldRoom.activeTracks[i], this.activeTracks[i])) {
 					if (oldRoom.activeTracks[i] !== null && oldRoom.activeTracks[i] !== undefined) {
-						if (deepEqual(oldRoom.activeTracks[i].album, this.activeTracks[i].album) === false
-						|| deepEqual(oldRoom.activeTracks[i].id, this.activeTracks[i].id) === false
-						|| deepEqual(oldRoom.activeTracks[i].name, this.activeTracks[i].name) === false
-						|| deepEqual(oldRoom.activeTracks[i].artists, this.activeTracks[i].artists) === false) {
+						if (!deepEqual(oldRoom.activeTracks[i].album, this.activeTracks[i].album)
+						|| !deepEqual(oldRoom.activeTracks[i].id, this.activeTracks[i].id)
+						|| !deepEqual(oldRoom.activeTracks[i].name, this.activeTracks[i].name)
+						|| !deepEqual(oldRoom.activeTracks[i].artists, this.activeTracks[i].artists)) {
 							update.activeTracks[i] = {
 								album: {images: [{url: this.activeTracks[i].album.images[0].url}]},
 								id: this.activeTracks[i].id,
@@ -196,12 +200,12 @@ method.getDifference = function(oldRoom) {
 			}
 		}
 
-		if (deepEqual(oldRoom.activePlaylist, this.activePlaylist) === false) {
+		if (!deepEqual(oldRoom.activePlaylist, this.activePlaylist)) {
 			let oldName = null;
 			if (oldRoom.activePlaylist !== null && oldRoom.activePlaylist !== undefined) {
 				oldName = oldRoom.activePlaylist.name;
 			}
-			if (deepEqual(oldName, this.activePlaylist.name) === false) {
+			if (!deepEqual(oldName, this.activePlaylist.name)) {
 				update.activePlaylist = {
 					name: 'Host is selecting',
 					images: [{url: 'https://via.placeholder.com/152x152'}],
@@ -217,11 +221,11 @@ method.getDifference = function(oldRoom) {
 			}
 		}
 
-		if (deepEqual(oldRoom.connectedUser, this.connectedUser) === false) {
+		if (!deepEqual(oldRoom.connectedUser, this.connectedUser)) {
 			update.connectedUser = this.connectedUser;
 		}
 
-		if (deepEqual(oldRoom.activePlayer, this.activePlayer) === false) {
+		if (!deepEqual(oldRoom.activePlayer, this.activePlayer)) {
 			update.activePlayer = {
 				progress: 0,
 				track: {
@@ -247,7 +251,7 @@ method.getDifference = function(oldRoom) {
 			}
 
 			if (oldRoom.activePlayer !== null && this.activePlayer !== null) {
-				if (deepEqual(oldRoom.activePlayer.track, this.activePlayer.track) === true) {
+				if (deepEqual(oldRoom.activePlayer.track, this.activePlayer.track)) {
 					update.activePlayer = {
 						progress: 0
 					};
@@ -261,7 +265,7 @@ method.getDifference = function(oldRoom) {
 		}
 
 		if (oldRoom.playlists !== null && this.playlists !== null) {
-			if (deepEqual(oldRoom.playlists,this.playlists) === false) {
+			if (!deepEqual(oldRoom.playlists,this.playlists)) {
 				update.playlists = [];
 				for (var i = 0; i < this.playlists.length; i++) {
 					update.playlists.push({
@@ -429,7 +433,7 @@ method.updatePlaylists = async function() {
 method.getRandomTracks = async function(playlistId, activeTrack) {
 	let playlist = this.getPlaylistById(playlistId);
 	//Load tracks into Playlist if its empty
-	if (Array.isArray(playlist.tracks) === false) {
+	if (!Array.isArray(playlist.tracks)) {
 		playlist.tracks = await this.fetchPlaylistTracks(playlist);
 	}
 
@@ -463,7 +467,7 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
 					active = true;
 				}
 			}
-		} while (selectedTracks.some(t => t.id === track.id) === true || active === true);
+		} while (selectedTracks.some(t => t.id === track.id) || active);
 		selectedTracks.push(_.cloneDeep(track));
 	}
 
@@ -490,6 +494,38 @@ method.getActiveTrackById = function(id) {
 };
 
 /*jshint ignore: start */
+
+/**
+* Refreshes the Hosts API Token
+*
+* @author: Michiocre
+* @return: boolean if completed successfull
+*/
+method.refreshToken = async function() {
+	console.log("Before REFRESH:");
+	console.log("  - Refresh Token: " + this.host.refreshToken);
+	console.log("  - Accsess Token: " + this.host.access_token);
+	let authOptions = {
+		url: 'https://accounts.spotify.com/api/token',
+		form: {
+			grant_type: 'refresh_token',
+			refresh_token: this.host.refreshToken
+		},
+		headers: {
+			'Authorization': 'Basic ' + (new Buffer(this.host.clientId + ':' + this.host.clientSecret).toString('base64'))
+		},
+		json: true
+	};
+	request.post(authOptions, async (error, response, body) => {
+		this.host.access_token = body.access_token;
+		this.host.refresh_token = body.refresh_token;
+
+		console.log("After REFRESH:");
+		console.log("  - Refresh Token: " + this.host.refreshToken);
+		console.log("  - Accsess Token: " + this.host.access_token);
+		return true;
+	});
+};
 
 /**
 * Fetches the data of the host, and all his playlists
@@ -541,7 +577,7 @@ method.fetchPlaylists = async function() {
 
 	let playlists = playlistRequestData.items;
 
-	while (next !== null) {
+	while (next !== null && next !== undefined) {
 		playlistRequest = await fetch(next, {
 			headers: {
 				"Authorization": "Bearer " + this.host.token
@@ -565,7 +601,7 @@ method.fetchPlaylists = async function() {
 }
 
 method.fetchPlaylistTracks = async function(playlist) {
-	let trackRequest = await fetch(playlist.href + '/tracks?fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal', { //%2Cmarket='+this.host.country
+	let trackRequest = await fetch(playlist.href + '/tracks?market='+this.host.country+'&fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal', {
 		headers: {
 			"Authorization": "Bearer " + this.host.token
 		}
@@ -589,9 +625,14 @@ method.fetchPlaylistTracks = async function(playlist) {
 		tracks = tracks.concat(trackRequestData.items);
 	}
 
+	let returnTracks = [];
+	for (var i = 0; i < tracks.length; i++) {
+		if (tracks[i].track.is_playable === true) {
+			returnTracks.push(tracks[i]);
+		}
+	}
 
-
-	return tracks;
+	return returnTracks;
 }
 
 /**
@@ -666,10 +707,10 @@ method.update = async function(isHost) {
 	}
 
 	if (this.activePlayer !== null && this.activePlaylist !== null) {
-		if (this.activePlayer.progress > 98 && this.isChanging === false) {
+		if (this.activePlayer.progress > 98 && !this.isChanging) {
 			this.isChanging = true;
 			await this.play();
-		} else if (this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isChanging === true) {
+		} else if (this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isChanging) {
 			console.log('INFO-[ROOM: '+this.id+']: Reset Cooldown');
 			this.isChanging = false;
 		}

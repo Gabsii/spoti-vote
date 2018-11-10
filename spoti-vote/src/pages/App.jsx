@@ -26,62 +26,65 @@ class App extends Component {
             token = null;
         }
 
-        this.state = {
-            token: token,
-            roomId: window.location.pathname.split('/')[2],
-            loginPage: 'http://' + ipAddress + ':' + portFront,
-            isHost: false,
-            connectedUser: [],
-            playlists: [],
-            host: {
-                img: '', //You now have the user icon in here
-                name: null,
-                voted: null
-            },
-            activePlaylist: {
-                name: 'Loading',
-                external_urls: {
-                    spotify: ''
-                },
-                images: [
-                    {
-                        url: ''
-                    }
-                ]
-            },
-            activeTracks: {},
-            activePlayer: null,
-            voted: null
-        };
-    }
+		this.state = {
+			isPhone: (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1),
+			token: token,
+			roomId: window.location.pathname.split('/')[2],
+			loginPage: 'http://' + ipAddress + ':' + portFront,
+			isHost: false,
+			connectedUser: [],
+			playlists: [],
+			host: {
+				img: '',	//You now have the user icon in here
+				name: null,
+				voted: null
+			},
+			activePlaylist: {
+				name: 'Loading',
+				external_urls: {
+					spotify: ''
+				},
+				images: [
+					{
+						url: ''
+					}
+				]
+			},
+			activeTracks: {},
+			activePlayer: null,
+			voted: null
+		}
+	}
 
     componentDidMount() {
         document.title = 'Spoti-Vote | ' + this.state.roomId;
         document.getElementsByTagName('META')[2].content = '';
 
-        //When the server asks for the id, it will return the id and the token
-        this.socket.on('roomId', data => {
-            this.socket.emit('roomId', {
-                roomId: this.state.roomId,
-                token: this.state.token
-            });
-        });
+		//When the server asks for the id, it will return the id and the token
+		this.socket.on('roomId', data => {
+			this.socket.emit('roomId', {
+				roomId: this.state.roomId,
+				token: this.state.token,
+				isPhone: this.state.isPhone
+			});
+		});
 
-        //When the server asks for what room to delete, it will return the answer of the user
-        this.socket.on('twoRooms', data => {
-            swal({
-                title: 'You are already hosting a room.',
-                text: 'You are currently hosting room [' + data.oldRoom + ']. Do you want to delete it?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, dont do it!'
-            }).then((result) => {
-                this.socket.emit('twoRooms', {
-                    value: result.value,
-                    roomId: data.oldRoom
-                });
-            });
+		//When the server asks for what room to delete, it will return the answer of the user
+		this.socket.on('twoRooms', data => {
+			swal({
+				title: 'You are already hosting a room.',
+				text: 'You are currently hosting room [' + data.oldRoom + ']. Do you want to delete it?',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Yes, delete it!',
+				cancelButtonText: 'No, dont do it!'
+			}).then((result) => {
+				this.socket.emit('twoRooms', {
+					value: result.value,
+					roomId: data.oldRoom,
+					isPhone: this.state.isPhone
+				});
+			});
 
         });
 
@@ -227,17 +230,16 @@ class App extends Component {
 	 * @param  {Element} elem
 	 * @return {Object}
 	 */
-    getSiblings(elem) {
-        let siblings = [];
-        let sibling = elem.parentNode.firstChild;
-        let skipMe = elem;
-        for (; sibling; sibling = sibling.nextSibling) {
-            if (sibling.nodeType === 1 && sibling !== skipMe) {
+	getSiblings(elem) {
+		let siblings = [];
+		let sibling = elem.parentNode.firstChild;
+		let skipMe = elem;
+		for (; sibling; sibling = sibling.nextSibling)
+			if (sibling.nodeType === 1 && sibling !== skipMe) {
                 siblings.push(sibling);
             }
-        }
-        return siblings;
-    }
+	return siblings;
+	}
 
     voteHandler(trackId, event) {
         let buttons = this.getSiblings(event.target.closest('button'));

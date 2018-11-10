@@ -37,10 +37,15 @@ stdin.addListener("data", function(d) {
                 console.log(rooms[i].id);
             }
             break;
-        case "refresh":
-            let room = getRoomById(d.toString().trim().split(' ')[1]);
+        case "refresh": //refresh CODE
+            let room = rooms[0];
+            if (rooms.length > 1) {
+                let room = getRoomById(d.toString().trim().split(' ')[1]);
+            }
+
             if (room !== null && room !== undefined) {
                 room.updatePlaylists();
+                room.refreshToken();
             }
             break;
         default:
@@ -98,7 +103,7 @@ app.get('/callback', async (req, res) => {
     };
     request.post(authOptions, async (error, response, body) => {
         let uri = 'http://' + ipAddress + ':' + portFront + '/app';
-        let room = new Room(body.access_token, rooms);
+        let room = new Room(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET, rooms);
 
         if (await room.fetchData() == true) {
             rooms.push(room);
@@ -167,8 +172,10 @@ io.on('connection', (socket) => {
             //Delete if old
             let toBeDeleted = [];
             for (let i = 0; i < rooms.length; i++) {
-                if (Date.now() - rooms[i].hostDisconnect > 1000 * secTillDelete && rooms[i].hostDisconnect !== null) {
-                    toBeDeleted.push(rooms[i]);
+                if (rooms[i].hostPhone === false) {
+                    if (Date.now() - rooms[i].hostDisconnect > 1000 * secTillDelete && rooms[i].hostDisconnect !== null) {
+                        toBeDeleted.push(rooms[i]);
+                    }
                 }
             }
             for (let i = 0; i < toBeDeleted.length; i++) {
@@ -191,9 +198,10 @@ io.on('connection', (socket) => {
 
                 if (room.firstConnection === true) {
                     room.firstConnection = false;
-                    console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token).');
+                    Console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token). [Phone: ' + data.isPhone + ']');
 
                     socket.isHost = true;
+                    room.hostPhone = data.isPhone;
 
                     let update = room.getDifference(null);
                     socket.oldUpdate = _.cloneDeep(room);
@@ -206,9 +214,10 @@ io.on('connection', (socket) => {
                     room.hostDisconnect = null;
                 } else {
                     if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
-                        console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected.');
+                        Console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
                         socket.isHost = true;
+                        room.hostPhone = data.isPhone;
 
                         let update = room.getDifference(null);
                         socket.oldUpdate = _.cloneDeep(room);
@@ -245,9 +254,10 @@ io.on('connection', (socket) => {
 
             if (room.firstConnection === true) {
                 room.firstConnection = false;
-                console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token).');
+                console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token). [Phone: ' + data.isPhone + ']');
 
                 socket.isHost = true;
+                room.hostPhone = data.isPhone;
 
                 let update = room.getDifference(null);
                 socket.oldUpdate = _.cloneDeep(room);
@@ -260,9 +270,10 @@ io.on('connection', (socket) => {
                 room.hostDisconnect = null;
             } else {
                 if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
-                    console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected.');
+                    console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
                     socket.isHost = true;
+                    room.hostPhone = data.isPhone;
 
                     let update = room.getDifference(null);
                     socket.oldUpdate = _.cloneDeep(room);
@@ -410,8 +421,12 @@ async function theUpdateFunction(socket) {
     if (room !== null) {
         await room.update(socket.isHost);
 
-        if (socket.updateCounter.amount % 300 == 0) {
+        if (socket.updateCounter.amount % 300 === 0 && socket.isHost === true) {
             room.updatePlaylists();
+        }
+
+        if (socket.updateCounter.amount % 3500 === 0 && socket.isHost === true) {
+            room.refreshToken();
         }
 
         let update = room.getDifference(socket.oldUpdate);
@@ -420,26 +435,29 @@ async function theUpdateFunction(socket) {
             socket.emit('update', update);
         }
         socket.oldUpdate = _.cloneDeep(room);
+
+        if (socket.updateCounter.amount % 30 == 0) {
+            let toBeDeleted = [];
+            for (let i = 0; i < rooms.length; i++) {
+                if (rooms[i].hostPhone === false) {
+                    if (Date.now() - rooms[i].hostDisconnect > 1000 * secTillDelete && rooms[i].hostDisconnect !== null) {
+                        toBeDeleted.push(rooms[i]);
+                    }
+                }
+            }
+            for (let i = 0; i < toBeDeleted.length; i++) {
+                console.log('INFO-[ROOM: ' + toBeDeleted[i].id + ']: This room has been deleted due to inactivity.');
+                rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
+            }
+        }
+
+        if (socket.updateCounter.amount > 30000) {
+            socket.updateCounter.amount = 0;
+        }
     } else {
         socket.emit('errorEvent', {message: null});
     }
 
-    if (socket.updateCounter.amount % 30 == 0) {
-        let toBeDeleted = [];
-        for (var i = 0; i < rooms.length; i++) {
-            if (Date.now() - rooms[i].hostDisconnect > 1000 * 60 && rooms[i].hostDisconnect !== null) {
-                toBeDeleted.push(rooms[i]);
-            }
-        }
-        for (var i = 0; i < toBeDeleted.length; i++) {
-            console.log('INFO-[ROOM: ' + toBeDeleted[i].id + ']: This room has been deleted due to inactivity.');
-            rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
-        }
-    }
-
-    if (socket.updateCounter.amount > 300) {
-        socket.updateCounter.amount = 0;
-    }
 };
 
 /* jshint ignore: end */
