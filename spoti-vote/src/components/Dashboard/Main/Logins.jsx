@@ -7,7 +7,7 @@ import LoginCode from '../../Login/LoginCode.jsx';
 const constants = require('../../../js/constants');
 const styles = {
     wrapper: css({
-        height: 'calc(100% - 340px)',
+        height: 'calc(100% - 360px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

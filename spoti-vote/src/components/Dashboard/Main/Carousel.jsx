@@ -8,15 +8,13 @@ let constants = require('../../../js/constants');
 const cookies = new Cookies();
 const styles = {
     wrapper: css({
-        height: '320px',
+        height: '340px',
         position: 'relative',
         bottom: 0,
         padding: '10px',
         backgroundColor: constants.colors.backgroundLite,
         display: 'flex',
-        justifyContent: 'center',
         boxSizing: 'content-box',
-        overflow: 'auto',
         flexDirection: 'column'
     }),
     heading: css({
@@ -26,7 +24,7 @@ const styles = {
         borderBottom: '1px solid' + constants.colors.barBackground,
         color: 'white'
     }),
-    tracksWrapper: css({display: 'flex', flexDirection: 'row'})
+    tracksWrapper: css({display: 'flex', flexDirection: 'row', justifyContent: 'center', overflow: 'hidden'})
 };
 
 class Carousel extends Component {
