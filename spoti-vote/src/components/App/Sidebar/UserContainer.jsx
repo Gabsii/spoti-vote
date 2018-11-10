@@ -1,21 +1,27 @@
 import React, {Component} from 'react';
+import {css} from 'glamor';
+
 import User from './User.jsx';
-
 let constants = require('../../../js/constants');
-let defaultStyle = {
-    height: 'calc(100% - 340px)',
-    width: '100%',
-    marginTop: '300px',
-    overflowY: 'auto'
-};
-
-let titleStyle = {
-    height: '35px',
-    fontSize: '24px',
-    border: '1px solid black',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+const styles = {
+    wrapper: css({
+        height: 'calc(100% - 340px)',
+        width: '100%',
+        marginTop: '300px',
+        overflowY: 'auto',
+        display: 'none',
+        '@media(min-width: 760px)': {
+            display: 'block'
+        }
+    }),
+    title: css({
+        height: '35px',
+        fontSize: '24px',
+        border: '1px solid black',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    })
 };
 
 class UserContainer extends Component {
@@ -35,8 +41,8 @@ class UserContainer extends Component {
             }
         }
 
-        return (<div style={defaultStyle}>
-            <div style={titleStyle}>Users</div>
+        return (<div className={`${styles.wrapper}`}>
+            <div className={`${styles.title}`}>Users</div>
             <div>
                 {
                     this.props.connectedUser.map(function(user, index) {
@@ -47,4 +53,5 @@ class UserContainer extends Component {
         </div>);
     }
 }
+
 export default UserContainer;

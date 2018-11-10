@@ -13,7 +13,8 @@ let sectionStyle = {
     position: 'relative',
     height: '50vh',
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    borderBottom: '1px solid black'
 };
 let linkStyle = {
     textDecoration: 'none',
@@ -26,7 +27,7 @@ let paragraphStyle = {
     height: 'calc( 50vh - 100px )',
     fontSize: '1.25em'
 };
-let imgStyle = { // TODO: scale images better
+let imgStyle = { // TODO: rework whole page lmao im ashamed
     maxWidth: '60%',
     maxHeight: '50vh'
 };
@@ -49,8 +50,7 @@ class Usage extends Component {
         return (<main>
             <Header/>
             <section style={{
-                    ...sectionStyle,
-                    backgroundColor: constants.colors.greenCard
+                    ...sectionStyle
                 }}>
                 <div style={{
                         ...paragraphStyle,
@@ -81,8 +81,7 @@ class Usage extends Component {
                 <img alt='Login with Spotify' style={imgStyle} src={step1}></img>
             </section>
             <section style={{
-                    ...sectionStyle,
-                    backgroundColor: constants.colors.blueCard
+                    ...sectionStyle
                 }}>
                 <div style={{
                         ...paragraphStyle,
@@ -101,8 +100,7 @@ class Usage extends Component {
                 <img alt='Share with your friends' style={imgStyle} src={step2}></img>
             </section>
             <section style={{
-                    ...sectionStyle,
-                    backgroundColor: constants.colors.yellowCard
+                    ...sectionStyle
                 }}>
                 <div style={{
                         ...paragraphStyle,
@@ -118,8 +116,7 @@ class Usage extends Component {
                 <img alt='Select playlist and songs' style={imgStyle} src={step4}></img>
             </section>
             <section style={{
-                    ...sectionStyle,
-                    backgroundColor: constants.colors.redCard
+                    ...sectionStyle
                 }}>
                 <div style={{
                         ...paragraphStyle,

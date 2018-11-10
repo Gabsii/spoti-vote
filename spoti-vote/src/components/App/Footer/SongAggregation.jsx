@@ -1,19 +1,24 @@
 import React, {Component} from 'react';
 import Marquee from 'react-text-marquee';
+import {css} from 'glamor';
 
 let constants = require('../../../js/constants');
-let defaultStyle = {
-    height: '75px',
-    width: '150px',
-    position: 'absolute',
-    bottom: 0,
-    left: '75px',
-    marginLeft: '10px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden'
+const styles = {
+    wrapper: css({
+        height: '75px',
+        width: '150px',
+        position: 'absolute',
+        bottom: 0,
+        left: '75px',
+        marginLeft: '10px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden'
+    }),
+    track: css({fontSize: '0.9em', color: constants.colors.font}),
+    artist: css({marginTop: '5px', fontSize: '0.8em', color: constants.colors.fontSecondary})
 };
 
 class SongAggregation extends Component {
@@ -25,21 +30,15 @@ class SongAggregation extends Component {
                 artistString += ', ';
             }
         }
-        return (<div style={defaultStyle}>
-            <div style={{
-                    fontSize: '0.9em',
-                    color: constants.colors.font
-                }}>
+        return (<div className={`${styles.wrapper}`}>
+            <div className={`${styles.track}`}>
                 <Marquee text={this.props.songName}/>
             </div>
-            <div style={{
-                    marginTop: '5px',
-                    fontSize: '0.8em',
-                    color: constants.colors.fontSecondary
-                }}>
+            <div className={`${styles.artist}`}>
                 <Marquee text={artistString}/>
             </div>
         </div>);
     }
 }
+
 export default SongAggregation;

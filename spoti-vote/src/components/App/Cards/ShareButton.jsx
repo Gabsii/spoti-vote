@@ -2,24 +2,28 @@ import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import swal from 'sweetalert2';
 import {faShareAlt} from '@fortawesome/fontawesome-free-solid';
+import {css} from 'glamor';
 
 let constants = require('../../../js/constants');
+const styles = {
+    button: css({
+        padding: '10px 25px',
+        marginTop: '2.5em',
+        color: constants.colors.fontSecondary,
+        backgroundColor: constants.colors.backgroundLite,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        lineHeight: 1,
+        borderRadius: '500px',
+        borderWidth: 0,
+        letterSpacing: '2px',
+        textTransform: 'uppercase',
+        whiteSpace: 'normal'
 
-let defaultStyle = {
-    padding: '10px 25px',
-    marginTop: '2.5em',
-    color: constants.colors.fontSecondary,
-    backgroundColor: constants.colors.backgroundLite,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    lineHeight: 1,
-    // border: '1px solid white',
-    borderRadius: '500px',
-    borderWidth: 0,
-    letterSpacing: '2px',
-    textTransform: 'uppercase',
-    whiteSpace: 'normal'
+    }),
+    text: css({fontSize: '1.3em', marginRight: '0.8em'}),
+    input: css({position: 'absolute', left: '-9999px'})
 };
 
 class ShareButton extends Component {
@@ -43,17 +47,12 @@ class ShareButton extends Component {
     }
 
     render() {
-        return (<button style={defaultStyle} onClick={this.share.bind(this)}>
-            <div style={{
-                    fontSize: '1.3em',
-                    marginRight: '0.8em'
-                }}>Share</div>
-            <input id='share' style={{
-                    position: 'absolute',
-                    left: '-9999px'
-                }} type='text' defaultValue={window.location.href} tabIndex='-1' aria-hidden='true'/>
+        return (<button className={`${styles.button}`} onClick={this.share.bind(this)}>
+            <div className={`${styles.text}`}>Share</div>
+            <input className={`${styles.input}`} id='share' type='text' defaultValue={window.location.href} tabIndex='-1' aria-hidden='true'/>
             <FontAwesomeIcon icon={faShareAlt} size='3x'/>
         </button>);
     }
 }
+
 export default ShareButton;

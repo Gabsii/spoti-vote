@@ -1,16 +1,29 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faRandom} from '@fortawesome/fontawesome-free-solid';
+import {css} from 'glamor';
 
 let constants = require('../../../js/constants');
+const styles = {
+    button: css({
+        border: 0,
+        color: constants.colors.fontSecondary,
+        background: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexDirection: 'column',
+        '@media(min-width: 760px)': {
+            flexDirection: 'row'
+        }
+    }),
+    count: css({
+        marginLeft: 0,
 
-let buttonStyle = {
-    border: 0,
-    color: constants.colors.fontSecondary,
-    background: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+        '@media(min-width: 760px)': {
+            marginLeft: '1em'
+        }
+    })
 };
 
 class SkipButton extends Component {
@@ -29,21 +42,13 @@ class SkipButton extends Component {
     }
 
     render() {
-        let linkStyle,
-            flexStyle;
+        let linkStyle;
         this.state.hover
             ? linkStyle = {
                 cursor: 'pointer'
             }
             : linkStyle = {
                 cursor: 'context-menu'
-            };
-        this.props.isPhone
-            ? flexStyle = {
-                flexDirection: 'column'
-            }
-            : flexStyle = {
-                flexDirection: 'row'
             };
 
         let users = this.props.connectedUser.length + 1;
@@ -57,20 +62,11 @@ class SkipButton extends Component {
             skips++;
         }
 
-        return (<button style={{
-                ...buttonStyle,
-                ...linkStyle,
-                ...flexStyle
-            }} onClick={this.props.skipHandler} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+        return (<button className={`${styles.button}`} style={linkStyle} onClick={this.props.skipHandler} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
             <FontAwesomeIcon icon={faRandom} size='2x'/>
-            <div style={this.props.isPhone
-                    ? {
-                        marginLeft: 0
-                    }
-                    : {
-                        marginLeft: '1em'
-                    }}>{skips + '/' + users}</div>
+            <div className={`${styles.count}`}>{skips + '/' + users}</div>
         </button>);
     }
 }
+
 export default SkipButton;

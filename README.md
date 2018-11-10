@@ -65,5 +65,6 @@ Congratulations! You now are able to use my webpage.
 * Credits to Eric Nopanen for his picture (found on [Unsplash](https://unsplash.com))
 * Credits to Etienne Boulanger for his picture (found on [Unsplash](https://unsplash.com))
 * Credits to Cory Bouthillette for his picture (found on [Unsplash](https://unsplash.com))
+* Credits to Mohammad Metri for his picture (found on [Unsplash](https://unsplash.com))
 * Credits to [Michiocre](https://github.com/Michiocre) for the Logo and Button Animation
 * Credits to Treer for his icon (found on [openclipart](https://openclipart.org/detail/247324/abstract-user-icon-1))

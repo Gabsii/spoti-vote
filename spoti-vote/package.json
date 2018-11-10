@@ -30,6 +30,7 @@
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "1.1.5",
     "fs-extra": "3.0.1",
+    "glamor": "^2.20.40",
     "html-webpack-plugin": "2.29.0",
     "ip": "^1.1.5",
     "jest": "20.0.4",
@@ -37,14 +38,14 @@
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
-    "preact": "^8.2.9",
-    "preact-compat": "^3.18.0",
+    "preact": "^8.3.1",
+    "preact-compat": "^3.18.4",
     "promise": "8.0.1",
     "raf": "3.4.0",
-    "react": "^16.2.0",
+    "react": "^16.6.0",
     "react-cookie": "^2.1.4",
-    "react-dev-utils": "^5.0.0",
-    "react-dom": "^16.2.0",
+    "react-dev-utils": "^5.0.3",
+    "react-dom": "^16.6.0",
     "react-responsive": "^4.1.0",
     "react-router-dom": "^4.2.2",
     "react-text-marquee": "^1.0.1",
@@ -53,7 +54,7 @@
     "socket.io-client": "^2.1.0",
     "style-loader": "0.19.0",
     "sw-precache-webpack-plugin": "0.11.4",
-    "sweetalert2": "^7.20.1",
+    "sweetalert2": "^7.28.11",
     "url-loader": "0.6.2",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4",
@@ -108,6 +109,6 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "image-webpack-loader": "^4.2.0"
+    "image-webpack-loader": "^4.5.0"
   }
 }
