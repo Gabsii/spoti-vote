@@ -87,34 +87,34 @@ app.get('/login', (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/callback', async (req, res) => {
-    let code = req.query.code || null;
-    let authOptions = {
-        url: 'https://accounts.spotify.com/api/token',
-        form: {
-            code: code,
-            redirect_uri,
-            grant_type: 'authorization_code'
-        },
-        headers: {
-            'Authorization': 'Basic ' + (
-            new Buffer(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64'))
-        },
-        json: true
-    };
-    request.post(authOptions, async (error, response, body) => {
-        let uri = 'http://' + ipAddress + ':' + portFront + '/app';
-        let room = new Room(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET, rooms);
+	let code = req.query.code || null;
+	let authOptions = {
+		url: 'https://accounts.spotify.com/api/token',
+		form: {
+			code: code,
+			redirect_uri,
+			grant_type: 'authorization_code'
+		},
+		headers: {
+			'Authorization': 'Basic ' + (
+			new Buffer(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64'))
+		},
+		json: true
+	};
+	request.post(authOptions, async (error, response, body) => {
+		let uri = 'http://' + ipAddress + ':' + portFront + '/dashboard';
+		let room = new Room(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET, rooms);
 
-        if (await room.fetchData() == true) {
-            rooms.push(room);
+		if (await room.fetchData() == true) {
+			rooms.push(room);
 
-            console.log('INFO-[ROOM: ' + room.id + ']: This room has been created');
+			console.log('INFO-[ROOM: '+room.id+']: This room has been created');
 
-            res.redirect(uri + '/' + room.id); // + '?token=' + body.access_token);
-        } else {
-            res.redirect('http://' + ipAddress + ':' + portFront);
-        }
-    });
+			res.redirect(uri + '/' + room.id); // + '?token=' + body.access_token);
+		} else {
+			res.redirect('http://' + ipAddress + ':' + portFront);
+		}
+	});
 });
 
 /**
