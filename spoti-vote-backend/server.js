@@ -103,7 +103,7 @@ app.get('/callback', async (req, res) => {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-		let uri = 'http://' + ipAddress + ':' + portFront + '/app';
+		let uri = 'http://' + ipAddress + ':' + portFront + '/dashboard';
 		let room = new Room(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET, rooms);
 
 		if (await room.fetchData() == true) {
