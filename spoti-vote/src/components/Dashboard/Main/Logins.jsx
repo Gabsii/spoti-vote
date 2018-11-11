@@ -4,8 +4,15 @@ import {css} from 'glamor';
 import LoginCode from '../../Login/LoginCode.jsx';
 
 let constants = require('../../../js/constants');
-const ipAddress = window.location.hostname || 'localhost';
-const portBack = 8888;
+const ipAddress = (window.location.hostname === 'localhost')
+    ? 'localhost'
+    : '80.123.206.40';
+const portBack = (window.location.hostname === 'localhost')
+    ? 8888
+    : '443/b';
+const protocol = (window.location.hostname === 'localhost')
+    ? 'http://'
+    : 'https://';
 const styles = {
     wrapper: css({
         height: 'calc(100% - 360px)',
@@ -52,7 +59,7 @@ class Logins extends Component {
     }
 
     login() {
-        window.location.href = 'http://' + ipAddress + ':' + portBack + '/createRoom';
+        window.location.href = protocol + ipAddress + ':' + portBack + '/createRoom';
     }
 
     render() {

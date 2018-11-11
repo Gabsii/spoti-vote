@@ -1,4 +1,4 @@
-import React, {lazy} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import {Route} from 'react-router';
 import {BrowserRouter, Switch} from 'react-router-dom';
