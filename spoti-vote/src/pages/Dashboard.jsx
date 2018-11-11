@@ -28,6 +28,7 @@ class Dashboard extends Component {
 
     componentDidMount() {
         const token = cookies.get('token');
+        console.log(token);
         this.fetchProfileData(token);
         this.fetchTopTracks(token);
     }

@@ -6,14 +6,11 @@ const socketIo = require('socket.io');
 const querystring = require('querystring');
 const request = require('request');
 const _ = require('lodash');
-const cookieParser = require('cookie-parser')
 //Import of used files
 const constants = require('./src/constants');
 const Room = require('./src/Room');
-const User = require('./src/User');
 //Setup of the server
 const app = express();
-app.use(cookieParser());
 const server = http.createServer(app);
 const io = socketIo(server);
 
@@ -28,7 +25,6 @@ const secTillDelete = 60;
 
 console.log('INFO: Redirect URL: ' + redirect_uri);
 let rooms = [];
-let users = [];
 let allClients = {};
 
 ///////DEGUG/////////
@@ -91,14 +87,6 @@ app.get('/login', (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/callback', async (req, res) => {
-
-    let options = {
-        path: '/',
-        expires: 0, // would expire after 15 minutes
-        httpOnly: false, // The cookie only accessible by the web server
-        signed: false // Indicates if the cookie should be signed
-    }
-
 	let code = req.query.code || null;
 	let authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
@@ -115,18 +103,17 @@ app.get('/callback', async (req, res) => {
 	};
 	request.post(authOptions, async (error, response, body) => {
 		let uri = 'http://' + ipAddress + ':' + portFront + '/dashboard';
-        let user = new User(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
+		let room = new Room(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET, rooms);
 
-        // Set cookie
-        res.cookie('token', body.access_token, options) // options is optional
+		if (await room.fetchData() == true) {
+			rooms.push(room);
 
-        // if (await user.fetchData() == true) {
-        //     users.push(user);
-        //
-        //     console.log('INFO-[USER: '+user.name+']: This user has loged in');
-        // }
+			console.log('INFO-[ROOM: '+room.id+']: This room has been created');
 
-        res.redirect(uri);
+			res.redirect(uri + '/' + room.id); // + '?token=' + body.access_token);
+		} else {
+			res.redirect('http://' + ipAddress + ':' + portFront);
+		}
 	});
 });
 
@@ -154,7 +141,7 @@ app.get('/rooms', async (req, res) => {
 */
 io.on('connection', (socket) => {
     //Local varibles, can only be used by the same connection (but in every call)
-    socket.state = 0; //0 Dashboard / 1 App
+    socket.roomId = null;
     socket.isHost = false;
     socket.name = null;
     socket.updateCounter = {
@@ -168,7 +155,7 @@ io.on('connection', (socket) => {
     /* jshint ignore: end */
 
     //This is what happens when a user connects
-    socket.emit('dashboard');
+    socket.emit('roomId');
 
     /**
     * Called when a user wants to connect to a room
