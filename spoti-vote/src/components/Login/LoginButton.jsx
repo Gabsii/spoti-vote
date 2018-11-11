@@ -57,7 +57,7 @@ class LoginButton extends Component {
             };
         }
         return (<button style={linkStyle} id='loginbutton' className={`${styles.button}`} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} onClick={this.login.bind(this)} tabIndex='0'>
-            Host
+            Login
         </button>);
     }
 }

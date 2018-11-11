@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Login from './pages/Login.jsx';
 import App from './pages/App.jsx';
+import Dashboard from './pages/Dashboard.jsx';
 import Join from './pages/Join.jsx';
 import Usage from './pages/Usage.jsx';
 import NotFound from './pages/NotFound.jsx';
@@ -17,6 +18,7 @@ ReactDOM.render((<BrowserRouter>
         <Switch>
             <Route exact={true} path="/" component={Login}/>
             <Route path="/app" component={App}/>
+            <Route path="/dashboard" component={Dashboard}/>
             <Route path="/join" component={Join}/>
             <Route path="/usage" component={Usage}/>
             <Route component={NotFound}/>
