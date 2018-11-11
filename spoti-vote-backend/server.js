@@ -120,14 +120,29 @@ app.get('/callback', async (req, res) => {
         // Set cookie
         res.cookie('token', body.access_token, options) // options is optional
 
-        // if (await user.fetchData() == true) {
-        //     users.push(user);
-        //
-        //     console.log('INFO-[USER: '+user.name+']: This user has loged in');
-        // }
+        if (await user.fetchData() == true) {
+            users.push(user);
+
+            console.log('INFO-[USER: '+user.name+']: This user has logged in');
+        }
 
         res.redirect(uri);
 	});
+});
+
+/**
+* The callback that will be called when the Login with the Spotify API is completed
+* Will redirect the user to the newly created room
+*/
+app.get('/createRoom', async (req, res) => {
+    let room = new Room(users[0], rooms);
+    let uri = 'http://' + ipAddress + ':' + portFront + '/app';
+
+    console.log(room);
+
+    rooms.push(room);
+
+    res.redirect(uri + '/' + room.id);
 });
 
 /**
@@ -168,7 +183,7 @@ io.on('connection', (socket) => {
     /* jshint ignore: end */
 
     //This is what happens when a user connects
-    socket.emit('dashboard');
+    socket.emit('roomId');
 
     /**
     * Called when a user wants to connect to a room
@@ -199,7 +214,7 @@ io.on('connection', (socket) => {
             //Count how many rooms this user is already hosting
             let x = -1;
             for (let i = 0; i < rooms.length; i++) {
-                if (rooms[i].host.id == room.host.id && rooms[i].id !== room.id) {
+                if (rooms[i].user.id == room.user.id && rooms[i].id !== room.id) {
                     x = i;
                 }
             }
@@ -207,7 +222,7 @@ io.on('connection', (socket) => {
             if (x >= 0) {
                 socket.emit('twoRooms', {oldRoom: rooms[x].id});
             } else {
-                socket.name = room.host.name;
+                socket.name = room.user.name;
 
                 if (room.firstConnection === true) {
                     room.firstConnection = false;
@@ -221,12 +236,12 @@ io.on('connection', (socket) => {
 
                     update.isHost = socket.isHost;
 
-                    update.token = room.host.token;
+                    update.token = room.user.token;
 
                     socket.emit('initData', update);
                     room.hostDisconnect = null;
                 } else {
-                    if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
+                    if (room.hostDisconnect !== null && data.token == room.user.token) { //If host is gone
                         console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
                         socket.isHost = true;
@@ -263,7 +278,7 @@ io.on('connection', (socket) => {
             console.log('INFO-[ROOM: ' + oldRoom.id + ']: This room has been deleted due to host creating a new one.');
             rooms.splice(rooms.indexOf(oldRoom), 1);
 
-            socket.name = room.host.name;
+            socket.name = room.user.name;
 
             if (room.firstConnection === true) {
                 room.firstConnection = false;
@@ -277,12 +292,12 @@ io.on('connection', (socket) => {
 
                 update.isHost = socket.isHost;
 
-                update.token = room.host.token;
+                update.token = room.user.token;
 
                 socket.emit('initData', update);
                 room.hostDisconnect = null;
             } else {
-                if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
+                if (room.hostDisconnect !== null && data.token == room.user.token) { //If host is gone
                     console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
                     socket.isHost = true;
