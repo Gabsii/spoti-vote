@@ -7,7 +7,6 @@ import step1 from '../img/Step1.PNG';
 import step2 from '../img/Step2.PNG';
 import step4 from '../img/Step4.PNG';
 
-let constants = require('../js/constants');
 let sectionStyle = {
     width: '100%',
     position: 'relative',

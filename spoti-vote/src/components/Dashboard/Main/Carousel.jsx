@@ -5,7 +5,6 @@ import Cookies from 'universal-cookie';
 import TopType from './TopType.jsx';
 
 let constants = require('../../../js/constants');
-const cookies = new Cookies();
 const styles = {
     wrapper: css({
         height: '340px',
