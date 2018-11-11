@@ -198,7 +198,7 @@ io.on('connection', (socket) => {
 
                 if (room.firstConnection === true) {
                     room.firstConnection = false;
-                    Console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token). [Phone: ' + data.isPhone + ']');
+                    console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token). [Phone: ' + data.isPhone + ']');
 
                     socket.isHost = true;
                     room.hostPhone = data.isPhone;
@@ -214,7 +214,7 @@ io.on('connection', (socket) => {
                     room.hostDisconnect = null;
                 } else {
                     if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
-                        Console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
+                        console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
                         socket.isHost = true;
                         room.hostPhone = data.isPhone;
