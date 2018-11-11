@@ -65,12 +65,10 @@ class SettingsBar extends Component {
                 </button>
                 <span style={linkStyle}>Help</span>
             </div>
-            <div className={`${styles.buttonWrapper}`}>
-                <button className={`${styles.button}`} onClick={this.logoutHandler.bind(this)}>
-                    <FontAwesomeIcon icon={faSignOutAlt} size='2x'/>
-                </button>
-                <span style={linkStyle}>Logout</span>
-            </div>
+            <button className={`${styles.button}`} onClick={this.logoutHandler.bind(this)}>
+                <FontAwesomeIcon icon={faSignOutAlt} size='2x'/>
+            </button>
+            <span style={linkStyle}>Logout</span>
         </div>);
     }
 }

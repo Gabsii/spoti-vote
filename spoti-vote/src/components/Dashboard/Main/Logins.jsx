@@ -52,7 +52,7 @@ class Logins extends Component {
     }
 
     login() {
-        window.location.href = 'http://' + ipAddress + ':' + portBack + '/host';
+        window.location.href = 'http://' + ipAddress + ':' + portBack + '/createRoom';
     }
 
     render() {
