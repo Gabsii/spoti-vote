@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
 
-let constants = require('../../../js/constants');
 const styles = {
     breaker: css({
         display: 'none',

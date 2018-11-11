@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
-import Cookies from 'universal-cookie';
 
 import TopType from './TopType.jsx';
+import Spinner from './Spinner.jsx';
 
 let constants = require('../../../js/constants');
-const cookies = new Cookies();
 const styles = {
     wrapper: css({
         height: '340px',
@@ -47,12 +46,11 @@ class Carousel extends Component {
                             }
                             return (<TopType img={track.album.images[1].url} name={track.name} artist={artistString} key={index}/>);
                         })
-                        : ''
+                        : <Spinner/>
                 }
             </div>
         </footer>);
     }
-    1
 }
 
 export default Carousel;

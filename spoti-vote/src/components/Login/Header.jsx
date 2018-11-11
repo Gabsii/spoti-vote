@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import MediaQuery from 'react-responsive';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {faBars} from '@fortawesome/fontawesome-free-solid';
 import {css} from 'glamor';
