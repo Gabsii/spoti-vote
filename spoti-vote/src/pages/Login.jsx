@@ -45,7 +45,7 @@ const styles = {
         background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,1))'
     }),
     textWrapper: css({color: constants.colors.font, display: 'flex', alignItems: 'flex-start', flexDirection: 'column', marginTop: '25%'}),
-    heroHeading: css({fontFamily: 'Circular Bold', fontSize: '3em'}),
+    heroHeading: css({fontFamily: 'Circular Bold, Arial, Sans-Serif', fontSize: '3em'}),
     heroSubheading: css({fontSize: '1.5em', marginTop: '0.25em'}),
     buttonsWrapper: css({
         display: 'flex',
@@ -67,7 +67,7 @@ const styles = {
         display: 'flex',
         justifyContent: 'center',
         fontSize: '2em',
-        fontFamily: 'Circular Book',
+        fontFamily: 'Circular Book, Arial, Sans-Serif',
         marginTop: '1.5em',
         marginBottom: '2em'
     }),
@@ -95,13 +95,13 @@ const styles = {
         display: 'flex',
         justifyContent: 'center',
         fontSize: '2em',
-        fontFamily: 'Circular Book',
+        fontFamily: 'Circular Book, Arial, Sans-Serif',
         marginTop: '1.5em',
         marginBottom: '2em',
         textAlign: 'center'
     }),
     socialSection: css({width: '100%', height: '250px', backgroundColor: constants.colors.font}),
-    socialHeading: css({display: 'flex', justifyContent: 'center', fontSize: '2em', fontFamily: 'Circular Book', marginTop: '1.5em'}),
+    socialHeading: css({display: 'flex', justifyContent: 'center', fontSize: '2em', fontFamily: 'Circular Book, Arial, Sans-Serif', marginTop: '1.5em'}),
     socialWrapper: css({display: 'flex', flexDirection: 'row', justifyContent: 'center'}),
     reasonWrapper: css({
         display: 'flex',

@@ -56,7 +56,7 @@ class Usage extends Component {
                         padding: '50px 7.5%'
                     }}>
                     <h1 style={{
-                            fontFamily: 'Circular Bold',
+                            fontFamily: 'Circular Bold, Arial, Sans-Serif',
                             fontSize: '1.5em',
                             marginBottom: '1em'
                         }}>1.&nbsp;Sign in using your Spotify Account*</h1>
@@ -87,7 +87,7 @@ class Usage extends Component {
                         padding: '50px 7.5%'
                     }}>
                     <h1 style={{
-                            fontFamily: 'Circular Bold',
+                            fontFamily: 'Circular Bold, Arial, Sans-Serif',
                             fontSize: '1.5em',
                             marginBottom: '1em'
                         }}>2.&nbsp;Share it with your friends!</h1>
@@ -106,7 +106,7 @@ class Usage extends Component {
                         padding: '50px 7.5%'
                     }}>
                     <h1 style={{
-                            fontFamily: 'Circular Bold',
+                            fontFamily: 'Circular Bold, Arial, Sans-Serif',
                             fontSize: '1.5em',
                             marginBottom: '1em'
                         }}>3.&nbsp;Select a playlist, vote and enjoy!</h1>
@@ -122,7 +122,7 @@ class Usage extends Component {
                         padding: '50px 7.5%'
                     }}>
                     <h1 style={{
-                            fontFamily: 'Circular Bold',
+                            fontFamily: 'Circular Bold, Arial, Sans-Serif',
                             fontSize: '1.5em',
                             marginBottom: '1em'
                         }}>4.&nbsp;'Eww I hate this song' (optional)</h1>

@@ -41,7 +41,7 @@ const styles = {
         marginRight: '0',
         borderRadius: '500px',
         marginTop: '0.5em',
-        fontFamily: 'Circular Bold'
+        fontFamily: 'Circular Bold, Arial, Sans-Serif'
     }),
     error: css({color: constants.colors.redCard, marginTop: '5px', textShadow: 'none'})
 };

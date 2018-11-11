@@ -15,7 +15,7 @@ const styles = {
             width: '33.33%'
         }
     }),
-    heading: css({fontSize: '2em', fontFamily: 'Circular Book', marginTop: '0.5em', marginBottom: '0.5em', textAlign: 'center'}),
+    heading: css({fontSize: '2em', fontFamily: 'Circular Book, Arial, Sans-Serif', marginTop: '0.5em', marginBottom: '0.5em', textAlign: 'center'}),
     text: css({textAlign: 'center', fontSize: '1.1em'})
 };
 
