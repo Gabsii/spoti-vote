@@ -103,18 +103,29 @@ app.get('/callback', async (req, res) => {
 	};
 	request.post(authOptions, async (error, response, body) => {
 		let uri = 'http://' + ipAddress + ':' + portFront + '/dashboard';
-		let room = new Room(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET, rooms);
-
-		if (await room.fetchData() == true) {
-			rooms.push(room);
-
-			console.log('INFO-[ROOM: '+room.id+']: This room has been created');
-
-			res.redirect(uri + '/' + room.id); // + '?token=' + body.access_token);
-		} else {
-			res.redirect('http://' + ipAddress + ':' + portFront);
-		}
+        res.redirect(uri);
 	});
+});
+
+/**
+* Creates a new Room and redirects the user there
+*
+* @Returns ResponseCode of 200
+* @Returns content Array of all the rooms
+*/
+app.get('/createRoom', async (req, res) => {
+    let uri = 'http://' + ipAddress + ':' + portFront + '/app';
+    let room = new Room(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET, rooms);
+
+    if (await room.fetchData() == true) {
+        rooms.push(room);
+
+        console.log('INFO-[ROOM: '+room.id+']: This room has been created');
+
+        res.redirect(uri + '/' + room.id); // + '?token=' + body.access_token);
+    } else {
+        res.redirect('http://' + ipAddress + ':' + portFront);
+    }
 });
 
 /**
