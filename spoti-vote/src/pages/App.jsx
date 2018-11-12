@@ -9,9 +9,18 @@ import Sidebar from '../components/App/Sidebar.jsx';
 import CardContainer from '../components/App/Cards/CardContainer.jsx';
 
 const constants = require('../js/constants');
+
 const ipAddress = window.location.host || 'localhost';
-const portFront = window.location.port || 80;
+const portFront = window.location.port || 443;
 const portBack = 8888;
+
+//const ipAddress = window.location.host || 'localhost';
+//const port = window.location.port || 443;
+
+
+
+const backendExtension = '/b';
+
 const cookies = new Cookies();
 const styles = {
     main: css({backgroundColor: constants.colors.background, height: '100vh', width: '100vw'})
@@ -234,7 +243,7 @@ class App extends Component {
         let siblings = [];
         let sibling = elem.parentNode.firstChild;
         let skipMe = elem;
-        for (; sibling; sibling = sibling.nextSibling) 
+        for (; sibling; sibling = sibling.nextSibling)
             if (sibling.nodeType === 1 && sibling !== skipMe) {
                 siblings.push(sibling);
             }

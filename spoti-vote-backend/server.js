@@ -19,10 +19,15 @@ const io = socketIo(server);
 
 //Global Varibles
 
-const ipAddress = process.env.ADDRESS || 'localhost';
-const portFront = process.env.PORT || 80;
-const portBack = process.env.PORTBACK || 8888;
-const redirect_uri = 'http://' + ipAddress + ':' + portBack + '/callback';
+const ipAddress = process.env.ADDRESS || 'localhost';       //Wichtig env.ADDRESS = 'spoti-vote.com' -> wen local egal
+const port = process.env.PORT || 80;                        //Wichtig env.PORT = 443 -> wenn local egal
+const backExtension = process.env.BACKEXTENSION || '';      //wichtig env.BACKEXTENSION = '/b' -> Wenn local egal
+const portBack = 8888;
+
+const uriFront = (backExtension == '' ? 'http://' + ipAddress + ':' + port : 'https://' + ipAddress + ':' + port)
+const uriBack = (backExtension == '' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port + backExtension);
+
+const redirect_uri = uriBack + '/callback';
 
 const secTillDelete = 60;
 
@@ -114,7 +119,7 @@ app.get('/callback', async (req, res) => {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-		let uri = 'http://' + ipAddress + ':' + portFront + '/dashboard';
+		let uri = uriFront + '/dashboard';
         let user = new User(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
 
         // Set cookie
@@ -136,7 +141,7 @@ app.get('/callback', async (req, res) => {
 */
 app.get('/createRoom', async (req, res) => {
     let room = new Room(users[0], rooms);
-    let uri = 'http://' + ipAddress + ':' + portFront + '/app';
+    let uri = uriFront + '/app';
 
     console.log(room);
 
