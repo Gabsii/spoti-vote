@@ -117,7 +117,6 @@ app.get('/login', (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/callback', async (req, res) => {
-    console.log(req.headers);
     let options = {
         domain: '.spoti-vote.com',
         path: '/',
@@ -146,12 +145,10 @@ app.get('/callback', async (req, res) => {
 
         // Set cookie
         // res.cookie('token', body.access_token, options); // options is optional
-
         if (await user.fetchData() == true) {
             users.push(user);
 
             console.log('INFO-[USER: '+user.name+']: This user has logged in');
-            console.log(uri + '?token=' + body.access_token);
             res.redirect(uri + '?token=' + body.access_token);
         }
 	});
