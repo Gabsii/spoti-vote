@@ -5,11 +5,11 @@ import '../../css/selectors.css';
 let constants = require('../../js/constants.js');
 const ipAddress = (window.location.hostname === 'localhost')
     ? 'localhost'
-    : '80.123.206.40';
+    : 'backend.spoti-vote.com';
 const portFront = window.location.port || 80;
 const portBack = (window.location.hostname === 'localhost')
     ? 8888
-    : '443/b';
+    : '443';
 const protocol = (window.location.hostname === 'localhost')
     ? 'http://'
     : 'https://';

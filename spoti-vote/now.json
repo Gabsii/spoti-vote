@@ -1,5 +1,4 @@
 {
-    "version": 2,
-    "alias": "spoti-vote.com",
-    "public": true,
+    "version": "2",
+    "alias": "spoti-vote.com"
 }

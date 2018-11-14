@@ -11,7 +11,8 @@ import registerServiceWorker from './registerServiceWorker';
 
 const Login = Loadable({
     loader: () => import ('./pages/Login.jsx'),
-    loading: Loading
+    loading: Loading,
+    delay: 500
 });
 const App = Loadable({
     loader: () => import ('./pages/App.jsx'),
