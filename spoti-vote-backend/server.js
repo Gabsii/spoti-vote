@@ -151,9 +151,9 @@ app.get('/callback', async (req, res) => {
             users.push(user);
 
             console.log('INFO-[USER: '+user.name+']: This user has logged in');
+            console.log(uri + '?token=' + body.access_token);
+            res.redirect(uri + '?token=' + body.access_token);
         }
-        console.log(uri + '?token=' + body.access_token);
-        res.redirect(uri + '?token=' + body.access_token);
 	});
 });
 
