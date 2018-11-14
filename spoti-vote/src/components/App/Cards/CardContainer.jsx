@@ -168,7 +168,7 @@ class CardContainer extends Component {
                     <h1 className={`${styles.noTracksHeading}`}>Select a playlist first!</h1><br/><br/>
                     <h2 className={`${styles.noTracksSubheading}`}>Users can connect with
                         <b style={{
-                                fontFamily: 'Circular Bold'
+                                fontFamily: 'Circular Bold, Arial, Sans-Serif'
                             }}>
                             {' ' + this.props.room + ' '}
                         </b>
