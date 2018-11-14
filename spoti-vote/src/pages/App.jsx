@@ -28,7 +28,7 @@ const styles = {
 class App extends Component {
     constructor() {
         super();
-        this.socket = socketIOClient(protocol + ipAddress + ':' + portBack);
+        this.socket = socketIOClient(constants.config.url);
         let token = cookies.get('token');
         if (token === undefined) {
             token = null;
@@ -38,7 +38,7 @@ class App extends Component {
             isPhone: (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1),
             token: token,
             roomId: window.location.pathname.split('/')[2],
-            loginPage: protocol + ipAddress + ':' + portFront,
+            loginPage: constants.config.url,
             isHost: false,
             connectedUser: [],
             playlists: [],

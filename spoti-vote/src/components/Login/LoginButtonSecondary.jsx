@@ -45,7 +45,7 @@ class LoginButtonSecondary extends Component {
     }
 
     login() {
-        window.location.href = protocol + ipAddress + '/join';
+        window.location.pathname = '/join';
     }
 
     render() {

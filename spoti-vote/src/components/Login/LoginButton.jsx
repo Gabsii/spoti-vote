@@ -49,7 +49,7 @@ class LoginButton extends Component {
     }
 
     login() {
-        window.location.href = protocol + ipAddress + ':' + portBack + '/login';
+        window.location.href = constants.config.url + '/login';
     }
 
     render() {

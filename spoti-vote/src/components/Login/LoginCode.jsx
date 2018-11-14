@@ -67,7 +67,7 @@ class LoginCode extends Component {
     submitHandler(event) {
         event.preventDefault();
         if (this.state.room) {
-            window.location.href = protocol + ipAddress + ':' + portFront + '/app/' + this.state.room;
+            window.location.href = constants.config.url + '/app/' + this.state.room;
         }
     }
 
@@ -75,7 +75,7 @@ class LoginCode extends Component {
         if (event.target.value.length === 5) {
             let str = event.target.value.toUpperCase();
             let exists = false;
-            fetch(protocol + ipAddress + ':' + portBack + '/rooms').then((response) => response.json().then(data => {
+            fetch(constants.config.url + '/rooms').then((response) => response.json().then(data => {
                 for (var i = 0; i < data.content.length; i++) {
                     if (data.content[i] === str) {
                         exists = true;
@@ -83,7 +83,7 @@ class LoginCode extends Component {
                     }
                 }
                 if (this.state.room && this.props.isPhone) {
-                    window.location.href = protocol + ipAddress + ':' + portFront + '/app/' + this.state.room;
+                    window.location.href = constants.config.url + '/app/' + this.state.room;
                 }
                 if (!exists) {
                     this.setState({roomExists: false});

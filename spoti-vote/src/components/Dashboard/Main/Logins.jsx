@@ -59,7 +59,7 @@ class Logins extends Component {
     }
 
     login() {
-        window.location.href = protocol + ipAddress + ':' + portBack + '/createRoom';
+        window.location.href = constants.config.url + '/createRoom';
     }
 
     render() {
