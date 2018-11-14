@@ -5,15 +5,11 @@ import {BrowserRouter, Switch} from 'react-router-dom';
 import Loadable from 'react-loadable';
 
 import Loading from './pages/Loading.jsx';
+import Login from './pages/Login.jsx';
 import './css/reset.css';
 import './css/fonts.css';
 import registerServiceWorker from './registerServiceWorker';
 
-const Login = Loadable({
-    loader: () => import ('./pages/Login.jsx'),
-    loading: Loading,
-    delay: 500
-});
 const App = Loadable({
     loader: () => import ('./pages/App.jsx'),
     loading: Loading

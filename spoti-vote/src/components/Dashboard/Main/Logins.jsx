@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
-import Cookies from 'universal-cookie';
-
 
 import LoginCode from '../../Login/LoginCode.jsx';
 
 let constants = require('../../../js/constants');
-
-const cookies = new Cookies();
 
 const styles = {
     wrapper: css({
