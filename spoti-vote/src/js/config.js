@@ -3,8 +3,6 @@ let config = {
     backEndPort: '8888'
 };
 
-TESTETSTS
-
 module.exports = {
     config: config
 };
