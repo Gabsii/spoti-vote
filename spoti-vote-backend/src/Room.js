@@ -33,30 +33,19 @@ function makeid(length) {
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function Room(token, refreshToken, clientId, clientSecret, room) {
+function Room(user, room) {
 	//The host object
-	this.host = {
-		token,
-		clientId,
-		clientSecret,
-		refreshToken,
-		name: '',
-		id: '',
-		profileUrl: '',
-		voted: null,
-		country: '',
-		img: ''
-	};
+	this.user = user;
 	this.firstConnection = true;
 	this.activeTracks = [];
 	this.activePlaylist = null;
 	this.connectedUser = [];
 	this.activePlayer = {};
 	this.id = makeid(5);
-	this.hostDisconnect = Date.now();
+	this.userDisconnect = Date.now();
 	this.isChanging = false;
 	this.isSkipping = false;
-	this.hostPhone = false;
+	this.userPhone = false;
 
 	//Makes sure the id is unique
 	let counter;
@@ -79,9 +68,9 @@ method.getDifference = function(oldRoom) {
 	if (oldRoom === null) {
 		//THIS IS FOR THE INIT DATA
 		update.host = {
-			name: this.host.name,
-			voted: this.host.voted,
-			img: this.host.img
+			name: this.user.name,
+			voted: this.user.voted,
+			img: this.user.img
 		}
 		update.activeTracks = [];
 		for (var i = 0; i < this.activeTracks.length; i++) {
@@ -140,18 +129,18 @@ method.getDifference = function(oldRoom) {
 		}
 
 		update.playlists = [];
-		for (var i = 0; i < this.playlists.length; i++) {
+		for (var i = 0; i < this.user.playlists.length; i++) {
 			update.playlists.push({
-				name: this.playlists[i].name,
-				id: this.playlists[i].id
+				name: this.user.playlists[i].name,
+				id: this.user.playlists[i].id
 			});
 		}
 
 	} else {
 		//THIS IS FOR AN UPDATE (IF NOTHING ELSE TODO REWORK THIS)
-		if (!deepEqual(oldRoom.host, this.host)) {
+		if (!deepEqual(oldRoom.host, this.user)) {
 			update.host = {
-				voted: this.host.voted
+				voted: this.user.voted
 			}
 		}
 
@@ -264,13 +253,13 @@ method.getDifference = function(oldRoom) {
 			}
 		}
 
-		if (oldRoom.playlists !== null && this.playlists !== null) {
-			if (!deepEqual(oldRoom.playlists,this.playlists)) {
+		if (oldRoom.playlists !== null && this.user.playlists !== null) {
+			if (!deepEqual(oldRoom.playlists,this.user.playlists)) {
 				update.playlists = [];
-				for (var i = 0; i < this.playlists.length; i++) {
+				for (var i = 0; i < this.user.playlists.length; i++) {
 					update.playlists.push({
-						name: this.playlists[i].name,
-						id: this.playlists[i].id
+						name: this.user.playlists[i].name,
+						id: this.user.playlists[i].id
 					});
 				}
 			}
@@ -294,7 +283,7 @@ method.getDifference = function(oldRoom) {
 */
 method.getUserNames = function() {
 	let names = [];
-	names.push(this.host.name);
+	names.push(this.user.name);
 	for (let i = 0; i < this.connectedUser.length; i++) {
 		names.push(this.connectedUser[i].name);
 	}
@@ -355,9 +344,9 @@ method.removeUser = function(name) {
 * @return {object} The playlist object
 */
 method.getPlaylistById = function(playlistId) {
-	for (let i = 0; i < this.playlists.length; i++) {
-		if (this.playlists[i].id == playlistId)
-			return this.playlists[i];
+	for (let i = 0; i < this.user.playlists.length; i++) {
+		if (this.user.playlists[i].id == playlistId)
+			return this.user.playlists[i];
 		}
 	return null;
 };
@@ -386,24 +375,24 @@ method.changePlaylist = async function(playlistId) {
 
 method.updatePlaylists = async function() {
 	let newPlaylists = await this.fetchPlaylists();
-	let toBeRemoved = _.cloneDeep(this.playlists);
+	let toBeRemoved = _.cloneDeep(this.user.playlists);
 
 	for (var i = 0; i < newPlaylists.length; i++) {
 		let playlist = this.getPlaylistById(newPlaylists[i].id);
 		if (playlist === null) {
-			this.playlists.push(newPlaylists[i]);
+			this.user.playlists.push(newPlaylists[i]);
 			console.log('INFO-[ROOM: '+this.id+']: Added new Playlist: ['+newPlaylists[i].name+'].');
 		} else {
-			toBeRemoved[this.playlists.indexOf(playlist)] = null;
+			toBeRemoved[this.user.playlists.indexOf(playlist)] = null;
 			//LOGIC FOR CHANGING A PLAYLIST
 			if (Array.isArray(playlist.tracks) === false) {
 				if (playlist.tracks.total !== newPlaylists[i].tracks.total) {
-					this.playlists[this.playlists.indexOf(playlist)] = newPlaylists[i];
+					this.user.playlists[this.user.playlists.indexOf(playlist)] = newPlaylists[i];
 					console.log('INFO-[ROOM: '+this.id+']: Changed Playlist: ['+newPlaylists[i].name+'].');
 				}
 			} else {
 				if (playlist.tracks.length !== newPlaylists[i].tracks.total) {
-					this.playlists[this.playlists.indexOf(playlist)] = newPlaylists[i];
+					this.user.playlists[this.user.playlists.indexOf(playlist)] = newPlaylists[i];
 					console.log('INFO-[ROOM: '+this.id+']: Changed Playlist: ['+newPlaylists[i].name+'].');
 				}
 			}
@@ -413,7 +402,7 @@ method.updatePlaylists = async function() {
 		if (toBeRemoved[i] !== null) {
 			let playlist = this.getPlaylistById(toBeRemoved[i].id);
 			if (playlist.id !== this.activePlaylist.id) {
-				this.playlists.splice(this.playlists.indexOf(playlist),1);
+				this.user.playlists.splice(this.user.playlists.indexOf(playlist),1);
 				console.log('INFO-[ROOM: '+this.id+']: Deleted Playlist: ['+playlist.name+'].');
 			}
 		}
@@ -446,7 +435,7 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
 	}
 
 	//Reset all the votes
-	this.host.voted = null;
+	this.user.voted = null;
 	for (let i = 0; i < this.connectedUser.length; i++) {
 		this.connectedUser[i].voted = null;
 	}
@@ -503,26 +492,26 @@ method.getActiveTrackById = function(id) {
 */
 method.refreshToken = async function() {
 	console.log("Before REFRESH:");
-	console.log("  - Refresh Token: " + this.host.refreshToken);
-	console.log("  - Accsess Token: " + this.host.access_token);
+	console.log("  - Refresh Token: " + this.user.refreshToken);
+	console.log("  - Accsess Token: " + this.user.access_token);
 	let authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
 		form: {
 			grant_type: 'refresh_token',
-			refresh_token: this.host.refreshToken
+			refresh_token: this.user.refreshToken
 		},
 		headers: {
-			'Authorization': 'Basic ' + (new Buffer(this.host.clientId + ':' + this.host.clientSecret).toString('base64'))
+			'Authorization': 'Basic ' + (new Buffer(this.user.clientId + ':' + this.user.clientSecret).toString('base64'))
 		},
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-		this.host.access_token = body.access_token;
-		this.host.refresh_token = body.refresh_token;
+		this.user.access_token = body.access_token;
+		this.user.refresh_token = body.refresh_token;
 
 		console.log("After REFRESH:");
-		console.log("  - Refresh Token: " + this.host.refreshToken);
-		console.log("  - Accsess Token: " + this.host.access_token);
+		console.log("  - Refresh Token: " + this.user.refreshToken);
+		console.log("  - Accsess Token: " + this.user.access_token);
 		return true;
 	});
 };
@@ -536,7 +525,7 @@ method.refreshToken = async function() {
 method.fetchData = async function() {
 	let hostRequest = await fetch('https://api.spotify.com/v1/me', {
 		headers: {
-			"Authorization": "Bearer " + this.host.token
+			"Authorization": "Bearer " + this.user.token
 		}
 	});
 	let hostRequestData = await hostRequest.json();
@@ -546,15 +535,15 @@ method.fetchData = async function() {
 	}
 
 	if (hostRequestData.images[0] !== undefined && hostRequestData.images[0] !== null) {
-		this.host.img = hostRequestData.images[0].url;
+		this.user.img = hostRequestData.images[0].url;
 	}
 
-	this.host.name = hostRequestData.display_name || hostRequestData.id;
-	this.host.id = hostRequestData.id;
-	this.host.profileUrl = hostRequestData.external_urls.spotify;
-	this.host.country = hostRequestData.country;
+	this.user.name = hostRequestData.display_name || hostRequestData.id;
+	this.user.id = hostRequestData.id;
+	this.user.profileUrl = hostRequestData.external_urls.spotify;
+	this.user.country = hostRequestData.country;
 
-	this.playlists = await this.fetchPlaylists();
+	this.user.playlists = await this.fetchPlaylists();
 
 	return true;
 };
@@ -568,7 +557,7 @@ method.fetchData = async function() {
 method.fetchPlaylists = async function() {
 	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
 		headers: {
-			"Authorization": "Bearer " + this.host.token
+			"Authorization": "Bearer " + this.user.token
 		}
 	});
 
@@ -580,7 +569,7 @@ method.fetchPlaylists = async function() {
 	while (next !== null && next !== undefined) {
 		playlistRequest = await fetch(next, {
 			headers: {
-				"Authorization": "Bearer " + this.host.token
+				"Authorization": "Bearer " + this.user.token
 			}
 		});
 
@@ -601,9 +590,9 @@ method.fetchPlaylists = async function() {
 }
 
 method.fetchPlaylistTracks = async function(playlist) {
-	let trackRequest = await fetch(playlist.href + '/tracks?market='+this.host.country+'&fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal', {
+	let trackRequest = await fetch(playlist.href + '/tracks?market='+this.user.country+'&fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal', {
 		headers: {
-			"Authorization": "Bearer " + this.host.token
+			"Authorization": "Bearer " + this.user.token
 		}
 	});
 
@@ -615,7 +604,7 @@ method.fetchPlaylistTracks = async function(playlist) {
 	while (next !== null) {
 		trackRequest = await fetch(next, {
 			headers: {
-				"Authorization": "Bearer " + this.host.token
+				"Authorization": "Bearer " + this.user.token
 			}
 		});
 
@@ -646,7 +635,7 @@ method.fetchPlaylistTracks = async function(playlist) {
 method.loadOneBatch = async function(next) {
 	let request = await fetch(next, {
 		headers: {
-			"Authorization": "Bearer " + this.host.token
+			"Authorization": "Bearer " + this.user.token
 		}
 	});
 	let fetchData = await request.json();
@@ -673,7 +662,7 @@ method.update = async function(isHost) {
 	try {
 		request = await fetch('https://api.spotify.com/v1/me/player', {
 	        headers: {
-	            "Authorization": "Bearer " + this.host.token
+	            "Authorization": "Bearer " + this.user.token
 	        }
 	    });
 	} catch (e) {
@@ -732,7 +721,7 @@ method.vote = async function(trackId, isHost, name) {
 	let user = this.getUserByName(name);
 
 	if (isHost == true) {
-		user = this.host;
+		user = this.user;
 	}
 
 	if (user !== null && user !== undefined) {
@@ -809,7 +798,7 @@ method.play = async function() {
 
 	let request = await fetch('https://api.spotify.com/v1/me/player/play', {
 		headers: {
-			"Authorization": "Bearer " + this.host.token
+			"Authorization": "Bearer " + this.user.token
 		},
 		method: "PUT",
 		body: JSON.stringify(payload)
@@ -837,7 +826,7 @@ method.skip = async function() {
 				skips += 1;
 			}
 		}
-		if (this.host.voted == 'skip') {
+		if (this.user.voted == 'skip') {
 			skips += 1;
 		}
 
@@ -861,7 +850,7 @@ method.skip = async function() {
 method.changeVolume = async function(volume) {
 	let request = await fetch('https://api.spotify.com/v1/me/player/volume?volume_percent=' + volume,{
 		headers: {
-			"Authorization": "Bearer " + this.host.token
+			"Authorization": "Bearer " + this.user.token
 		},
 		method: "PUT"
 	});
