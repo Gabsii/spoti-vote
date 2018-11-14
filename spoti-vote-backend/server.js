@@ -99,6 +99,7 @@ app.get('/login', (req, res) => {
 */
 app.get('/callback', async (req, res) => {
     let options = {
+        domain: '.spoti-vote.com',
         path: '/',
         expires: 0, // would expire after 15 minutes
         httpOnly: false, // The cookie only accessible by the web server
