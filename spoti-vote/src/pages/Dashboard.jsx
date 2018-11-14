@@ -83,7 +83,7 @@ class Dashboard extends Component {
     render() {
         return (<div className={`${styles.main}`}>
             <Sidebar profile={this.state.profile}/>
-            <Main topTracks={this.state.topTracks}/>
+            <Main topTracks={this.state.topTracks} profile={this.state.profile}/>
         </div>);
     }
 }

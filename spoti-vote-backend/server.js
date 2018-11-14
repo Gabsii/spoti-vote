@@ -77,9 +77,28 @@ function getRoomById(roomId) {
     for (var i = 0; i < rooms.length; i++) {
         if (rooms[i].id == roomId) {
             room = rooms[i];
+            return room;
         }
     }
-    return room;
+    return null;
+}
+
+/**
+* Return the room with the specified id
+*
+* @author: Michiocre
+* @param {string} roomId The id that identifies the room
+* @return {Room} The room object with the id of the parameter
+*/
+function getUserById(id) {
+    let user = null;
+    for (var i = 0; i < users.length; i++) {
+        if (users[i].id == id) {
+            user = users[i];
+            return user;
+        }
+    }
+    return null;
 }
 
 /* jshint ignore: start */
@@ -98,7 +117,6 @@ app.get('/login', (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/callback', async (req, res) => {
-    console.log(req.headers);
     let options = {
         domain: '.spoti-vote.com',
         path: '/',
@@ -127,14 +145,12 @@ app.get('/callback', async (req, res) => {
 
         // Set cookie
         // res.cookie('token', body.access_token, options); // options is optional
-
         if (await user.fetchData() == true) {
             users.push(user);
 
             console.log('INFO-[USER: '+user.name+']: This user has logged in');
+            res.redirect(uri + '?token=' + body.access_token);
         }
-
-        res.redirect(uri + '?token=' + body.access_token);
 	});
 });
 
@@ -143,7 +159,8 @@ app.get('/callback', async (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/createRoom', async (req, res) => {
-    let room = new Room(users[0], rooms);
+    let id = req.query.id;
+    let room = new Room(getUserById(id), rooms);
     let uri = referer + '/app';
 
     rooms.push(room);
