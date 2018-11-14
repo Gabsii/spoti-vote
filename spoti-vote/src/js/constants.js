@@ -1,3 +1,5 @@
+let config = require('./config');
+
 let codes = {
     SUCCESS: 200,
     NOTFOUND: 404,
@@ -51,6 +53,7 @@ let iterateCardColors = function(index) {
 };
 
 module.exports = {
+    config: config,
     colors: colors,
     iterateCardColors: iterateCardColors,
     amountTopTracks: amountTopTracks,

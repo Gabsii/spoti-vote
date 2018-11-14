@@ -3,12 +3,6 @@ import {css} from 'glamor';
 
 import '../../css/selectors.css';
 let constants = require('../../js/constants');
-const ipAddress = (window.location.hostname === 'localhost')
-    ? 'localhost'
-    : '80.123.206.40';
-const protocol = (window.location.hostname === 'localhost')
-    ? 'http://'
-    : 'https://';
 
 const styles = {
     button: css({
@@ -45,7 +39,7 @@ class LoginButtonSecondary extends Component {
     }
 
     login() {
-        window.location.href = protocol + ipAddress + '/join';
+        window.location.pathname = '/join';
     }
 
     render() {

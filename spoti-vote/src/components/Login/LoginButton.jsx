@@ -3,15 +3,6 @@ import {css} from 'glamor';
 
 import '../../css/selectors.css';
 let constants = require('../../js/constants');
-const ipAddress = (window.location.hostname === 'localhost')
-    ? 'localhost'
-    : '80.123.206.40';
-const portBack = (window.location.hostname === 'localhost')
-    ? 8888
-    : '443/b';
-const protocol = (window.location.hostname === 'localhost')
-    ? 'http://'
-    : 'https://';
 
 const styles = {
     button: css({
@@ -49,7 +40,7 @@ class LoginButton extends Component {
     }
 
     login() {
-        window.location.href = protocol + ipAddress + ':' + portBack + '/login';
+        window.location.href = constants.config.url + '/login';
     }
 
     render() {

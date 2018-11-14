@@ -6,25 +6,35 @@ const socketIo = require('socket.io');
 const querystring = require('querystring');
 const request = require('request');
 const _ = require('lodash');
+const cookieParser = require('cookie-parser')
 //Import of used files
 const constants = require('./src/constants');
 const Room = require('./src/Room');
+const User = require('./src/User');
 //Setup of the server
 const app = express();
+app.use(cookieParser());
 const server = http.createServer(app);
 const io = socketIo(server);
 
 //Global Varibles
 
-const ipAddress = process.env.ADDRESS || 'localhost';
-const portFront = process.env.PORT || 80;
-const portBack = process.env.PORTBACK || 8888;
-const redirect_uri = 'http://' + ipAddress + ':' + portBack + '/callback';
+const ipAddress = process.env.ADDRESS || 'localhost';       //Wichtig env.ADDRESS = 'spoti-vote.com' -> wen local egal
+const port = process.env.PORT || 80;                        //Wichtig env.PORT = 443 -> wenn local egal
+const portBack = 8888;
+
+const uriBack = (ipAddress == 'localhost' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port);
+
+const redirect_uri = uriBack + '/callback';
 
 const secTillDelete = 60;
 
 console.log('INFO: Redirect URL: ' + redirect_uri);
+
+let referer = '';
+
 let rooms = [];
+let users = [];
 let allClients = {};
 
 ///////DEGUG/////////
@@ -79,6 +89,7 @@ function getRoomById(roomId) {
 */
 app.get('/login', (req, res) => {
     console.log('INFO: User was sent to Spotify login');
+    referer = req.headers.referer.substring(0, req.headers.referer.lastIndexOf('/'));
     res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
 });
 
@@ -87,6 +98,13 @@ app.get('/login', (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/callback', async (req, res) => {
+    let options = {
+        path: '/',
+        expires: 0, // would expire after 15 minutes
+        httpOnly: false, // The cookie only accessible by the web server
+        signed: false // Indicates if the cookie should be signed
+    }
+
 	let code = req.query.code || null;
 	let authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
@@ -102,30 +120,36 @@ app.get('/callback', async (req, res) => {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-		let uri = 'http://' + ipAddress + ':' + portFront + '/dashboard';
+		let uri = referer + '/dashboard';
+        console.log(uri);
+        let user = new User(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
+
+        // Set cookie
+        res.cookie('token', body.access_token, options); // options is optional
+
+        if (await user.fetchData() == true) {
+            users.push(user);
+
+            console.log('INFO-[USER: '+user.name+']: This user has logged in');
+        }
+
         res.redirect(uri);
 	});
 });
 
 /**
-* Creates a new Room and redirects the user there
-*
-* @Returns ResponseCode of 200
-* @Returns content Array of all the rooms
+* The callback that will be called when the Login with the Spotify API is completed
+* Will redirect the user to the newly created room
 */
 app.get('/createRoom', async (req, res) => {
-    let uri = 'http://' + ipAddress + ':' + portFront + '/app';
-    let room = new Room(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET, rooms);
+    let room = new Room(users[0], rooms);
+    let uri = referer + '/app';
 
-    if (await room.fetchData() == true) {
-        rooms.push(room);
+    console.log(room);
 
-        console.log('INFO-[ROOM: '+room.id+']: This room has been created');
+    rooms.push(room);
 
-        res.redirect(uri + '/' + room.id); // + '?token=' + body.access_token);
-    } else {
-        res.redirect('http://' + ipAddress + ':' + portFront);
-    }
+    res.redirect(uri + '/' + room.id);
 });
 
 /**
@@ -152,7 +176,7 @@ app.get('/rooms', async (req, res) => {
 */
 io.on('connection', (socket) => {
     //Local varibles, can only be used by the same connection (but in every call)
-    socket.roomId = null;
+    socket.state = 0; //0 Dashboard / 1 App
     socket.isHost = false;
     socket.name = null;
     socket.updateCounter = {
@@ -197,7 +221,7 @@ io.on('connection', (socket) => {
             //Count how many rooms this user is already hosting
             let x = -1;
             for (let i = 0; i < rooms.length; i++) {
-                if (rooms[i].host.id == room.host.id && rooms[i].id !== room.id) {
+                if (rooms[i].user.id == room.user.id && rooms[i].id !== room.id) {
                     x = i;
                 }
             }
@@ -205,7 +229,7 @@ io.on('connection', (socket) => {
             if (x >= 0) {
                 socket.emit('twoRooms', {oldRoom: rooms[x].id});
             } else {
-                socket.name = room.host.name;
+                socket.name = room.user.name;
 
                 if (room.firstConnection === true) {
                     room.firstConnection = false;
@@ -219,12 +243,12 @@ io.on('connection', (socket) => {
 
                     update.isHost = socket.isHost;
 
-                    update.token = room.host.token;
+                    update.token = room.user.token;
 
                     socket.emit('initData', update);
                     room.hostDisconnect = null;
                 } else {
-                    if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
+                    if (room.hostDisconnect !== null && data.token == room.user.token) { //If host is gone
                         console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
                         socket.isHost = true;
@@ -261,7 +285,7 @@ io.on('connection', (socket) => {
             console.log('INFO-[ROOM: ' + oldRoom.id + ']: This room has been deleted due to host creating a new one.');
             rooms.splice(rooms.indexOf(oldRoom), 1);
 
-            socket.name = room.host.name;
+            socket.name = room.user.name;
 
             if (room.firstConnection === true) {
                 room.firstConnection = false;
@@ -275,12 +299,12 @@ io.on('connection', (socket) => {
 
                 update.isHost = socket.isHost;
 
-                update.token = room.host.token;
+                update.token = room.user.token;
 
                 socket.emit('initData', update);
                 room.hostDisconnect = null;
             } else {
-                if (room.hostDisconnect !== null && data.token == room.host.token) { //If host is gone
+                if (room.hostDisconnect !== null && data.token == room.user.token) { //If host is gone
                     console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
                     socket.isHost = true;
