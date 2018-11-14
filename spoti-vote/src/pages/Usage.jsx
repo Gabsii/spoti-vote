@@ -31,8 +31,15 @@ let imgStyle = { // TODO: rework whole page lmao im ashamed
     maxHeight: '50vh'
 };
 
-const ipAddress = window.location.hostname || 'localhost';
-const portBack = 8888;
+const ipAddress = (window.location.hostname === 'localhost')
+    ? 'localhost'
+    : '80.123.206.40';
+const portBack = (window.location.hostname === 'localhost')
+    ? 8888
+    : '443/b';
+const protocol = (window.location.hostname === 'localhost')
+    ? 'http://'
+    : 'https://';
 
 class Usage extends Component {
 
@@ -56,7 +63,7 @@ class Usage extends Component {
                         padding: '50px 7.5%'
                     }}>
                     <h1 style={{
-                            fontFamily: 'Circular Bold',
+                            fontFamily: 'Circular Bold, Arial, Sans-Serif',
                             fontSize: '1.5em',
                             marginBottom: '1em'
                         }}>1.&nbsp;Sign in using your Spotify Account*</h1>
@@ -64,7 +71,7 @@ class Usage extends Component {
                             height: 'calc( 100% - 3em )',
                             position: 'relative'
                         }}>SpotiVote controls your party playlist, while Spotify is used to play the playlist. Connect an existing or new Spotify account by clicking
-                        <a style={linkStyle} href={'http://' + ipAddress + ':' + portBack + '/login'}>
+                        <a style={linkStyle} href={protocol + ipAddress + ':' + portBack + '/login'}>
                             {' '}Host</a>
                         . {"Don' t worry about your data.We save as little about you as we need(in fact we don 't save anything about your account). We are not Facebook, you are save with us."}
                         <div style={{
@@ -87,7 +94,7 @@ class Usage extends Component {
                         padding: '50px 7.5%'
                     }}>
                     <h1 style={{
-                            fontFamily: 'Circular Bold',
+                            fontFamily: 'Circular Bold, Arial, Sans-Serif',
                             fontSize: '1.5em',
                             marginBottom: '1em'
                         }}>2.&nbsp;Share it with your friends!</h1>
@@ -106,7 +113,7 @@ class Usage extends Component {
                         padding: '50px 7.5%'
                     }}>
                     <h1 style={{
-                            fontFamily: 'Circular Bold',
+                            fontFamily: 'Circular Bold, Arial, Sans-Serif',
                             fontSize: '1.5em',
                             marginBottom: '1em'
                         }}>3.&nbsp;Select a playlist, vote and enjoy!</h1>
@@ -122,7 +129,7 @@ class Usage extends Component {
                         padding: '50px 7.5%'
                     }}>
                     <h1 style={{
-                            fontFamily: 'Circular Bold',
+                            fontFamily: 'Circular Bold, Arial, Sans-Serif',
                             fontSize: '1.5em',
                             marginBottom: '1em'
                         }}>4.&nbsp;'Eww I hate this song' (optional)</h1>

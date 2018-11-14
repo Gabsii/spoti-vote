@@ -3,8 +3,16 @@ import {css} from 'glamor';
 
 import '../../css/selectors.css';
 let constants = require('../../js/constants');
-const ipAddress = window.location.hostname || 'localhost';
-const portBack = 8888;
+const ipAddress = (window.location.hostname === 'localhost')
+    ? 'localhost'
+    : '80.123.206.40';
+const portBack = (window.location.hostname === 'localhost')
+    ? 8888
+    : '443/b';
+const protocol = (window.location.hostname === 'localhost')
+    ? 'http://'
+    : 'https://';
+
 const styles = {
     button: css({
         padding: '17px 48px',
@@ -41,7 +49,7 @@ class LoginButton extends Component {
     }
 
     login() {
-        window.location.href = 'http://' + ipAddress + ':' + portBack + '/login';
+        window.location.href = protocol + ipAddress + ':' + portBack + '/login';
     }
 
     render() {

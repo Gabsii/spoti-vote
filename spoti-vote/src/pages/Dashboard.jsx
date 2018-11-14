@@ -40,11 +40,12 @@ class Dashboard extends Component {
             }
         }).then(response => response.json()).then(response => {
             if (response.error === undefined) {
+
                 this.setState({
                     profile: {
                         name: response.display_name,
                         id: response.id,
-                        img: response.images[0].url
+                        img: response.images[0].url || 'https://via.placeholder.com/152x152'
                     }
                 });
             }

@@ -9,8 +9,15 @@ import logo from '../../img/spotiLogo.svg';
 let constants = require('../../js/constants');
 
 let backgroundColor = constants.colors.background;
-const ipAddress = window.location.hostname || 'localhost';
-const portBack = 8888;
+const ipAddress = (window.location.hostname === 'localhost')
+    ? 'localhost'
+    : '80.123.206.40';
+const portBack = (window.location.hostname === 'localhost')
+    ? 8888
+    : '443/b';
+const protocol = (window.location.hostname === 'localhost')
+    ? 'http://'
+    : 'https://';
 
 const styles = {
     header: css({backgroundColor, height: '90px', overflow: 'hidden', display: 'flex', alignItems: 'center'}),
@@ -109,7 +116,7 @@ class Header extends Component {
                     <BarItem url='/#features' name='Features'/>
                     <BarItem url='/usage' name='Usage'/>
                     <li className={`${styles.divider}`}></li>
-                    <BarItem url={'http://' + ipAddress + ':' + portBack + '/login'} name='Login'/>
+                    <BarItem url={protocol + ipAddress + ':' + portBack + '/login'} name='Login'/>
                     <BarItem url='/join' name='Join'/>
                 </ul>
             </nav>
@@ -122,7 +129,7 @@ class Header extends Component {
                     ? <ul id='nav' className={`${styles.navList}`} ref={(node) => {
                                 this.node = node;
                             }}>
-                            <NavItem name='Host' href={'http://' + ipAddress + ':' + portBack + '/login'}/>
+                            <NavItem name='Host' href={protocol + ipAddress + ':' + portBack + '/login'}/>
                             <NavItem name='Join' href={'/join'}/>
                             <NavItem name='Features' href={'#features'}/>
                             <NavItem name='Usage' href={'/usage'}/>

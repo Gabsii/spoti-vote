@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/fontawesome-free-solid';
 import {faFacebook, faTwitter, faGithub} from '@fortawesome/fontawesome-free-brands';
 import {css} from 'glamor';
+import LazyLoad from 'react-lazyload';
 
 import image from '../img/samantha-gades-540989-unsplash.jpg';
 import for1 from '../img/etienne-boulanger-409520-unsplash.jpg'; //car
@@ -45,7 +46,7 @@ const styles = {
         background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,1))'
     }),
     textWrapper: css({color: constants.colors.font, display: 'flex', alignItems: 'flex-start', flexDirection: 'column', marginTop: '25%'}),
-    heroHeading: css({fontFamily: 'Circular Bold', fontSize: '3em'}),
+    heroHeading: css({fontFamily: 'Circular Bold, Arial, Sans-Serif', fontSize: '3em'}),
     heroSubheading: css({fontSize: '1.5em', marginTop: '0.25em'}),
     buttonsWrapper: css({
         display: 'flex',
@@ -67,7 +68,7 @@ const styles = {
         display: 'flex',
         justifyContent: 'center',
         fontSize: '2em',
-        fontFamily: 'Circular Book',
+        fontFamily: 'Circular Book, Arial, Sans-Serif',
         marginTop: '1.5em',
         marginBottom: '2em'
     }),
@@ -95,13 +96,13 @@ const styles = {
         display: 'flex',
         justifyContent: 'center',
         fontSize: '2em',
-        fontFamily: 'Circular Book',
+        fontFamily: 'Circular Book, Arial, Sans-Serif',
         marginTop: '1.5em',
         marginBottom: '2em',
         textAlign: 'center'
     }),
     socialSection: css({width: '100%', height: '250px', backgroundColor: constants.colors.font}),
-    socialHeading: css({display: 'flex', justifyContent: 'center', fontSize: '2em', fontFamily: 'Circular Book', marginTop: '1.5em'}),
+    socialHeading: css({display: 'flex', justifyContent: 'center', fontSize: '2em', fontFamily: 'Circular Book, Arial, Sans-Serif', marginTop: '1.5em'}),
     socialWrapper: css({display: 'flex', flexDirection: 'row', justifyContent: 'center'}),
     reasonWrapper: css({
         display: 'flex',
@@ -165,38 +166,44 @@ class Login extends Component {
                     </div>
                 </div>
             </section>
-            <section className={`${styles.plainSection}`}>
-                <div className={`${styles.plainContainer}`}>
-                    <h2 id='features' className={`${styles.plainHeading}`}>Why Spoti-Vote?</h2>
-                    <div className={`${styles.reasonWrapper}`}>
-                        <Reason icon={faPiggyBank} title="No Costs" text="Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!"/>
-                        <Reason icon={faUsers} title="No Dictatorship" text="We empower the users! The DJ plays a song you don't like? Use your voice and just skip it!"/>
-                        <Reason icon={faUnlink} title="No Registration" text="We have no strings on you! Just log in with your Spotify Premium account and invite your friends to join your room!"/>
+            <LazyLoad height={500} once={true}>
+                <section className={`${styles.plainSection}`}>
+                    <div className={`${styles.plainContainer}`}>
+                        <h2 id='features' className={`${styles.plainHeading}`}>Why Spoti-Vote?</h2>
+                        <div className={`${styles.reasonWrapper}`}>
+                            <Reason icon={faPiggyBank} title="No Costs" text="Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!"/>
+                            <Reason icon={faUsers} title="No Dictatorship" text="We empower the users! The DJ plays a song you don't like? Use your voice and just skip it!"/>
+                            <Reason icon={faUnlink} title="No Registration" text="We have no strings on you! Just log in with your Spotify Premium account and invite your friends to join your room!"/>
+                        </div>
                     </div>
-                </div>
-            </section>
-            <section className={`${styles.imageSection}`} style={{
-                    backgroundImage: 'url(' + this.state.image + ')'
-                }}>
-                <div className={`${styles.imageContainer}`}>
-                    <h2 className={`${styles.imageHeading}`}>Spoti-Vote is perfect for...</h2>
-                    <div className={`${styles.reasonWrapper}`}>
-                        <Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
-                        <Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
-                        <Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
-                    </div>);
-                </div>
-            </section>
-            <section className={`${styles.socialSection}`}>
-                <div className={`${styles.plainContainer}`}>
-                    <h2 className={`${styles.socialHeading}`}>Connect with us</h2>
-                    <div className={`${styles.socialWrapper}`}>
-                        <SocialIcon icon={faFacebook} url={'https://www.facebook.com/Spoti-Vote-600357846990340/'}/>
-                        <SocialIcon icon={faTwitter} url={'https://twitter.com/SpotiVote'}/>
-                        <SocialIcon icon={faGithub} url={'https://github.com/Gabsii/spoti-vote'}/>
+                </section>
+            </LazyLoad>
+            <LazyLoad height={500} offset={100} once={true}>
+                <section className={`${styles.imageSection}`} style={{
+                        backgroundImage: 'url(' + this.state.image + ')'
+                    }}>
+                    <div className={`${styles.imageContainer}`}>
+                        <h2 className={`${styles.imageHeading}`}>Spoti-Vote is perfect for...</h2>
+                        <div className={`${styles.reasonWrapper}`}>
+                            <Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
+                            <Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
+                            <Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
+                        </div>);
                     </div>
-                </div>
-            </section>
+                </section>
+            </LazyLoad>
+            <LazyLoad height={250} offset={100} once={true}>
+                <section className={`${styles.socialSection}`}>
+                    <div className={`${styles.plainContainer}`}>
+                        <h2 className={`${styles.socialHeading}`}>Connect with us</h2>
+                        <div className={`${styles.socialWrapper}`}>
+                            <SocialIcon icon={faFacebook} url={'https://www.facebook.com/Spoti-Vote-600357846990340/'}/>
+                            <SocialIcon icon={faTwitter} url={'https://twitter.com/SpotiVote'}/>
+                            <SocialIcon icon={faGithub} url={'https://github.com/Gabsii/spoti-vote'}/>
+                        </div>
+                    </div>
+                </section>
+            </LazyLoad>
             <LoginFooter/>
         </main>);
     }

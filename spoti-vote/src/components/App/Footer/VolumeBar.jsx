@@ -10,7 +10,7 @@ const styles = {
         height: '75px',
         maxWidth: '250px',
         minWidth: '200px',
-        fontFamily: 'Circular Medium',
+        fontFamily: 'Circular Medium, Arial, Sans-Serif',
         position: 'absolute',
         right: 0,
         display: 'none',
