@@ -21,10 +21,9 @@ const io = socketIo(server);
 
 const ipAddress = process.env.ADDRESS || 'localhost';       //Wichtig env.ADDRESS = 'spoti-vote.com' -> wen local egal
 const port = process.env.PORT || 80;                        //Wichtig env.PORT = 443 -> wenn local egal
-const backExtension = process.env.BACKEXT || '';      //wichtig env.BACKEXTENSION = '/b' -> Wenn local egal
 const portBack = 8888;
 
-const uriBack = (backExtension == '' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port + backExtension);
+const uriBack = (ipAddress == '' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port);
 
 const redirect_uri = uriBack + '/callback';
 
@@ -88,7 +87,7 @@ function getRoomById(roomId) {
 /**
 * Login using the Spotify API (This is only a Redirect)
 */
-app.get(backExtension + '/login', (req, res) => {
+app.get('/login', (req, res) => {
     console.log('INFO: User was sent to Spotify login');
     referer = req.headers.referer;
     res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
@@ -98,7 +97,7 @@ app.get(backExtension + '/login', (req, res) => {
 * The callback that will be called when the Login with the Spotify API is completed
 * Will redirect the user to the newly created room
 */
-app.get(backExtension + '/callback', async (req, res) => {
+app.get('/callback', async (req, res) => {
     let options = {
         path: '/',
         expires: 0, // would expire after 15 minutes
@@ -141,7 +140,7 @@ app.get(backExtension + '/callback', async (req, res) => {
 * The callback that will be called when the Login with the Spotify API is completed
 * Will redirect the user to the newly created room
 */
-app.get(backExtension + '/createRoom', async (req, res) => {
+app.get('/createRoom', async (req, res) => {
     let room = new Room(users[0], rooms);
     let uri = referer + 'app';
 
@@ -158,7 +157,7 @@ app.get(backExtension + '/createRoom', async (req, res) => {
 * @Returns ResponseCode of 200
 * @Returns content Array of all the rooms
 */
-app.get(backExtension + '/rooms', async (req, res) => {
+app.get('/rooms', async (req, res) => {
     console.log('INFO: /rooms has been called.');
     res.setHeader('Access-Control-Allow-Origin', '*');
 
