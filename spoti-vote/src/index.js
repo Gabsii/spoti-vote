@@ -30,6 +30,11 @@ const Usage = Loadable({
     loader: () => import ('./pages/Usage.jsx'),
     loading: Loading
 });
+const Policies = Loadable({
+    loader: () => import ('./pages/Policies.jsx'),
+    loading: Loading,
+    delay: 500
+});
 const NotFound = Loadable({
     loader: () => import ('./pages/NotFound.jsx'),
     loading: Loading
@@ -41,6 +46,7 @@ ReactDOM.render((<BrowserRouter>
         <Route path="/dashboard" component={Dashboard}/>
         <Route path="/join" component={Join}/>
         <Route path="/usage" component={Usage}/>
+        <Route path="/policies" component={Policies}/>
         <Route component={NotFound}/>
     </Switch>
 
