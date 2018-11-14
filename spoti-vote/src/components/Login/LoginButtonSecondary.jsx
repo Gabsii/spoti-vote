@@ -5,7 +5,7 @@ import '../../css/selectors.css';
 let constants = require('../../js/constants');
 const ipAddress = (window.location.hostname === 'localhost')
     ? 'localhost'
-    : '80.123.206.40';
+    : 'backend.spoti-vote.com';
 const protocol = (window.location.hostname === 'localhost')
     ? 'http://'
     : 'https://';

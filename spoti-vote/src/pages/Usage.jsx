@@ -33,10 +33,10 @@ let imgStyle = { // TODO: rework whole page lmao im ashamed
 
 const ipAddress = (window.location.hostname === 'localhost')
     ? 'localhost'
-    : '80.123.206.40';
+    : 'backend.spoti-vote.com';
 const portBack = (window.location.hostname === 'localhost')
     ? 8888
-    : '443/b';
+    : '443';
 const protocol = (window.location.hostname === 'localhost')
     ? 'http://'
     : 'https://';
