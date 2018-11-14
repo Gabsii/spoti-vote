@@ -9,16 +9,6 @@ import Sidebar from '../components/App/Sidebar.jsx';
 import CardContainer from '../components/App/Cards/CardContainer.jsx';
 
 const constants = require('../js/constants');
-const ipAddress = (window.location.hostname === 'localhost')
-    ? 'localhost'
-    : '80.123.206.40';
-const portFront = window.location.port || 80;
-const portBack = (window.location.hostname === 'localhost')
-    ? 8888
-    : '443/b';
-const protocol = (window.location.hostname === 'localhost')
-    ? 'http://'
-    : 'https://';
 
 const cookies = new Cookies();
 const styles = {
@@ -28,7 +18,7 @@ const styles = {
 class App extends Component {
     constructor() {
         super();
-        this.socket = socketIOClient(protocol + ipAddress + ':' + portBack);
+        this.socket = socketIOClient(constants.config.url);
         let token = cookies.get('token');
         if (token === undefined) {
             token = null;
@@ -38,7 +28,7 @@ class App extends Component {
             isPhone: (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1),
             token: token,
             roomId: window.location.pathname.split('/')[2],
-            loginPage: protocol + ipAddress + ':' + portFront,
+            loginPage: constants.config.url,
             isHost: false,
             connectedUser: [],
             playlists: [],

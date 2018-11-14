@@ -23,7 +23,7 @@ const ipAddress = process.env.ADDRESS || 'localhost';       //Wichtig env.ADDRES
 const port = process.env.PORT || 80;                        //Wichtig env.PORT = 443 -> wenn local egal
 const portBack = 8888;
 
-const uriBack = (ipAddress == '' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port);
+const uriBack = (ipAddress == 'localhost' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port);
 
 const redirect_uri = uriBack + '/callback';
 
@@ -89,7 +89,7 @@ function getRoomById(roomId) {
 */
 app.get('/login', (req, res) => {
     console.log('INFO: User was sent to Spotify login');
-    referer = req.headers.referer;
+    referer = req.headers.referer.substring(0, req.headers.referer.lastIndexOf('/'));
     res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
 });
 
@@ -120,7 +120,8 @@ app.get('/callback', async (req, res) => {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-		let uri = referer + 'dashboard';
+		let uri = referer + '/dashboard';
+        console.log(uri);
         let user = new User(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
 
         // Set cookie
@@ -142,7 +143,7 @@ app.get('/callback', async (req, res) => {
 */
 app.get('/createRoom', async (req, res) => {
     let room = new Room(users[0], rooms);
-    let uri = referer + 'app';
+    let uri = referer + '/app';
 
     console.log(room);
 
