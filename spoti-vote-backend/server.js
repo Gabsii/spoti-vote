@@ -21,10 +21,9 @@ const io = socketIo(server);
 
 const ipAddress = process.env.ADDRESS || 'localhost';       //Wichtig env.ADDRESS = 'spoti-vote.com' -> wen local egal
 const port = process.env.PORT || 80;                        //Wichtig env.PORT = 443 -> wenn local egal
-const backExtension = process.env.BACKEXTENSION || '';      //wichtig env.BACKEXTENSION = '/b' -> Wenn local egal
+const backExtension = process.env.BACKEXT || '';      //wichtig env.BACKEXTENSION = '/b' -> Wenn local egal
 const portBack = 8888;
 
-const uriFront = (backExtension == '' ? 'http://' + ipAddress + ':' + port : 'https://' + ipAddress + ':' + port)
 const uriBack = (backExtension == '' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port + backExtension);
 
 const redirect_uri = uriBack + '/callback';
@@ -32,6 +31,9 @@ const redirect_uri = uriBack + '/callback';
 const secTillDelete = 60;
 
 console.log('INFO: Redirect URL: ' + redirect_uri);
+
+let referer = '';
+
 let rooms = [];
 let users = [];
 let allClients = {};
@@ -86,8 +88,9 @@ function getRoomById(roomId) {
 /**
 * Login using the Spotify API (This is only a Redirect)
 */
-app.get('/login', (req, res) => {
+app.get(backExtension + '/login', (req, res) => {
     console.log('INFO: User was sent to Spotify login');
+    referer = req.headers.referer;
     res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
 });
 
@@ -95,8 +98,7 @@ app.get('/login', (req, res) => {
 * The callback that will be called when the Login with the Spotify API is completed
 * Will redirect the user to the newly created room
 */
-app.get('/callback', async (req, res) => {
-
+app.get(backExtension + '/callback', async (req, res) => {
     let options = {
         path: '/',
         expires: 0, // would expire after 15 minutes
@@ -119,11 +121,11 @@ app.get('/callback', async (req, res) => {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-		let uri = uriFront + '/dashboard';
+		let uri = referer + 'dashboard';
         let user = new User(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
 
         // Set cookie
-        res.cookie('token', body.access_token, options) // options is optional
+        res.cookie('token', body.access_token, options); // options is optional
 
         if (await user.fetchData() == true) {
             users.push(user);
@@ -139,9 +141,9 @@ app.get('/callback', async (req, res) => {
 * The callback that will be called when the Login with the Spotify API is completed
 * Will redirect the user to the newly created room
 */
-app.get('/createRoom', async (req, res) => {
+app.get(backExtension + '/createRoom', async (req, res) => {
     let room = new Room(users[0], rooms);
-    let uri = uriFront + '/app';
+    let uri = referer + 'app';
 
     console.log(room);
 
@@ -156,7 +158,7 @@ app.get('/createRoom', async (req, res) => {
 * @Returns ResponseCode of 200
 * @Returns content Array of all the rooms
 */
-app.get('/rooms', async (req, res) => {
+app.get(backExtension + '/rooms', async (req, res) => {
     console.log('INFO: /rooms has been called.');
     res.setHeader('Access-Control-Allow-Origin', '*');
 
