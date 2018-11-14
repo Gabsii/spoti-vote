@@ -55,7 +55,7 @@ class Logins extends Component {
     }
 
     login() {
-        window.location.href = constants.config.url + '/createRoom?token=' + cookies.get('token');;
+        window.location.href = constants.config.url + '/createRoom?id=' + this.props.profile.id;
     }
 
     render() {

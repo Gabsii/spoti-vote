@@ -20,7 +20,7 @@ class Main extends Component {
 
     render() {
         return (<main className={`${styles.main}`}>
-            <Logins/> {/* TODO: add top tracks/artist */}
+            <Logins profile={this.props.profile}/> {/* TODO: add top tracks/artist */}
             <Carousel topTracks={this.props.topTracks}/>
         </main>);
     }

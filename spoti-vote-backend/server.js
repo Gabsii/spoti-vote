@@ -90,10 +90,10 @@ function getRoomById(roomId) {
 * @param {string} roomId The id that identifies the room
 * @return {Room} The room object with the id of the parameter
 */
-function getUserByToken(token) {
+function getUserById(id) {
     let user = null;
     for (var i = 0; i < users.length; i++) {
-        if (users[i].access_token == token) {
+        if (users[i].id == id) {
             user = users[i];
             return user;
         }
@@ -159,8 +159,8 @@ app.get('/callback', async (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/createRoom', async (req, res) => {
-    let token = req.query.token;
-    let room = new Room(getUserByToken(token), rooms);
+    let id = req.query.id;
+    let room = new Room(getUserById(id), rooms);
     let uri = referer + '/app';
 
     rooms.push(room);
