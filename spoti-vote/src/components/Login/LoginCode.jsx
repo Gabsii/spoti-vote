@@ -3,16 +3,6 @@ import {css} from 'glamor';
 
 import '../../css/selectors.css';
 let constants = require('../../js/constants.js');
-const ipAddress = (window.location.hostname === 'localhost')
-    ? 'localhost'
-    : 'backend.spoti-vote.com';
-const portFront = window.location.port || 80;
-const portBack = (window.location.hostname === 'localhost')
-    ? 8888
-    : '443';
-const protocol = (window.location.hostname === 'localhost')
-    ? 'http://'
-    : 'https://';
 
 const styles = {
     wrapper: css({display: 'flex', textAlign: 'center', justifyContent: 'center', alignItems: 'center'}),

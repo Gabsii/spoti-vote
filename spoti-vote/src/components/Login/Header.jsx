@@ -8,19 +8,8 @@ import BarItem from './BarItem.jsx';
 import logo from '../../img/spotiLogo.svg';
 let constants = require('../../js/constants');
 
-let backgroundColor = constants.colors.background;
-const ipAddress = (window.location.hostname === 'localhost')
-    ? 'localhost'
-    : 'backend.spoti-vote.com';
-const portBack = (window.location.hostname === 'localhost')
-    ? 8888
-    : '443';
-const protocol = (window.location.hostname === 'localhost')
-    ? 'http://'
-    : 'https://';
-
 const styles = {
-    header: css({backgroundColor, height: '90px', overflow: 'hidden', display: 'flex', alignItems: 'center'}),
+    header: css({backgroundColor: constants.colors.background, height: '90px', overflow: 'hidden', display: 'flex', alignItems: 'center'}),
     logoWrapper: css({height: '5em', width: '5em', marginLeft: '5px', marginRight: '20px'}),
     link: css({textDecoration: 'none', letterSpacing: '1px'}),
     title: css({color: constants.colors.font, fontSize: '2em'}),
