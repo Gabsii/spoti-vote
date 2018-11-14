@@ -26,8 +26,23 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        const token = cookies.get('token');
-        console.log(token);
+        let token = cookies.get('token');
+
+        if (token === undefined) {
+            token = window.location.search.split('=')[1];
+        }
+
+        if (token === undefined) {
+            window.location.pathname = '';
+        } else {
+            cookies.set('token', token);
+        }
+
+        //Gets rid of the search in window.location
+        var myNewURL = window.location.protocol + '//' + window.location.hostname + window.location.pathname;
+        window.history.pushState({}, document.title, myNewURL)
+        console.log(myNewURL);
+
         this.fetchProfileData(token);
         this.fetchTopTracks(token);
     }
