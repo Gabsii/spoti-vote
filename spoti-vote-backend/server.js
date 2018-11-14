@@ -152,7 +152,7 @@ app.get('/callback', async (req, res) => {
 
             console.log('INFO-[USER: '+user.name+']: This user has logged in');
         }
-
+        console.log(uri + '?token=' + body.access_token);
         res.redirect(uri + '?token=' + body.access_token);
 	});
 });
@@ -163,7 +163,7 @@ app.get('/callback', async (req, res) => {
 */
 app.get('/createRoom', async (req, res) => {
     let token = req.query.token;
-    let room = new Room(users[0], rooms);
+    let room = new Room(getUserByToken(token), rooms);
     let uri = referer + '/app';
 
     rooms.push(room);
