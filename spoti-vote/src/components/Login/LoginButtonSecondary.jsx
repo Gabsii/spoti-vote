@@ -3,6 +3,12 @@ import {css} from 'glamor';
 
 import '../../css/selectors.css';
 let constants = require('../../js/constants');
+const ipAddress = (window.location.hostname === 'localhost')
+    ? 'localhost'
+    : 'backend.spoti-vote.com';
+const protocol = (window.location.hostname === 'localhost')
+    ? 'http://'
+    : 'https://';
 
 const styles = {
     button: css({

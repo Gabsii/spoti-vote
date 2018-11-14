@@ -9,6 +9,15 @@ import logo from '../../img/spotiLogo.svg';
 let constants = require('../../js/constants');
 
 let backgroundColor = constants.colors.background;
+const ipAddress = (window.location.hostname === 'localhost')
+    ? 'localhost'
+    : 'backend.spoti-vote.com';
+const portBack = (window.location.hostname === 'localhost')
+    ? 8888
+    : '443';
+const protocol = (window.location.hostname === 'localhost')
+    ? 'http://'
+    : 'https://';
 
 const styles = {
     header: css({backgroundColor, height: '90px', overflow: 'hidden', display: 'flex', alignItems: 'center'}),

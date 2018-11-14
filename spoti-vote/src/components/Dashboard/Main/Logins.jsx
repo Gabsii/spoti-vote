@@ -4,7 +4,15 @@ import {css} from 'glamor';
 import LoginCode from '../../Login/LoginCode.jsx';
 
 let constants = require('../../../js/constants');
-
+const ipAddress = (window.location.hostname === 'localhost')
+    ? 'localhost'
+    : 'backend.spoti-vote.com';
+const portBack = (window.location.hostname === 'localhost')
+    ? 8888
+    : '443';
+const protocol = (window.location.hostname === 'localhost')
+    ? 'http://'
+    : 'https://';
 const styles = {
     wrapper: css({
         height: 'calc(100% - 360px)',

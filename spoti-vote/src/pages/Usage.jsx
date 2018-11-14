@@ -31,7 +31,15 @@ let imgStyle = { // TODO: rework whole page lmao im ashamed
     maxHeight: '50vh'
 };
 
-let constants = require('../js/constants');
+const ipAddress = (window.location.hostname === 'localhost')
+    ? 'localhost'
+    : 'backend.spoti-vote.com';
+const portBack = (window.location.hostname === 'localhost')
+    ? 8888
+    : '443';
+const protocol = (window.location.hostname === 'localhost')
+    ? 'http://'
+    : 'https://';
 
 class Usage extends Component {
 
