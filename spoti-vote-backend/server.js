@@ -77,9 +77,28 @@ function getRoomById(roomId) {
     for (var i = 0; i < rooms.length; i++) {
         if (rooms[i].id == roomId) {
             room = rooms[i];
+            return room;
         }
     }
-    return room;
+    return null;
+}
+
+/**
+* Return the room with the specified id
+*
+* @author: Michiocre
+* @param {string} roomId The id that identifies the room
+* @return {Room} The room object with the id of the parameter
+*/
+function getUserByToken(token) {
+    let user = null;
+    for (var i = 0; i < users.length; i++) {
+        if (users[i].access_token == token) {
+            user = users[i];
+            return user;
+        }
+    }
+    return null;
 }
 
 /* jshint ignore: start */
@@ -143,6 +162,7 @@ app.get('/callback', async (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/createRoom', async (req, res) => {
+    let token = req.query.token;
     let room = new Room(users[0], rooms);
     let uri = referer + '/app';
 
