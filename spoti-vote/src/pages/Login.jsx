@@ -188,7 +188,7 @@ class Login extends Component {
                             <Reason icon={faCar} title="Road Trips" text="You're feeling like James Corden, do you? Sing along with your friends to your favourite songs"/>
                             <Reason icon={faHome} title="House Parties" text="Create a collabarative playlist and party to your finest tunes"/>
                             <Reason icon={faHeadphones} title="DJs/Streamer" text="Let your crowd set the tone while you lean back and relax"/>
-                        </div>);
+                        </div>
                     </div>
                 </section>
             </LazyLoad>

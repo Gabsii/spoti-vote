@@ -21,7 +21,10 @@ class LoginFooter extends Component {
 
         return (<footer className={`${styles.footer}`}>Help us to keep Spoti-Vote running
             <br/>
-            &copy; Lukas Gabsi, Michael Blank</footer>);
+            &copy; Lukas Gabsi, Michael Blank
+            <br/>
+            <a href="/policies">Policies</a>
+        </footer>);
     }
 }
 
