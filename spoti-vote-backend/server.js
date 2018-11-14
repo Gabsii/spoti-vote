@@ -98,6 +98,7 @@ app.get('/login', (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/callback', async (req, res) => {
+    console.log(req.headers);
     let options = {
         domain: '.spoti-vote.com',
         path: '/',
@@ -125,7 +126,7 @@ app.get('/callback', async (req, res) => {
         let user = new User(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
 
         // Set cookie
-        res.cookie('token', body.access_token, options); // options is optional
+        // res.cookie('token', body.access_token, options); // options is optional
 
         if (await user.fetchData() == true) {
             users.push(user);
@@ -133,7 +134,7 @@ app.get('/callback', async (req, res) => {
             console.log('INFO-[USER: '+user.name+']: This user has logged in');
         }
 
-        res.redirect(uri);
+        res.redirect(uri + '?token=' + body.access_token);
 	});
 });
 
