@@ -42,6 +42,9 @@ const styles = {
         flexGrow: 1,
         marginRight: '20px',
         display: 'flex!important',
+        background: 'none',
+        border: 'none',
+        outline: 'none',
         '@media(min-width: 760px)': {
             display: 'none!important'
         }
@@ -110,9 +113,9 @@ class Header extends Component {
                 </ul>
             </nav>
             {/* Tablet */}
-            <a className={`${styles.navButton}`} href='#' onClick={this.showNav}>
+            <button className={`${styles.navButton}`} href='#' onClick={this.showNav}>
                 <FontAwesomeIcon icon={faBars} size='3x'/>
-            </a>
+            </button>
             {
                 this.state.popupVisible
                     ? <ul id='nav' className={`${styles.navList}`} ref={(node) => {
