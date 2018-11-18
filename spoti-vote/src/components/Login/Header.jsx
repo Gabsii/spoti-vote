@@ -113,7 +113,7 @@ class Header extends Component {
                 </ul>
             </nav>
             {/* Tablet */}
-            <button className={`${styles.navButton}`} href='#' onClick={this.showNav}>
+            <button className={`${styles.navButton}`} href='#' rel='noopener noreferrer' onClick={this.showNav}>
                 <FontAwesomeIcon icon={faBars} size='3x'/>
             </button>
             {

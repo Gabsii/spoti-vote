@@ -30,7 +30,8 @@ const styles = {
         textTransform: 'uppercase',
         whiteSpace: 'normal',
         backgroundColor: constants.colors.green
-    })
+    }),
+    link: css({color: 'white', textDecoration: 'none'})
 };
 
 class CookieMessage extends Component {
@@ -66,7 +67,7 @@ class CookieMessage extends Component {
         if (this.state.cookie) {
             return (<div className={`${styles.wrapper}`}>
                 <div className={`${styles.text}`}>This page uses Cookies to work. Please press this button so we can stay within the law. {" "}
-                    <a href="/policies">More Infos about your rights.</a>
+                    <a href="/policies" className={`${styles.link}`}>More Infos about your rights.</a>
                 </div>
                 <button className={`${styles.button}`} onClick={this.setCookie.bind(this)}>I understand</button>
             </div>);
