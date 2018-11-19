@@ -1,6 +1,12 @@
 {
-  "short_name": "Spoti-Vote",
+  "short_name": "Spoti Vote",
   "name": "Spoti-Vote",
+  "lang" : "English",
+  "start_url": "/",
+  "orientation": "portrait",
+  "display": "fullscreen",
+  "theme_color": "#282828",
+  "background_color": "#191414",
   "icons": [
     {
       "src": "favicon.ico",
@@ -47,10 +53,5 @@
         "sizes": "512x512",
         "type": "image/png"
     }
-  ],
-  "start_url": "./index.html",
-  "orientation": "landscape",
-  "display": "standalone",
-  "theme_color": "#282828",
-  "background_color": "#191414"
+  ]
 }
