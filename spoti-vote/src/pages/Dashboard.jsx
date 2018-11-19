@@ -69,7 +69,11 @@ class Dashboard extends Component {
 
     // asynchronously fetch all the comments for the current post and add it to the comments array in the state
     fetchTopTracks(token) {
-        fetch('https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=' + constants.amountTopTracks, {
+        let maxTracks = Math.floor((window.innerWidth - 221) / 200);
+        let amountTopTracks = (maxTracks > 0)
+            ? maxTracks
+            : 1;
+        fetch('https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=' + amountTopTracks, {
             headers: {
                 "Authorization": "Bearer " + token
             }
