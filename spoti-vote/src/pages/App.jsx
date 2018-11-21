@@ -80,6 +80,9 @@ class App extends Component {
                     roomId: data.oldRoom,
                     isPhone: this.state.isPhone
                 });
+                if (result.dismiss) {
+                    window.location = "/app/" + data.oldRoom;
+                }
             });
 
         });

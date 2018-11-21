@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import {faRandom} from '@fortawesome/fontawesome-free-solid';
+import {faDice} from '@fortawesome/fontawesome-free-solid';
 import {css} from 'glamor';
 
 let constants = require('../../../js/constants');
@@ -63,7 +63,7 @@ class SkipButton extends Component {
         }
 
         return (<button className={`${styles.button}`} style={linkStyle} onClick={this.props.skipHandler} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-            <FontAwesomeIcon icon={faRandom} size='2x'/>
+            <FontAwesomeIcon icon={faDice} size='2x'/>
             <div className={`${styles.count}`}>{skips + '/' + users}</div>
         </button>);
     }

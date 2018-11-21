@@ -77,7 +77,7 @@ class CardContainer extends Component {
             voted: null,
             notification: {
                 ignore: true,
-                title: ''
+                title: 'Spoti Vote'
             }
         };
     }
@@ -128,7 +128,6 @@ class CardContainer extends Component {
 
                 const now = Date.now();
 
-                const title = 'Spoti Vote';
                 const body = 'New Songs were loaded!';
                 const tag = now;
                 const icon = logo;
@@ -144,7 +143,6 @@ class CardContainer extends Component {
                 }
                 this.setState({
                     notification: {
-                        title: title,
                         options: options
                     }
                 });
@@ -160,7 +158,7 @@ class CardContainer extends Component {
                         return (<Card isPhone={true} randomTrack={track} onClick={this.props.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>);
                     })
                 }
-                <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} onClick={this.handleNotificationOnClick.bind(this)} onClose={this.handleNotificationOnClose.bind(this)} onError={this.handleNotificationOnError.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
+                <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
             </main>);
         } else {
             return (<main className={`${styles.noTracksMain}`}>
@@ -174,8 +172,7 @@ class CardContainer extends Component {
                         </b>
                         as Code!</h2>
                     <ShareButton/>
-                    <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} onClick={this.handleNotificationOnClick.bind(this)} onClose={this.handleNotificationOnClose.bind(this)} onError={this.handleNotificationOnError.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
-
+                    <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
                 </div>
             </main>);
         }

@@ -6,9 +6,13 @@ import Loadable from 'react-loadable';
 
 import Loading from './pages/Loading.jsx';
 import Login from './pages/Login.jsx';
-import './css/reset.css';
-import './css/fonts.css';
 import registerServiceWorker from './registerServiceWorker';
+
+// preloads css => no render blocking
+import (/* webpackPrefetch: true */
+"./css/reset.css");
+import (/* webpackPrefetch: true */
+"./css/fonts.css");
 
 const App = Loadable({
     loader: () => import ('./pages/App.jsx'),

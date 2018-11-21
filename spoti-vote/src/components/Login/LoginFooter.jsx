@@ -12,7 +12,8 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
-    })
+    }),
+    link: css({color: 'white', textDecoration: 'none'})
 };
 
 class LoginFooter extends Component {
@@ -23,7 +24,7 @@ class LoginFooter extends Component {
             <br/>
             &copy; Lukas Gabsi, Michael Blank
             <br/>
-            <a href="/policies">Policies</a>
+            <a href="/policies" className={`${styles.link}`}>Policies</a>
         </footer>);
     }
 }

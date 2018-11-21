@@ -113,9 +113,9 @@ class Header extends Component {
                 </ul>
             </nav>
             {/* Tablet */}
-            <button className={`${styles.navButton}`} href='#' rel='noopener noreferrer' onClick={this.showNav}>
+            <div className={`${styles.navButton}`} onClick={this.showNav}>
                 <FontAwesomeIcon icon={faBars} size='3x'/>
-            </button>
+            </div>
             {
                 this.state.popupVisible
                     ? <ul id='nav' className={`${styles.navList}`} ref={(node) => {
