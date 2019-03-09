@@ -8,7 +8,7 @@
     "@fortawesome/fontawesome-free-solid": "^5.0.8",
     "@fortawesome/react-fontawesome": "0.0.17",
     "autoprefixer": "7.1.6",
-    "babel-core": "6.26.0",
+    "babel-core": "^6.26.3",
     "babel-eslint": "7.2.3",
     "babel-jest": "20.0.3",
     "babel-loader": "7.1.2",
@@ -38,25 +38,25 @@
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
-    "preact": "^8.3.1",
+    "preact": "^8.4.2",
     "preact-compat": "^3.18.4",
     "promise": "8.0.1",
     "raf": "3.4.0",
-    "react": "^16.6.0",
+    "react": "^16.8.4",
     "react-cookie": "^2.1.4",
     "react-dev-utils": "^5.0.3",
-    "react-dom": "^16.6.0",
-    "react-lazyload": "^2.3.0",
+    "react-dom": "^16.8.4",
+    "react-lazyload": "^2.5.0",
     "react-loadable": "^5.5.0",
     "react-responsive": "^4.1.0",
     "react-router-dom": "^4.2.2",
     "react-text-marquee": "^1.0.1",
     "react-web-notification": "^0.3.1",
     "really-smooth-scroll": "^2.1.1",
-    "socket.io-client": "^2.1.0",
+    "socket.io-client": "^2.2.0",
     "style-loader": "0.19.0",
     "sw-precache-webpack-plugin": "0.11.4",
-    "sweetalert2": "^7.28.11",
+    "sweetalert2": "^7.33.1",
     "url-loader": "0.6.2",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4",
@@ -111,6 +111,6 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "image-webpack-loader": "^4.5.0"
+    "image-webpack-loader": "^4.6.0"
   }
 }
