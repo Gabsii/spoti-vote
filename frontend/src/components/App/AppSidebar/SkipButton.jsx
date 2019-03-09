@@ -54,7 +54,7 @@ class SkipButton extends Component {
         let users,
             skips;
 
-        if (this.props.connectedUser != null && this.props.connectedUser != undefined) {
+        if (this.props.connectedUser !==null && this.props.connectedUser !==undefined) {
             users = this.props.connectedUser.length + 1;
             skips = 0;
             for (let j = 0; j < this.props.connectedUser.length; j++) {
@@ -64,7 +64,7 @@ class SkipButton extends Component {
             }
         }
 
-        if (this.props.host != null && this.props.host != undefined) {
+        if (this.props.host !==null && this.props.host !==undefined) {
             if (this.props.host.voted === 'skip') {
                 skips++;
             }

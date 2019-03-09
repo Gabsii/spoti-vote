@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {css} from 'glamor';
 
@@ -19,22 +19,18 @@ const styles = {
     text: css({textAlign: 'center', fontSize: '1.1em'})
 };
 
-class Reason extends Component {
+const Reason = (props) => {
 
-    render() {
+    return (<div className={`${styles.wrapper}`}>
 
-        return (<div className={`${styles.wrapper}`}>
-
-            <FontAwesomeIcon icon={this.props.icon} size='4x'/>
-            <h3 className={`${styles.heading}`}>
-                {this.props.title}
-            </h3>
-            <div className={`${styles.text}`}>
-                {this.props.text}
-            </div>
-        </div>);
-
-    }
+        <FontAwesomeIcon icon={props.icon} size='4x'/>
+        <h3 className={`${styles.heading}`}>
+            {props.title}
+        </h3>
+        <div className={`${styles.text}`}>
+            {props.text}
+        </div>
+    </div>);
 }
 
 export default Reason;

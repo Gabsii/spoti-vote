@@ -24,7 +24,7 @@ const styles = {
 class SongAggregation extends Component {
     render() {
         let artistString = '';
-        if (this.props.artists != null && this.props.artists != undefined) {
+        if (this.props.artists !==null && this.props.artists !==undefined) {
             for (var i = 0; i < this.props.artists.length; i++) {
                 artistString += this.props.artists[i].name;
                 if (i < this.props.artists.length - 1) {

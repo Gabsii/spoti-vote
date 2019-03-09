@@ -67,7 +67,7 @@ class Infos extends Component {
             playlistImage,
             hostName,
             hostId;
-        if (this.props.activePlaylist != null && this.props.activePlaylist != undefined) {
+        if (this.props.activePlaylist !==null && this.props.activePlaylist !==undefined) {
             option = <div>Playlist:{' ' + this.props.activePlaylist.name}</div>;
             playlistUrl = this.props.activePlaylist.external_urls.spotify;
             playlistImage = this.props.activePlaylist.images[0].url;
@@ -88,7 +88,7 @@ class Infos extends Component {
             hostId = this.props.host.id;
             iconColor.color = constants.colors.font;
         }
-        if (this.props.activeTracks != null && this.props.activeTracks != undefined) {
+        if (this.props.activeTracks !==null && this.props.activeTracks !==undefined) {
 
             for (var j = 0; j < this.props.activeTracks.length; j++) {
                 if (this.props.activeTracks[j].id === this.props.host.voted) {
@@ -96,7 +96,7 @@ class Infos extends Component {
                 }
             }
         }
-        if (this.props.host != null && this.props.host != undefined) {
+        if (this.props.host !==null && this.props.host !==undefined) {
             if (this.props.host.voted === 'skip') {
                 iconColor.color = constants.colors.skip;
             }

@@ -151,7 +151,7 @@ class CardContainer extends Component {
     }
 
     render() {
-        if (this.props.activeTracks != null && this.props.activeTracks != undefined && this.props.activeTracks.length > 0) {
+        if (this.props.activeTracks !==null && this.props.activeTracks !==undefined && this.props.activeTracks.length > 0) {
             return (<main className={`${styles.tracksMain}`}>
                 {
                     this.props.activeTracks.map((track, index) => {

@@ -19,44 +19,24 @@ const styles = {
         backgroundColor: 'rgba(0,0,0,0)',
         boxShadow: '0 0 0 2px ' + constants.colors.green + ' inset',
         color: constants.colors.green,
-        marginTop: '1.5em'
+        marginTop: '1.5em',
+        cursor: 'context-menu',
+        ':hover': {
+            cursor: 'pointer',
+            backgroundColor: constants.colors.green,
+            color: constants.colors.background
+        }
     })
 };
 
 class LoginButtonSecondary extends Component {
-
-    constructor() {
-        super();
-        this.state = {
-            hover: false
-        };
-    }
-
-    toggleHover() {
-        this.setState({
-            hover: !this.state.hover
-        });
-    }
 
     login() {
         window.location.pathname = '/join';
     }
 
     render() {
-        let linkStyle;
-        if (this.state.hover) {
-            linkStyle = {
-                cursor: 'pointer',
-                backgroundColor: constants.colors.green,
-                color: constants.colors.background
-            };
-        } else {
-            linkStyle = {
-                cursor: 'context-menu'
-            };
-        }
-        return (<button id='loginbuttonsecondary' className={`${styles.button}`} style={linkStyle
-} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} onClick={this.login.bind(this)} tabIndex='0'>
+        return (<button id='loginbuttonsecondary' className={`${styles.button}`} onClick={this.login.bind(this)} tabIndex='0'>
             Join
         </button>);
     }

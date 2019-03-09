@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {css} from 'glamor';
 
 let constants = require('../../../js/constants');
+let progress = {
+    width: '0%'
+};
 const styles = {
     wrapper: css({
         backgroundColor: constants.colors.barBackground,
@@ -43,10 +46,6 @@ class Progressbar extends Component {
     }
 
     render() {
-        let progress = {
-            width: '0%'
-        };
-
         if (this.props.activePlayer !== null && this.props.activePlayer !== undefined) {
             progress.width = this.props.activePlayer.progress + '%';
         }
