@@ -1,12 +1,10 @@
-/*jshint esversion: 6, node: true, undef: true, unused: true */
 let method = Room.prototype; //This is used when programming object oriented in js to make everything a bit more organised
-/*jshint ignore: start */
 const request = require('request');
 const fetch = require('node-fetch');
-const shallowEqual = require('shallow-equals');
+//const shallowEqual = require('shallow-equals');
 const deepEqual = require('deep-equal');
 const _ = require('lodash');
-/*jshint ignore: end */
+
 /**
 * Return a randomly generated string with a specified length, based on the possible symbols
 *
@@ -15,9 +13,8 @@ const _ = require('lodash');
 * @return {string} The random string
 */
 function makeid(length) {
-	let text = "";
-	let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //ALl possible symbols
-
+	let text = '';
+	let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; //ALl possible symbols
 	for (let i = 0; i < length; i++)
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
 
@@ -33,7 +30,7 @@ function makeid(length) {
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function Room(user, room) {
+function Room(user, rooms) {
 	//The host object
 	this.user = user;
 	this.firstConnection = true;
@@ -62,6 +59,13 @@ function Room(user, room) {
 	}
 }
 
+/**
+* Returns all the changes between the last update and the current state
+*
+* @author: Michiocre
+* @param {Room} oldRoom The old status of the room
+* @returns: Changes
+*/
 method.getDifference = function(oldRoom) {
 	let update = {};
 
@@ -71,9 +75,9 @@ method.getDifference = function(oldRoom) {
 			name: this.user.name,
 			voted: this.user.voted,
 			img: this.user.img
-		}
+		};
 		update.activeTracks = [];
-		for (var i = 0; i < this.activeTracks.length; i++) {
+		for (let i = 0; i < this.activeTracks.length; i++) {
 			update.activeTracks[i] = {
 				album: {images: [{url: this.activeTracks[i].album.images[0].url}]},
 				id: this.activeTracks[i].id,
@@ -81,10 +85,10 @@ method.getDifference = function(oldRoom) {
 				votes: this.activeTracks[i].votes
 			};
 			update.activeTracks[i].artists = [];
-			for (var j = 0; j < this.activeTracks[i].artists.length; j++) {
+			for (let j = 0; j < this.activeTracks[i].artists.length; j++) {
 				update.activeTracks[i].artists[j] = {
 					name: this.activeTracks[i].artists[j].name
-				}
+				};
 			}
 		}
 
@@ -121,15 +125,15 @@ method.getDifference = function(oldRoom) {
 				}
 			};
 			update.activePlayer.track.artists = [];
-			for (var i = 0; i < this.activePlayer.track.artists.length; i++) {
+			for (let i = 0; i < this.activePlayer.track.artists.length; i++) {
 				update.activePlayer.track.artists[i] = {
-						name: this.activePlayer.track.artists[i].name
+					name: this.activePlayer.track.artists[i].name
 				};
 			}
 		}
 
 		update.playlists = [];
-		for (var i = 0; i < this.user.playlists.length; i++) {
+		for (let i = 0; i < this.user.playlists.length; i++) {
 			update.playlists.push({
 				name: this.user.playlists[i].name,
 				id: this.user.playlists[i].id
@@ -141,12 +145,12 @@ method.getDifference = function(oldRoom) {
 		if (!deepEqual(oldRoom.host, this.user)) {
 			update.host = {
 				voted: this.user.voted
-			}
+			};
 		}
 
 		if (!deepEqual(oldRoom.activeTracks, this.activeTracks)) {
 			update.activeTracks = [];
-			for (var i = 0; i < this.activeTracks.length; i++) {
+			for (let i = 0; i < this.activeTracks.length; i++) {
 				update.activeTracks[i] = null;
 				if (!deepEqual(oldRoom.activeTracks[i], this.activeTracks[i])) {
 					if (oldRoom.activeTracks[i] !== null && oldRoom.activeTracks[i] !== undefined) {
@@ -161,10 +165,10 @@ method.getDifference = function(oldRoom) {
 								votes: this.activeTracks[i].votes
 							};
 							update.activeTracks[i].artists = [];
-							for (var j = 0; j < this.activeTracks[i].artists.length; j++) {
+							for (let j = 0; j < this.activeTracks[i].artists.length; j++) {
 								update.activeTracks[i].artists[j] = {
 									name: this.activeTracks[i].artists[j].name
-								}
+								};
 							}
 						} else {
 							update.activeTracks[i] = {
@@ -179,10 +183,10 @@ method.getDifference = function(oldRoom) {
 							votes: this.activeTracks[i].votes
 						};
 						update.activeTracks[i].artists = [];
-						for (var j = 0; j < this.activeTracks[i].artists.length; j++) {
+						for (let j = 0; j < this.activeTracks[i].artists.length; j++) {
 							update.activeTracks[i].artists[j] = {
 								name: this.activeTracks[i].artists[j].name
-							}
+							};
 						}
 					}
 				}
@@ -232,9 +236,9 @@ method.getDifference = function(oldRoom) {
 					}
 				};
 				update.activePlayer.track.artists = [];
-				for (var i = 0; i < this.activePlayer.track.artists.length; i++) {
+				for (let i = 0; i < this.activePlayer.track.artists.length; i++) {
 					update.activePlayer.track.artists[i] = {
-							name: this.activePlayer.track.artists[i].name
+						name: this.activePlayer.track.artists[i].name
 					};
 				}
 			}
@@ -256,7 +260,7 @@ method.getDifference = function(oldRoom) {
 		if (oldRoom.playlists !== null && this.user.playlists !== null) {
 			if (!deepEqual(oldRoom.playlists,this.user.playlists)) {
 				update.playlists = [];
-				for (var i = 0; i < this.user.playlists.length; i++) {
+				for (let i = 0; i < this.user.playlists.length; i++) {
 					update.playlists.push({
 						name: this.user.playlists[i].name,
 						id: this.user.playlists[i].id
@@ -273,7 +277,7 @@ method.getDifference = function(oldRoom) {
 		return null;
 	}
 	return update;
-}
+};
 
 /**
 * Gets a list of all usernames
@@ -299,9 +303,10 @@ method.getUserNames = function() {
 */
 method.getUserByName = function(name) {
 	for (let i = 0; i < this.connectedUser.length; i++) {
-		if (this.connectedUser[i].name == name)
+		if (this.connectedUser[i].name == name) {
 			return this.connectedUser[i];
 		}
+	}
 	return null;
 };
 
@@ -345,13 +350,12 @@ method.removeUser = function(name) {
 */
 method.getPlaylistById = function(playlistId) {
 	for (let i = 0; i < this.user.playlists.length; i++) {
-		if (this.user.playlists[i].id == playlistId)
+		if (this.user.playlists[i].id == playlistId) {
 			return this.user.playlists[i];
 		}
+	}
 	return null;
 };
-
-/*jshint ignore: start */
 
 /**
 * Changes the active Playlist to the one that was given
@@ -367,17 +371,23 @@ method.changePlaylist = async function(playlistId) {
 	if (playlist != this.activePlaylist) {
 		await this.getRandomTracks(playlist.id);
 	}
-
 	this.activePlaylist = playlist;
 	console.log('INFO-[ROOM: '+this.id+']: Playlist changed to ['+playlist.name+'].');
 	return true;
 };
 
+
+/**
+* Updates all Playlists if ithey have changed (THIS LOOKS KINDA WRONG)
+*
+* @author: Michiocre
+* @return {boolean} True if completed
+*/
 method.updatePlaylists = async function() {
 	let newPlaylists = await this.fetchPlaylists();
 	let toBeRemoved = _.cloneDeep(this.user.playlists);
 
-	for (var i = 0; i < newPlaylists.length; i++) {
+	for (let i = 0; i < newPlaylists.length; i++) {
 		let playlist = this.getPlaylistById(newPlaylists[i].id);
 		if (playlist === null) {
 			this.user.playlists.push(newPlaylists[i]);
@@ -398,7 +408,7 @@ method.updatePlaylists = async function() {
 			}
 		}
 	}
-	for (var i = 0; i < toBeRemoved.length; i++) {
+	for (let i = 0; i < toBeRemoved.length; i++) {
 		if (toBeRemoved[i] !== null) {
 			let playlist = this.getPlaylistById(toBeRemoved[i].id);
 			if (playlist.id !== this.activePlaylist.id) {
@@ -408,9 +418,7 @@ method.updatePlaylists = async function() {
 		}
 	}
 	return true;
-}
-
-/*jshint ignore: end */
+};
 
 /**
 * Sets the internal list activeTracks to 4 random selected tracks from a playlist
@@ -476,13 +484,12 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
 */
 method.getActiveTrackById = function(id) {
 	for (let i = 0; i < this.activeTracks.length; i++) {
-		if (this.activeTracks[i].id == id)
+		if (this.activeTracks[i].id == id) {
 			return this.activeTracks[i];
 		}
+	}
 	return null;
 };
-
-/*jshint ignore: start */
 
 /**
 * Refreshes the Hosts API Token
@@ -491,9 +498,8 @@ method.getActiveTrackById = function(id) {
 * @return: boolean if completed successfull
 */
 method.refreshToken = async function() {
-	console.log("Before REFRESH:");
-	console.log("  - Refresh Token: " + this.user.refreshToken);
-	console.log("  - Accsess Token: " + this.user.access_token);
+	console.log('Before REFRESH:');
+	console.log('  - Access Token: ' + this.user.token);
 	let authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
 		form: {
@@ -506,12 +512,9 @@ method.refreshToken = async function() {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-		this.user.access_token = body.access_token;
-		this.user.refresh_token = body.refresh_token;
-
-		console.log("After REFRESH:");
-		console.log("  - Refresh Token: " + this.user.refreshToken);
-		console.log("  - Accsess Token: " + this.user.access_token);
+		this.user.token = body.access_token;
+		console.log('After REFRESH:');
+		console.log('  - Access Token: ' + this.user.token);
 		return true;
 	});
 };
@@ -525,7 +528,7 @@ method.refreshToken = async function() {
 method.fetchData = async function() {
 	let hostRequest = await fetch('https://api.spotify.com/v1/me', {
 		headers: {
-			"Authorization": "Bearer " + this.user.token
+			'Authorization': 'Bearer ' + this.user.token
 		}
 	});
 	let hostRequestData = await hostRequest.json();
@@ -557,19 +560,19 @@ method.fetchData = async function() {
 method.fetchPlaylists = async function() {
 	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
 		headers: {
-			"Authorization": "Bearer " + this.user.token
+			'Authorization': 'Bearer ' + this.user.token
 		}
 	});
 
 	let playlistRequestData = await playlistRequest.json();
-	next = playlistRequestData.next;
+	let next = playlistRequestData.next;
 
 	let playlists = playlistRequestData.items;
 
 	while (next !== null && next !== undefined) {
 		playlistRequest = await fetch(next, {
 			headers: {
-				"Authorization": "Bearer " + this.user.token
+				'Authorization': 'Bearer ' + this.user.token
 			}
 		});
 
@@ -587,24 +590,24 @@ method.fetchPlaylists = async function() {
 		}
 	}
 	return returnPlaylists;
-}
+};
 
 method.fetchPlaylistTracks = async function(playlist) {
 	let trackRequest = await fetch(playlist.href + '/tracks?market='+this.user.country+'&fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal', {
 		headers: {
-			"Authorization": "Bearer " + this.user.token
+			'Authorization': 'Bearer ' + this.user.token
 		}
 	});
 
 	let trackRequestData = await trackRequest.json();
-	next = trackRequestData.next;
+	let next = trackRequestData.next;
 
 	let tracks = trackRequestData.items;
 
 	while (next !== null) {
 		trackRequest = await fetch(next, {
 			headers: {
-				"Authorization": "Bearer " + this.user.token
+				'Authorization': 'Bearer ' + this.user.token
 			}
 		});
 
@@ -622,7 +625,7 @@ method.fetchPlaylistTracks = async function(playlist) {
 	}
 
 	return returnTracks;
-}
+};
 
 /**
 * Recursive function, in each iteration it will get up to 100 tracks of the playlist, and if there are more to get it will also return the url for the next batch of up to 100 tracks
@@ -635,12 +638,13 @@ method.fetchPlaylistTracks = async function(playlist) {
 method.loadOneBatch = async function(next) {
 	let request = await fetch(next, {
 		headers: {
-			"Authorization": "Bearer " + this.user.token
+			'Authorization': 'Bearer ' + this.user.token
 		}
 	});
 	let fetchData = await request.json();
 	next = fetchData.next;
 
+	let tracks;
 	if (next !== null) {
 		let prevTracks = await this.loadOneBatch(next);
 		tracks = fetchData.items.concat(prevTracks);
@@ -656,15 +660,15 @@ method.loadOneBatch = async function(next) {
 * @author: Michiocre
 * @return {boolean} True when done
 */
-method.update = async function(isHost) {
+method.update = async function() {
 	this.lastUpdate = Date.now();
 	let request;
 	try {
 		request = await fetch('https://api.spotify.com/v1/me/player', {
-	        headers: {
-	            "Authorization": "Bearer " + this.user.token
-	        }
-	    });
+			headers: {
+				'Authorization': 'Bearer ' + this.user.token
+			}
+		});
 	} catch (e) {
 		console.error('ERROR-[ROOM: '+this.id+']: THERE WAS AN ERROR GETTING THE ACTIVE PLAYER.');
 	}
@@ -682,7 +686,8 @@ method.update = async function(isHost) {
 		if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
 			this.activePlayer = {
 				volume: fetchData.device.volume_percent,
-				progress: (Math.round((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0 * 1.5)/1.5).toFixed(2),
+				timeLeft: fetchData.item.duration_ms - fetchData.progress_ms,
+				progress: fetchData.progress_ms,
 				isPlaying: fetchData.is_playing,
 				track: {
 					album: fetchData.item.album,
@@ -696,18 +701,16 @@ method.update = async function(isHost) {
 	}
 
 	if (this.activePlayer !== null && this.activePlaylist !== null) {
-		if (this.activePlayer.progress > 98 && !this.isChanging) {
+		if (this.activePlayer.timeLeft < 3000 && !this.isChanging) {
 			this.isChanging = true;
 			await this.play();
-		} else if (this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isChanging) {
+		} else if (this.activePlayer.progress > 3000 && this.isChanging) {
 			console.log('INFO-[ROOM: '+this.id+']: Reset Cooldown');
 			this.isChanging = false;
 		}
 	}
-    return true;
+	return true;
 };
-
-/*jshint ignore: end */
 
 /**
 * Changes the vote of a user to the specified track
@@ -762,8 +765,6 @@ method.vote = async function(trackId, isHost, name) {
 	return false;
 };
 
-/*jshint ignore: start */
-
 /**
 * PLays the most voted track
 *
@@ -795,12 +796,11 @@ method.play = async function() {
 		uris: ['spotify:track:' + track.id]
 	};
 
-
-	let request = await fetch('https://api.spotify.com/v1/me/player/play', {
+	await fetch('https://api.spotify.com/v1/me/player/play', {
 		headers: {
-			"Authorization": "Bearer " + this.user.token
+			'Authorization': 'Bearer ' + this.user.token
 		},
-		method: "PUT",
+		method: 'PUT',
 		body: JSON.stringify(payload)
 	});
 
@@ -848,15 +848,13 @@ method.skip = async function() {
 * @return {boolean} True if completed
 */
 method.changeVolume = async function(volume) {
-	let request = await fetch('https://api.spotify.com/v1/me/player/volume?volume_percent=' + volume,{
+	await fetch('https://api.spotify.com/v1/me/player/volume?volume_percent=' + volume,{
 		headers: {
-			"Authorization": "Bearer " + this.user.token
+			'Authorization': 'Bearer ' + this.user.token
 		},
-		method: "PUT"
+		method: 'PUT'
 	});
 	return true;
 };
-
-/*jshint ignore: end */
 
 module.exports = Room;

@@ -1,9 +1,9 @@
 {
-  "name": "oauth-bridge-template",
+  "name": "spoti-vote-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "eslint ./src && eslint server.js",
     "start": "node server.js"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
+    "eslint": "^5.15.1",
     "nodemon": "^1.18.10"
   }
 }

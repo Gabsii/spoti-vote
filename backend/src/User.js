@@ -1,13 +1,10 @@
-/*jshint esversion: 6, node: true, undef: true, unused: true */
 let method = User.prototype; //This is used when programming object oriented in js to make everything a bit more organised
 
-/*jshint ignore: start */
-const request = require('request');
+//const request = require('request');
 const fetch = require('node-fetch');
-const shallowEqual = require('shallow-equals');
-const deepEqual = require('deep-equal');
-const _ = require('lodash');
-/*jshint ignore: end */
+//const shallowEqual = require('shallow-equals');
+//const deepEqual = require('deep-equal');
+//const _ = require('lodash');
 
 
 /**
@@ -19,9 +16,9 @@ const _ = require('lodash');
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function User(token, refreshToken, clientId, clientSecret, room) {
+function User(token, refreshToken, clientId, clientSecret) {
 	this.token = token;
-    this.refreshToken = refreshToken;
+	this.refreshToken = refreshToken;
 	this.clientId = clientId;
 	this.clientSecret = clientSecret;
 	this.name = '';
@@ -30,8 +27,6 @@ function User(token, refreshToken, clientId, clientSecret, room) {
 	this.voted = null;
 	this.country = '';
 	this.img = '';
-
-    let counter = 0;
 }
 
 /**
@@ -43,7 +38,7 @@ function User(token, refreshToken, clientId, clientSecret, room) {
 method.fetchData = async function() {
 	let hostRequest = await fetch('https://api.spotify.com/v1/me', {
 		headers: {
-			"Authorization": "Bearer " + this.token
+			'Authorization': 'Bearer ' + this.token
 		}
 	});
 	let hostRequestData = await hostRequest.json();
@@ -75,19 +70,19 @@ method.fetchData = async function() {
 method.fetchPlaylists = async function() {
 	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
 		headers: {
-			"Authorization": "Bearer " + this.token
+			'Authorization': 'Bearer ' + this.token
 		}
 	});
 
 	let playlistRequestData = await playlistRequest.json();
-	next = playlistRequestData.next;
+	let next = playlistRequestData.next;
 
 	let playlists = playlistRequestData.items;
 
 	while (next !== null && next !== undefined) {
 		playlistRequest = await fetch(next, {
 			headers: {
-				"Authorization": "Bearer " + this.token
+				'Authorization': 'Bearer ' + this.token
 			}
 		});
 
@@ -105,24 +100,24 @@ method.fetchPlaylists = async function() {
 		}
 	}
 	return returnPlaylists;
-}
+};
 
 method.fetchPlaylistTracks = async function(playlist) {
 	let trackRequest = await fetch(playlist.href + '/tracks?market='+this.country+'&fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal', {
 		headers: {
-			"Authorization": "Bearer " + this.token
+			'Authorization': 'Bearer ' + this.token
 		}
 	});
 
 	let trackRequestData = await trackRequest.json();
-	next = trackRequestData.next;
+	let next = trackRequestData.next;
 
 	let tracks = trackRequestData.items;
 
 	while (next !== null) {
 		trackRequest = await fetch(next, {
 			headers: {
-				"Authorization": "Bearer " + this.token
+				'Authorization': 'Bearer ' + this.token
 			}
 		});
 
@@ -140,6 +135,6 @@ method.fetchPlaylistTracks = async function(playlist) {
 	}
 
 	return returnTracks;
-}
+};
 
 module.exports = User;
