@@ -4,16 +4,16 @@
   "description": "Vote for Spotify Queue",
   "scripts": {
     "install-ui": "cd frontend && npm install",
-    "install-backend": "cd ../backend && npm install",
-    "install": "npm run install-ui | npm run install-backend",
+    "install-backend": "cd backend && npm install",
+    "install": "npm run install-ui && npm run install-backend",
     "start-ui": "cd frontend && npm start",
     "start-backend": "cd backend && node server.js",
     "start": "npm run start-ui | npm run start-backend"
   },
   "cacheDirectories": [
-      "node_modules",
-      "spoti-vote-backend/node_modules",
-      "spoti-vote/node_modules"
+    "node_modules",
+    "spoti-vote-backend/node_modules",
+    "spoti-vote/node_modules"
   ],
   "repository": {
     "type": "git",
@@ -24,7 +24,7 @@
     "vote",
     "nodejs",
     "reactjs"
-],
+  ],
   "author": "Gabsii",
   "license": "Apache-2.0",
   "bugs": {

@@ -1,7 +1,7 @@
 {
-  "name": "oauth-bridge-template",
+  "name": "spoti-vote-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "eslint ./src && eslint server.js",
     "start": "node server.js"
