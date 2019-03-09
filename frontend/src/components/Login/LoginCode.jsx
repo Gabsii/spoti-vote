@@ -57,7 +57,7 @@ class LoginCode extends Component {
     submitHandler(event) {
         event.preventDefault();
         if (this.state.room) {
-            window.location.href = constants.config.url + '/app/' + this.state.room;
+            window.location.href = window.location.origin + '/app/' + this.state.room;
         }
     }
 
@@ -73,7 +73,7 @@ class LoginCode extends Component {
                     }
                 }
                 if (this.state.room && this.props.isPhone) {
-                    window.location.href = constants.config.url + '/app/' + this.state.room;
+                    window.location.href = window.location.origin + '/app/' + this.state.room;
                 }
                 if (!exists) {
                     this.setState({roomExists: false});
@@ -92,6 +92,7 @@ class LoginCode extends Component {
     }
 
     render() {
+        console.log(window.location.origin);
         return (<div className={`${styles.wrapper}`}>
             <form onSubmit={this.submitHandler.bind(this)}>
                 <input type='text' id='code' maxLength='5' placeholder='Room Code' className={`${styles.input}`} autoComplete='off' onChange={this.checkRoom.bind(this)} pattern='[A-Za-z]{5}'/>
