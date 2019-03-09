@@ -687,7 +687,8 @@ method.update = async function() {
 			this.activePlayer = {
 				volume: fetchData.device.volume_percent,
 				timeLeft: fetchData.item.duration_ms - fetchData.progress_ms,
-				progress: fetchData.progress_ms,
+				progressMs: fetchData.progress_ms,
+				progress: (Math.round((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0 * 1.5)/1.5).toFixed(2),
 				isPlaying: fetchData.is_playing,
 				track: {
 					album: fetchData.item.album,
@@ -704,7 +705,7 @@ method.update = async function() {
 		if (this.activePlayer.timeLeft < 3000 && !this.isChanging) {
 			this.isChanging = true;
 			await this.play();
-		} else if (this.activePlayer.progress > 3000 && this.isChanging) {
+		} else if (this.activePlayer.progressMs > 3000 && this.activePlayer.timeLeft > 3000 && this.isChanging) {
 			console.log('INFO-[ROOM: '+this.id+']: Reset Cooldown');
 			this.isChanging = false;
 		}
