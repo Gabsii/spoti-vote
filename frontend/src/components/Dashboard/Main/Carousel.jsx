@@ -34,7 +34,7 @@ class Carousel extends Component {
             </h2>
             <div className={`${styles.tracksWrapper}`}>
                 {
-                    this.props.topTracks != null && this.props.topTracks != undefined
+                    this.props.topTracks !==null && this.props.topTracks !==undefined
                         ? this.props.topTracks.length !== 0
                             ? this.props.topTracks.items.map((track, index) => {
                                 // console.log(track);
