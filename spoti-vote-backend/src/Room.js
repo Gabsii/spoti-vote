@@ -62,6 +62,13 @@ function Room(user, room) {
 	}
 }
 
+/**
+* Returns all the changes between the last update and the current state
+*
+* @author: Michiocre
+* @param {Room} oldRoom The old status of the room
+* @returns: Changes
+*/
 method.getDifference = function(oldRoom) {
 	let update = {};
 
@@ -373,6 +380,13 @@ method.changePlaylist = async function(playlistId) {
 	return true;
 };
 
+
+/**
+* Updates all Playlists if ithey have changed (THIS LOOKS KINDA WRONG)
+*
+* @author: Michiocre
+* @return {boolean} True if completed
+*/
 method.updatePlaylists = async function() {
 	let newPlaylists = await this.fetchPlaylists();
 	let toBeRemoved = _.cloneDeep(this.user.playlists);
@@ -492,8 +506,7 @@ method.getActiveTrackById = function(id) {
 */
 method.refreshToken = async function() {
 	console.log("Before REFRESH:");
-	console.log("  - Refresh Token: " + this.user.refreshToken);
-	console.log("  - Accsess Token: " + this.user.access_token);
+	console.log("  - Access Token: " + this.user.token);
 	let authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
 		form: {
@@ -506,12 +519,9 @@ method.refreshToken = async function() {
 		json: true
 	};
 	request.post(authOptions, async (error, response, body) => {
-		this.user.access_token = body.access_token;
-		this.user.refresh_token = body.refresh_token;
-
+		this.user.token = body.access_token;
 		console.log("After REFRESH:");
-		console.log("  - Refresh Token: " + this.user.refreshToken);
-		console.log("  - Accsess Token: " + this.user.access_token);
+		console.log("  - Access Token: " + this.user.token);
 		return true;
 	});
 };
@@ -682,7 +692,8 @@ method.update = async function(isHost) {
 		if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
 			this.activePlayer = {
 				volume: fetchData.device.volume_percent,
-				progress: (Math.round((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0 * 1.5)/1.5).toFixed(2),
+				timeLeft: fetchData.item.duration_ms - fetchData.progress_ms,
+				progress: fetchData.progress_ms,
 				isPlaying: fetchData.is_playing,
 				track: {
 					album: fetchData.item.album,
@@ -696,10 +707,10 @@ method.update = async function(isHost) {
 	}
 
 	if (this.activePlayer !== null && this.activePlaylist !== null) {
-		if (this.activePlayer.progress > 98 && !this.isChanging) {
+		if (this.activePlayer.timeLeft < 3000 && !this.isChanging) {
 			this.isChanging = true;
 			await this.play();
-		} else if (this.activePlayer.progress > 5 && this.activePlayer.progress < 90 && this.isChanging) {
+		} else if (this.activePlayer.progress > 3000 && this.isChanging) {
 			console.log('INFO-[ROOM: '+this.id+']: Reset Cooldown');
 			this.isChanging = false;
 		}

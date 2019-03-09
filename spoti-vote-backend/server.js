@@ -142,11 +142,11 @@ app.get('/callback', async (req, res) => {
 	request.post(authOptions, async (error, response, body) => {
 		let uri = referer + '/dashboard';
         let user = new User(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
-
         // Set cookie
         // res.cookie('token', body.access_token, options); // options is optional
         if (await user.fetchData() == true) {
             users.push(user);
+            console.log(user);
 
             console.log('INFO-[USER: '+user.name+']: This user has logged in');
             res.redirect(uri + '?token=' + body.access_token);
