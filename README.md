@@ -1,6 +1,9 @@
 # spoti-vote
 Web application to vote for the next song in Spotify Queue
 
+[![Front‑End_Checklist followed](https://img.shields.io/badge/Front‑End_Checklist-followed-brightgreen.svg)](https://github.com/thedaviddias/Front-End-Checklist/)
+
+
 # Project Description:
 
 The idea for this project resulted as we have a Spotify class playlist with great songs we listen to in our breaks.
