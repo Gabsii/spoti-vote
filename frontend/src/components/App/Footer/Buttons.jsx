@@ -21,7 +21,6 @@ const styles = {
 class Buttons extends React.Component {
 
     render() {
-        console.log(this.props);
         return (<div className={`${styles.wrapper}`}>
             <div className={`${styles.play}`}>
                 {

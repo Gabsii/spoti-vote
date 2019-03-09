@@ -34,18 +34,20 @@ class Carousel extends Component {
             </h2>
             <div className={`${styles.tracksWrapper}`}>
                 {
-                    this.props.topTracks.length !== 0
-                        ? this.props.topTracks.items.map((track, index) => {
-                            // console.log(track);
-                            let artistString = '';
-                            for (var i = 0; i < track.artists.length; i++) {
-                                artistString += track.artists[i].name;
-                                if (i < track.artists.length - 1) {
-                                    artistString += ', ';
+                    this.props.topTracks != null && this.props.topTracks != undefined
+                        ? this.props.topTracks.length !== 0
+                            ? this.props.topTracks.items.map((track, index) => {
+                                // console.log(track);
+                                let artistString = '';
+                                for (var i = 0; i < track.artists.length; i++) {
+                                    artistString += track.artists[i].name;
+                                    if (i < track.artists.length - 1) {
+                                        artistString += ', ';
+                                    }
                                 }
-                            }
-                            return (<TopType img={track.album.images[1].url} name={track.name} artist={artistString} key={index}/>);
-                        })
+                                return (<TopType img={track.album.images[1].url} name={track.name} artist={artistString} key={index}/>);
+                            })
+                            : <Spinner/>
                         : <Spinner/>
                 }
             </div>

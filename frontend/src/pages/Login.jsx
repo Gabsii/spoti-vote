@@ -128,7 +128,10 @@ class Login extends Component {
             window.location.search = '';
         }
         document.title = 'Spoti-Vote';
-        document.getElementsByTagName('META')[2].content = 'Spoti Vote provides you with a party mode for Spotify. Let your friends choose the music!';
+        if (document.getElementsByTagName('META')[2]) {
+            document.getElementsByTagName('META')[2].content = 'Spoti Vote provides you with a party mode for Spotify. Let your friends choose the music!';
+        }
+
         var random = Math.floor((Math.random() * 3) + 1);
         switch (random) {
             case 1:

@@ -27,12 +27,20 @@ const styles = {
 class Profile extends Component {
 
     render() {
+        let img,
+            name,
+            id;
+        if (this.props.profile != null && this.props.profile != undefined) {
+            img = this.props.profile.img;
+            name = this.props.profile.name;
+            id = this.props.profile.id;
+        }
         return (<div className={`${styles.breaker}`}>
             <a>
-                <img alt='Current Playlist' src={this.props.profile.img} className={`${styles.playlistImage}`}/>
+                <img alt='Current Playlist' src={img} className={`${styles.playlistImage}`}/>
             </a>
             <div className={`${styles.hostWrapper}`}>
-                <div className={`${styles.hostName}`}>{this.props.profile.name || this.props.profile.id}
+                <div className={`${styles.hostName}`}>{name || id}
                 </div>
             </div>
         </div>);

@@ -62,8 +62,17 @@ const styles = {
 class Infos extends Component {
 
     render() {
-        let option = <div>Playlist:{' ' + this.props.activePlaylist.name}</div>;
+        let option,
+            playlistUrl,
+            playlistImage,
+            hostName,
+            hostId;
+        if (this.props.activePlaylist != null && this.props.activePlaylist != undefined) {
+            option = <div>Playlist:{' ' + this.props.activePlaylist.name}</div>;
+            playlistUrl = this.props.activePlaylist.external_urls.spotify;
+            playlistImage = this.props.activePlaylist.images[0].url;
 
+        }
         if (this.props.isHost === true) {
             option = <select style={{
                     width: '175px'
@@ -74,16 +83,23 @@ class Infos extends Component {
         }
 
         let iconColor = {};
-        if (this.props.host.voted === null) {
+        if (this.props.host === null) {
+            hostName = this.props.host.name;
+            hostId = this.props.host.id;
             iconColor.color = constants.colors.font;
         }
-        for (var j = 0; j < this.props.activeTracks.length; j++) {
-            if (this.props.activeTracks[j].id === this.props.host.voted) {
-                iconColor.color = constants.iterateCardColors(j);
+        if (this.props.activeTracks != null && this.props.activeTracks != undefined) {
+
+            for (var j = 0; j < this.props.activeTracks.length; j++) {
+                if (this.props.activeTracks[j].id === this.props.host.voted) {
+                    iconColor.color = constants.iterateCardColors(j);
+                }
             }
         }
-        if (this.props.host.voted === 'skip') {
-            iconColor.color = constants.colors.skip;
+        if (this.props.host != null && this.props.host != undefined) {
+            if (this.props.host.voted === 'skip') {
+                iconColor.color = constants.colors.skip;
+            }
         }
 
         return (<div className={`${styles.wrapper}`}>
@@ -93,12 +109,12 @@ class Infos extends Component {
             <div className={`${styles.room}`}>{option}
             </div>
             <div className={`${styles.breaker}`}>
-                <a href={this.props.activePlaylist.external_urls.spotify}>
-                    <img alt='Current Playlist' src={this.props.activePlaylist.images[0].url} className={`${styles.playlistImage}`}/>
+                <a href={playlistUrl}>
+                    <img alt='Current Playlist' src={playlistImage} className={`${styles.playlistImage}`}/>
                 </a>
                 <div className={`${styles.hostWrapper}`}>
                     <FontAwesomeIcon style={iconColor} icon={faHeadphones} size='2x'/>
-                    <div className={`${styles.hostName}`}>{this.props.host.name || this.props.host.id}
+                    <div className={`${styles.hostName}`}>{hostName || hostId}
                     </div>
                 </div>
             </div>

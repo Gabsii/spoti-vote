@@ -5,7 +5,7 @@ import swal from 'sweetalert2';
 import {css} from 'glamor';
 
 import Footer from '../components/App/Footer.jsx';
-import Sidebar from '../components/App/Sidebar.jsx';
+import AppSidebar from '../components/App/AppSidebar.jsx';
 import CardContainer from '../components/App/Cards/CardContainer.jsx';
 
 const constants = require('../js/constants');
@@ -54,7 +54,6 @@ class App extends Component {
 
     componentDidMount() {
         document.title = 'Spoti-Vote | ' + this.state.roomId;
-        document.getElementsByTagName('META')[2].content = '';
 
         //When the server asks for the id, it will return the id and the token
         this.socket.on('roomId', data => {
@@ -215,8 +214,6 @@ class App extends Component {
             }
         });
 
-        console.log(this.state);
-
         if (this.state.isHost) {
             swal({titleText: "Hello from the other side!", type: "info", text: "Please make sure that you are running Spotify in the background!", allowOutsideClick: false, allowEscapeKey: false});
         }
@@ -271,7 +268,7 @@ class App extends Component {
 
     render() {
         return (<main className={`${styles.main}`}>
-            <Sidebar skipHandler={this.skipHandler.bind(this)} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
+            <AppSidebar skipHandler={this.skipHandler.bind(this)} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
             <CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
             <Footer isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
         </main>);

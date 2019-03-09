@@ -36,7 +36,9 @@ class Join extends Component {
 
     componentDidMount() {
         document.title = 'Spoti-Vote | Join a room';
-        document.getElementsByTagName('META')[2].content = 'Join a room to fulfill your wish of musically democracy';
+        if (document.getElementsByTagName('META')[2]) {
+            document.getElementsByTagName('META')[2].content = 'Join a room to fulfill your wish of musically democracy';
+        }
     }
 
     render() {

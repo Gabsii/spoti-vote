@@ -51,15 +51,23 @@ class SkipButton extends Component {
                 cursor: 'context-menu'
             };
 
-        let users = this.props.connectedUser.length + 1;
-        let skips = 0;
-        for (let j = 0; j < this.props.connectedUser.length; j++) {
-            if (this.props.connectedUser[j].voted === 'skip') {
-                skips++;
+        let users,
+            skips;
+
+        if (this.props.connectedUser != null && this.props.connectedUser != undefined) {
+            users = this.props.connectedUser.length + 1;
+            skips = 0;
+            for (let j = 0; j < this.props.connectedUser.length; j++) {
+                if (this.props.connectedUser[j].voted === 'skip') {
+                    skips++;
+                }
             }
         }
-        if (this.props.host.voted === 'skip') {
-            skips++;
+
+        if (this.props.host != null && this.props.host != undefined) {
+            if (this.props.host.voted === 'skip') {
+                skips++;
+            }
         }
 
         return (<button className={`${styles.button}`} style={linkStyle} onClick={this.props.skipHandler} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>

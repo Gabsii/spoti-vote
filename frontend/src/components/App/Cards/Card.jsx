@@ -69,7 +69,6 @@ class Card extends Component {
     }
 
     render() {
-        const tint = this.hexToRgb(this.props.color);
         let linkStyle;
         if (this.state.hover) {
             linkStyle = {
@@ -81,28 +80,56 @@ class Card extends Component {
             };
         }
 
-        let votes = this.props.randomTrack.votes;
-        if (votes === undefined || votes === 0) {
-            votes = '-';
+        //declare variables that are generated through the hexToRgb function
+
+        let redValue,
+            greenValue,
+            blueValue;
+
+        if (this.props.color != null && this.props.color != undefined) {
+            let tint = this.hexToRgb(this.props.color);
+            redValue = tint.r;
+            blueValue = tint.b;
+            greenValue = tint.g;
+
         }
 
-        let artistString = '';
-        for (var i = 0; i < this.props.randomTrack.artists.length; i++) {
-            artistString += this.props.randomTrack.artists[i].name;
-            if (i < this.props.randomTrack.artists.length - 1) {
-                artistString += ', ';
+        //declare variables that are used in the randomTrack array
+
+        let albumUrl,
+            votes,
+            id,
+            name,
+            artistString = '';
+
+        if (this.props.randomTrack != null && this.props.randomTrack != undefined) {
+            votes = this.props.randomTrack.votes || 0;
+            albumUrl = this.props.randomTrack.album.images[0].url;
+            id = this.props.randomTrack.id;
+            name = this.props.randomTrack.name;
+
+            if (votes === undefined || votes === 0) {
+                votes = '-';
             }
+
+            for (var i = 0; i < this.props.randomTrack.artists.length; i++) {
+                artistString += this.props.randomTrack.artists[i].name;
+                if (i < this.props.randomTrack.artists.length - 1) {
+                    artistString += ', ';
+                }
+            }
+
         }
 
         return (<button onMouseLeave={this.toggleHover.bind(this)} onClick={this.props.onClick} onMouseEnter={this.toggleHover.bind(this)} className={`card ${styles.button}`} style={{
                 ...linkStyle,
-                backgroundImage: 'url(' + this.props.randomTrack.album.images[0].url + ')'
-            }} id={this.props.randomTrack.id}>
+                backgroundImage: 'url(' + albumUrl || 'https://picsum.photos/640' + ')'
+            }} id={id || 0}>
             <div className={`${styles.image}`} style={{
-                    backgroundColor: 'rgba(' + tint.r + ',' + tint.g + ',' + tint.b + ',0.5)'
+                    backgroundColor: 'rgba(' + redValue + ',' + greenValue + ',' + blueValue + ',0.5)'
                 }}>
                 <div className={`${styles.wrapper}`}>
-                    <div className={`${styles.track}`}><Marquee text={this.props.randomTrack.name || '-'}/></div>
+                    <div className={`${styles.track}`}><Marquee text={name || '-'}/></div>
                     <div className={`${styles.artist}`}><Marquee text={artistString || '-'}/></div>
                     <div className={`${styles.votes}`}>{votes + ' Votes'}</div>
                 </div>

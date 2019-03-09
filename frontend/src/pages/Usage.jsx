@@ -40,7 +40,9 @@ class Usage extends Component {
             window.location.search = '';
         }
         document.title = 'Spoti-Vote | Usage';
-        document.getElementsByTagName('META')[2].content = 'Spoti Vote provides you with a party mode for Spotify. Let your friends choose the music!';
+        if (document.getElementsByTagName('META')[2]) {
+            document.getElementsByTagName('META')[2].content = 'Spoti Vote provides you with a party mode for Spotify. Let your friends choose the music!';
+        }
     }
 
     render() {

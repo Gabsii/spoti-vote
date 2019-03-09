@@ -27,17 +27,23 @@ const styles = {
 class VolumeBar extends Component {
 
     volumeHandler(event) {
-        if (event.target.value !== this.props.activePlayer.volume) {
-            this.props.socket.emit('changeVolume', {volume: event.target.value});
+        if (this.props.activePlayer != null && this.props.activePlayer != undefined) {
+            if (event.target.value !== this.props.activePlayer.volume) {
+                this.props.socket.emit('changeVolume', {volume: event.target.value});
+            }
         }
     }
 
     render() { //onChange={this.props.volumeHandler}
+        let volume;
+        if (this.props.activePlayer != null && this.props.activePlayer != undefined) {
+            volume = this.props.activePlayer.volume;
+        }
         return (<div className={`${styles.wrapper}`} id='player'>
             <FontAwesomeIcon icon={faVolumeDown} style={{
                     color: constants.colors.fontSecondary
                 }} size='lg'/>
-            <input onChange={this.volumeHandler.bind(this)} type='range' min='0' step='2' max='100' defaultValue={this.props.activePlayer.volume} id='volume' className={`${styles.slider}`}/>
+            <input onChange={this.volumeHandler.bind(this)} type='range' min='0' step='2' max='100' defaultValue={volume} id='volume' className={`${styles.slider}`}/>
             <FontAwesomeIcon icon={faVolumeUp} style={{
                     color: constants.colors.fontSecondary
                 }} size='lg'/>

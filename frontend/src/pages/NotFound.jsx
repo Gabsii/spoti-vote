@@ -27,7 +27,9 @@ class NotFound extends Component {
 
     componentDidMount() {
         document.title = 'Spoti-Vote | Join a room';
-        document.getElementsByTagName('META')[2].content = 'You should not be here! Return home';
+        if (document.getElementsByTagName('META')[2]) {
+            document.getElementsByTagName('META')[2].content = 'You should not be here! Return home';
+        }
     }
 
     render() {

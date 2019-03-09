@@ -151,14 +151,14 @@ class CardContainer extends Component {
     }
 
     render() {
-        if (this.props.activeTracks.length > 0) {
+        if (this.props.activeTracks != null && this.props.activeTracks != undefined && this.props.activeTracks.length > 0) {
             return (<main className={`${styles.tracksMain}`}>
                 {
                     this.props.activeTracks.map((track, index) => {
                         return (<Card isPhone={true} randomTrack={track} onClick={this.props.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>);
                     })
                 }
-                <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
+                <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} timeout={5000} title={this.state.notification.title || ''} options={this.state.notification.options}/>
             </main>);
         } else {
             return (<main className={`${styles.noTracksMain}`}>
@@ -172,7 +172,7 @@ class CardContainer extends Component {
                         </b>
                         as Code!</h2>
                     <ShareButton/>
-                    <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} timeout={5000} title={this.state.notification.title} options={this.state.notification.options}/>
+                    <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} timeout={5000} title={this.state.notification.title || ''} options={this.state.notification.options}/>
                 </div>
             </main>);
         }

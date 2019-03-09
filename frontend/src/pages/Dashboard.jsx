@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {css} from 'glamor';
 import Cookies from 'universal-cookie';
 
-import Sidebar from '../components/Dashboard/Sidebar.jsx';
+import DashboardSidebar from '../components/Dashboard/DashboardSidebar.jsx';
 import Main from '../components/Dashboard/Main.jsx';
 
 const cookies = new Cookies();
@@ -41,7 +41,6 @@ class Dashboard extends Component {
         //Gets rid of the search in window.location
         var myNewURL = window.location.protocol + '//' + window.location.hostname + window.location.pathname;
         window.history.pushState({}, document.title, myNewURL)
-        console.log(myNewURL);
 
         this.fetchProfileData(token);
         this.fetchTopTracks(token);
@@ -66,7 +65,8 @@ class Dashboard extends Component {
             } else if (response.error.status === 401) {
                 window.location.href = constants.config.url + '/login';
             }
-        });
+        }).catch((err) => console.log(err));
+
     }
 
     // asynchronously fetch all the comments for the current post and add it to the comments array in the state
@@ -85,12 +85,13 @@ class Dashboard extends Component {
             } else if (response.error.status === 401) {
                 window.location.href = constants.config.url + '/login';
             }
-        });
+        }).catch((err) => console.log(err));
+
     }
 
     render() {
         return (<div className={`${styles.main}`}>
-            <Sidebar profile={this.state.profile}/>
+            <DashboardSidebar profile={this.state.profile}/>
             <Main topTracks={this.state.topTracks} profile={this.state.profile}/>
         </div>);
     }

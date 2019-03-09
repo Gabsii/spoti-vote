@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
 
-import Profile from './Sidebar/Profile.jsx';
-import Settings from './Sidebar/Settings.jsx';
+import Profile from './DashboardSidebar/Profile.jsx';
+import Settings from './DashboardSidebar/Settings.jsx';
 
 let constants = require('../../js/constants');
 const styles = {
@@ -26,7 +26,7 @@ const styles = {
     })
 };
 
-class Sidebar extends Component {
+class DashboardSidebar extends Component {
 
     render() {
         return (<header id='sidebar' className={`${styles.wrapper}`}>
@@ -36,4 +36,4 @@ class Sidebar extends Component {
     }
 }
 
-export default Sidebar;
+export default DashboardSidebar;
