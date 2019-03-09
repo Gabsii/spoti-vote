@@ -28,6 +28,8 @@ class Dashboard extends Component {
     componentDidMount() {
         let token = cookies.get('token');
 
+        console.log(token);
+
         if (token === undefined) {
             token = window.location.search.split('=')[1];
         }
@@ -37,6 +39,8 @@ class Dashboard extends Component {
         } else {
             cookies.set('token', token);
         }
+
+        console.log(token);
 
         //Gets rid of the search in window.location
         var myNewURL = window.location.protocol + '//' + window.location.hostname + window.location.pathname;
@@ -54,12 +58,19 @@ class Dashboard extends Component {
             }
         }).then(response => response.json()).then(response => {
             if (response.error === undefined) {
-
+                console.log(response);
+                let premium;
+                if (response.product === "premium") {
+                    premium = true;
+                } else {
+                    premium = false;
+                }
                 this.setState({
                     profile: {
                         name: response.display_name,
                         id: response.id,
-                        img: response.images[0].url || 'https://via.placeholder.com/152x152'
+                        img: response.images[0].url || 'https://via.placeholder.com/152x152',
+                        premium: premium
                     }
                 });
             } else if (response.error.status === 401) {
