@@ -28,8 +28,6 @@ class Dashboard extends Component {
     componentDidMount() {
         let token = cookies.get('token');
 
-        console.log(token);
-
         if (token === undefined) {
             token = window.location.search.split('=')[1];
         }
@@ -39,8 +37,6 @@ class Dashboard extends Component {
         } else {
             cookies.set('token', token);
         }
-
-        console.log(token);
 
         //Gets rid of the search in window.location
         var myNewURL = window.location.protocol + '//' + window.location.hostname + window.location.pathname;

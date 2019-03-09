@@ -28,7 +28,7 @@ const styles = {
 const NavItem = (props) => {
 
     return (<li className={`${styles.item}`}>
-        <a className={`${styles.link}`} href={this.props.href}>{this.props.name}</a>
+        <a className={`${styles.link}`} href={props.href}>{props.name}</a>
     </li>);
 }
 

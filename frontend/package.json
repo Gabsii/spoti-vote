@@ -33,7 +33,7 @@
     "glamor": "^2.20.40",
     "html-webpack-plugin": "2.29.0",
     "ip": "^1.1.5",
-    "jest": "20.0.4",
+    "jest": "^24.3.1",
     "npm": "^5.8.0",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
@@ -79,6 +79,9 @@
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,mjs}",
       "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,mjs}"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/(build|docs|node_modules)/"
     ],
     "testEnvironment": "node",
     "testURL": "http://localhost",

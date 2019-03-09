@@ -89,16 +89,18 @@ class Logins extends Component {
         return (<div className={`${styles.wrapper}`}>
             <h1 className={`${styles.heading}`}>Create a Room:</h1>
             {
-                this.props.profile.premium
-                    ? <button id='loginbutton' className={`${styles.button}`} onClick={this.login.bind(this)} tabIndex='0'>
-                            Host
-                        </button>
-                    : <div className={`${styles.buttonWrapper}`}>
-                            <button className={`${styles.buttonDisabled}`} onClick={this.login.bind(this)} tabIndex='0' disabled="disabled">
+                this.props.profile !== null && this.props.profile !== undefined
+                    ? this.props.profile.premium
+                        ? <button id='loginbutton' className={`${styles.button}`} onClick={this.login.bind(this)} tabIndex='0'>
                                 Host
                             </button>
-                            <div className={`${styles.error}`}>You need Spotify Premium to host a room!</div>
-                        </div>
+                        : <div className={`${styles.buttonWrapper}`}>
+                                <button className={`${styles.buttonDisabled}`} onClick={this.login.bind(this)} tabIndex='0' disabled="disabled">
+                                    Host
+                                </button>
+                                <div className={`${styles.error}`}>You need Spotify Premium to host a room!</div>
+                            </div>
+                    : ''
             }
 
             <h2 className={`${styles.subHeading}`}>Or join one:</h2>
