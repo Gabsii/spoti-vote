@@ -214,6 +214,12 @@ class App extends Component {
                 });
             }
         });
+
+        console.log(this.state);
+
+        if (this.state.isHost) {
+            swal({titleText: "Hello from the other side!", type: "info", text: "Please make sure that you are running Spotify in the background!", allowOutsideClick: false, allowEscapeKey: false});
+        }
     }
 
     selectPlaylist(event) {
