@@ -146,7 +146,6 @@ app.get('/callback', async (req, res) => {
         // res.cookie('token', body.access_token, options); // options is optional
         if (await user.fetchData() == true) {
             users.push(user);
-            console.log(user);
 
             console.log('INFO-[USER: '+user.name+']: This user has logged in');
             res.redirect(uri + '?token=' + body.access_token);
