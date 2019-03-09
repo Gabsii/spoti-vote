@@ -1,16 +1,29 @@
 {
   "name": "spoti-vote-backend",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
-    "test": "eslint ./src && eslint server.js",
-    "start": "node server.js"
+    "test": "jest --watch",
+    "start": "node src/server.js"
   },
+  "jest": {
+	  "projects": [
+        {
+          "displayName": "test"
+        },
+        {
+          "runner": "jest-runner-eslint",
+          "displayName": "lint",
+          "testMatch": ["<rootDir>/src/**/*.js"]
+        }
+      ]
+},
   "dependencies": {
     "body-parser": "^1.18.2",
     "cookie-parser": "^1.4.4",
     "deep-equal": "^1.0.1",
     "express": "^4.16.4",
+    "helmet-csp": "^2.7.1",
     "ip": "^1.1.5",
     "lodash": "^4.17.11",
     "node-fetch": "^2.3.0",
@@ -21,6 +34,9 @@
   },
   "devDependencies": {
     "eslint": "^5.15.1",
+    "eslint-plugin-jest": "^22.3.0",
+    "jest": "^24.3.1",
+    "jest-runner-eslint": "^0.7.3",
     "nodemon": "^1.18.10"
   }
 }

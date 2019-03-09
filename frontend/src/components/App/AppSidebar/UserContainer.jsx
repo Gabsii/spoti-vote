@@ -27,7 +27,7 @@ const styles = {
 class UserContainer extends Component {
 
     render() {
-        if (this.props.connectedUser != null && this.props.connectedUser != undefined) {
+        if (this.props.connectedUser !==null && this.props.connectedUser !==undefined) {
             for (var i = 0; i < this.props.connectedUser.length; i++) {
                 if (this.props.connectedUser[i].voted === null) {
                     this.props.connectedUser[i].color = constants.colors.font;
@@ -47,7 +47,7 @@ class UserContainer extends Component {
             <div className={`${styles.title}`}>Users</div>
             <div>
                 {
-                    this.props.connectedUser != null && this.props.connectedUser != undefined
+                    this.props.connectedUser !==null && this.props.connectedUser !==undefined
                         ? this.props.connectedUser.map(function(user, index) {
                             return (<User voteColor={user.color} key={index} name={user.name}/>);
                         })

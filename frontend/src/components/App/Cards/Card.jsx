@@ -86,7 +86,7 @@ class Card extends Component {
             greenValue,
             blueValue;
 
-        if (this.props.color != null && this.props.color != undefined) {
+        if (this.props.color !== null && this.props.color !== undefined) {
             let tint = this.hexToRgb(this.props.color);
             redValue = tint.r;
             blueValue = tint.b;
@@ -96,13 +96,13 @@ class Card extends Component {
 
         //declare variables that are used in the randomTrack array
 
-        let albumUrl,
+        let albumUrl = 'https://picsum.photos/640',
             votes,
             id,
             name,
             artistString = '';
 
-        if (this.props.randomTrack != null && this.props.randomTrack != undefined) {
+        if (this.props.randomTrack !== null && this.props.randomTrack !== undefined) {
             votes = this.props.randomTrack.votes || 0;
             albumUrl = this.props.randomTrack.album.images[0].url;
             id = this.props.randomTrack.id;
@@ -123,7 +123,7 @@ class Card extends Component {
 
         return (<button onMouseLeave={this.toggleHover.bind(this)} onClick={this.props.onClick} onMouseEnter={this.toggleHover.bind(this)} className={`card ${styles.button}`} style={{
                 ...linkStyle,
-                backgroundImage: 'url(' + albumUrl || 'https://picsum.photos/640' + ')'
+                backgroundImage: 'url(' + albumUrl + ')'
             }} id={id || 0}>
             <div className={`${styles.image}`} style={{
                     backgroundColor: 'rgba(' + redValue + ',' + greenValue + ',' + blueValue + ',0.5)'

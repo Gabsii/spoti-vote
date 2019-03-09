@@ -18,44 +18,24 @@ const styles = {
         whiteSpace: 'normal',
         backgroundColor: constants.colors.green,
         marginTop: '1.5em',
+        cursor: 'context-menu',
         '@media(min-width: 760px)': {
             marginRight: '2em'
+        },
+        ':hover': {
+            cursor: 'pointer',
+            backgroundColor: constants.colors.greenHover
         }
     })
 };
 
 class LoginButton extends Component {
-
-    constructor() {
-        super();
-        this.state = {
-            hover: false
-        };
-    }
-
-    toggleHover() {
-        this.setState({
-            hover: !this.state.hover
-        });
-    }
-
     login() {
         window.location.href = constants.config.url + '/login';
     }
 
     render() {
-        let linkStyle;
-        if (this.state.hover) {
-            linkStyle = {
-                cursor: 'pointer',
-                backgroundColor: constants.colors.greenHover
-            };
-        } else {
-            linkStyle = {
-                cursor: 'context-menu'
-            };
-        }
-        return (<button style={linkStyle} id='loginbutton' className={`${styles.button}`} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} onClick={this.login.bind(this)} tabIndex='0'>
+        return (<button id='loginbutton' className={`${styles.button}`} onClick={this.login.bind(this)} tabIndex='0'>
             Login
         </button>);
     }

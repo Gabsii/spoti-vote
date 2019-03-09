@@ -1,7 +1,7 @@
 {
   "version": 2,
   "name": "build",
-  "alias": ["www.spoti-vote.com"],
+  "alias": ["www.spoti-vote.com", "spoti-vote.com"],
   "routes": [
     {
       "src": "/(.*)",

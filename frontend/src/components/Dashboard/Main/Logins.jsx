@@ -27,12 +27,43 @@ const styles = {
         whiteSpace: 'normal',
         backgroundColor: constants.colors.green,
         marginTop: '1.5em',
+        cursor: 'context-menu',
         '@media(min-width: 760px)': {
             marginRight: '2em'
+        },
+        ':hover': {
+            cursor: 'pointer',
+            backgroundColor: constants.colors.greenHover
+        }
+    }),
+    buttonWrapper: css({display: 'flex', flexDirection: 'column'}),
+    buttonDisabled: css({
+        padding: '17px 48px',
+        fontSize: '0.9em',
+        lineHeight: 1,
+        borderRadius: '500px',
+        borderWidth: 0,
+        letterSpacing: '2px',
+        minWidth: '160px',
+        maxHeight: '50px',
+        textTransform: 'uppercase',
+        whiteSpace: 'normal',
+        color: 'black',
+        backgroundColor: constants.colors.fontSecondary,
+        marginTop: '1.5em',
+        cursor: 'context-menu',
+        '@media(min-width: 760px)': {
+            marginRight: '2em'
+        },
+        ':hover': {
+            color: 'white',
+            cursor: 'pointer',
+            backgroundColor: constants.colors.barBackground
         }
     }),
     heading: css({fontSize: '2.5em'}),
-    subHeading: css({fontSize: '1.5em', marginTop: '25px'})
+    subHeading: css({fontSize: '1.5em', marginTop: '25px'}),
+    error: css({fontWeight: 'bold', color: constants.colors.redCard})
 };
 
 class Logins extends Component {
@@ -55,23 +86,23 @@ class Logins extends Component {
     }
 
     render() {
-        let linkStyle;
-        if (this.state.hover) {
-            linkStyle = {
-                cursor: 'pointer',
-                backgroundColor: constants.colors.greenHover
-            };
-        } else {
-            linkStyle = {
-                cursor: 'context-menu'
-            };
-        }
-
         return (<div className={`${styles.wrapper}`}>
             <h1 className={`${styles.heading}`}>Create a Room:</h1>
-            <button style={linkStyle} id='loginbutton' className={`${styles.button}`} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)} onClick={this.login.bind(this)} tabIndex='0'>
-                Host
-            </button>
+            {
+                this.props.profile !== null && this.props.profile !== undefined
+                    ? this.props.profile.premium
+                        ? <button id='loginbutton' className={`${styles.button}`} onClick={this.login.bind(this)} tabIndex='0'>
+                                Host
+                            </button>
+                        : <div className={`${styles.buttonWrapper}`}>
+                                <button className={`${styles.buttonDisabled}`} onClick={this.login.bind(this)} tabIndex='0' disabled="disabled">
+                                    Host
+                                </button>
+                                <div className={`${styles.error}`}>You need Spotify Premium to host a room!</div>
+                            </div>
+                    : ''
+            }
+
             <h2 className={`${styles.subHeading}`}>Or join one:</h2>
             <LoginCode/>
         </div>);

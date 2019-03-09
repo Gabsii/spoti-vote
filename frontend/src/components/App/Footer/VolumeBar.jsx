@@ -27,7 +27,7 @@ const styles = {
 class VolumeBar extends Component {
 
     volumeHandler(event) {
-        if (this.props.activePlayer != null && this.props.activePlayer != undefined) {
+        if (this.props.activePlayer !==null && this.props.activePlayer !==undefined) {
             if (event.target.value !== this.props.activePlayer.volume) {
                 this.props.socket.emit('changeVolume', {volume: event.target.value});
             }
@@ -36,7 +36,7 @@ class VolumeBar extends Component {
 
     render() { //onChange={this.props.volumeHandler}
         let volume;
-        if (this.props.activePlayer != null && this.props.activePlayer != undefined) {
+        if (this.props.activePlayer !==null && this.props.activePlayer !==undefined) {
             volume = this.props.activePlayer.volume;
         }
         return (<div className={`${styles.wrapper}`} id='player'>

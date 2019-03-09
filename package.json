@@ -8,7 +8,9 @@
     "install": "npm run install-ui && npm run install-backend",
     "start": "concurrently --kill-others-on-fail \"npm run start-ui\" \"npm run start-backend\"",
     "start-ui": "cd frontend && npm start",
-    "start-backend": "cd backend && node server.js"
+    "start-backend": "cd backend && nodemon server.js",
+    "test-ui": "cd frontend && npm test",
+    "test-backend": "cd backend && npm test"
   },
   "cacheDirectories": [
     "node_modules",

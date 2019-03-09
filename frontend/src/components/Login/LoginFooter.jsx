@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {css} from 'glamor';
 
 let constants = require('../../js/constants');
@@ -16,17 +16,14 @@ const styles = {
     link: css({color: 'white', textDecoration: 'none'})
 };
 
-class LoginFooter extends Component {
+const LoginFooter = (props) => {
 
-    render() {
-
-        return (<footer className={`${styles.footer}`}>Help us to keep Spoti-Vote running
-            <br/>
-            &copy; Lukas Gabsi, Michael Blank
-            <br/>
-            <a href="/policies" className={`${styles.link}`}>Policies</a>
-        </footer>);
-    }
+    return (<footer className={`${styles.footer}`}>Help us to keep Spoti-Vote running
+        <br/>
+        &copy; Lukas Gabsi, Michael Blank
+        <br/>
+        <a href="/policies" className={`${styles.link}`}>Policies</a>
+    </footer>);
 }
 
 export default LoginFooter;

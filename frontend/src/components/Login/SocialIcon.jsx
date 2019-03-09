@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {css} from 'glamor';
 
@@ -16,16 +16,13 @@ const styles = {
     })
 };
 
-class SocialIcon extends Component {
+const SocialIcon = (props) => {
 
-    render() {
-
-        return (<a href={this.props.url} className={`${styles.link}`}>
-            <div className={`${styles.wrapper}`}>
-                <FontAwesomeIcon icon={this.props.icon} size='4x'/>
-            </div>
-        </a>);
-    }
+    return (<a href={props.url} className={`${styles.link}`}>
+        <div className={`${styles.wrapper}`}>
+            <FontAwesomeIcon icon={props.icon} size='4x'/>
+        </div>
+    </a>);
 }
 
 export default SocialIcon;

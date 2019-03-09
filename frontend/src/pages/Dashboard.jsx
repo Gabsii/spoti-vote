@@ -54,12 +54,19 @@ class Dashboard extends Component {
             }
         }).then(response => response.json()).then(response => {
             if (response.error === undefined) {
-
+                console.log(response);
+                let premium;
+                if (response.product === "premium") {
+                    premium = true;
+                } else {
+                    premium = false;
+                }
                 this.setState({
                     profile: {
                         name: response.display_name,
                         id: response.id,
-                        img: response.images[0].url || 'https://via.placeholder.com/152x152'
+                        img: response.images[0].url || 'https://via.placeholder.com/152x152',
+                        premium: premium
                     }
                 });
             } else if (response.error.status === 401) {
