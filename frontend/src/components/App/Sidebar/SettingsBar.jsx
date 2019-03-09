@@ -44,10 +44,10 @@ class SettingsBar extends Component {
         if (this.props.isHost === true) {
             if (window.confirm('This will close the room, are you sure?')) {
                 this.props.socket.emit('logout');
-                window.location.pathname = '/';
+                window.location.pathname = '/dashboard';
             }
         } else {
-            window.location.pathname = '/';
+            window.location.pathname = '/dashboard';
         }
     }
 

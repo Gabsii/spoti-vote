@@ -63,6 +63,8 @@ class Dashboard extends Component {
                         img: response.images[0].url || 'https://via.placeholder.com/152x152'
                     }
                 });
+            } else if (response.error.status === 401) {
+                window.location.href = constants.config.url + '/login';
             }
         });
     }
@@ -80,6 +82,8 @@ class Dashboard extends Component {
         }).then(response => response.json()).then(response => {
             if (response.error === undefined) {
                 this.setState({topTracks: response});
+            } else if (response.error.status === 401) {
+                window.location.href = constants.config.url + '/login';
             }
         });
     }
