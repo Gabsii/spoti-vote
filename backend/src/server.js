@@ -112,12 +112,20 @@ app.get('/rooms', async (req, res) => {
 	console.log('INFO: /rooms has been called.');
 	res.setHeader('Access-Control-Allow-Origin', '*');
 
-	let roomIds = [];
+	let returnRooms = [];
 	for (var i = 0; i < rooms.length; i++) {
-		roomIds.push(rooms[i].id);
+		let roomI = {
+			roomName: rooms[i].id,
+			roomHost: rooms[i].user.name,
+			roomCover: 'https://via.placeholder.com/152x152'
+		}
+		if (rooms[i].activePlaylist !== null) {
+			roomCover: rooms[i].activePlaylist.images[0].url
+		}
+		returnRooms.push(roomI);
 	}
 
-	res.send({responseCode: constants.codes.SUCCESS, content: roomIds});
+	res.send({responseCode: constants.codes.SUCCESS, content: returnRooms});
 });
 
 /**
@@ -411,7 +419,9 @@ async function theUpdateFunction(socket) {
 
 		if (update !== null) {
 			socket.emit('update', update);
+			console.log(JSON.stringify(update).length);
 		}
+
 		socket.oldUpdate = _.cloneDeep(room);
 
 		if (socket.updateCounter.amount % 30 == 0) {

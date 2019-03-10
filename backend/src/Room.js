@@ -142,7 +142,7 @@ method.getDifference = function(oldRoom) {
 
 	} else {
 		//THIS IS FOR AN UPDATE (IF NOTHING ELSE TODO REWORK THIS)
-		if (!deepEqual(oldRoom.host, this.user)) {
+		if (!deepEqual(oldRoom.user, this.user)) {
 			update.host = {
 				voted: this.user.voted
 			};
@@ -218,47 +218,33 @@ method.getDifference = function(oldRoom) {
 			update.connectedUser = this.connectedUser;
 		}
 
-		if (!deepEqual(oldRoom.activePlayer, this.activePlayer)) {
+		if (!deepEqual(oldRoom.activePlayer, this.activePlayer) && this.activePlayer.progress !== oldRoom.activePlayer.progress) {
 			update.activePlayer = {
-				progress: 0,
-				track: {
+				progress: this.activePlayer.progress
+			};
+			if (!deepEqual(oldRoom.activePlayer.track, this.activePlayer.track)) {
+				update.activePlayer.track = {
 					name: 'Spotify isn\'t running',
 					album: {images: [{url: 'https://via.placeholder.com/75x75'}]},
 					artists: [{name: 'Start Spotify'}]
-				}
-			};
-			if (this.activePlayer !== null) {
-				update.activePlayer = {
-					progress: this.activePlayer.progress,
-					track: {
+				};
+				if (this.activePlayer.track !== null) {
+					update.activePlayer.track = {
 						name: this.activePlayer.track.name,
 						album: {images: [{url: this.activePlayer.track.album.images[0].url}]},
-					}
-				};
-				update.activePlayer.track.artists = [];
-				for (let i = 0; i < this.activePlayer.track.artists.length; i++) {
-					update.activePlayer.track.artists[i] = {
-						name: this.activePlayer.track.artists[i].name
 					};
-				}
-			}
-
-			if (oldRoom.activePlayer !== null && this.activePlayer !== null) {
-				if (deepEqual(oldRoom.activePlayer.track, this.activePlayer.track)) {
-					update.activePlayer = {
-						progress: 0
-					};
-					if (this.activePlayer !== null) {
-						update.activePlayer = {
-							progress: this.activePlayer.progress
+					update.activePlayer.track.artists = [];
+					for (let i = 0; i < this.activePlayer.track.artists.length; i++) {
+						update.activePlayer.track.artists[i] = {
+							name: this.activePlayer.track.artists[i].name
 						};
 					}
 				}
 			}
 		}
 
-		if (oldRoom.playlists !== null && this.user.playlists !== null) {
-			if (!deepEqual(oldRoom.playlists,this.user.playlists)) {
+		if (oldRoom.user.playlists !== null && this.user.playlists !== null) {
+			if (!deepEqual(oldRoom.user.playlists,this.user.playlists)) {
 				update.playlists = [];
 				for (let i = 0; i < this.user.playlists.length; i++) {
 					update.playlists.push({
@@ -270,10 +256,7 @@ method.getDifference = function(oldRoom) {
 		}
 
 	}
-
-
-
-	if ((update.host === null && update.activeTracks === null && update.activePlaylist === null && update.connectedUser === null && update.activePlayer === null && update.playlists === null) || Object.keys(update).length === 0) {
+	if ((update.host === undefined && update.activeTracks === undefined && update.activePlaylist === undefined && update.connectedUser === undefined && update.activePlayer === undefined && update.playlists === undefined) || Object.keys(update).length === 0) {
 		return null;
 	}
 	return update;
@@ -553,7 +536,7 @@ method.update = async function() {
 				volume: fetchData.device.volume_percent,
 				timeLeft: fetchData.item.duration_ms - fetchData.progress_ms,
 				progressMs: fetchData.progress_ms,
-				progress: (Math.round((fetchData.progress_ms / fetchData.item.duration_ms) * 100.0 * 1.5)/1.5).toFixed(2),
+				progress: Math.round((fetchData.progress_ms / fetchData.item.duration_ms) * 10000) / 100,
 				isPlaying: fetchData.is_playing,
 				track: {
 					album: fetchData.item.album,
