@@ -8,8 +8,9 @@ const _ = require('lodash');
 const cookieParser = require('cookie-parser');
 //Import of used files
 const constants = require('./constants');
-const Room = require('./Room');
-const User = require('./User');
+const Room = require('./Room').Room;
+const User = require('./User').User;
+const sFunctions = require('./serverFunctions.js');
 //Setup of the server
 const app = express();
 app.use(cookieParser());
@@ -34,45 +35,9 @@ let users = [];
 
 app.use(csp({
 	directives: {
-		defaultSrc: ['https:']
+		defaultSrc: ['https:', '"self"']
 	}
 }));
-
-/**
-* Return the room with the specified id
-*
-* @author: Michiocre
-* @param {string} roomId The id that identifies the room
-* @return {Room} The room object with the id of the parameter
-*/
-function getRoomById(roomId) {
-	let room = null;
-	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].id == roomId) {
-			room = rooms[i];
-			return room;
-		}
-	}
-	return null;
-}
-
-/**
-* Return the room with the specified id
-*
-* @author: Michiocre
-* @param {string} roomId The id that identifies the room
-* @return {Room} The room object with the id of the parameter
-*/
-function getUserById(id) {
-	let user = null;
-	for (var i = 0; i < users.length; i++) {
-		if (users[i].id == id) {
-			user = users[i];
-			return user;
-		}
-	}
-	return null;
-}
 
 /**
 * Login using the Spotify API (This is only a Redirect)
@@ -129,7 +94,7 @@ app.get('/callback', async (req, res) => {
 */
 app.get('/createRoom', async (req, res) => {
 	let id = req.query.id;
-	let room = new Room(getUserById(id), rooms);
+	let room = new Room(sFunctions.getUserById(id, users), rooms);
 	let uri = referer + '/app';
 
 	rooms.push(room);
@@ -181,7 +146,7 @@ io.on('connection', (socket) => {
 	* @param {string} roomId Id of the room
 	*/
 	socket.on('roomId', data => {
-		let room = getRoomById(data.roomId);
+		let room = sFunctions.getRoomById(data.roomId, rooms);
 
 		if (room !== null) {
 			socket.roomId = room.id;
@@ -261,8 +226,8 @@ io.on('connection', (socket) => {
 	* @param {boolean} roomId Id of the old room
 	*/
 	socket.on('twoRooms', data => {
-		let oldRoom = getRoomById(data.roomId);
-		let room = getRoomById(socket.roomId);
+		let oldRoom = sFunctions.getRoomById(data.roomId, rooms);
+		let room = sFunctions.getRoomById(socket.roomId, rooms);
 		if (data.value === true) {
 			console.log('INFO-[ROOM: ' + oldRoom.id + ']: This room has been deleted due to host creating a new one.');
 			rooms.splice(rooms.indexOf(oldRoom), 1);
@@ -317,7 +282,7 @@ io.on('connection', (socket) => {
 	* @param {string} name Name of the user
 	*/
 	socket.on('nameEvent', data => {
-		let room = getRoomById(socket.roomId);
+		let room = sFunctions.getRoomById(socket.roomId, rooms);
 		if (room !== null) {
 			if (room.getUserNames().includes(data.name) == true) {
 				socket.emit('nameEvent', {title: 'This name is already taken, enter a different name.'});
@@ -346,7 +311,7 @@ io.on('connection', (socket) => {
 	* @param {int} volume Volume in percent
 	*/
 	socket.on('changeVolume', data => {
-		let room = getRoomById(socket.roomId);
+		let room = sFunctions.getRoomById(socket.roomId, rooms);
 		if (room !== null) {
 			console.log('INFO-[ROOM: ' + socket.roomId + ']: Volume changed to [' + data.volume + '].');
 			room.changeVolume(data.volume);
@@ -360,7 +325,7 @@ io.on('connection', (socket) => {
 	* @param {string} playlistId Id of the Playlist
 	*/
 	socket.on('changePlaylist', data => {
-		let room = getRoomById(socket.roomId);
+		let room = sFunctions.getRoomById(socket.roomId, rooms);
 		if (room !== null) {
 			room.changePlaylist(data.playlistId);
 		} else {
@@ -373,7 +338,7 @@ io.on('connection', (socket) => {
 	* @param {string} trackId Id of the track
 	*/
 	socket.on('vote', data => {
-		let room = getRoomById(socket.roomId);
+		let room = sFunctions.getRoomById(socket.roomId, rooms);
 		if (room !== null) {
 			console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] voted for [' + data.trackId + '].');
 			room.vote(data.trackId, socket.isHost, socket.name);
@@ -389,8 +354,8 @@ io.on('connection', (socket) => {
 	/**
 	* Called when the host wants to close the room
 	*/
-	socket.on('logout', function() {
-		let room = getRoomById(socket.roomId);
+	socket.on('logout', () => {
+		let room = sFunctions.getRoomById(socket.roomId, rooms);
 		if (room !== null) {
 			console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted by host.');
 			rooms.splice(rooms.indexOf(room), 1);
@@ -403,7 +368,7 @@ io.on('connection', (socket) => {
 	* Called when a connection is closed
 	*/
 	socket.on('disconnect', () => {
-		let room = getRoomById(socket.roomId);
+		let room = sFunctions.getRoomById(socket.roomId, rooms);
 
 		clearInterval(updateInterval);
 		if (room !== null) {
@@ -427,7 +392,7 @@ io.on('connection', (socket) => {
 * @param {socket} socket The socket object passed down from the call
 */
 async function theUpdateFunction(socket) {
-	let room = getRoomById(socket.roomId);
+	let room = sFunctions.getRoomById(socket.roomId, rooms);
 
 	socket.updateCounter.amount += 1;
 

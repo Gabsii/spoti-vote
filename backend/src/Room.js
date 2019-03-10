@@ -384,7 +384,7 @@ method.changePlaylist = async function(playlistId) {
 * @return {boolean} True if completed
 */
 method.updatePlaylists = async function() {
-	let newPlaylists = await this.fetchPlaylists();
+	let newPlaylists = await this.user.fetchPlaylists();
 	let toBeRemoved = _.cloneDeep(this.user.playlists);
 
 	for (let i = 0; i < newPlaylists.length; i++) {
@@ -431,7 +431,7 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
 	let playlist = this.getPlaylistById(playlistId);
 	//Load tracks into Playlist if its empty
 	if (!Array.isArray(playlist.tracks)) {
-		playlist.tracks = await this.fetchPlaylistTracks(playlist);
+		playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
 	}
 
 	if (activeTrack === null || activeTrack === undefined) {
@@ -517,141 +517,6 @@ method.refreshToken = async function() {
 		console.log('  - Access Token: ' + this.user.token);
 		return true;
 	});
-};
-
-/**
-* Fetches the data of the host, and all his playlists
-*
-* @author: Michiocre
-* @return: boolean if completed successfull
-*/
-method.fetchData = async function() {
-	let hostRequest = await fetch('https://api.spotify.com/v1/me', {
-		headers: {
-			'Authorization': 'Bearer ' + this.user.token
-		}
-	});
-	let hostRequestData = await hostRequest.json();
-
-	if (hostRequestData.error !== undefined){
-		return false;
-	}
-
-	if (hostRequestData.images[0] !== undefined && hostRequestData.images[0] !== null) {
-		this.user.img = hostRequestData.images[0].url;
-	}
-
-	this.user.name = hostRequestData.display_name || hostRequestData.id;
-	this.user.id = hostRequestData.id;
-	this.user.profileUrl = hostRequestData.external_urls.spotify;
-	this.user.country = hostRequestData.country;
-
-	this.user.playlists = await this.fetchPlaylists();
-
-	return true;
-};
-
-/**
-* Fetches all the playlists of a user
-*
-* @author: Michiocre
-* @return: array All the playlists
-*/
-method.fetchPlaylists = async function() {
-	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
-		headers: {
-			'Authorization': 'Bearer ' + this.user.token
-		}
-	});
-
-	let playlistRequestData = await playlistRequest.json();
-	let next = playlistRequestData.next;
-
-	let playlists = playlistRequestData.items;
-
-	while (next !== null && next !== undefined) {
-		playlistRequest = await fetch(next, {
-			headers: {
-				'Authorization': 'Bearer ' + this.user.token
-			}
-		});
-
-		playlistRequestData = await playlistRequest.json();
-		next = playlistRequestData.next;
-
-		playlists = playlists.concat(playlistRequestData.items);
-	}
-
-	let returnPlaylists = [];
-
-	for (var i = 0; i < playlists.length; i++) {
-		if (playlists[i].tracks.total > 5) {
-			returnPlaylists.push(playlists[i]);
-		}
-	}
-	return returnPlaylists;
-};
-
-method.fetchPlaylistTracks = async function(playlist) {
-	let trackRequest = await fetch(playlist.href + '/tracks?market='+this.user.country+'&fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal', {
-		headers: {
-			'Authorization': 'Bearer ' + this.user.token
-		}
-	});
-
-	let trackRequestData = await trackRequest.json();
-	let next = trackRequestData.next;
-
-	let tracks = trackRequestData.items;
-
-	while (next !== null) {
-		trackRequest = await fetch(next, {
-			headers: {
-				'Authorization': 'Bearer ' + this.user.token
-			}
-		});
-
-		trackRequestData = await trackRequest.json();
-		next = trackRequestData.next;
-
-		tracks = tracks.concat(trackRequestData.items);
-	}
-
-	let returnTracks = [];
-	for (var i = 0; i < tracks.length; i++) {
-		if (tracks[i].track.is_playable === true) {
-			returnTracks.push(tracks[i]);
-		}
-	}
-
-	return returnTracks;
-};
-
-/**
-* Recursive function, in each iteration it will get up to 100 tracks of the playlist, and if there are more to get it will also return the url for the next batch of up to 100 tracks
-* Each iteration will return these tracks, and concat the array of tracks with the array of tracks from the next batch. In the end it will return all tracks in the playlist
-*
-* @author: Michiocre
-* @param {string} next URL to the spotify API to get Tracks from a playlist
-* @return {array} Array of all the track objects
-*/
-method.loadOneBatch = async function(next) {
-	let request = await fetch(next, {
-		headers: {
-			'Authorization': 'Bearer ' + this.user.token
-		}
-	});
-	let fetchData = await request.json();
-	next = fetchData.next;
-
-	let tracks;
-	if (next !== null) {
-		let prevTracks = await this.loadOneBatch(next);
-		tracks = fetchData.items.concat(prevTracks);
-	} else {
-		tracks = fetchData.items;
-	}
-	return tracks;
 };
 
 /**
@@ -858,4 +723,4 @@ method.changeVolume = async function(volume) {
 	return true;
 };
 
-module.exports = Room;
+module.exports = {Room: Room};
