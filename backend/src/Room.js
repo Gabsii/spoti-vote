@@ -17,7 +17,6 @@ function makeid(length) {
 	let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; //ALl possible symbols
 	for (let i = 0; i < length; i++)
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
-
 	return text;
 }
 
@@ -285,6 +284,9 @@ method.getUserNames = function() {
 * @return {object} The user object
 */
 method.getUserByName = function(name) {
+	if (name == this.user.name) {
+		return this.user;
+	}
 	for (let i = 0; i < this.connectedUser.length; i++) {
 		if (this.connectedUser[i].name == name) {
 			return this.connectedUser[i];
@@ -304,6 +306,7 @@ method.addUser = function(name) {
 		name: name,
 		voted: null
 	});
+	return true;
 };
 
 /**
@@ -314,14 +317,17 @@ method.addUser = function(name) {
 */
 method.removeUser = function(name) {
 	let user = this.getUserByName(name);
-	let i = this.connectedUser.indexOf(user);
-	if (i >= 0) {
-		if (user.voted !== null && user.voted !== 'skip') {
-			let track = this.getActiveTrackById(user.voted);
-			track.votes -= 1;
+	if (user !== null) {
+		let i = this.connectedUser.indexOf(user);
+		if (i >= 0) {
+			if (user.voted !== null && user.voted !== 'skip') {
+				let track = this.getActiveTrackById(user.voted);
+				track.votes -= 1;
+			}
+			this.connectedUser.splice(i,1);
 		}
-		this.connectedUser.splice(i,1);
 	}
+	return user;
 };
 
 /**
@@ -706,4 +712,4 @@ method.changeVolume = async function(volume) {
 	return true;
 };
 
-module.exports = {Room: Room};
+module.exports = {Room: Room, makeid: makeid};
