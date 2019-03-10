@@ -7,17 +7,19 @@
     "start": "node src/server.js"
   },
   "jest": {
-	  "projects": [
-        {
-          "displayName": "test"
-        },
-        {
-          "runner": "jest-runner-eslint",
-          "displayName": "lint",
-          "testMatch": ["<rootDir>/src/**/*.js"]
-        }
-      ]
-},
+    "projects": [
+      {
+        "displayName": "test"
+      },
+      {
+        "runner": "jest-runner-eslint",
+        "displayName": "lint",
+        "testMatch": [
+          "<rootDir>/src/**/*.js"
+        ]
+      }
+    ]
+  },
   "dependencies": {
     "body-parser": "^1.18.2",
     "cookie-parser": "^1.4.4",
