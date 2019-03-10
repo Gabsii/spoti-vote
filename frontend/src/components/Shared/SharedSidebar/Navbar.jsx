@@ -1,0 +1,95 @@
+import React, {Component} from 'react';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import {faSignOutAlt, faUsers, faHome} from '@fortawesome/fontawesome-free-solid';
+import Cookies from 'universal-cookie';
+import {css} from 'glamor';
+
+let constants = require('../../../js/constants');
+const cookies = new Cookies();
+const styles = {
+    wrapper: css({
+        width: '100%',
+        minWidth: 0,
+        boxSizing: 'border-box',
+        padding: '4px 16px',
+        display: 'flex',
+        marginTop: '10px',
+        alignItems: 'center',
+        textAlign: 'center',
+        color: constants.colors.backgroundLite,
+        justifyContent: 'space-between',
+        '@media(min-width: 760px)': {
+            flexDirection: 'column',
+            marginTop: '25px',
+            color: constants.colors.fontSecondary,
+            marginBottom: 'auto',
+            ':hover': {
+                color: constants.colors.fontSecondary
+            }
+        },
+        ':hover': {
+            color: constants.colors.fontSecondary
+        }
+    }),
+    buttonWrapper: css({
+        display: 'flex',
+        flexDirection: 'column',
+        margin: '5px 10px 15px 10px',
+        '@media(min-width: 760px)': {
+            padding: '15px'
+        }
+    }),
+    button: css({border: 0, color: constants.colors.fontSecondary, background: 'none', paddingBottom: '5px'})
+};
+
+class SettingsBar extends Component {
+    constructor() {
+        super();
+        this.state = {
+            hover: false
+        };
+    }
+
+    toggleHover() {
+        this.setState({
+            hover: !this.state.hover
+        });
+    }
+
+    logoutHandler() {
+        if (window.confirm('Are you sure you want to log out?')) {
+            cookies.remove('token');
+            window.location = '/';
+        }
+    }
+
+    render() {
+        return (<div className={`${styles.wrapper}`}>
+            {
+                window.location.pathname === "/dashboard"
+                    ? <div className={`${styles.buttonWrapper}`}>
+                            <a className={`${styles.button}`} href="/rooms">
+                                <FontAwesomeIcon icon={faUsers} size='3x'/>
+                            </a>
+                            <span>Rooms</span>
+                        </div>
+                    : window.location.pathname === "/rooms"
+                        ? <div className={`${styles.buttonWrapper}`}>
+                                <a className={`${styles.button}`} href="/dashboard">
+                                    <FontAwesomeIcon icon={faHome} size='3x'/>
+                                </a>
+                                <span>Home</span>
+                            </div>
+                        : ""
+            }
+            <div className={`${styles.buttonWrapper}`}>
+                <button className={`${styles.button}`} onClick={this.logoutHandler.bind(this)}>
+                    <FontAwesomeIcon icon={faSignOutAlt} size='3x'/>
+                </button>
+                <span>Logout</span>
+            </div>
+        </div>);
+    }
+}
+
+export default SettingsBar;

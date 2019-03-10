@@ -1,27 +1,23 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
 
-import Profile from './DashboardSidebar/Profile.jsx';
-import Settings from './DashboardSidebar/Settings.jsx';
+import Profile from './SharedSidebar/Profile.jsx';
+import Navbar from './SharedSidebar/Navbar.jsx';
 
 let constants = require('../../js/constants');
 const styles = {
     wrapper: css({
         height: '75px',
-        width: '100vw',
-        position: 'absolute',
-        top: 0,
-        right: 0,
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
-        flexFlow: 'row',
-        color: 'white',
         backgroundColor: constants.colors.backgroundLite,
+        flexFlow: 'column',
+        color: 'white',
         borderLeft: '1px solid black',
         '@media(min-width: 760px)': {
-            height: '100vh',
             width: '200px',
-            flexFlow: 'column'
+            height: 'auto'
         }
     })
 };
@@ -29,10 +25,10 @@ const styles = {
 class DashboardSidebar extends Component {
 
     render() {
-        return (<header id='sidebar' className={`${styles.wrapper}`}>
+        return (<aside id='sidebar' className={`${styles.wrapper}`}>
             <Profile profile={this.props.profile}/>
-            <Settings/>
-        </header>);
+            <Navbar/>
+        </aside>);
     }
 }
 

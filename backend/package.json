@@ -7,22 +7,26 @@
     "start": "node src/server.js"
   },
   "jest": {
-	  "projects": [
-        {
-          "displayName": "test"
-        },
-        {
-          "runner": "jest-runner-eslint",
-          "displayName": "lint",
-          "testMatch": ["<rootDir>/src/**/*.js"]
-        }
-      ]
-},
+    "projects": [
+      {
+        "displayName": "test"
+      },
+      {
+        "runner": "jest-runner-eslint",
+        "displayName": "lint",
+        "testMatch": [
+          "<rootDir>/src/**/*.js"
+        ]
+      }
+    ]
+  },
   "dependencies": {
     "body-parser": "^1.18.2",
     "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
     "deep-equal": "^1.0.1",
     "express": "^4.16.4",
+    "helmet": "^3.15.1",
     "helmet-csp": "^2.7.1",
     "ip": "^1.1.5",
     "lodash": "^4.17.11",

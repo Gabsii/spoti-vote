@@ -5,7 +5,9 @@ const styles = {
     breaker: css({
         display: 'none',
         '@media(min-width: 760px)': {
-            display: 'block'
+            display: 'block',
+            width: '100%',
+            textAlign: 'center'
         }
     }),
     playlistImage: css({
@@ -30,7 +32,7 @@ class Profile extends Component {
         let img,
             name,
             id;
-        if (this.props.profile !==null && this.props.profile !==undefined) {
+        if (this.props.profile !== null && this.props.profile !== undefined) {
             img = this.props.profile.img;
             name = this.props.profile.name;
             id = this.props.profile.id;
