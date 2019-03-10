@@ -217,26 +217,30 @@ method.getDifference = function(oldRoom) {
 			update.connectedUser = this.connectedUser;
 		}
 
-		if (!deepEqual(oldRoom.activePlayer, this.activePlayer) && this.activePlayer.progress !== oldRoom.activePlayer.progress) {
-			update.activePlayer = {
-				progress: this.activePlayer.progress
-			};
-			if (!deepEqual(oldRoom.activePlayer.track, this.activePlayer.track)) {
-				update.activePlayer.track = {
-					name: 'Spotify isn\'t running',
-					album: {images: [{url: 'https://via.placeholder.com/75x75'}]},
-					artists: [{name: 'Start Spotify'}]
-				};
-				if (this.activePlayer.track !== null) {
-					update.activePlayer.track = {
-						name: this.activePlayer.track.name,
-						album: {images: [{url: this.activePlayer.track.album.images[0].url}]},
+		if (this.activePlayer !== null && oldRoom.activePlayer) {
+			if (!deepEqual(oldRoom.activePlayer, this.activePlayer)) {
+				if (this.activePlayer.progress !== oldRoom.activePlayer.progress) {
+					update.activePlayer = {
+						progress: this.activePlayer.progress
 					};
-					update.activePlayer.track.artists = [];
-					for (let i = 0; i < this.activePlayer.track.artists.length; i++) {
-						update.activePlayer.track.artists[i] = {
-							name: this.activePlayer.track.artists[i].name
+					if (!deepEqual(oldRoom.activePlayer.track, this.activePlayer.track)) {
+						update.activePlayer.track = {
+							name: 'Spotify isn\'t running',
+							album: {images: [{url: 'https://via.placeholder.com/75x75'}]},
+							artists: [{name: 'Start Spotify'}]
 						};
+						if (this.activePlayer.track !== null) {
+							update.activePlayer.track = {
+								name: this.activePlayer.track.name,
+								album: {images: [{url: this.activePlayer.track.album.images[0].url}]},
+							};
+							update.activePlayer.track.artists = [];
+							for (let i = 0; i < this.activePlayer.track.artists.length; i++) {
+								update.activePlayer.track.artists[i] = {
+									name: this.activePlayer.track.artists[i].name
+								};
+							}
+						}
 					}
 				}
 			}
