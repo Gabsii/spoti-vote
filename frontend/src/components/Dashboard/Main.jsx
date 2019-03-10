@@ -8,10 +8,18 @@ const constants = require('../../js/constants');
 const styles = {
     main: css({
         backgroundColor: constants.colors.background,
-        height: '100vh',
-        width: 'calc(100vw - 200px)',
+        minHeight: '100vh',
+        height: '100%',
+        width: 'calc(100% - 200px)',
         '@media(max-width: 760px)': {
-            width: '100vw'
+            width: '100%',
+            minHeight: 'calc(100% - 75px)',
+            height: 'auto',
+            position: 'absolute',
+            top: '75px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
         }
     })
 };

@@ -30,14 +30,14 @@ const styles = {
 class AppSidebar extends Component {
 
     render() {
-        return (<header id='sidebar' className={`${styles.wrapper}`}>
+        return (<aside id='sidebar' className={`${styles.wrapper}`}>
             <Infos isHost={this.props.isHost} host={this.props.host} playlistHandler={this.props.playlistHandler} activeTracks={this.props.activeTracks} activePlaylist={this.props.activePlaylist} playlists={this.props.playlists}/> {
                 this.props.isHost
                     ? <UserContainer activeTracks={this.props.activeTracks} connectedUser={this.props.connectedUser}/>
                     : ''
             }
             <SettingsBar skipHandler={this.props.skipHandler} isPhone={false} isHost={this.props.isHost} socket={this.props.socket} connectedUser={this.props.connectedUser} host={this.props.host}/>
-        </header>);
+        </aside>);
     }
 }
 

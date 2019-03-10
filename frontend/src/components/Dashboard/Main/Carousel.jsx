@@ -8,13 +8,17 @@ let constants = require('../../../js/constants');
 const styles = {
     wrapper: css({
         height: '340px',
-        position: 'relative',
+        width: 'calc(100% - 220px)',
+        position: 'absolute',
         bottom: 0,
         padding: '10px',
         backgroundColor: constants.colors.backgroundLite,
         display: 'flex',
         boxSizing: 'content-box',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        '@media(max-width: 760px)': {
+            width: 'calc(100% - 20px)'
+        }
     }),
     heading: css({
         fontSize: '1.3em',
@@ -34,7 +38,7 @@ class Carousel extends Component {
             </h2>
             <div className={`${styles.tracksWrapper}`}>
                 {
-                    this.props.topTracks !==null && this.props.topTracks !==undefined
+                    this.props.topTracks !== null && this.props.topTracks !== undefined
                         ? this.props.topTracks.length !== 0
                             ? this.props.topTracks.items.map((track, index) => {
                                 // console.log(track);

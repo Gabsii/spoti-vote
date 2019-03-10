@@ -40,6 +40,7 @@ const styles = {
             display: 'block'
         }
     }),
+    playlistName: css({marginBottom: '20px'}),
     playlistImage: css({
         height: '150px',
         width: '150px',
@@ -67,8 +68,8 @@ class Infos extends Component {
             playlistImage,
             hostName,
             hostId;
-        if (this.props.activePlaylist !==null && this.props.activePlaylist !==undefined) {
-            option = <div>Playlist:{' ' + this.props.activePlaylist.name}</div>;
+        if (this.props.activePlaylist !== null && this.props.activePlaylist !== undefined) {
+            option = <div>{this.props.activePlaylist.name}</div>;
             playlistUrl = this.props.activePlaylist.external_urls.spotify;
             playlistImage = this.props.activePlaylist.images[0].url;
 
@@ -84,11 +85,13 @@ class Infos extends Component {
 
         let iconColor = {};
         if (this.props.host === null) {
-            hostName = this.props.host.name;
-            hostId = this.props.host.id;
             iconColor.color = constants.colors.font;
         }
-        if (this.props.activeTracks !==null && this.props.activeTracks !==undefined) {
+        if (this.props.host !== null && this.props.host !== undefined) {
+            hostName = this.props.host.name;
+            hostId = this.props.host.id;
+        }
+        if (this.props.activeTracks !== null && this.props.activeTracks !== undefined) {
 
             for (var j = 0; j < this.props.activeTracks.length; j++) {
                 if (this.props.activeTracks[j].id === this.props.host.voted) {
@@ -96,7 +99,7 @@ class Infos extends Component {
                 }
             }
         }
-        if (this.props.host !==null && this.props.host !==undefined) {
+        if (this.props.host !== null && this.props.host !== undefined) {
             if (this.props.host.voted === 'skip') {
                 iconColor.color = constants.colors.skip;
             }
@@ -106,12 +109,12 @@ class Infos extends Component {
             <div className={`${styles.room}`}>Room
                 <strong>{': ' + window.location.pathname.split('/')[2]}</strong>
             </div>
-            <div className={`${styles.room}`}>{option}
-            </div>
             <div className={`${styles.breaker}`}>
                 <a href={playlistUrl}>
                     <img alt='Current Playlist' src={playlistImage} className={`${styles.playlistImage}`}/>
                 </a>
+                <div className={`${styles.playlistName}`}>{option}
+                </div>
                 <div className={`${styles.hostWrapper}`}>
                     <FontAwesomeIcon style={iconColor} icon={faHeadphones} size='2x'/>
                     <div className={`${styles.hostName}`}>{hostName || hostId}

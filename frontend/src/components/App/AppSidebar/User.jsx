@@ -20,13 +20,12 @@ const styles = {
 class User extends Component {
 
     render() {
-
         return (<div className={`${styles.wrapper}`}>
             <img alt='icon' src={icon} className={`${styles.img}`}/>
             <div className={`${styles.name}`}>
                 <Marquee text={this.props.name}/>
             </div>
-            <div className={`vote ${styles.vote}`} styles={{
+            <div className={`vote ${styles.vote}`} style={{
                     backgroundColor: this.props.voteColor
                 }}></div>
         </div>);
