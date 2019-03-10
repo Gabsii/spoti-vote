@@ -118,9 +118,9 @@ app.get('/rooms', async (req, res) => {
 			roomName: rooms[i].id,
 			roomHost: rooms[i].user.name,
 			roomCover: 'https://via.placeholder.com/152x152'
-		}
+		};
 		if (rooms[i].activePlaylist !== null) {
-			roomCover: rooms[i].activePlaylist.images[0].url
+			roomI.roomCover = rooms[i].activePlaylist.images[0].url;
 		}
 		returnRooms.push(roomI);
 	}
