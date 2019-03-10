@@ -92,7 +92,6 @@ class LoginCode extends Component {
     }
 
     render() {
-        console.log(window.location.origin);
         return (<div className={`${styles.wrapper}`}>
             <form onSubmit={this.submitHandler.bind(this)}>
                 <input type='text' id='code' maxLength='5' placeholder='Room Code' className={`${styles.input}`} autoComplete='off' onChange={this.checkRoom.bind(this)} pattern='[A-Za-z]{5}'/>
