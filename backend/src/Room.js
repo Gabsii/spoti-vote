@@ -17,7 +17,6 @@ function makeid(length) {
 	let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; //ALl possible symbols
 	for (let i = 0; i < length; i++)
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
-
 	return text;
 }
 
@@ -142,7 +141,7 @@ method.getDifference = function(oldRoom) {
 
 	} else {
 		//THIS IS FOR AN UPDATE (IF NOTHING ELSE TODO REWORK THIS)
-		if (!deepEqual(oldRoom.host, this.user)) {
+		if (!deepEqual(oldRoom.user, this.user)) {
 			update.host = {
 				voted: this.user.voted
 			};
@@ -218,47 +217,33 @@ method.getDifference = function(oldRoom) {
 			update.connectedUser = this.connectedUser;
 		}
 
-		if (!deepEqual(oldRoom.activePlayer, this.activePlayer)) {
+		if (!deepEqual(oldRoom.activePlayer, this.activePlayer) && this.activePlayer.progress !== oldRoom.activePlayer.progress) {
 			update.activePlayer = {
-				progress: 0,
-				track: {
+				progress: this.activePlayer.progress
+			};
+			if (!deepEqual(oldRoom.activePlayer.track, this.activePlayer.track)) {
+				update.activePlayer.track = {
 					name: 'Spotify isn\'t running',
 					album: {images: [{url: 'https://via.placeholder.com/75x75'}]},
 					artists: [{name: 'Start Spotify'}]
-				}
-			};
-			if (this.activePlayer !== null) {
-				update.activePlayer = {
-					progress: this.activePlayer.progress,
-					track: {
+				};
+				if (this.activePlayer.track !== null) {
+					update.activePlayer.track = {
 						name: this.activePlayer.track.name,
 						album: {images: [{url: this.activePlayer.track.album.images[0].url}]},
-					}
-				};
-				update.activePlayer.track.artists = [];
-				for (let i = 0; i < this.activePlayer.track.artists.length; i++) {
-					update.activePlayer.track.artists[i] = {
-						name: this.activePlayer.track.artists[i].name
 					};
-				}
-			}
-
-			if (oldRoom.activePlayer !== null && this.activePlayer !== null) {
-				if (deepEqual(oldRoom.activePlayer.track, this.activePlayer.track)) {
-					update.activePlayer = {
-						progress: 0
-					};
-					if (this.activePlayer !== null) {
-						update.activePlayer = {
-							progress: this.activePlayer.progress
+					update.activePlayer.track.artists = [];
+					for (let i = 0; i < this.activePlayer.track.artists.length; i++) {
+						update.activePlayer.track.artists[i] = {
+							name: this.activePlayer.track.artists[i].name
 						};
 					}
 				}
 			}
 		}
 
-		if (oldRoom.playlists !== null && this.user.playlists !== null) {
-			if (!deepEqual(oldRoom.playlists,this.user.playlists)) {
+		if (oldRoom.user.playlists !== null && this.user.playlists !== null) {
+			if (!deepEqual(oldRoom.user.playlists,this.user.playlists)) {
 				update.playlists = [];
 				for (let i = 0; i < this.user.playlists.length; i++) {
 					update.playlists.push({
@@ -270,10 +255,7 @@ method.getDifference = function(oldRoom) {
 		}
 
 	}
-
-
-
-	if ((update.host === null && update.activeTracks === null && update.activePlaylist === null && update.connectedUser === null && update.activePlayer === null && update.playlists === null) || Object.keys(update).length === 0) {
+	if ((update.host === undefined && update.activeTracks === undefined && update.activePlaylist === undefined && update.connectedUser === undefined && update.activePlayer === undefined && update.playlists === undefined) || Object.keys(update).length === 0) {
 		return null;
 	}
 	return update;
@@ -302,6 +284,9 @@ method.getUserNames = function() {
 * @return {object} The user object
 */
 method.getUserByName = function(name) {
+	if (name == this.user.name) {
+		return this.user;
+	}
 	for (let i = 0; i < this.connectedUser.length; i++) {
 		if (this.connectedUser[i].name == name) {
 			return this.connectedUser[i];
@@ -321,6 +306,7 @@ method.addUser = function(name) {
 		name: name,
 		voted: null
 	});
+	return true;
 };
 
 /**
@@ -331,14 +317,17 @@ method.addUser = function(name) {
 */
 method.removeUser = function(name) {
 	let user = this.getUserByName(name);
-	let i = this.connectedUser.indexOf(user);
-	if (i >= 0) {
-		if (user.voted !== null && user.voted !== 'skip') {
-			let track = this.getActiveTrackById(user.voted);
-			track.votes -= 1;
+	if (user !== null) {
+		let i = this.connectedUser.indexOf(user);
+		if (i >= 0) {
+			if (user.voted !== null && user.voted !== 'skip') {
+				let track = this.getActiveTrackById(user.voted);
+				track.votes -= 1;
+			}
+			this.connectedUser.splice(i,1);
 		}
-		this.connectedUser.splice(i,1);
 	}
+	return user;
 };
 
 /**
@@ -384,7 +373,7 @@ method.changePlaylist = async function(playlistId) {
 * @return {boolean} True if completed
 */
 method.updatePlaylists = async function() {
-	let newPlaylists = await this.fetchPlaylists();
+	let newPlaylists = await this.user.fetchPlaylists();
 	let toBeRemoved = _.cloneDeep(this.user.playlists);
 
 	for (let i = 0; i < newPlaylists.length; i++) {
@@ -431,7 +420,7 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
 	let playlist = this.getPlaylistById(playlistId);
 	//Load tracks into Playlist if its empty
 	if (!Array.isArray(playlist.tracks)) {
-		playlist.tracks = await this.fetchPlaylistTracks(playlist);
+		playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
 	}
 
 	if (activeTrack === null || activeTrack === undefined) {
@@ -520,141 +509,6 @@ method.refreshToken = async function() {
 };
 
 /**
-* Fetches the data of the host, and all his playlists
-*
-* @author: Michiocre
-* @return: boolean if completed successfull
-*/
-method.fetchData = async function() {
-	let hostRequest = await fetch('https://api.spotify.com/v1/me', {
-		headers: {
-			'Authorization': 'Bearer ' + this.user.token
-		}
-	});
-	let hostRequestData = await hostRequest.json();
-
-	if (hostRequestData.error !== undefined){
-		return false;
-	}
-
-	if (hostRequestData.images[0] !== undefined && hostRequestData.images[0] !== null) {
-		this.user.img = hostRequestData.images[0].url;
-	}
-
-	this.user.name = hostRequestData.display_name || hostRequestData.id;
-	this.user.id = hostRequestData.id;
-	this.user.profileUrl = hostRequestData.external_urls.spotify;
-	this.user.country = hostRequestData.country;
-
-	this.user.playlists = await this.fetchPlaylists();
-
-	return true;
-};
-
-/**
-* Fetches all the playlists of a user
-*
-* @author: Michiocre
-* @return: array All the playlists
-*/
-method.fetchPlaylists = async function() {
-	let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
-		headers: {
-			'Authorization': 'Bearer ' + this.user.token
-		}
-	});
-
-	let playlistRequestData = await playlistRequest.json();
-	let next = playlistRequestData.next;
-
-	let playlists = playlistRequestData.items;
-
-	while (next !== null && next !== undefined) {
-		playlistRequest = await fetch(next, {
-			headers: {
-				'Authorization': 'Bearer ' + this.user.token
-			}
-		});
-
-		playlistRequestData = await playlistRequest.json();
-		next = playlistRequestData.next;
-
-		playlists = playlists.concat(playlistRequestData.items);
-	}
-
-	let returnPlaylists = [];
-
-	for (var i = 0; i < playlists.length; i++) {
-		if (playlists[i].tracks.total > 5) {
-			returnPlaylists.push(playlists[i]);
-		}
-	}
-	return returnPlaylists;
-};
-
-method.fetchPlaylistTracks = async function(playlist) {
-	let trackRequest = await fetch(playlist.href + '/tracks?market='+this.user.country+'&fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal', {
-		headers: {
-			'Authorization': 'Bearer ' + this.user.token
-		}
-	});
-
-	let trackRequestData = await trackRequest.json();
-	let next = trackRequestData.next;
-
-	let tracks = trackRequestData.items;
-
-	while (next !== null) {
-		trackRequest = await fetch(next, {
-			headers: {
-				'Authorization': 'Bearer ' + this.user.token
-			}
-		});
-
-		trackRequestData = await trackRequest.json();
-		next = trackRequestData.next;
-
-		tracks = tracks.concat(trackRequestData.items);
-	}
-
-	let returnTracks = [];
-	for (var i = 0; i < tracks.length; i++) {
-		if (tracks[i].track.is_playable === true) {
-			returnTracks.push(tracks[i]);
-		}
-	}
-
-	return returnTracks;
-};
-
-/**
-* Recursive function, in each iteration it will get up to 100 tracks of the playlist, and if there are more to get it will also return the url for the next batch of up to 100 tracks
-* Each iteration will return these tracks, and concat the array of tracks with the array of tracks from the next batch. In the end it will return all tracks in the playlist
-*
-* @author: Michiocre
-* @param {string} next URL to the spotify API to get Tracks from a playlist
-* @return {array} Array of all the track objects
-*/
-method.loadOneBatch = async function(next) {
-	let request = await fetch(next, {
-		headers: {
-			'Authorization': 'Bearer ' + this.user.token
-		}
-	});
-	let fetchData = await request.json();
-	next = fetchData.next;
-
-	let tracks;
-	if (next !== null) {
-		let prevTracks = await this.loadOneBatch(next);
-		tracks = fetchData.items.concat(prevTracks);
-	} else {
-		tracks = fetchData.items;
-	}
-	return tracks;
-};
-
-/**
 * Gets the active Player data from the Spotify API
 *
 * @author: Michiocre
@@ -687,7 +541,8 @@ method.update = async function() {
 			this.activePlayer = {
 				volume: fetchData.device.volume_percent,
 				timeLeft: fetchData.item.duration_ms - fetchData.progress_ms,
-				progress: fetchData.progress_ms,
+				progressMs: fetchData.progress_ms,
+				progress: Math.round((fetchData.progress_ms / fetchData.item.duration_ms) * 10000) / 100,
 				isPlaying: fetchData.is_playing,
 				track: {
 					album: fetchData.item.album,
@@ -704,7 +559,7 @@ method.update = async function() {
 		if (this.activePlayer.timeLeft < 3000 && !this.isChanging) {
 			this.isChanging = true;
 			await this.play();
-		} else if (this.activePlayer.progress > 3000 && this.isChanging) {
+		} else if (this.activePlayer.progressMs > 3000 && this.activePlayer.timeLeft > 3000 && this.isChanging) {
 			console.log('INFO-[ROOM: '+this.id+']: Reset Cooldown');
 			this.isChanging = false;
 		}
@@ -857,4 +712,4 @@ method.changeVolume = async function(volume) {
 	return true;
 };
 
-module.exports = Room;
+module.exports = {Room: Room, makeid: makeid};
