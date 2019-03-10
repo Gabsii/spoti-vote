@@ -57,7 +57,7 @@ class LoginCode extends Component {
     submitHandler(event) {
         event.preventDefault();
         if (this.state.room) {
-            window.location.href = constants.config.url + '/app/' + this.state.room;
+            window.location.href = window.location.origin + '/app/' + this.state.room;
         }
     }
 
@@ -73,7 +73,7 @@ class LoginCode extends Component {
                     }
                 }
                 if (this.state.room && this.props.isPhone) {
-                    window.location.href = constants.config.url + '/app/' + this.state.room;
+                    window.location.href = window.location.origin + '/app/' + this.state.room;
                 }
                 if (!exists) {
                     this.setState({roomExists: false});

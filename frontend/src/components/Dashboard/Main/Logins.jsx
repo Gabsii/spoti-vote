@@ -12,7 +12,10 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        color: 'white'
+        color: 'white',
+        '@media(min-width: 760px)': {
+            marginTop: '150px'
+        }
     }),
     button: css({
         padding: '17px 48px',

@@ -137,4 +137,6 @@ method.fetchPlaylistTracks = async function(playlist) {
 	return returnTracks;
 };
 
-module.exports = User;
+module.exports = {
+	User: User
+};
