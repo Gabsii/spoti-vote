@@ -16,7 +16,10 @@ const app = express();
 app.use(cookieParser());
 const server = http.createServer(app);
 const io = socketIo(server);
+//Security
 const csp = require('helmet-csp');
+const cors = require('cors');
+const helmet = require('helmet');
 
 //Global Varibles
 
@@ -38,6 +41,25 @@ app.use(csp({
 		defaultSrc: ['https:', '"self"']
 	}
 }));
+
+app.use(helmet.frameguard({
+	action: 'deny'
+}));
+
+app.use(helmet.hsts({
+	maxAge: 5184000 //Sixty Days in Seconds
+}));
+
+app.use(cors({
+	origin: '*',
+	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+	preflightContinue: false,
+	optionsSuccessStatus: 204
+}));
+
+app.get('/', (req, res) => {
+	res.send('Hello There');
+});
 
 /**
 * Login using the Spotify API (This is only a Redirect)
