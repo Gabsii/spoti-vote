@@ -114,6 +114,8 @@ method.fetchPlaylistTracks = async function(playlist) {
 
 	let tracks = trackRequestData.items;
 
+	console.log("NEXT URL  " + next);
+
 	while (next !== null) {
 		trackRequest = await fetch(next, {
 			headers: {
