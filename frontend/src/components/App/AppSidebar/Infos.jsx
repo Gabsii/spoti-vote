@@ -40,7 +40,7 @@ const styles = {
             display: 'block'
         }
     }),
-    playlistName: css({marginBottom: '20px'}),
+    playlistName: css({marginBottom: '20px', textAlign: 'center'}),
     playlistImage: css({
         height: '150px',
         width: '150px',

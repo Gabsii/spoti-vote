@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import {faCaretDown, faCaretRight} from '@fortawesome/fontawesome-free-solid';
 
 import TopType from './TopType.jsx';
 import Spinner from './Spinner.jsx';
@@ -18,7 +20,9 @@ const styles = {
         flexDirection: 'column',
         '@media(max-width: 760px)': {
             width: 'calc(100% - 20px)'
-        }
+        },
+        transition: 'height 0.4s cubic-bezier(0, 0.795, 0, 1)'
+
     }),
     heading: css({
         fontSize: '1.3em',
@@ -27,14 +31,48 @@ const styles = {
         borderBottom: '1px solid' + constants.colors.barBackground,
         color: 'white'
     }),
-    tracksWrapper: css({display: 'flex', flexDirection: 'row', justifyContent: 'center', overflow: 'hidden'})
+    tracksWrapper: css({display: 'flex', flexDirection: 'row', justifyContent: 'center', overflow: 'hidden'}),
+    minimizer: css({
+        ':hover': {
+            cursor: 'pointer'
+        }
+    })
 };
 
 class Carousel extends Component {
 
+    constructor() {
+        super();
+        this.state = {
+            minimized: false
+        }
+    }
+
+    //height: 35px
+    minimizeFooter() {
+        if (this.state.minimized) {
+            document.getElementById("carousel").style.height = '340px';
+            this.setState({minimized: false});
+        } else {
+            document.getElementById("carousel").style.height = '35px';
+            this.setState({minimized: true});
+        }
+    }
+
     render() {
-        return (<footer className={`${styles.wrapper}`}>
-            <h2 className={`${styles.heading}`}>Your Top Tracks:
+        return (<footer id="carousel" className={`${styles.wrapper}`}>
+            <h2 className={`${styles.heading}`}>
+                {
+                    this.state.minimized
+                        ? <FontAwesomeIcon icon={faCaretRight} size='1x' className={`${styles.minimizer}`} style={{
+                                    marginRight: '10px'
+                                }} onClick={this.minimizeFooter.bind(this)}/>
+                        : <FontAwesomeIcon icon={faCaretDown} size='1x' className={`${styles.minimizer}`} style={{
+                                    marginRight: '10px'
+                                }} onClick={this.minimizeFooter.bind(this)}/>
+                }
+
+                Your Top Tracks:
             </h2>
             <div className={`${styles.tracksWrapper}`}>
                 {

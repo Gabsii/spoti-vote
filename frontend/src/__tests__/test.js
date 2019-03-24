@@ -24,9 +24,14 @@ import Carousel from '../components/Dashboard/Main/Carousel';
 import Logins from '../components/Dashboard/Main/Logins';
 import Spinner from '../components/Dashboard/Main/Spinner';
 import TopType from '../components/Dashboard/Main/TopType';
-import DashboardSidebar from '../components/Dashboard/DashboardSidebar';
-import Profile from '../components/Dashboard/DashboardSidebar/Profile';
-import Settings from '../components/Dashboard/DashboardSidebar/Settings';
+
+import SharedSidebar from '../components/Shared/SharedSidebar';
+import Profile from '../components/Shared/SharedSidebar/Profile';
+import NavBar from '../components/Shared/SharedSidebar/NavBar';
+
+import Rooms from '../pages/Rooms';
+import Room from '../components/Rooms/Room';
+import RoomContainer from '../components/Rooms/RoomContainer';
 
 import Join from '../pages/Join';
 
@@ -153,11 +158,6 @@ describe('Pages render', () => {
             ReactDOM.render(<Main/>, div);
             ReactDOM.unmountComponentAtNode(div);
         });
-        it('Dashboard Sidebar', () => {
-            const div = document.createElement('div');
-            ReactDOM.render(<DashboardSidebar/>, div);
-            ReactDOM.unmountComponentAtNode(div);
-        });
         describe('Dashboard Main components render', () => {
             it('Carousel', () => {
                 const div = document.createElement('div');
@@ -180,15 +180,43 @@ describe('Pages render', () => {
                 ReactDOM.unmountComponentAtNode(div);
             });
         })
-        describe('Dashboard Sidebar components render', () => {
+    })
+
+    describe('Shared components render', () => {
+        it('Shared Sidebar', () => {
+            const div = document.createElement('div');
+            ReactDOM.render(<SharedSidebar/>, div);
+            ReactDOM.unmountComponentAtNode(div);
+        });
+        describe('Shared Sidebar components render', () => {
             it('Profile', () => {
                 const div = document.createElement('div');
                 ReactDOM.render(<Profile/>, div);
                 ReactDOM.unmountComponentAtNode(div);
             });
-            it('Settings', () => {
+            it('NavBar', () => {
                 const div = document.createElement('div');
-                ReactDOM.render(<Settings/>, div);
+                ReactDOM.render(<NavBar/>, div);
+                ReactDOM.unmountComponentAtNode(div);
+            });
+        })
+    });
+
+    describe('Rooms components render', () => {
+        it('Rooms', () => {
+            const div = document.createElement('div');
+            ReactDOM.render(<Rooms/>, div);
+            ReactDOM.unmountComponentAtNode(div);
+        });
+        describe('Rooms components render', () => {
+            it('RoomContainer', () => {
+                const div = document.createElement('div');
+                ReactDOM.render(<RoomContainer/>, div);
+                ReactDOM.unmountComponentAtNode(div);
+            });
+            it('Room', () => {
+                const div = document.createElement('div');
+                ReactDOM.render(<Room/>, div);
                 ReactDOM.unmountComponentAtNode(div);
             });
         })
