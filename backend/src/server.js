@@ -441,7 +441,7 @@ async function theUpdateFunction(socket) {
 
 		if (update !== null) {
 			socket.emit('update', update);
-			console.log(JSON.stringify(update).length);
+			//console.log(JSON.stringify(update).length);
 		}
 
 		socket.oldUpdate = _.cloneDeep(room);
