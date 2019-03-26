@@ -116,7 +116,7 @@ method.fetchPlaylistTracks = async function(playlist) {
 
 	console.log("NEXT URL  " + next);
 
-	while (next !== null) {
+	while (next !== null && next !== undefined) {
 		trackRequest = await fetch(next, {
 			headers: {
 				'Authorization': 'Bearer ' + this.token
