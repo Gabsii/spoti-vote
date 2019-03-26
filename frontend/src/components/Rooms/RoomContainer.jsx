@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
 
+import SearchRooms from './SearchRooms.jsx';
 import Room from './Room.jsx';
 const constants = require('../../js/constants');
 const styles = {
@@ -9,10 +10,6 @@ const styles = {
         minHeight: '100vh',
         height: '100%',
         width: 'calc(100% - 200px)',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
         padding: '25px',
         boxSizing: 'border-box',
         '@media(max-width: 760px)': {
@@ -22,7 +19,8 @@ const styles = {
             position: 'absolute',
             top: '75px'
         }
-    })
+    }),
+    roomWrapper: css({display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', flexWrap: 'wrap'})
 };
 
 class RoomContainer extends Component {
@@ -30,54 +28,68 @@ class RoomContainer extends Component {
     constructor() {
         super();
         this.state = {
-            rooms: [
-                {
-                    roomName: 'ADFKJ',
-                    roomHost: 'HostName',
-                    roomCover: 'https://via.placeholder.com/640'
-                }, {
-                    roomName: 'ADFKJ',
-                    roomHost: 'HostName',
-                    roomCover: 'https://via.placeholder.com/640'
-                }, {
-                    roomName: 'ADFKJ',
-                    roomHost: 'HostName',
-                    roomCover: 'https://via.placeholder.com/640'
-                }, {
-                    roomName: 'ADFKJ',
-                    roomHost: 'HostName',
-                    roomCover: 'https://via.placeholder.com/640'
-                }, {
-                    roomName: 'ADFKJ',
-                    roomHost: 'HostName',
-                    roomCover: 'https://via.placeholder.com/640'
-                }
-            ]
+            rooms: [],
+            search: '',
+            searchRooms: []
         }
+        this.displayRooms.bind(this);
     }
 
     componentDidMount() {
-        this.fetchRoomData();
+        this.fetchRoomData().then(() => {
+            this.displayRooms()
+        })
+    }
+
+    filterRooms(e) {
+        let value = e.target.value.toLowerCase();
+        this.setState({
+            search: value
+        }, () => {
+            this.displayRooms();
+        });
+    }
+
+    displayRooms() {
+        if (this.state.search === '' || this.state.search === null || this.state.search === undefined) {
+            this.setState({searchRooms: this.state.rooms});
+        } else {
+            let res = [];
+            this.state.rooms.filter((room, index) => {
+                let roomName = room.roomName.toLowerCase();
+                let roomHost = room.roomHost.toLowerCase();
+                if (roomName.includes(this.state.search) || roomHost.includes(this.state.search)) {
+                    return res.push(room);
+                }
+                return null;
+            });
+            this.setState({searchRooms: res});
+        }
+
     }
 
     fetchRoomData() {
-        fetch(constants.config.url + '/rooms').then(response => response.json()).then(response => {
-            console.log(response);
-            this.setState({rooms: response.content})
-        }).catch((err) => console.log(err));
+        return new Promise((resolve, reject) => {
+            fetch(constants.config.url + '/rooms').then(response => response.json()).then(response => {
+                this.setState({rooms: response.content})
+                resolve();
+            }).catch((err) => reject(err));
+        })
     }
 
     render() {
         return (<main className={`${styles.main}`}>
-            {
-                this.state.rooms.length > 2
-                    ? this.state.rooms.map((room, index) => {
-                        return (<Room name={room.roomName} host={room.roomHost} cover={room.roomCover} key={index}/>)
-                    })
-                    : this.state.rooms.length === 1
-                        ? <Room name={this.state.rooms[0].roomName} host={this.state.rooms[0].roomHost} cover={this.state.rooms[0].roomCover}/>
-                        : <div>No Rooms found</div>
-            }
+            <SearchRooms rooms={this.state.rooms} filterRooms={this.filterRooms.bind(this)}/>
+            <div className={`${styles.roomWrapper}`}>
+                {
+                    this.state.rooms.length >= 1
+                        ? this.state.searchRooms.map((room, index) => {
+                            return (<Room name={room.roomName} host={room.roomHost} cover={room.roomCover} key={index}/>)
+                        })
+                        : <div style={{
+                                    color: 'white'
+                                }}>No Rooms found</div>
+                }</div>
         </main>);
     }
 }
