@@ -62,6 +62,8 @@ Congratulations! You now are able to use my webpage.
 
 By running `npm run test-frontend` and `npm run test-backend` you can start a jest testing environment for the frontend and backend respectively.
 
+You can also run `npm run update` to update all npm packages.
+
 # Credits
 
 ## Frameworks/Tools
