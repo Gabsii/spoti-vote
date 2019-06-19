@@ -66,7 +66,7 @@ class App extends Component {
 
         //When the server asks for what room to delete, it will return the answer of the user
         this.socket.on('twoRooms', data => {
-            swal({
+            swal.fire({
                 title: 'You are already hosting a room.',
                 text: 'You are currently hosting room [' + data.oldRoom + ']. Do you want to delete it?',
                 type: 'warning',
@@ -88,7 +88,7 @@ class App extends Component {
 
         //When the server asks for a name, the user is prompted with popups
         this.socket.on('nameEvent', data => { // SWAL
-            swal({
+            swal.fire({
                 title: data.title,
                 type: 'question',
                 allowOutsideClick: false,
@@ -206,7 +206,7 @@ class App extends Component {
 
         this.socket.on('errorEvent', (data) => {
             if (data.message !== null && data.message !== undefined) {
-                swal({type: 'error', title: 'Oops...', text: data.message}).then((value) => {
+                swal.fire({type: 'error', title: 'Oops...', text: data.message}).then((value) => {
                     // console.log(value);
                     this.socket.emit('logout');
                     window.location.pathname = '/';
@@ -215,10 +215,10 @@ class App extends Component {
         });
 
         if (this.state.isHost) {
-            swal({titleText: "Hello from the other side!", type: "info", text: "Please make sure that you are running Spotify in the background!", allowOutsideClick: false, allowEscapeKey: false});
+            swal.fire({titleText: "Hello from the other side!", type: "info", text: "Please make sure that you are running Spotify in the background!", allowOutsideClick: false, allowEscapeKey: false});
         }
     }
-
+    
     selectPlaylist(event) {
         let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
         if (playlistId !== null && playlistId !== 'none') {

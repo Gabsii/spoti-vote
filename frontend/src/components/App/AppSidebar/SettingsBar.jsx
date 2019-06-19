@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSignOutAlt} from '@fortawesome/fontawesome-free-solid';
 import {css} from 'glamor';
+import swal from 'sweetalert2';
 
 import SkipButton from './SkipButton.jsx';
 
@@ -42,10 +43,19 @@ class SettingsBar extends Component {
 
     logoutHandler() {
         if (this.props.isHost === true) {
-            if (window.confirm('This will close the room, are you sure?')) {
-                this.props.socket.emit('logout');
-                window.location.pathname = '/dashboard';
-            }
+            swal.fire({
+                title: 'Close Room.',
+                text: 'This will close the room, are you sure?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, close it!',
+                cancelButtonText: 'No, dont do it!'
+            }).then((result) => {
+                if (!result.dismiss) {
+                    this.props.socket.emit('logout');
+                    window.location.pathname = '/dashboard';
+                }
+            });
         } else {
             window.location.pathname = '/dashboard';
         }

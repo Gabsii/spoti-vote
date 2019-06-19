@@ -39,26 +39,25 @@ let referer = '';
 let rooms = [];
 let users = [];
 
-app.use(csp({
-	directives: {
-		defaultSrc: ['https:', '"self"']
-	}
-}));
-
-app.use(helmet.frameguard({
-	action: 'deny'
-}));
-
-app.use(helmet.hsts({
-	maxAge: 5184000 //Sixty Days in Seconds
-}));
-
-app.use(cors({
-	origin: '*',
-	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-	preflightContinue: false,
-	optionsSuccessStatus: 204
-}));
+app.use(
+	csp({
+		directives: {
+			defaultSrc: ['https:', '"self"']
+		}
+	}),
+	helmet.frameguard({
+		action: 'deny'
+	}),
+	helmet.hsts({
+		maxAge: 5184000 //Sixty Days in Seconds
+	}),
+	cors({
+		origin: '*',
+		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+		preflightContinue: false,
+		optionsSuccessStatus: 204
+	})
+);
 
 app.get('/', (req, res) => {
 	res.send('Hello There');
@@ -78,14 +77,6 @@ app.get('/login', (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/callback', async (req, res) => {
-	// let options = {
-	// 	domain: '.spoti-vote.com',
-	// 	path: '/',
-	// 	expires: 0, // would expire after 15 minutes
-	// 	httpOnly: false, // The cookie only accessible by the web server
-	// 	signed: false // Indicates if the cookie should be signed
-	// };
-
 	let code = req.query.code || null;
 	let authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
@@ -203,6 +194,7 @@ io.on('connection', (socket) => {
 			for (let i = 0; i < rooms.length; i++) {
 				if (rooms[i].user.id == room.user.id && rooms[i].id !== room.id) {
 					x = i;
+					break;
 				}
 			}
 

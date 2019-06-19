@@ -35,7 +35,7 @@ class ShareButton extends Component {
             const copyText = document.getElementById('share');
             copyText.select();
             document.execCommand('Copy');
-            swal({
+            swal.fire({
                 type: 'info',
                 title: 'Link copied to clipboard!',
                 toast: true,
