@@ -53,6 +53,7 @@ ReactDOM.render((<BrowserRouter>
         <Route path="/policies" component={Policies}/>
         <Route path="/rooms" component={Rooms}/>
         <Route component={NotFound}/>
+        
     </Switch>
 
 </BrowserRouter>), document.getElementById('root'));

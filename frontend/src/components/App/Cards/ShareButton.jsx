@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import swal from 'sweetalert2';
 import {faShareAlt} from '@fortawesome/fontawesome-free-solid';
 import {css} from 'glamor';

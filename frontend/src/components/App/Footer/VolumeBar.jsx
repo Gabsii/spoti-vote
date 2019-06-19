@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faVolumeDown, faVolumeUp} from '@fortawesome/fontawesome-free-solid';
 import {css} from 'glamor';
 

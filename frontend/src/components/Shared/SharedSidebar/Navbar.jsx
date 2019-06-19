@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSignOutAlt, faUsers, faHome} from '@fortawesome/fontawesome-free-solid';
 import Cookies from 'universal-cookie';
 import {css} from 'glamor';

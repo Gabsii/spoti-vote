@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCaretDown, faCaretRight} from '@fortawesome/fontawesome-free-solid';
 
 import TopType from './TopType.jsx';
