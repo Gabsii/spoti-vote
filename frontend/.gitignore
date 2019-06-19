@@ -22,4 +22,4 @@ yarn-error.log*
 
 package-lock.json
 
-/src/js/config.js
+/src/js/config.json

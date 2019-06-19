@@ -1,4 +1,6 @@
-let config = require('./config');
+let config = require('./config.json');
+
+config.url = config.protocol + '://' + config.address + ':' + config.portback + config.addon;
 
 let codes = {
     SUCCESS: 200,
@@ -57,5 +59,3 @@ module.exports = {
     codes: codes,
     breakpoints: breakpoints
 };
-
-//let color = require('./css/colors.js'); Path to this file color.green == '1DB954'

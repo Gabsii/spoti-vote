@@ -6,6 +6,7 @@ const querystring = require('querystring');
 const request = require('request');
 const _ = require('lodash');
 const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
 //Import of used files
 const constants = require('./constants');
 const Room = require('./Room').Room;
@@ -23,9 +24,11 @@ const helmet = require('helmet');
 
 //Global Varibles
 
-const ipAddress = process.env.ADDRESS || 'localhost';       //Wichtig env.ADDRESS = 'spoti-vote.com' -> wen local egal
-const port = process.env.PORT || 80;                        //Wichtig env.PORT = 443 -> wenn local egal
-const portBack = 8888;
+dotenv.config();
+
+const ipAddress = process.env.ADDRESS;
+const port = process.env.PORT;
+const portBack = process.env.PORTBACK;
 
 const uriBack = (ipAddress == 'localhost' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port);
 const redirect_uri = uriBack + '/callback';
