@@ -13,6 +13,8 @@ describe('Basic Functions Tests', () => {
 			{id: 'YXNCB'}
 		];
 		expect(sFunctions.getRoomById('UADBA', rooms)).toBe(rooms[1]);
+		expect(sFunctions.getRoomById('WNIFP', rooms)).toBe(rooms[3]);
+		expect(sFunctions.getRoomById('YXNCB', rooms)).toBe(rooms[4]);
 	});
 	test('getUserById', () => {
 		let users = [

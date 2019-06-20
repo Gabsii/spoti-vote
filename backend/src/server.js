@@ -63,6 +63,12 @@ app.get('/', (req, res) => {
 	res.send('Hello There');
 });
 
+app.get('/app/*', (req, res) => {
+	let parts = req.headers.referer.split('/');
+	console.log(parts);
+	res.redirect(parts[0] + '//' + parts[2]);
+});
+
 /**
 * Login using the Spotify API (This is only a Redirect)
 */
@@ -192,9 +198,11 @@ io.on('connection', (socket) => {
 			//Count how many rooms this user is already hosting
 			let x = -1;
 			for (let i = 0; i < rooms.length; i++) {
-				if (rooms[i].user.id == room.user.id && rooms[i].id !== room.id) {
-					x = i;
-					break;
+				if (rooms[i].user !== null) {
+					if (rooms[i].user.id == room.user.id && rooms[i].id !== room.id) {
+						x = i;
+						break;
+					}
 				}
 			}
 
