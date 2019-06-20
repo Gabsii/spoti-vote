@@ -1,5 +1,4 @@
 {
-    "protocol": "http://",
     "address": "localhost",
     "portback": 8888,
     "port": 80,

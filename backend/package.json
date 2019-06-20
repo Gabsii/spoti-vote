@@ -14,14 +14,11 @@
       {
         "runner": "jest-runner-eslint",
         "displayName": "lint",
-        "testMatch": [
-          "<rootDir>/src/**/*.js"
-        ]
+        "testMatch": ["<rootDir>/src/**/*.js"]
       }
     ]
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "deep-equal": "^1.0.1",
@@ -29,12 +26,10 @@
     "express": "^4.17.1",
     "helmet": "^3.18.0",
     "helmet-csp": "^2.7.1",
-    "ip": "^1.1.5",
     "lodash": "^4.17.11",
     "node-fetch": "^2.6.0",
     "querystring": "^0.2.0",
     "request": "^2.88.0",
-    "shallow-equals": "^1.0.0",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {

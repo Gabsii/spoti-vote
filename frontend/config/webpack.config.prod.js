@@ -1,5 +1,3 @@
-'use strict';
-
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
@@ -82,7 +80,7 @@ module.exports = {
 		// https://github.com/facebookincubator/create-react-app/issues/253
 		modules: ['node_modules', paths.appNodeModules].concat(
 		// It is guaranteed to exist because we tweak it in `env.js`
-		process.env.NODE_PATH.split(path.delimiter).filter(Boolean)),
+			process.env.NODE_PATH.split(path.delimiter).filter(Boolean)),
 		// These are the reasonable defaults supported by the Node ecosystem.
 		// We also include JSX as a common component filename extension to support
 		// some tools, although we do not recommend using it, see:
@@ -100,10 +98,10 @@ module.exports = {
 		alias: {
 
 			// src: https://codeburst.io/how-i-cut-my-react-javascript-bundle-size-in-half-with-three-lines-of-code-fe7798ecbd3f
-			"react": "preact-compat",
-			"react-dom": "preact-compat",
+			'react': 'preact-compat',
+			'react-dom': 'preact-compat',
 			// Not necessary unless you consume a module using `createClass`
-			"create-react-class": "preact-compat/lib/create-react-class",
+			'create-react-class': 'preact-compat/lib/create-react-class',
 
 			// Support React Native Web
 			// https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/

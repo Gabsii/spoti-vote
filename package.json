@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "description": "Vote for Spotify Queue",
   "scripts": {
-    "install-ui": "cd frontend && npm install",
-    "install-backend": "cd backend && npm install",
-    "install": "npm run install-ui && npm run install-backend",
-    "start": "concurrently --kill-others-on-fail \"npm run start-ui\" \"npm run start-backend\"",
-    "start-ui": "cd frontend && npm start",
+    "install-all": "echo Installing / && npm install && cd backend && echo Installing /backend && npm install && cd ../frontend && echo Installing /frontend && npm install",
+    "start": "concurrently --kill-others-on-fail \"npm run start-frontend\" \"npm run start-backend\"",
+    "start-frontend": "cd frontend && npm start",
     "start-backend": "cd backend && nodemon server.js",
-    "test-ui": "cd frontend && npm test",
-    "test-backend": "cd backend && npm test"
+    "test-frontend": "cd frontend && npm test",
+    "test-backend": "cd backend && npm test",
+    "update": "echo Updating / && npm-update-all && cd backend && echo Updating /backend && npm-update-all && cd ../frontend && echo Updating /frontend && npm-update-all"
   },
   "cacheDirectories": [
     "node_modules",
@@ -32,5 +31,10 @@
   "bugs": {
     "url": "https://github.com/Gabsii/spoti-vote/issues"
   },
-  "homepage": "https://github.com/Gabsii/spoti-vote#readme"
+  "homepage": "https://github.com/Gabsii/spoti-vote#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "npm-update-all": "^1.0.1"
+  }
 }

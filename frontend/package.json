@@ -27,13 +27,12 @@
     "eslint-plugin-flowtype": "^3.10.3",
     "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.13.0",
     "eslint-plugin-react-hooks": "^1.6.0",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^4.0.0",
     "fs-extra": "^8.0.1",
     "glamor": "^2.20.40",
-    "html-webpack-plugin": "^4.0.0-beta.5",
+    "html-webpack-plugin": "^3.2.0",
     "ip": "^1.1.5",
     "jest": "^24.8.0",
     "npm": "^6.9.0",
@@ -72,40 +71,56 @@
     "deploy": "npm run build && now --public ./build && now alias"
   },
   "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,mjs}"
-    ],
-    "setupFiles": [
-      "<rootDir>/config/polyfills.js"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,mjs}",
-      "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,mjs}"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/(build|docs|node_modules)/"
-    ],
-    "testEnvironment": "node",
-    "testURL": "http://localhost",
-    "transform": {
-      "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
-    ],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "mjs",
-      "js",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
+    "projects": [
+      {
+        "displayName": "test",
+        "collectCoverageFrom": [
+          "src/**/*.{js,jsx,mjs}"
+        ],
+        "setupFiles": [
+          "<rootDir>/config/polyfills.js"
+        ],
+        "testMatch": [
+          "<rootDir>/src/**/__tests__/**/*.{js,jsx,mjs}",
+          "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,mjs}"
+        ],
+        "testPathIgnorePatterns": [
+          "<rootDir>/(build|docs|node_modules)/"
+        ],
+        "testEnvironment": "node",
+        "testURL": "http://localhost",
+        "transform": {
+          "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
+          "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+          "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+        },
+        "transformIgnorePatterns": [
+          "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
+        ],
+        "moduleNameMapper": {
+          "^react-native$": "react-native-web"
+        },
+        "moduleFileExtensions": [
+          "web.js",
+          "mjs",
+          "js",
+          "json",
+          "web.jsx",
+          "jsx",
+          "node"
+        ]
+      },
+      {
+        "runner": "jest-runner-eslint",
+        "displayName": "lint",
+        "testMatch": [
+          "<rootDir>/src/pages/**/*.jsx",
+          "<rootDir>/src/components/**/*.jsx",
+          "<rootDir>/src/js/**/*.js",
+          "<rootDir>/scripts/**/*.js",
+          "<rootDir>/config/**/*.js"
+        ]
+      }
     ]
   },
   "babel": {
@@ -117,6 +132,9 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "image-webpack-loader": "^5.0.0"
+    "eslint-plugin-jest": "^22.6.4",
+    "eslint-plugin-react": "^7.13.0",
+    "image-webpack-loader": "^5.0.0",
+    "jest-runner-eslint": "^0.7.4"
   }
 }

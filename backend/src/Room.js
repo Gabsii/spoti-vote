@@ -1,7 +1,6 @@
 let method = Room.prototype; //This is used when programming object oriented in js to make everything a bit more organised
 const request = require('request');
 const fetch = require('node-fetch');
-//const shallowEqual = require('shallow-equals');
 const deepEqual = require('deep-equal');
 const _ = require('lodash');
 

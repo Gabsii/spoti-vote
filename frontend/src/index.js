@@ -9,10 +9,8 @@ import Login from './pages/Login.jsx';
 import registerServiceWorker from './registerServiceWorker';
 
 // preloads css => no render blocking
-import (/* webpackPrefetch: true */
-"./css/reset.css");
-import (/* webpackPrefetch: true */
-"./css/fonts.css");
+import("./css/reset.css"); /* webpackPrefetch: true */
+import("./css/fonts.css"); /* webpackPrefetch: true */
 
 const App = Loadable({
     loader: () => import ('./pages/App.jsx'),
