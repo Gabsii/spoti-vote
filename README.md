@@ -16,34 +16,53 @@ To solve this problem I thought about creating a website where users could choos
 
 ## Usage
 
+### Installation
+
 To use my webpage, you first want to download [NodeJS](https://nodejs.org/en/).
 Then clone my repository using:
 `git clone https://github.com/Gabsii/spoti-vote.git`
 
-The following Environment Variables are key for the usage of this app. You want to set them using `SET` on Windows or `EXPORT` on a OSX. If this doesn't work try to set them in `/etc/environment`.
+After successfully cloning the repository, you want to startup a commandline in the `spoti-vote` folder and run `npm run install-all`.
 
-`PORT=80`\
-`ADDRESS="localhost"`\
-`SPOTIFY_CLIENT_ID="FOO"`\
-`SPOTIFY_CLIENT_SECRET="BAR"`
+Navigate into both `backend` and `frontend` folders and copy the `.env.template` file and rename it to `.env`.
 
-After successfully cloning the repository, you want to startup a commandline in its folder and run `npm install` in:
+In the backend folder you can set the port the backend will run on. You also have to change your frontend port and address acording too your project.
+The Spotify_Client_ID and SECRET are provided by spotify after you sign up for their developer system.
+```
+PORT=80
+PORTBACK=8888
+ADDRESS="localhost"
+SPOTIFY_CLIENT_ID="fb0059a660bb4324a513b260db7c5353"
+SPOTIFY_CLIENT_SECRET="b3a140deefc34244ae97caf427c2669b"
+```
+In the frontend folder you can set the port you want the react app to run on.
+```
+PORT=80
+```
+Navigate into `frontend\src\js` and copy the `config.json.template` and rename it to `config.json`.
+You can change the ports and address to your liking.
+If you assign a value to addon that string will be appended to every backend call.
+```
+{
+    "address": "localhost",
+    "portback": 8888,
+    "port": 80,
+    "addon": ""
+}
+```
 
-`.`\
-`+-- spoti-vote`\
-`|   +-- execute command here`\
-`+-- spoti-vote-backend`\
-`|   +-- execute command here`
-
-then manover back to the root folder and run:
-
-`npm install pm2 -g`\
-`pm2 start ecosystem.config.js`
+### Info
 
 If you can't run a port below 1024 without root permission see [this](http://pm2.keymetrics.io/docs/usage/specifics/).
 Thanks to [MPJ](https://github.com/mpj/oauth-bridge-template) for providing a framework for the backend-logic.
 
 Congratulations! You now are able to use my webpage.
+
+### Testing
+
+By running `npm run test-frontend` and `npm run test-backend` you can start a jest testing environment for the frontend and backend respectively.
+
+You can also run `npm run update` to update all npm packages.
 
 # Credits
 
