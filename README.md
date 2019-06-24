@@ -58,6 +58,8 @@ Thanks to [MPJ](https://github.com/mpj/oauth-bridge-template) for providing a fr
 
 Congratulations! You now are able to use my webpage.
 
+If you encounter the error `this.htmlWebpackPlugin.getHooks is not a function` try to run `npm install html-webpack-plugin@next` in your frontend folder.
+
 ### Testing
 
 By running `npm run test-frontend` and `npm run test-backend` you can start a jest testing environment for the frontend and backend respectively.
