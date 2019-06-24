@@ -32,8 +32,8 @@ The Spotify_Client_ID and SECRET are provided by spotify after you sign up for t
 PORT=80
 PORTBACK=8888
 ADDRESS="localhost"
-SPOTIFY_CLIENT_ID="fb0059a660bb4324a513b260db7c5353"
-SPOTIFY_CLIENT_SECRET="b3a140deefc34244ae97caf427c2669b"
+SPOTIFY_CLIENT_ID="foo"
+SPOTIFY_CLIENT_SECRET="foo"
 ```
 In the frontend folder you can set the port you want the react app to run on.
 ```
