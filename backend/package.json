@@ -39,6 +39,7 @@
     "eslint-plugin-jest": "^22.6.4",
     "jest": "^24.8.0",
     "jest-runner-eslint": "^0.7.4",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "supertest": "^4.0.2"
   }
 }

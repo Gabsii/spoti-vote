@@ -36,8 +36,15 @@ function getUserById(id, users) {
 	return null;
 }
 
+let codes = {
+	SUCCESS: 200,
+	NOTFOUND: 404,
+	PLNOTFOUND: 414,
+	ERROR: 500
+};
 
 module.exports = {
 	getRoomById: getRoomById,
-	getUserById: getUserById
+	getUserById: getUserById,
+	codes: codes
 };
