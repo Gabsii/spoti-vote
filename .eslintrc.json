@@ -4,7 +4,7 @@
         "node": true,
 		"jest": true
     },
-    "extends": ["eslint:recommended"],
+    "extends": ["eslint:recommended", "react-app"],
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -15,19 +15,19 @@
 	"plugins": ["jest"],
     "rules": {
         "indent": [
-            "error",
+            "warn",
             "tab"
         ],
         "linebreak-style": [
-            "error",
+            "warn",
             "windows"
         ],
         "quotes": [
-            "error",
+            "warn",
             "single"
         ],
         "semi": [
-            "error",
+            "warn",
             "always"
         ],
 		"no-console": [

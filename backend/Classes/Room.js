@@ -1,7 +1,6 @@
 let method = Room.prototype; //This is used when programming object oriented in js to make everything a bit more organised
 const request = require('request');
 const fetch = require('node-fetch');
-//const shallowEqual = require('shallow-equals');
 const deepEqual = require('deep-equal');
 const _ = require('lodash');
 
@@ -48,7 +47,7 @@ function Room(user, rooms) {
 	while (counter > 0) {
 		counter = 0;
 		for (let i = 0; i < rooms.length; i++) {
-			if (rooms[i].id == this.id) {
+			if (rooms[i].id === this.id) {
 				counter++;
 			}
 		}
@@ -217,26 +216,30 @@ method.getDifference = function(oldRoom) {
 			update.connectedUser = this.connectedUser;
 		}
 
-		if (!deepEqual(oldRoom.activePlayer, this.activePlayer) && this.activePlayer.progress !== oldRoom.activePlayer.progress) {
-			update.activePlayer = {
-				progress: this.activePlayer.progress
-			};
-			if (!deepEqual(oldRoom.activePlayer.track, this.activePlayer.track)) {
-				update.activePlayer.track = {
-					name: 'Spotify isn\'t running',
-					album: {images: [{url: 'https://via.placeholder.com/75x75'}]},
-					artists: [{name: 'Start Spotify'}]
-				};
-				if (this.activePlayer.track !== null) {
-					update.activePlayer.track = {
-						name: this.activePlayer.track.name,
-						album: {images: [{url: this.activePlayer.track.album.images[0].url}]},
+		if (this.activePlayer !== null && oldRoom.activePlayer) {
+			if (!deepEqual(oldRoom.activePlayer, this.activePlayer)) {
+				if (this.activePlayer.progress !== oldRoom.activePlayer.progress) {
+					update.activePlayer = {
+						progress: this.activePlayer.progress
 					};
-					update.activePlayer.track.artists = [];
-					for (let i = 0; i < this.activePlayer.track.artists.length; i++) {
-						update.activePlayer.track.artists[i] = {
-							name: this.activePlayer.track.artists[i].name
+					if (!deepEqual(oldRoom.activePlayer.track, this.activePlayer.track)) {
+						update.activePlayer.track = {
+							name: 'Spotify isn\'t running',
+							album: {images: [{url: 'https://via.placeholder.com/75x75'}]},
+							artists: [{name: 'Start Spotify'}]
 						};
+						if (this.activePlayer.track !== null) {
+							update.activePlayer.track = {
+								name: this.activePlayer.track.name,
+								album: {images: [{url: this.activePlayer.track.album.images[0].url}]},
+							};
+							update.activePlayer.track.artists = [];
+							for (let i = 0; i < this.activePlayer.track.artists.length; i++) {
+								update.activePlayer.track.artists[i] = {
+									name: this.activePlayer.track.artists[i].name
+								};
+							}
+						}
 					}
 				}
 			}
@@ -284,11 +287,11 @@ method.getUserNames = function() {
 * @return {object} The user object
 */
 method.getUserByName = function(name) {
-	if (name == this.user.name) {
+	if (name === this.user.name) {
 		return this.user;
 	}
 	for (let i = 0; i < this.connectedUser.length; i++) {
-		if (this.connectedUser[i].name == name) {
+		if (this.connectedUser[i].name === name) {
 			return this.connectedUser[i];
 		}
 	}
@@ -339,7 +342,7 @@ method.removeUser = function(name) {
 */
 method.getPlaylistById = function(playlistId) {
 	for (let i = 0; i < this.user.playlists.length; i++) {
-		if (this.user.playlists[i].id == playlistId) {
+		if (this.user.playlists[i].id === playlistId) {
 			return this.user.playlists[i];
 		}
 	}
@@ -357,7 +360,7 @@ method.changePlaylist = async function(playlistId) {
 	let playlist = this.getPlaylistById(playlistId);
 
 	//Generate 4 new songs if the playlist changed
-	if (playlist != this.activePlaylist) {
+	if (playlist !== this.activePlaylist) {
 		await this.getRandomTracks(playlist.id);
 	}
 	this.activePlaylist = playlist;
@@ -473,7 +476,7 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
 */
 method.getActiveTrackById = function(id) {
 	for (let i = 0; i < this.activeTracks.length; i++) {
-		if (this.activeTracks[i].id == id) {
+		if (this.activeTracks[i].id === id) {
 			return this.activeTracks[i];
 		}
 	}
@@ -578,7 +581,7 @@ method.update = async function() {
 method.vote = async function(trackId, isHost, name) {
 	let user = this.getUserByName(name);
 
-	if (isHost == true) {
+	if (isHost === true) {
 		user = this.user;
 	}
 
@@ -605,8 +608,8 @@ method.vote = async function(trackId, isHost, name) {
 
 		}
 
-		if (trackId == 'skip') {
-			if (this.activePlayer != null) {
+		if (trackId === 'skip') {
+			if (this.activePlayer !== null) {
 				if (this.activePlayer.progress <= 90) {
 					await this.skip();
 				}
@@ -630,7 +633,7 @@ method.play = async function() {
 	let track = this.activeTracks[0];
 
 	for (let i = 1; i < this.activeTracks.length; i++) {
-		if (this.activeTracks[i].votes > track.votes || (track.votes == null && this.activeTracks[i].votes >= 1)) {
+		if (this.activeTracks[i].votes > track.votes || (track.votes === null && this.activeTracks[i].votes >= 1)) {
 			track = this.activeTracks[i];
 		}
 	}
@@ -638,7 +641,7 @@ method.play = async function() {
 	let possibleTracks = [];
 
 	for (let i = 0; i < this.activeTracks.length; i++) {
-		if (this.activeTracks[i].votes == track.votes) {
+		if (this.activeTracks[i].votes === track.votes) {
 			possibleTracks.push(this.activeTracks[i]);
 		}
 	}
@@ -677,11 +680,11 @@ method.skip = async function() {
 
 		let skips = 0;
 		for (var i = 0; i < this.connectedUser.length; i++) {
-			if (this.connectedUser[i].voted == 'skip') {
+			if (this.connectedUser[i].voted === 'skip') {
 				skips += 1;
 			}
 		}
-		if (this.user.voted == 'skip') {
+		if (this.user.voted === 'skip') {
 			skips += 1;
 		}
 

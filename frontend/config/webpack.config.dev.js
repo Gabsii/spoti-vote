@@ -1,5 +1,3 @@
-'use strict';
-
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
@@ -12,6 +10,8 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+const smp = new SpeedMeasurePlugin();
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -25,7 +25,7 @@ const env = getClientEnvironment(publicUrl);
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
-module.exports = {
+const config = {
 	// You may want 'eval' instead if you prefer to see the compiled output in DevTools.
 	// See the discussion in https://github.com/facebookincubator/create-react-app/issues/343.
 	devtool: 'cheap-module-source-map',
@@ -73,7 +73,7 @@ module.exports = {
 		// https://github.com/facebookincubator/create-react-app/issues/253
 		modules: ['node_modules', paths.appNodeModules].concat(
 		// It is guaranteed to exist because we tweak it in `env.js`
-		process.env.NODE_PATH.split(path.delimiter).filter(Boolean)),
+			process.env.NODE_PATH.split(path.delimiter).filter(Boolean)),
 		// These are the reasonable defaults supported by the Node ecosystem.
 		// We also include JSX as a common component filename extension to support
 		// some tools, although we do not recommend using it, see:
@@ -110,20 +110,21 @@ module.exports = {
 
 			// First, run the linter.
 			// It's important to do this before Babel processes the JS.
+			// {
+			// 	test: /\.(js|jsx|mjs)$/,
+			// 	enforce: 'pre',
+			// 	use: [
+			// 		{
+			// 			options: {
+			// 				formatter: eslintFormatter,
+			// 				eslintPath: require.resolve('eslint')
+			// 			},
+			// 			loader: require.resolve('eslint-loader')
+			// 		}
+			// 	],
+			// 	include: paths.appSrc
+			// }, 
 			{
-				test: /\.(js|jsx|mjs)$/,
-				enforce: 'pre',
-				use: [
-					{
-						options: {
-							formatter: eslintFormatter,
-							eslintPath: require.resolve('eslint')
-						},
-						loader: require.resolve('eslint-loader')
-					}
-				],
-				include: paths.appSrc
-			}, {
 				// "oneOf" will traverse all following loaders until one will
 				// match the requirements. When no loader matches it will fall
 				// back to the "file" loader at the end of the loader list.
@@ -176,9 +177,6 @@ module.exports = {
 									plugins: () => [
 										require('postcss-flexbugs-fixes'),
 										autoprefixer({
-											browsers: [
-												'>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9', // React doesn't support IE8 anyway
-											],
 											flexbox: 'no-2009'
 										})
 									]
@@ -215,9 +213,24 @@ module.exports = {
 		// The public URL is available as %PUBLIC_URL% in index.html, e.g.:
 		// <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
 		// In development, this will be an empty string.
-		new InterpolateHtmlPlugin(env.raw),
+		new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
 		// Generates an `index.html` file with the <script> injected.
-		new HtmlWebpackPlugin({inject: true, template: paths.appHtml}),
+		new HtmlWebpackPlugin({
+			inject: true,
+			template: paths.appHtml,
+			minify: {
+				removeComments: true,
+				collapseWhitespace: true,
+				removeRedundantAttributes: true,
+				useShortDoctype: true,
+				removeEmptyAttributes: true,
+				removeStyleLinkTypeAttributes: true,
+				keepClosingSlash: true,
+				minifyJS: true,
+				minifyCSS: true,
+				minifyURLs: true
+			}
+		}),
 		// Add module names to factory functions so they appear in browser profiler.
 		new webpack.NamedModulesPlugin(),
 		// Makes some environment variables available to the JS code, for example:
@@ -257,3 +270,5 @@ module.exports = {
 		hints: false
 	}
 };
+
+module.exports = config;

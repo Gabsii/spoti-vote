@@ -1,4 +1,3 @@
-'use strict'; //Places the server in a strict enviroment (More exeptions, catches coding blooper, prevents unsafe actions, disables some features)
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
@@ -6,56 +5,70 @@ const querystring = require('querystring');
 const request = require('request');
 const _ = require('lodash');
 const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
+
 //Import of used files
-const constants = require('./constants');
-const Room = require('./Room').Room;
-const User = require('./User').User;
-const sFunctions = require('./serverFunctions.js');
+const Room = require('./Classes/Room').Room;
+const User = require('./Classes/User').User;
+const lib = require('./lib.js');
+
 //Setup of the server
 const app = express();
 app.use(cookieParser());
 const server = http.createServer(app);
 const io = socketIo(server);
+
 //Security
 const csp = require('helmet-csp');
 const cors = require('cors');
 const helmet = require('helmet');
 
 //Global Varibles
+dotenv.config();
+const ipAddress = process.env.ADDRESS;
+const port = process.env.PORT;
+const portBack = process.env.PORTBACK;
 
-const ipAddress = process.env.ADDRESS || 'localhost';       //Wichtig env.ADDRESS = 'spoti-vote.com' -> wen local egal
-const port = process.env.PORT || 80;                        //Wichtig env.PORT = 443 -> wenn local egal
-const portBack = 8888;
-
-const uriBack = (ipAddress == 'localhost' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port);
+const uriBack = (ipAddress === 'localhost' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port);
 const redirect_uri = uriBack + '/callback';
 const secTillDelete = 60;
-console.log('INFO: Redirect URL: ' + redirect_uri);
 
 let referer = '';
 let rooms = [];
 let users = [];
 
-app.use(csp({
-	directives: {
-		defaultSrc: ['https:', '"self"']
-	}
-}));
+console.log('INFO: Redirect URL: ' + redirect_uri);
 
-app.use(helmet.frameguard({
-	action: 'deny'
-}));
-
-app.use(helmet.hsts({
-	maxAge: 5184000 //Sixty Days in Seconds
-}));
-
-app.use(cors({
-	origin: '*',
-	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-	preflightContinue: false,
-	optionsSuccessStatus: 204
-}));
+app.use(
+	csp({
+		directives: {
+			defaultSrc: ['https:', '"self"']
+		}
+	}),
+	helmet.featurePolicy({
+		features: {
+			fullscreen: ['"self"'],
+			vibrate: ['"none"'],
+			payment: ['"none"'],
+			syncXhr: ['"none"']
+		}
+	}),
+	helmet.referrerPolicy({ policy: 'same-origin' }),
+	helmet.frameguard({
+		action: 'deny'
+	}),
+	helmet.hsts({
+		maxAge: 15768000 //Six Months in Seconds
+	}),
+	helmet.xssFilter(),
+	helmet.noSniff(),
+	cors({
+		origin: '*',
+		methods: 'GET',
+		preflightContinue: false,
+		optionsSuccessStatus: 204
+	})
+);
 
 app.get('/', (req, res) => {
 	res.send('Hello There');
@@ -65,9 +78,14 @@ app.get('/', (req, res) => {
 * Login using the Spotify API (This is only a Redirect)
 */
 app.get('/login', (req, res) => {
-	console.log('INFO: User was sent to Spotify login');
-	referer = req.headers.referer.substring(0, req.headers.referer.lastIndexOf('/'));
-	res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
+	try {
+		referer = req.headers.referer.substring(0, req.headers.referer.lastIndexOf('/'));
+		console.log('INFO: User was sent to Spotify login');
+		res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
+	} catch (error) {
+		res.status(400).send('Login from the main page');
+	}
+
 });
 
 /**
@@ -75,14 +93,6 @@ app.get('/login', (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/callback', async (req, res) => {
-	// let options = {
-	// 	domain: '.spoti-vote.com',
-	// 	path: '/',
-	// 	expires: 0, // would expire after 15 minutes
-	// 	httpOnly: false, // The cookie only accessible by the web server
-	// 	signed: false // Indicates if the cookie should be signed
-	// };
-
 	let code = req.query.code || null;
 	let authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
@@ -101,11 +111,13 @@ app.get('/callback', async (req, res) => {
 		let user = new User(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
 		// Set cookie
 		// res.cookie('token', body.access_token, options); // options is optional
-		if (await user.fetchData() == true) {
+		if (await user.fetchData() === true) {
 			users.push(user);
 
 			console.log('INFO-[USER: '+user.name+']: This user has logged in');
 			res.redirect(uri + '?token=' + body.access_token);
+		} else {
+			res.status(400).end();
 		}
 	});
 });
@@ -115,13 +127,17 @@ app.get('/callback', async (req, res) => {
 * Will redirect the user to the newly created room
 */
 app.get('/createRoom', async (req, res) => {
-	let id = req.query.id;
-	let room = new Room(sFunctions.getUserById(id, users), rooms);
-	let uri = referer + '/app';
-
-	rooms.push(room);
-
-	res.redirect(uri + '/' + room.id);
+	let user = lib.getUserById(req.query.id, users);
+	if (user === null) {
+		res.status(400).end();
+	} else {
+		let room = new Room(user, rooms);
+		let uri = referer + '/app';
+	
+		rooms.push(room);
+	
+		res.redirect(uri + '/' + room.id);
+	}
 });
 
 /**
@@ -147,7 +163,7 @@ app.get('/rooms', async (req, res) => {
 		returnRooms.push(roomI);
 	}
 
-	res.send({responseCode: constants.codes.SUCCESS, content: returnRooms});
+	res.send({responseCode: lib.codes.SUCCESS, content: returnRooms});
 });
 
 /**
@@ -176,7 +192,7 @@ io.on('connection', (socket) => {
 	* @param {string} roomId Id of the room
 	*/
 	socket.on('roomId', data => {
-		let room = sFunctions.getRoomById(data.roomId, rooms);
+		let room = lib.getRoomById(data.roomId, rooms);
 
 		if (room !== null) {
 			socket.roomId = room.id;
@@ -198,8 +214,11 @@ io.on('connection', (socket) => {
 			//Count how many rooms this user is already hosting
 			let x = -1;
 			for (let i = 0; i < rooms.length; i++) {
-				if (rooms[i].user.id == room.user.id && rooms[i].id !== room.id) {
-					x = i;
+				if (rooms[i].user !== null) {
+					if (rooms[i].user.id === room.user.id && rooms[i].id !== room.id) {
+						x = i;
+						break;
+					}
 				}
 			}
 
@@ -225,7 +244,7 @@ io.on('connection', (socket) => {
 					socket.emit('initData', update);
 					room.hostDisconnect = null;
 				} else {
-					if (room.hostDisconnect !== null && data.token == room.user.token) { //If host is gone
+					if (room.hostDisconnect !== null && data.token === room.user.token) { //If host is gone
 						console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
 						socket.isHost = true;
@@ -256,8 +275,8 @@ io.on('connection', (socket) => {
 	* @param {boolean} roomId Id of the old room
 	*/
 	socket.on('twoRooms', data => {
-		let oldRoom = sFunctions.getRoomById(data.roomId, rooms);
-		let room = sFunctions.getRoomById(socket.roomId, rooms);
+		let oldRoom = lib.getRoomById(data.roomId, rooms);
+		let room = lib.getRoomById(socket.roomId, rooms);
 		if (data.value === true) {
 			console.log('INFO-[ROOM: ' + oldRoom.id + ']: This room has been deleted due to host creating a new one.');
 			rooms.splice(rooms.indexOf(oldRoom), 1);
@@ -281,7 +300,7 @@ io.on('connection', (socket) => {
 				socket.emit('initData', update);
 				room.hostDisconnect = null;
 			} else {
-				if (room.hostDisconnect !== null && data.token == room.user.token) { //If host is gone
+				if (room.hostDisconnect !== null && data.token === room.user.token) { //If host is gone
 					console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
 					socket.isHost = true;
@@ -312,11 +331,11 @@ io.on('connection', (socket) => {
 	* @param {string} name Name of the user
 	*/
 	socket.on('nameEvent', data => {
-		let room = sFunctions.getRoomById(socket.roomId, rooms);
+		let room = lib.getRoomById(socket.roomId, rooms);
 		if (room !== null) {
-			if (room.getUserNames().includes(data.name) == true) {
+			if (room.getUserNames().includes(data.name) === true) {
 				socket.emit('nameEvent', {title: 'This name is already taken, enter a different name.'});
-			} else if (data.name.trim() == '') {
+			} else if (data.name.trim() === '') {
 				socket.emit('nameEvent', {title: 'This name can´t be emtpy, enter a different name.'});
 			} else if (data.name.length > 15) {
 				socket.emit('nameEvent', {title: 'This name is too long, enter a different name.'});
@@ -341,7 +360,7 @@ io.on('connection', (socket) => {
 	* @param {int} volume Volume in percent
 	*/
 	socket.on('changeVolume', data => {
-		let room = sFunctions.getRoomById(socket.roomId, rooms);
+		let room = lib.getRoomById(socket.roomId, rooms);
 		if (room !== null) {
 			console.log('INFO-[ROOM: ' + socket.roomId + ']: Volume changed to [' + data.volume + '].');
 			room.changeVolume(data.volume);
@@ -355,7 +374,7 @@ io.on('connection', (socket) => {
 	* @param {string} playlistId Id of the Playlist
 	*/
 	socket.on('changePlaylist', data => {
-		let room = sFunctions.getRoomById(socket.roomId, rooms);
+		let room = lib.getRoomById(socket.roomId, rooms);
 		if (room !== null) {
 			room.changePlaylist(data.playlistId);
 		} else {
@@ -368,7 +387,7 @@ io.on('connection', (socket) => {
 	* @param {string} trackId Id of the track
 	*/
 	socket.on('vote', data => {
-		let room = sFunctions.getRoomById(socket.roomId, rooms);
+		let room = lib.getRoomById(socket.roomId, rooms);
 		if (room !== null) {
 			console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] voted for [' + data.trackId + '].');
 			room.vote(data.trackId, socket.isHost, socket.name);
@@ -385,7 +404,7 @@ io.on('connection', (socket) => {
 	* Called when the host wants to close the room
 	*/
 	socket.on('logout', () => {
-		let room = sFunctions.getRoomById(socket.roomId, rooms);
+		let room = lib.getRoomById(socket.roomId, rooms);
 		if (room !== null) {
 			console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted by host.');
 			rooms.splice(rooms.indexOf(room), 1);
@@ -398,7 +417,7 @@ io.on('connection', (socket) => {
 	* Called when a connection is closed
 	*/
 	socket.on('disconnect', () => {
-		let room = sFunctions.getRoomById(socket.roomId, rooms);
+		let room = lib.getRoomById(socket.roomId, rooms);
 
 		clearInterval(updateInterval);
 		if (room !== null) {
@@ -422,7 +441,7 @@ io.on('connection', (socket) => {
 * @param {socket} socket The socket object passed down from the call
 */
 async function theUpdateFunction(socket) {
-	let room = sFunctions.getRoomById(socket.roomId, rooms);
+	let room = lib.getRoomById(socket.roomId, rooms);
 
 	socket.updateCounter.amount += 1;
 
@@ -441,12 +460,12 @@ async function theUpdateFunction(socket) {
 
 		if (update !== null) {
 			socket.emit('update', update);
-			console.log(JSON.stringify(update).length);
+			//console.log(JSON.stringify(update).length);
 		}
 
 		socket.oldUpdate = _.cloneDeep(room);
 
-		if (socket.updateCounter.amount % 30 == 0) {
+		if (socket.updateCounter.amount % 30 === 0) {
 			let toBeDeleted = [];
 			for (let i = 0; i < rooms.length; i++) {
 				if (rooms[i].hostPhone === false) {
@@ -470,9 +489,8 @@ async function theUpdateFunction(socket) {
 
 }
 
-/**
-* Starts the server
-*/
-server.listen(portBack, () => {
-	console.log('INFO: Server started on port: ' + server.address().port);
-});
+module.exports = {
+	server: server,
+	users: users,
+	rooms: rooms
+};

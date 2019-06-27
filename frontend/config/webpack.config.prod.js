@@ -1,5 +1,3 @@
-'use strict';
-
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
@@ -12,6 +10,8 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
+
+const TerserPlugin = require('terser-webpack-plugin');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -35,7 +35,7 @@ if (env.stringified['process.env'].NODE_ENV !== '"production"') {
 }
 
 // Note: defined here because it will be used more than once.
-const cssFilename = 'static/css/[name].[contenthash:8].css';
+const cssFilename = 'static/css/[name].[hash:8].css';
 
 // ExtractTextPlugin expects the build output to be flat.
 // (See https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/27)
@@ -82,7 +82,7 @@ module.exports = {
 		// https://github.com/facebookincubator/create-react-app/issues/253
 		modules: ['node_modules', paths.appNodeModules].concat(
 		// It is guaranteed to exist because we tweak it in `env.js`
-		process.env.NODE_PATH.split(path.delimiter).filter(Boolean)),
+			process.env.NODE_PATH.split(path.delimiter).filter(Boolean)),
 		// These are the reasonable defaults supported by the Node ecosystem.
 		// We also include JSX as a common component filename extension to support
 		// some tools, although we do not recommend using it, see:
@@ -100,10 +100,10 @@ module.exports = {
 		alias: {
 
 			// src: https://codeburst.io/how-i-cut-my-react-javascript-bundle-size-in-half-with-three-lines-of-code-fe7798ecbd3f
-			"react": "preact-compat",
-			"react-dom": "preact-compat",
+			'react': 'preact-compat',
+			'react-dom': 'preact-compat',
 			// Not necessary unless you consume a module using `createClass`
-			"create-react-class": "preact-compat/lib/create-react-class",
+			'create-react-class': 'preact-compat/lib/create-react-class',
 
 			// Support React Native Web
 			// https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
@@ -187,7 +187,6 @@ module.exports = {
 									loader: require.resolve('css-loader'),
 									options: {
 										importLoaders: 1,
-										minimize: true,
 										sourceMap: shouldUseSourceMap
 									}
 								}, {
@@ -199,9 +198,6 @@ module.exports = {
 										plugins: () => [
 											require('postcss-flexbugs-fixes'),
 											autoprefixer({
-												browsers: [
-													'>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9', // React doesn't support IE8 anyway
-												],
 												flexbox: 'no-2009'
 											})
 										]
@@ -240,7 +236,7 @@ module.exports = {
 		// <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
 		// In production, it will be an empty string unless you specify "homepage"
 		// in `package.json`, in which case it will be the pathname of that URL.
-		new InterpolateHtmlPlugin(env.raw),
+		new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
 		// Generates an `index.html` file with the <script> injected.
 		new HtmlWebpackPlugin({
 			inject: true,
@@ -264,26 +260,36 @@ module.exports = {
 		// Otherwise React will be compiled in the very slow development mode.
 		new webpack.DefinePlugin(env.stringified),
 		// Minify the code.
-		new webpack.optimize.UglifyJsPlugin({
-			compress: {
-				warnings: false,
-				// Disabled because of an issue with Uglify breaking seemingly valid code:
-				// https://github.com/facebookincubator/create-react-app/issues/2376
-				// Pending further investigation:
-				// https://github.com/mishoo/UglifyJS2/issues/2011
-				comparisons: false
+		new TerserPlugin({
+			parallel: true,
+			terserOptions: {
+				ecma: 6,
 			},
-			mangle: {
-				safari10: true
-			},
-			output: {
-				comments: false,
-				// Turned on because emoji and regex is not minified properly using default
-				// https://github.com/facebookincubator/create-react-app/issues/2488
-				ascii_only: true
-			},
-			sourceMap: shouldUseSourceMap
 		}),
+
+		//UglifyJSPlugin doesnt work anymore
+		// new webpack.optimize.UglifyJsPlugin({
+		// 	compress: {
+		// 		warnings: false,
+		// 		// Disabled because of an issue with Uglify breaking seemingly valid code:
+		// 		// https://github.com/facebookincubator/create-react-app/issues/2376
+		// 		// Pending further investigation:
+		// 		// https://github.com/mishoo/UglifyJS2/issues/2011
+		// 		comparisons: false
+		// 	},
+		// 	mangle: {
+		// 		safari10: true
+		// 	},
+		// 	output: {
+		// 		comments: false,
+		// 		// Turned on because emoji and regex is not minified properly using default
+		// 		// https://github.com/facebookincubator/create-react-app/issues/2488
+		// 		ascii_only: true
+		// 	},
+		// 	sourceMap: shouldUseSourceMap
+		// }),
+
+
 		// Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
 		new ExtractTextPlugin({filename: cssFilename}),
 		// Generate a manifest file which contains a mapping of all asset filenames

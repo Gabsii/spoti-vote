@@ -16,34 +16,44 @@ To solve this problem I thought about creating a website where users could choos
 
 ## Usage
 
+### Installation
+
 To use my webpage, you first want to download [NodeJS](https://nodejs.org/en/).
 Then clone my repository using:
 `git clone https://github.com/Gabsii/spoti-vote.git`
 
-The following Environment Variables are key for the usage of this app. You want to set them using `SET` on Windows or `EXPORT` on a OSX. If this doesn't work try to set them in `/etc/environment`.
+After successfully cloning the repository, you want to startup a commandline in the `spoti-vote` folder and run `npm install`.
 
-`PORT=80`\
-`ADDRESS="localhost"`\
-`SPOTIFY_CLIENT_ID="FOO"`\
-`SPOTIFY_CLIENT_SECRET="BAR"`
-
-After successfully cloning the repository, you want to startup a commandline in its folder and run `npm install` in:
-
-`.`\
-`+-- spoti-vote`\
-`|   +-- execute command here`\
-`+-- spoti-vote-backend`\
-`|   +-- execute command here`
-
-then manover back to the root folder and run:
-
-`npm install pm2 -g`\
-`pm2 start ecosystem.config.js`
+Copy the `.env.template` file and rename it to `.env`.
+Here you can configure ports and address.
+The Spotify_Client_ID and SECRET are provided by spotify after you sign up for their developer system.
+```
+PORT=80
+PORTBACK=8888
+ADDRESS="localhost"
+SPOTIFY_CLIENT_ID="foo"
+SPOTIFY_CLIENT_SECRET="foo"
+```
+### Info
 
 If you can't run a port below 1024 without root permission see [this](http://pm2.keymetrics.io/docs/usage/specifics/).
 Thanks to [MPJ](https://github.com/mpj/oauth-bridge-template) for providing a framework for the backend-logic.
 
 Congratulations! You now are able to use my webpage.
+
+If you encounter the error `this.htmlWebpackPlugin.getHooks is not a function` try to run `npm install html-webpack-plugin@next` in your frontend folder.
+
+If when building you encounter the error `Chunk.entrypoints: Use Chunks.groupsIterable and filter by instanceof Entrypoint instead` try run `npm install extract-text-webpack-plugin@next` in your frontend folder.
+
+These errors keep hapending since installing a new webpack version pls send help.
+
+BUILDING DOESNT WORK AT THE MOMEMENT NEED GABSII TO FIX
+
+### Testing
+
+By running `npm test` you can start a jest testing environment respectively.
+
+You can also run `npm run update` to update all npm packages.
 
 # Credits
 
