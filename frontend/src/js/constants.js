@@ -1,13 +1,13 @@
-let config = require('./config.json');
-
-
-if (config.port === 443) {
+let dotenv = require('dotenv');
+let config = {};
+dotenv.config();
+if (process.env.PORTBACK === 443) {
 	config.url = 'https://';
 } else {
 	config.url = 'http://';
 }
 
-config.url += config.address + ':' + config.portback + config.addon;
+config.url += process.env.ADDRESS + ':' + process.env.PORTBACK;
 
 let codes = {
 	SUCCESS: 200,

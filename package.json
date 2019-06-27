@@ -7,9 +7,9 @@
   "scripts": {
     "start": "concurrently --kill-others-on-fail \"npm:start-frontend\" \"npm:start-backend\"",
     "start-frontend": "node frontend/scripts/start.js",
-    "start-backend": "nodemon ./backend/src/server.js",
-    "build-frontend": "node frontend/scripts/build.js",
-    "deploy-frontend": "npm run build-frontend && now --public ./frontend/build && now alias",
+    "start-backend": "nodemon ./backend/server.js",
+    "build": "node frontend/scripts/build.js",
+    "deploy": "npm run build-frontend && now --public ./frontend/build && now alias",
     "test": "node scripts/test.js --env=jsdom",
     "update": "npm-update-all"
   },
@@ -39,14 +39,14 @@
       {
         "displayName": "backend",
         "testMatch": [
-          "<rootDir>/backend/src/**/__tests__/**/*.{js,jsx,mjs}"
+          "<rootDir>/backend/**/__tests__/**/*.{js,jsx,mjs}"
         ]
       },
       {
         "runner": "jest-runner-eslint",
         "displayName": "backend-lint",
         "testMatch": [
-          "<rootDir>/backend/src/**/*.js"
+          "<rootDir>/backend/**/*.js"
         ]
       },
       {
