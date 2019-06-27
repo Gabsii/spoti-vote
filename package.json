@@ -35,7 +35,7 @@
   "bugs": {
     "url": "https://github.com/Gabsii/spoti-vote/issues"
   },
-  "homepage": "https://github.com/Gabsii/spoti-vote#readme",
+  "homepage": "https://spoti-vote.com",
   "jest": {
     "watchPlugins": [
       "jest-runner-eslint/watch-fix"
