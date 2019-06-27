@@ -1,4 +1,3 @@
-'use strict'; //Places the server in a strict enviroment (More exeptions, catches coding blooper, prevents unsafe actions, disables some features)
 const dotenv = require('dotenv');
 //Setup of the server
 const app = require('./app').server;

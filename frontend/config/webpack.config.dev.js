@@ -10,6 +10,8 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+const smp = new SpeedMeasurePlugin();
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -23,7 +25,7 @@ const env = getClientEnvironment(publicUrl);
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
-module.exports = {
+const config = smp.wrap({
 	// You may want 'eval' instead if you prefer to see the compiled output in DevTools.
 	// See the discussion in https://github.com/facebookincubator/create-react-app/issues/343.
 	devtool: 'cheap-module-source-map',
@@ -108,20 +110,21 @@ module.exports = {
 
 			// First, run the linter.
 			// It's important to do this before Babel processes the JS.
+			// {
+			// 	test: /\.(js|jsx|mjs)$/,
+			// 	enforce: 'pre',
+			// 	use: [
+			// 		{
+			// 			options: {
+			// 				formatter: eslintFormatter,
+			// 				eslintPath: require.resolve('eslint')
+			// 			},
+			// 			loader: require.resolve('eslint-loader')
+			// 		}
+			// 	],
+			// 	include: paths.appSrc
+			// }, 
 			{
-				test: /\.(js|jsx|mjs)$/,
-				enforce: 'pre',
-				use: [
-					{
-						options: {
-							formatter: eslintFormatter,
-							eslintPath: require.resolve('eslint')
-						},
-						loader: require.resolve('eslint-loader')
-					}
-				],
-				include: paths.appSrc
-			}, {
 				// "oneOf" will traverse all following loaders until one will
 				// match the requirements. When no loader matches it will fall
 				// back to the "file" loader at the end of the loader list.
@@ -174,9 +177,6 @@ module.exports = {
 									plugins: () => [
 										require('postcss-flexbugs-fixes'),
 										autoprefixer({
-											browsers: [
-												'>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9', // React doesn't support IE8 anyway
-											],
 											flexbox: 'no-2009'
 										})
 									]
@@ -215,7 +215,7 @@ module.exports = {
 		// In development, this will be an empty string.
 		new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
 		// Generates an `index.html` file with the <script> injected.
-		new HtmlWebpackPlugin({inject: true, template: paths.appHtml}),
+		
 		// Add module names to factory functions so they appear in browser profiler.
 		new webpack.NamedModulesPlugin(),
 		// Makes some environment variables available to the JS code, for example:
@@ -254,4 +254,10 @@ module.exports = {
 	performance: {
 		hints: false
 	}
-};
+});
+
+config.plugins.unshift(
+	new HtmlWebpackPlugin({inject: true, template: paths.appHtml})
+);
+
+module.exports = config;

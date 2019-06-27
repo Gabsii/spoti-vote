@@ -34,7 +34,6 @@ import Room from '../components/Rooms/Room';
 import RoomContainer from '../components/Rooms/RoomContainer';
 
 import Join from '../pages/Join';
-
 import Loading from '../pages/Loading';
 
 import Login from '../pages/Login';

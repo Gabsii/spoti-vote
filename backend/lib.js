@@ -9,7 +9,7 @@
 function getRoomById(roomId, rooms) {
 	let room = null;
 	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].id == roomId) {
+		if (rooms[i].id === roomId) {
 			room = rooms[i];
 			return room;
 		}
@@ -28,7 +28,7 @@ function getRoomById(roomId, rooms) {
 function getUserById(id, users) {
 	let user = null;
 	for (var i = 0; i < users.length; i++) {
-		if (users[i].id == id) {
+		if (users[i].id === id) {
 			user = users[i];
 			return user;
 		}
