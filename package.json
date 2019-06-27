@@ -1,6 +1,6 @@
 {
   "name": "spoti-vote",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vote for Spotify Queue",
   "scripts": {
     "install-ui": "cd frontend && npm install",
