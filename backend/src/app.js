@@ -45,6 +45,15 @@ app.use(
 			defaultSrc: ['https:', '"self"']
 		}
 	}),
+	helmet.featurePolicy({
+		features: {
+			fullscreen: ["'self'"],
+			vibrate: ['"none"'],
+			payment: ['"none"'],
+			syncXhr: ['"none"']
+		}
+	}),
+	helmet.referrerPolicy({ policy: 'same-origin' }),
 	helmet.frameguard({
 		action: 'deny'
 	}),
