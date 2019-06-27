@@ -124,12 +124,13 @@ method.fetchPlaylistTracks = async function(playlist) {
 	}
 
 	let returnTracks = [];
-	for (var i = 0; i < tracks.length; i++) {
-		if (tracks[i].track.is_playable === true) {
-			returnTracks.push(tracks[i]);
+	if (tracks !== (null||undefined)) {
+		for (var i = 0; i < tracks.length; i++) {
+			if (tracks[i].track.is_playable === true) {
+				returnTracks.push(tracks[i]);
+			}
 		}
 	}
-
 	return returnTracks;
 };
 
