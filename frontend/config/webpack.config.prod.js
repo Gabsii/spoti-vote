@@ -11,6 +11,8 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 
+const TerserPlugin = require('terser-webpack-plugin');
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
 const publicPath = paths.servedPath;
@@ -33,7 +35,7 @@ if (env.stringified['process.env'].NODE_ENV !== '"production"') {
 }
 
 // Note: defined here because it will be used more than once.
-const cssFilename = 'static/css/[name].[contenthash:8].css';
+const cssFilename = 'static/css/[name].[hash:8].css';
 
 // ExtractTextPlugin expects the build output to be flat.
 // (See https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/27)
@@ -185,7 +187,6 @@ module.exports = {
 									loader: require.resolve('css-loader'),
 									options: {
 										importLoaders: 1,
-										minimize: true,
 										sourceMap: shouldUseSourceMap
 									}
 								}, {
@@ -259,26 +260,36 @@ module.exports = {
 		// Otherwise React will be compiled in the very slow development mode.
 		new webpack.DefinePlugin(env.stringified),
 		// Minify the code.
-		new webpack.optimize.UglifyJsPlugin({
-			compress: {
-				warnings: false,
-				// Disabled because of an issue with Uglify breaking seemingly valid code:
-				// https://github.com/facebookincubator/create-react-app/issues/2376
-				// Pending further investigation:
-				// https://github.com/mishoo/UglifyJS2/issues/2011
-				comparisons: false
+		new TerserPlugin({
+			parallel: true,
+			terserOptions: {
+				ecma: 6,
 			},
-			mangle: {
-				safari10: true
-			},
-			output: {
-				comments: false,
-				// Turned on because emoji and regex is not minified properly using default
-				// https://github.com/facebookincubator/create-react-app/issues/2488
-				ascii_only: true
-			},
-			sourceMap: shouldUseSourceMap
 		}),
+
+		//UglifyJSPlugin doesnt work anymore
+		// new webpack.optimize.UglifyJsPlugin({
+		// 	compress: {
+		// 		warnings: false,
+		// 		// Disabled because of an issue with Uglify breaking seemingly valid code:
+		// 		// https://github.com/facebookincubator/create-react-app/issues/2376
+		// 		// Pending further investigation:
+		// 		// https://github.com/mishoo/UglifyJS2/issues/2011
+		// 		comparisons: false
+		// 	},
+		// 	mangle: {
+		// 		safari10: true
+		// 	},
+		// 	output: {
+		// 		comments: false,
+		// 		// Turned on because emoji and regex is not minified properly using default
+		// 		// https://github.com/facebookincubator/create-react-app/issues/2488
+		// 		ascii_only: true
+		// 	},
+		// 	sourceMap: shouldUseSourceMap
+		// }),
+
+
 		// Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
 		new ExtractTextPlugin({filename: cssFilename}),
 		// Generate a manifest file which contains a mapping of all asset filenames
