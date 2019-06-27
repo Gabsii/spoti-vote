@@ -633,7 +633,7 @@ method.play = async function() {
 	let track = this.activeTracks[0];
 
 	for (let i = 1; i < this.activeTracks.length; i++) {
-		if (this.activeTracks[i].votes > track.votes || (track.votes === null && this.activeTracks[i].votes >= 1)) {
+		if (this.activeTracks[i].votes > track.votes || (track.votes === (null||undefined) && this.activeTracks[i].votes >= 1)) {
 			track = this.activeTracks[i];
 		}
 	}
