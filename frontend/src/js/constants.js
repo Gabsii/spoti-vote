@@ -6,8 +6,11 @@ if (process.env.PORTBACK === 443) {
 } else {
 	config.url = 'http://';
 }
-
-config.url += process.env.ADDRESS + ':' + process.env.PORTBACK;
+if (process.env.NODE_ENV !== 'production') {
+	config.url += process.env.ADDRESS + ':' + process.env.PORTBACK;
+}else{
+	config.url = 'https://backend.spoti-vote.com:443';
+}
 
 let codes = {
 	SUCCESS: 200,

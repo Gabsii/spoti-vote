@@ -9,7 +9,7 @@
     "start-frontend": "node frontend/scripts/start.js",
     "start-backend": "nodemon ./backend/server.js",
     "build": "node frontend/scripts/build.js",
-    "deploy": "npm run build-frontend && now --public ./frontend/build && now alias",
+    "deploy": "npm run build && now --public ./frontend/build && now alias",
     "test": "node scripts/test.js --env=jsdom",
     "update": "npm-update-all"
   },
@@ -34,6 +34,10 @@
   ],
   "bugs": {
     "url": "https://github.com/Gabsii/spoti-vote/issues"
+  },
+  "now": {
+    "name": "build",
+    "alias": ["www.spoti-vote.com", "spoti-vote.com"]
   },
   "homepage": "https://spoti-vote.com",
   "jest": {
