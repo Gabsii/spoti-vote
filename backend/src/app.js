@@ -29,7 +29,7 @@ const ipAddress = process.env.ADDRESS;
 const port = process.env.PORT;
 const portBack = process.env.PORTBACK;
 
-const uriBack = (ipAddress == 'localhost' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port);
+const uriBack = (ipAddress === 'localhost' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port);
 const redirect_uri = uriBack + '/callback';
 const secTillDelete = 60;
 
@@ -47,7 +47,7 @@ app.use(
 	}),
 	helmet.featurePolicy({
 		features: {
-			fullscreen: ["'self'"],
+			fullscreen: ['"self"'],
 			vibrate: ['"none"'],
 			payment: ['"none"'],
 			syncXhr: ['"none"']
@@ -111,7 +111,7 @@ app.get('/callback', async (req, res) => {
 		let user = new User(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
 		// Set cookie
 		// res.cookie('token', body.access_token, options); // options is optional
-		if (await user.fetchData() == true) {
+		if (await user.fetchData() === true) {
 			users.push(user);
 
 			console.log('INFO-[USER: '+user.name+']: This user has logged in');
@@ -128,7 +128,7 @@ app.get('/callback', async (req, res) => {
 */
 app.get('/createRoom', async (req, res) => {
 	let user = lib.getUserById(req.query.id, users);
-	if (user == null) {
+	if (user === null) {
 		res.status(400).end();
 	} else {
 		let room = new Room(user, rooms);
@@ -215,7 +215,7 @@ io.on('connection', (socket) => {
 			let x = -1;
 			for (let i = 0; i < rooms.length; i++) {
 				if (rooms[i].user !== null) {
-					if (rooms[i].user.id == room.user.id && rooms[i].id !== room.id) {
+					if (rooms[i].user.id === room.user.id && rooms[i].id !== room.id) {
 						x = i;
 						break;
 					}
@@ -244,7 +244,7 @@ io.on('connection', (socket) => {
 					socket.emit('initData', update);
 					room.hostDisconnect = null;
 				} else {
-					if (room.hostDisconnect !== null && data.token == room.user.token) { //If host is gone
+					if (room.hostDisconnect !== null && data.token === room.user.token) { //If host is gone
 						console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
 						socket.isHost = true;
@@ -300,7 +300,7 @@ io.on('connection', (socket) => {
 				socket.emit('initData', update);
 				room.hostDisconnect = null;
 			} else {
-				if (room.hostDisconnect !== null && data.token == room.user.token) { //If host is gone
+				if (room.hostDisconnect !== null && data.token === room.user.token) { //If host is gone
 					console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
 					socket.isHost = true;
@@ -333,9 +333,9 @@ io.on('connection', (socket) => {
 	socket.on('nameEvent', data => {
 		let room = lib.getRoomById(socket.roomId, rooms);
 		if (room !== null) {
-			if (room.getUserNames().includes(data.name) == true) {
+			if (room.getUserNames().includes(data.name) === true) {
 				socket.emit('nameEvent', {title: 'This name is already taken, enter a different name.'});
-			} else if (data.name.trim() == '') {
+			} else if (data.name.trim() === '') {
 				socket.emit('nameEvent', {title: 'This name can´t be emtpy, enter a different name.'});
 			} else if (data.name.length > 15) {
 				socket.emit('nameEvent', {title: 'This name is too long, enter a different name.'});
@@ -465,7 +465,7 @@ async function theUpdateFunction(socket) {
 
 		socket.oldUpdate = _.cloneDeep(room);
 
-		if (socket.updateCounter.amount % 30 == 0) {
+		if (socket.updateCounter.amount % 30 === 0) {
 			let toBeDeleted = [];
 			for (let i = 0; i < rooms.length; i++) {
 				if (rooms[i].hostPhone === false) {

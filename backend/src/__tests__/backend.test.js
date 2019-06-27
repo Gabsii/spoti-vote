@@ -18,7 +18,7 @@ const ipAddress = process.env.ADDRESS;
 const port = process.env.PORT;
 const portBack = process.env.PORTBACK;
 
-const uriBack = (ipAddress == 'localhost' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port);
+const uriBack = (ipAddress === 'localhost' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port);
 const redirect_uri = uriBack + '/callback';
 
 describe('Basic Functions Tests', () => {
@@ -61,7 +61,7 @@ describe('Basic Functions Tests', () => {
 		test('If a unique id is returned every time', () => {
 			let ids = [];
 			for (let i = 0; i < 26; i++) {
-				let newId = makeid(1);
+				let newId = makeid(5);
 				expect(ids.includes(newId)).toBe(false);
 				if (ids.includes(ids[i])) {
 					break;
@@ -177,23 +177,6 @@ describe('App Tests', () => {
 		test('It should responde with a error', (done) =>  {
 			request(server).get('/callback').then((response) => {
 				expect(response.statusCode).toBe(400);
-				done();
-			});
-		});
-	});
-
-	describe('Get /createRoom Method', () => {
-		test('It should responde with a error if no user is given', (done) =>  {
-			request(server).get('/createRoom').then((response) => {
-				expect(response.statusCode).toBe(400);
-				done();
-			});
-		});
-		test('It should responde with a redirect', (done) =>  {
-			request(server).get('/createRoom?id=User1').then((response) => {
-				expect(response.statusCode).toBe(302);
-				
-				expect(rooms.length > 0).toBeTruthy();
 				done();
 			});
 		});
