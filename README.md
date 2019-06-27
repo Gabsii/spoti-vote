@@ -60,6 +60,12 @@ Congratulations! You now are able to use my webpage.
 
 If you encounter the error `this.htmlWebpackPlugin.getHooks is not a function` try to run `npm install html-webpack-plugin@next` in your frontend folder.
 
+If when building you encounter the error `Chunk.entrypoints: Use Chunks.groupsIterable and filter by instanceof Entrypoint instead` try run `npm install extract-text-webpack-plugin@next` in your frontend folder.
+
+These errors keep hapending since installing a new webpack version pls send help.
+
+BUILDING DOESNT WORK AT THE MOMEMENT NEED GABSII TO FIX
+
 ### Testing
 
 By running `npm run test-frontend` and `npm run test-backend` you can start a jest testing environment for the frontend and backend respectively.
