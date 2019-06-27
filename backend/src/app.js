@@ -49,11 +49,13 @@ app.use(
 		action: 'deny'
 	}),
 	helmet.hsts({
-		maxAge: 5184000 //Sixty Days in Seconds
+		maxAge: 15768000 //Six Months in Seconds
 	}),
+	helmet.xssFilter(),
+	helmet.noSniff(),
 	cors({
 		origin: '*',
-		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+		methods: 'GET',
 		preflightContinue: false,
 		optionsSuccessStatus: 204
 	})
