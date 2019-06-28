@@ -40,8 +40,9 @@ let users = [];
 console.log('INFO: Redirect URL: ' + redirect_uri);
 
 app.disable('x-powered-by');
-app.use(function (req, res) {
+app.use(function (req, res, next) {
 	res.set('Server', 'Yes');
+	next();
 });
 app.use(
 	csp({
