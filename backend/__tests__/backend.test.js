@@ -10,6 +10,8 @@ const server = require('../app').server;
 const users = require('../app').users;
 const rooms = require('../app').rooms;
 
+const testRooms = [];
+
 users.push(new User('', '', '', ''));
 users[0].id = 'User1';
 users[0].name = 'Max';
@@ -21,6 +23,10 @@ users[1].name = 'Gabsii';
 users.push(new User('', '', '', ''));
 users[2].id = 'Michiocre';
 users[2].name = 'Michiocre';
+
+testRooms.push(new Room(users[0], testRooms));
+testRooms.push(new Room(users[1], testRooms));
+testRooms.push(new Room(users[2], testRooms));
 
 dotenv.config();
 const ipAddress = process.env.ADDRESS;
@@ -107,7 +113,8 @@ describe('App Tests', () => {
 			request(server).get('/rooms').then((response) => {
 				expect(response.statusCode).toBe(200);
 				let body = JSON.parse(response.text);
-				expect(body.content.length).toHaveLength(rooms.length);
+				expect(body.content).toHaveLength(rooms.length);
+				expect(body.content.length > 0).toBeTruthy();
 				for (let i = body.content.length - 1; i > body.content.length - roomIds.length; i--) {
 					expect(body.content[i].roomName).toBe(roomIds.pop());
 				}
@@ -118,23 +125,12 @@ describe('App Tests', () => {
 });
 
 describe('Basic Functions Tests', () => {
-	let testRooms = [];
-
-	testRooms.push(new Room(users[0], testRooms));
-	testRooms.push(new Room(users[1], testRooms));
-	testRooms.push(new Room(users[2], testRooms));
-
 	describe('getRoomById', () => {
 		test('The requested room is returned', () => {
 			expect(lib.getRoomById('UADBA', testRooms)).toBe(null);
 			for (let i = 0; i < testRooms.length; i++) {
-				expect(lib.getRoomById(testRooms[0].id, testRooms)).not.toBeNull();
-			expect(lib.getRoomById(testRooms[0].id, testRooms)).toBe(rooms[0]);
-			expect(lib.getRoomById(testRooms[1].id, testRooms)).not.toBeNull();
-			expect(lib.getRoomById(testRooms[1].id, testRooms)).toBe(rooms[i]);
-			expect(lib.getRoomById(testRooms[2].id, testRooms)).not.toBeNull();
-			expect(lib.getRoomById(testRooms[2].id, testRooms)).toBe(rooms[i]);
-				
+				expect(lib.getRoomById(testRooms[i].id, testRooms)).not.toBeNull();
+				expect(lib.getRoomById(testRooms[i].id, testRooms)).toBe(testRooms[i]);
 			}
 		});
 	});
@@ -142,8 +138,11 @@ describe('Basic Functions Tests', () => {
 	describe('getUserById', () => {
 		test('The requested User', () => {
 			expect(lib.getUserById('blankesMichl', users)).toBe(null);
+			expect(lib.getUserById('User1', users)).not.toBeNull();
 			expect(lib.getUserById('User1', users)).toBe(users[0]);
+			expect(lib.getUserById('Michiocre', users)).not.toBeNull();
 			expect(lib.getUserById('Michiocre', users)).toBe(users[2]);
+			expect(lib.getUserById('Gabsii', users)).not.toBeNull();
 			expect(lib.getUserById('Gabsii', users)).toBe(users[1]);
 		});
 	});
@@ -157,11 +156,6 @@ describe('Basic Functions Tests', () => {
 });
 
 describe('Room Functions Tests', () => {
-	let testRooms = [];
-
-	testRooms.push(new Room(users[0], testRooms));
-	testRooms.push(new Room(users[1], testRooms));
-	testRooms.push(new Room(users[2], testRooms));
 
 	testRooms.forEach(testRoom => {
 		let testUser = testRoom.user;
@@ -185,6 +179,7 @@ describe('Room Functions Tests', () => {
 		});
 	
 		test('Get User by Name', () => {
+			expect(testRoom.getUserByName('TempUser1')).not.toBeNull();
 			expect(testRoom.getUserByName('TempUser1')).toBe(testRoom.connectedUser[1]);
 			expect(testRoom.getUserByName(testUser.name)).toBe(testRoom.user);
 			expect(testRoom.getUserByName('Not Existent User')).toBeNull();
@@ -193,6 +188,7 @@ describe('Room Functions Tests', () => {
 		test('Remove User', () => {
 			expect(testRoom.removeUser('TempUser0')).toEqual({name: 'TempUser0', voted: null});
 			expect(testRoom.getUserNames()).not.toContain('TempUser0');
+			expect(testRoom.getUserByName('TempUser0')).toBeNull();
 			expect(testRoom.getUserNames()).toHaveLength(4);
 			expect(testRoom.removeUser('Not Existent User')).toBeNull();
 		});
@@ -215,8 +211,7 @@ describe('Room Functions Tests', () => {
 				{id: 'activeTrack2'},
 				{id: 'activeTrack3'},
 				{id: 'activeTrack4'}
-			];
-	
+			];	
 			expect(testRoom.getActiveTrackById('activeTrack4')).toBe(testRoom.activeTracks[3]);
 			expect(testRoom.getActiveTrackById('Not Existent Track')).toBeNull();
 		});
