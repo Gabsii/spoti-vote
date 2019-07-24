@@ -47,7 +47,7 @@ app.use(function (req, res, next) {
 app.use(
 	csp({
 		directives: {
-			defaultSrc: ['https:', '"self"']
+			defaultSrc: ['"self"']
 		}
 	}),
 	helmet.featurePolicy({
