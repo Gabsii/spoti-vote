@@ -12,15 +12,6 @@ import registerServiceWorker from './registerServiceWorker';
 import './css/reset.css'; /* webpackPrefetch: true */
 import './css/fonts.css'; /* webpackPrefetch: true */
 
-import App from './pages/App.jsx';
-import Dashboard from './pages/Dashboard.jsx';
-import Join from './pages/Join.jsx';
-import Usage from './pages/Usage.jsx';
-import Rooms from './pages/Rooms.jsx';
-import Policies from './pages/Policies.jsx';
-import NotFound from './pages/NotFound.jsx';
-
-/*   Dynamic loading does currently not work :(
 const App = Loadable({
     loader: () => import('./pages/App.jsx'),
     loading: Loading
@@ -50,19 +41,19 @@ const NotFound = Loadable({
     loader: () => import('./pages/NotFound.jsx'),
     loading: Loading
 });
-*/
+
 ReactDOM.render((
-	<BrowserRouter>
-		<Switch>
-			<Route exact={true} path="/" component={Login}/>
-			<Route path="/app" component={App}/>
-			<Route path="/dashboard" component={Dashboard}/>
-			<Route path="/join" component={Join}/>
-			<Route path="/usage" component={Usage}/>
-			<Route path="/policies" component={Policies}/>
-			<Route path="/rooms" component={Rooms}/>
-			<Route component={NotFound}/>
-		</Switch>
-	</BrowserRouter>
+    <BrowserRouter>
+        <Switch>
+            <Route exact={true} path="/" component={Login}/>
+            <Route path="/app" component={App}/>
+            <Route path="/dashboard" component={Dashboard}/>
+            <Route path="/join" component={Join}/>
+            <Route path="/usage" component={Usage}/>
+            <Route path="/policies" component={Policies}/>
+            <Route path="/rooms" component={Rooms}/>
+            <Route component={NotFound}/>
+        </Switch>
+    </BrowserRouter>
 ), document.getElementById('root'));
 registerServiceWorker();

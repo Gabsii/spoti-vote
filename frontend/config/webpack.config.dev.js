@@ -26,6 +26,7 @@ const env = getClientEnvironment(publicUrl);
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
 const config = {
+	mode: 'development',
 	// You may want 'eval' instead if you prefer to see the compiled output in DevTools.
 	// See the discussion in https://github.com/facebookincubator/create-react-app/issues/343.
 	devtool: 'cheap-module-source-map',
@@ -110,20 +111,20 @@ const config = {
 
 			// First, run the linter.
 			// It's important to do this before Babel processes the JS.
-			// {
-			// 	test: /\.(js|jsx|mjs)$/,
-			// 	enforce: 'pre',
-			// 	use: [
-			// 		{
-			// 			options: {
-			// 				formatter: eslintFormatter,
-			// 				eslintPath: require.resolve('eslint')
-			// 			},
-			// 			loader: require.resolve('eslint-loader')
-			// 		}
-			// 	],
-			// 	include: paths.appSrc
-			// }, 
+			{
+				test: /\.(js|jsx|mjs)$/,
+				enforce: 'pre',
+				use: [
+					{
+						options: {
+							formatter: eslintFormatter,
+							eslintPath: require.resolve('eslint')
+						},
+						loader: require.resolve('eslint-loader')
+					}
+				],
+				include: paths.appSrc
+			}, 
 			{
 				// "oneOf" will traverse all following loaders until one will
 				// match the requirements. When no loader matches it will fall
