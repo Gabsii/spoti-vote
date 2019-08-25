@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faRandom} from '@fortawesome/fontawesome-free-solid';
+import {Helmet} from 'react-helmet';
 
 import Header from '../components/Login/Header.jsx';
 import step1 from '../img/Step1.PNG';
@@ -39,16 +40,20 @@ class Usage extends Component {
         if (window.location.search !== '') {
             window.location.search = '';
         }
-        document.title = 'Spoti-Vote | Usage';
-        if (document.getElementsByTagName('META')[2]) {
-            document.getElementsByTagName('META')[2].content = 'Spoti Vote provides you with a party mode for Spotify. Let your friends choose the music!';
-        }
     }
 
     render() {
         window.addEventListener('touchmove', () => {}, {passive: true}); //(event)
         return (<main>
-            <Header/>
+            <Helmet>
+                <html lang="en"   />
+                <title>Spoti-Vote | Usage</title>
+                <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
+                <meta name="description" content="Spoti-Vote aims to improve your party! Ever had a fight over the music? Which song to play next? Spoti-Vote saves that problem! Simply start a new room, choose a playlist and invite your friends!"></meta>
+                <meta property="og:image" content="https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"></meta>
+                <meta property="og:description" content="Spoti-Vote aims to improve your party! Ever had a fight over the music? Which song to play next? Spoti-Vote saves that problem! Simply start a new room, choose a playlist and invite your friends!"></meta>
+                <meta property="og:title" content="Get your party grooving with Spoti-Vote"></meta>
+            </Helmet><Header/>
             <section style={{
                 ...sectionStyle
             }}>

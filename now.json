@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "name": "build",
-  "alias": ["www.spoti-vote.com", "spoti-vote.com"],
+  "name": "spoti-vote",
+  "alias": ["www.spoti-vote.com"],
+  "public": false,
   "routes": [{
-      "src": "/(.*)",
+      "src": "^http://(.*)",
+      "status": 301,
       "headers": { "Location": "https://spoti-vote.com/$1" }
     }, {
       "src": "/static/(.*)",

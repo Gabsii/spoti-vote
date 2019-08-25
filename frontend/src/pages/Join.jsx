@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
+import {Helmet} from 'react-helmet';
 
 import Header from '../components/Login/Header.jsx';
 import LoginCode from '../components/Login/LoginCode.jsx';
@@ -34,15 +35,17 @@ const styles = {
 
 class Join extends Component {
 
-    componentDidMount() {
-        document.title = 'Spoti-Vote | Join a room';
-        if (document.getElementsByTagName('META')[2]) {
-            document.getElementsByTagName('META')[2].content = 'Join a room to fulfill your wish of musically democracy';
-        }
-    }
-
     render() {
         return (<main className={`${styles.main}`}>
+            <Helmet>
+                <html lang="en"   />
+                <title>Spoti-Vote | Join</title>
+                <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
+                <meta name="description" content="Spoti-Vote aims to improve your party! Ever had a fight over the music? Which song to play next? Spoti-Vote saves that problem! Simply start a new room, choose a playlist and invite your friends!"></meta>
+                <meta property="og:image" content="https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"></meta>
+                <meta property="og:description" content="Spoti-Vote aims to improve your party! Ever had a fight over the music? Which song to play next? Spoti-Vote saves that problem! Simply start a new room, choose a playlist and invite your friends!"></meta>
+                <meta property="og:title" content="Get your party grooving with Spoti-Vote"></meta>
+            </Helmet>
             <Header/>
             <div className={`${styles.wrapper}`}>
                 <h1 className={`${styles.heading}`}>Join a Spoti-Vote Room</h1><br/>

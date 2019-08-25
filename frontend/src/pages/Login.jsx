@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/fontawesome-free-solid';
 import {faFacebook, faTwitter, faGithub} from '@fortawesome/fontawesome-free-brands';
 import {css} from 'glamor';
+import {Helmet} from 'react-helmet';
 import LazyLoad from 'react-lazyload';
 
 import image from '../img/samantha-gades-540989-unsplash.jpg';
@@ -127,11 +128,7 @@ class Login extends Component {
         if (window.location.search !== '') {
             window.location.search = '';
         }
-        document.title = 'Get the party started with Spoti-Vote';
-        if (document.getElementsByTagName('META')[2]) {
-            document.getElementsByTagName('META')[2].content = 'Spoti Vote provides you with a party mode for Spotify. Let your friends choose the music!';
-        }
-
+        // document.getElementsByTagName('META')[2].content = 'Spoti Vote provides you with a party mode for Spotify. Let your friends choose the music!';
         var random = Math.floor((Math.random() * 3) + 1);
         switch (random) {
         case 1:
@@ -152,6 +149,15 @@ class Login extends Component {
     render() {
         window.addEventListener('touchmove', () => {}, {passive: true}); // (event)
         return (<main>
+            <Helmet>
+                <html lang="en"   />
+                <title>Get your party grooving with Spoti-Vote</title>
+                <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
+                <meta name="description" content="Spoti-Vote aims to improve your party! Ever had a fight over the music? Which song to play next? Spoti-Vote saves that problem! Simply start a new room, choose a playlist and invite your friends!"></meta>
+                <meta property="og:image" content="https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"></meta>
+                <meta property="og:description" content="Spoti-Vote aims to improve your party! Ever had a fight over the music? Which song to play next? Spoti-Vote saves that problem! Simply start a new room, choose a playlist and invite your friends!"></meta>
+                <meta property="og:title" content="Get your party grooving with Spoti-Vote"></meta>
+            </Helmet>
             <Header/>
             <CookieMessage/>
             <section className={`${styles.heroWrapper}`}>

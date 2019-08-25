@@ -1,5 +1,6 @@
 import React from 'react';
 import {css} from 'glamor';
+import {Helmet} from 'react-helmet';
 
 import Header from '../components/Login/Header.jsx';
 
@@ -18,6 +19,15 @@ const styles = {
 class Policies extends React.Component {
     render() {
         return (<div {... styles.main}>
+            <Helmet>
+                <html lang="en"   />
+                <title>Spoti-Vote | Policies</title>
+                <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
+                <meta name="description" content="Spoti-Vote aims to improve your party! Ever had a fight over the music? Which song to play next? Spoti-Vote saves that problem! Simply start a new room, choose a playlist and invite your friends!"></meta>
+                <meta property="og:image" content="https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"></meta>
+                <meta property="og:description" content="Spoti-Vote aims to improve your party! Ever had a fight over the music? Which song to play next? Spoti-Vote saves that problem! Simply start a new room, choose a playlist and invite your friends!"></meta>
+                <meta property="og:title" content="Get your party grooving with Spoti-Vote"></meta>
+            </Helmet>
             <Header/>
             <main {... styles.wrapper}>
                 <div id="privacyPolicy">
@@ -55,7 +65,7 @@ class Policies extends React.Component {
                     <p {... styles.paragraph}>We use cookies and similar tracking technologies to track the activity on our Service and hold certain information.</p>
                     <p {... styles.paragraph}>Cookies are files with small amount of data which may include an anonymous unique identifier. Cookies are sent to your browser from a website and stored on your device. Tracking technologies also used are beacons, tags, and scripts to collect and track information and to improve and analyze our Service.</p>
                     <p {... styles.paragraph}>You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our Service.</p>
-                    <p {... styles.paragraph}>Examples of Cookies we use:</p>
+                    <p {... styles.paragraph}>Ex les of Cookies we use:</p>
                     <ul {... styles.list}>
                         <li {... styles.listItem}>
                             <strong>Session Cookies.</strong>
