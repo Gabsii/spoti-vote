@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import swal from 'sweetalert2';
-import {faShareAlt} from '@fortawesome/fontawesome-free-solid';
+import {faShareAlt} from '@fortawesome/free-solid-svg-icons/faShareAlt';
 import {css} from 'glamor';
 
 let constants = require('../../../js/constants');

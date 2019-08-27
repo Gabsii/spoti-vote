@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {css} from 'glamor';
 
 import '../../css/selectors.css';
@@ -44,7 +44,7 @@ const styles = {
     error: css({color: constants.colors.redCard, marginTop: '5px', textShadow: 'none'})
 };
 
-class LoginCode extends Component {
+class LoginCode extends PureComponent {
 
     constructor() {
         super();

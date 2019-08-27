@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {css} from 'glamor';
 
 import '../../css/selectors.css';
@@ -29,7 +29,7 @@ const styles = {
     })
 };
 
-class LoginButtonSecondary extends Component {
+class LoginButtonSecondary extends PureComponent {
 
     login() {
         window.location.pathname = '/join';

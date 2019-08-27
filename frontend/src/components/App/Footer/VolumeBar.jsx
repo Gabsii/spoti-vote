@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faVolumeDown, faVolumeUp} from '@fortawesome/fontawesome-free-solid';
+import {faVolumeDown} from '@fortawesome/free-solid-svg-icons/faVolumeDown';
+import {faVolumeUp} from '@fortawesome/free-solid-svg-icons/faVolumeUp';
 import {css} from 'glamor';
 
 import '../../../css/Volumebar.css';

@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faBars} from '@fortawesome/fontawesome-free-solid';
+import {faBars} from '@fortawesome/free-solid-svg-icons/faBars';
 import {css} from 'glamor';
 
 import NavItem from './NavItem.jsx';
@@ -60,7 +60,7 @@ const styles = {
     })
 };
 
-class Header extends Component {
+class Header extends PureComponent {
 
     constructor() {
         super();

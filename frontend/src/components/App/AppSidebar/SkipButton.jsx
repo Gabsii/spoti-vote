@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faDice} from '@fortawesome/fontawesome-free-solid';
+import {faDice} from '@fortawesome/free-solid-svg-icons/faDice';
 import {css} from 'glamor';
 
 let constants = require('../../../js/constants');

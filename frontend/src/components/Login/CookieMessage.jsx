@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import Cookies from 'universal-cookie';
 import {css} from 'glamor';
 
@@ -35,7 +35,7 @@ const styles = {
     link: css({color: 'white', textDecoration: 'none'})
 };
 
-class CookieMessage extends Component {
+class CookieMessage extends PureComponent {
 
     constructor() {
         super();

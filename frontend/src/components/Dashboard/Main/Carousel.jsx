@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCaretDown, faCaretRight} from '@fortawesome/fontawesome-free-solid';
+import {faCaretDown} from '@fortawesome/free-solid-svg-icons/faCaretDown';
+import {faCaretRight} from '@fortawesome/free-solid-svg-icons/faCaretRight';
 
 import TopType from './TopType.jsx';
 import Spinner from './Spinner.jsx';

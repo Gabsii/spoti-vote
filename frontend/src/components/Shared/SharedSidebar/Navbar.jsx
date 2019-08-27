@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSignOutAlt, faUsers, faHome} from '@fortawesome/fontawesome-free-solid';
+import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
+import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers'; 
+import {faHome} from '@fortawesome/free-solid-svg-icons/faHome';
 import Cookies from 'universal-cookie';
 import {css} from 'glamor';
 
@@ -39,7 +41,7 @@ const styles = {
             padding: '15px'
         }
     }),
-    button: css({border: 0, color: constants.colors.fontSecondary, background: 'none', paddingBottom: '5px'})
+    button: css({border: 0, color: constants.colors.fontSecondary, background: 'none', paddingBottom: '5px', ':hover': {cursor: 'pointer'}})
 };
 
 class SettingsBar extends Component {

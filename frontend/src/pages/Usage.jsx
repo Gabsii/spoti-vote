@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faRandom} from '@fortawesome/fontawesome-free-solid';
+import {faRandom} from '@fortawesome/free-solid-svg-icons/faRandom';
 import {Helmet} from 'react-helmet';
 
 import Header from '../components/Login/Header.jsx';

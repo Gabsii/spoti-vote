@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-import {
-    faUsers,
-    faPiggyBank,
-    faUnlink,
-    faCar,
-    faHome,
-    faHeadphones
-} from '@fortawesome/fontawesome-free-solid';
-import {faFacebook, faTwitter, faGithub} from '@fortawesome/fontawesome-free-brands';
+import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers';
+import {faPiggyBank} from '@fortawesome/free-solid-svg-icons/faPiggyBank';
+import {faUnlink} from '@fortawesome/free-solid-svg-icons/faUnlink';
+import {faCar} from '@fortawesome/free-solid-svg-icons/faCar';
+import {faHome} from '@fortawesome/free-solid-svg-icons/faHome';
+import {faHeadphones} from '@fortawesome/free-solid-svg-icons/faHeadphones';
+import {faFacebookF} from '@fortawesome/free-brands-svg-icons/faFacebookF'; 
+import {faTwitter} from '@fortawesome/free-brands-svg-icons/faTwitter';
+import {faGithub} from '@fortawesome/free-brands-svg-icons/faGithub';
 import {css} from 'glamor';
 import {Helmet} from 'react-helmet';
 import LazyLoad from 'react-lazyload';
@@ -206,7 +206,7 @@ class Login extends Component {
                     <div className={`${styles.plainContainer}`}>
                         <h2 className={`${styles.socialHeading}`}>Connect with us</h2>
                         <div className={`${styles.socialWrapper}`}>
-                            <SocialIcon icon={faFacebook} url={'https://www.facebook.com/Spoti-Vote-600357846990340/'}/>
+                            <SocialIcon icon={faFacebookF} url={'https://www.facebook.com/Spoti-Vote-600357846990340/'}/>
                             <SocialIcon icon={faTwitter} url={'https://twitter.com/SpotiVote'}/>
                             <SocialIcon icon={faGithub} url={'https://github.com/Gabsii/spoti-vote'}/>
                         </div>

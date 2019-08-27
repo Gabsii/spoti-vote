@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSignOutAlt} from '@fortawesome/fontawesome-free-solid';
+import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
 import {css} from 'glamor';
 import swal from 'sweetalert2';
 

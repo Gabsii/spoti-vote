@@ -1,6 +1,8 @@
 import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faPlayCircle, faPauseCircle, faStepForward} from '@fortawesome/fontawesome-free-solid';
+import {faPlayCircle} from '@fortawesome/free-solid-svg-icons/faPlayCircle';
+import {faPauseCircle} from '@fortawesome/free-solid-svg-icons/faPauseCircle';
+import {faStepForward} from '@fortawesome/free-solid-svg-icons/faStepForward';
 import {css} from 'glamor';
 
 let constants = require('../../../js/constants');

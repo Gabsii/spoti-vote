@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {css} from 'glamor';
 
 import '../../css/selectors.css';
@@ -29,12 +29,13 @@ const styles = {
     })
 };
 
-class LoginButton extends Component {
+class LoginButton extends PureComponent {
     login() {
         window.location.href = constants.config.url + '/login';
     }
 
     render() {
+        console.log(constants);
         return (<button id='loginbutton' className={`${styles.button}`} onClick={this.login.bind(this)} tabIndex='0'>
             Create a party
         </button>);
