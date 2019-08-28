@@ -209,7 +209,8 @@ class App extends Component {
                 swal.fire({type: 'error', title: 'Oops...', text: data.message}).then( () => { // (value)
                     // console.log(value);
                     this.socket.emit('logout');
-                    window.location.pathname = '/';
+                    // if the user has a token he will stay on /dashboard, otherwise he will be redirected to /
+                    window.location.pathname = '/dashboard';
                 });
             }
         });

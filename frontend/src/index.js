@@ -22,7 +22,7 @@ const NotFound = React.lazy(()=> import('./pages/NotFound.jsx'));
 
 ReactDOM.render((
     <BrowserRouter>
-        <Suspense fallback={Loading}>
+        <Suspense fallback={<Loading/>}>
             <Switch>
                 <Route exact={true} path="/" component={Login}/>
                 <Route path="/app" component={App}/>

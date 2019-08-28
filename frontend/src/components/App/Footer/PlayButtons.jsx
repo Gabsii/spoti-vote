@@ -20,7 +20,7 @@ const styles = {
     skip: css({bottom: 0})
 };
 
-class Buttons extends React.PureComponent {
+class PlayButtons extends React.PureComponent {
 
     render() {
         return (<div className={`${styles.wrapper}`}>
@@ -40,4 +40,4 @@ class Buttons extends React.PureComponent {
     }
 }
 
-export default Buttons;
+export default PlayButtons;

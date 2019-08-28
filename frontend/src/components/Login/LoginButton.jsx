@@ -35,9 +35,8 @@ class LoginButton extends PureComponent {
     }
 
     render() {
-        console.log(constants);
         return (<button id='loginbutton' className={`${styles.button}`} onClick={this.login.bind(this)} tabIndex='0'>
-            Create a party
+            Start a party
         </button>);
     }
 }
