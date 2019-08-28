@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import ReactDOM from 'react-dom';
 import {Route} from 'react-router';
 import {BrowserRouter, Switch} from 'react-router-dom';
-import Loadable from 'react-loadable';
 
 import Loading from './pages/Loading.jsx';
 import Login from './pages/Login.jsx';
@@ -12,57 +11,29 @@ import registerServiceWorker from './registerServiceWorker';
 import './css/reset.css'; /* webpackPrefetch: true */
 import './css/fonts.css'; /* webpackPrefetch: true */
 
-import App from './pages/App.jsx';
-import Dashboard from './pages/Dashboard.jsx';
-import Join from './pages/Join.jsx';
-import Usage from './pages/Usage.jsx';
-import Rooms from './pages/Rooms.jsx';
-import Policies from './pages/Policies.jsx';
-import NotFound from './pages/NotFound.jsx';
+// dynamic imports for each route
+const App = React.lazy(()=> import('./pages/App.jsx'));
+const Dashboard = React.lazy(()=> import('./pages/Dashboard.jsx'));
+const Join = React.lazy(()=> import('./pages/Join.jsx'));
+const Usage = React.lazy(()=> import('./pages/Usage.jsx'));
+const Rooms = React.lazy(()=> import('./pages/Rooms.jsx'));
+const Policies = React.lazy(()=> import('./pages/Policies.jsx'));
+const NotFound = React.lazy(()=> import('./pages/NotFound.jsx'));
 
-/*   Dynamic loading does currently not work :(
-const App = Loadable({
-    loader: () => import('./pages/App.jsx'),
-    loading: Loading
-});
-const Dashboard = Loadable({
-    loader: () => import('./pages/Dashboard.jsx'),
-    loading: Loading
-});
-const Join = Loadable({
-    loader: () => import('./pages/Join.jsx'),
-    loading: Loading
-});
-const Usage = Loadable({
-    loader: () => import('./pages/Usage.jsx'),
-    loading: Loading
-});
-const Rooms = Loadable({
-    loader: () => import('./pages/Rooms.jsx'),
-    loading: Loading
-});
-const Policies = Loadable({
-    loader: () => import('./pages/Policies.jsx'),
-    loading: Loading,
-    delay: 500
-});
-const NotFound = Loadable({
-    loader: () => import('./pages/NotFound.jsx'),
-    loading: Loading
-});
-*/
 ReactDOM.render((
-	<BrowserRouter>
-		<Switch>
-			<Route exact={true} path="/" component={Login}/>
-			<Route path="/app" component={App}/>
-			<Route path="/dashboard" component={Dashboard}/>
-			<Route path="/join" component={Join}/>
-			<Route path="/usage" component={Usage}/>
-			<Route path="/policies" component={Policies}/>
-			<Route path="/rooms" component={Rooms}/>
-			<Route component={NotFound}/>
-		</Switch>
-	</BrowserRouter>
+    <BrowserRouter>
+        <Suspense fallback={Loading}>
+            <Switch>
+                <Route exact={true} path="/" component={Login}/>
+                <Route path="/app" component={App}/>
+                <Route path="/dashboard" component={Dashboard}/>
+                <Route path="/join" component={Join}/>
+                <Route path="/usage" component={Usage}/>
+                <Route path="/policies" component={Policies}/>
+                <Route path="/rooms" component={Rooms}/>
+                <Route component={NotFound}/>
+            </Switch>
+        </Suspense>
+    </BrowserRouter>
 ), document.getElementById('root'));
 registerServiceWorker();

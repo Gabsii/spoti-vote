@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSignOutAlt} from '@fortawesome/fontawesome-free-solid';
+import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
 import {css} from 'glamor';
 import swal from 'sweetalert2';
 
@@ -8,76 +8,76 @@ import SkipButton from './SkipButton.jsx';
 
 let constants = require('../../../js/constants');
 const styles = {
-	wrapper: css({
-		width: '100%',
-		minWidth: 0,
-		height: '32px',
-		boxSizing: 'border-box',
-		marginTop: 'auto',
-		padding: '4px 16px',
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		marginBottom: 'auto',
-		'@media(min-width: 760px)': {
-			marginBottom: 0
-		}
-	}),
-	button: css({border: 0, color: constants.colors.fontSecondary, background: 'none'})
+    wrapper: css({
+        width: '100%',
+        minWidth: 0,
+        height: '32px',
+        boxSizing: 'border-box',
+        marginTop: 'auto',
+        padding: '4px 16px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 'auto',
+        '@media(min-width: 760px)': {
+            marginBottom: 0
+        }
+    }),
+    button: css({border: 0, color: constants.colors.fontSecondary, background: 'none'})
 };
 
-class SettingsBar extends Component {
+class SettingsBar extends PureComponent {
 
-	constructor() {
-		super();
-		this.state = {
-			hover: false
-		};
-	}
+    constructor() {
+        super();
+        this.state = {
+            hover: false
+        };
+    }
 
-	toggleHover() {
-		this.setState({
-			hover: !this.state.hover
-		});
-	}
+    toggleHover() {
+        this.setState({
+            hover: !this.state.hover
+        });
+    }
 
-	logoutHandler() {
-		if (this.props.isHost === true) {
-			swal.fire({
-				title: 'Close Room.',
-				text: 'This will close the room, are you sure?',
-				type: 'warning',
-				showCancelButton: true,
-				confirmButtonText: 'Yes, close it!',
-				cancelButtonText: 'No, dont do it!'
-			}).then((result) => {
-				if (!result.dismiss) {
-					this.props.socket.emit('logout');
-					window.location.pathname = '/dashboard';
-				}
-			});
-		} else {
-			window.location.pathname = '/dashboard';
-		}
-	}
+    logoutHandler() {
+        if (this.props.isHost === true) {
+            swal.fire({
+                title: 'Close Room.',
+                text: 'This will close the room, are you sure?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, close it!',
+                cancelButtonText: 'No, dont do it!'
+            }).then((result) => {
+                if (!result.dismiss) {
+                    this.props.socket.emit('logout');
+                    window.location.pathname = '/dashboard';
+                }
+            });
+        } else {
+            window.location.pathname = '/dashboard';
+        }
+    }
 
-	render() {
-		let linkStyle;
-		this.state.hover
-			? linkStyle = {
-				cursor: 'pointer'
-			}
-			: linkStyle = {
-				cursor: 'context-menu'
-			};
+    render() {
+        let linkStyle;
+        this.state.hover
+            ? linkStyle = {
+                cursor: 'pointer'
+            }
+            : linkStyle = {
+                cursor: 'context-menu'
+            };
 
-		return (<div className={`${styles.wrapper}`}>
-			<SkipButton socket={this.props.socket} skipHandler={this.props.skipHandler} connectedUser={this.props.connectedUser} host={this.props.host}/>
-			<button style={linkStyle} className={`${styles.button}`} onClick={this.logoutHandler.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
-				<FontAwesomeIcon icon={faSignOutAlt} size='2x'/>
-			</button>
-		</div>);
-	}
+        return (<div className={`${styles.wrapper}`}>
+            <SkipButton socket={this.props.socket} skipHandler={this.props.skipHandler} connectedUser={this.props.connectedUser} host={this.props.host}/>
+            <button style={linkStyle} className={`${styles.button}`} onClick={this.logoutHandler.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+                <FontAwesomeIcon icon={faSignOutAlt} size='2x'/>
+            </button>
+        </div>);
+    }
 }
 
 export default SettingsBar;
