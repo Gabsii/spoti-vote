@@ -182,11 +182,12 @@ class App extends Component {
                     } else {
                         newState.activePlayer = {
                             progress: data.activePlayer.progress,
+                            isPlaying: data.activePlayer.isPlaying,
                             track: this.state.activePlayer.track
                         };
                     }
+                    console.log(data.activePlayer.isPlaying);
                 }
-
                 if (data.playlists !== null && data.playlists !== undefined) {
                     newState.playlists = data.playlists;
                 }

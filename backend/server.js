@@ -10,5 +10,5 @@ let portBack = process.env.PORTBACK;
 * Starts the server
 */
 app.listen(portBack, () => {
-	console.log('INFO: Server started on port: ' + app.address().port);
+    console.log('INFO: Server started on port: ' + app.address().port);
 });
