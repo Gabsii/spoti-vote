@@ -406,14 +406,13 @@ io.on('connection', (socket) => {
     });
 
     /**
-	* Called when a user votes on a track
-	* @param {string} trackId Id of the track
+	* Called when the host decides to skip the currently playing song
 	*/
     socket.on('skip', data => {
         let room = lib.getRoomById(socket.roomId, rooms);
         if (room !== null) {
-            console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] voted for [' + data.trackId + '].');
-            room.vote(data.trackId, socket.isHost, socket.name);
+            console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] skiped the song.');
+            room.play();
 
             let update = room.getDifference(socket.oldUpdate);
             socket.oldUpdate = _.cloneDeep(room);

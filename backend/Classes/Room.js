@@ -627,7 +627,7 @@ method.vote = async function(trackId, isHost, name) {
 };
 
 /**
-* PLays the most voted track
+* Plays the most voted track
 *
 * @author: Michiocre
 * @return {boolean} True if the request to the spotify API was successfully changed
@@ -669,7 +669,7 @@ method.play = async function() {
 };
 
 /**
-* PLays the current selection of Tracks
+* Rerolls the current selection of votable songs
 *
 * @author: Michiocre
 * @return {boolean} True if new tracks were chosen
