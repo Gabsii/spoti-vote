@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
 import Cookies from 'universal-cookie';
+import {Helmet} from 'react-helmet';
 
 import SharedSidebar from '../components/Shared/SharedSidebar.jsx';
 import Main from '../components/Dashboard/Main.jsx';
@@ -104,6 +105,11 @@ class Dashboard extends Component {
 
     render() {
         return (<div className={`${styles.main}`}>
+            <Helmet>
+                <html lang="en"   />
+                <title>Dashboard | Spoti-Vote</title>
+                <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
+            </Helmet>
             <Main topTracks={this.state.topTracks} profile={this.state.profile}/>
             <SharedSidebar profile={this.state.profile}/>
         </div>);

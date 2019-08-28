@@ -157,6 +157,8 @@ class Login extends Component {
                 <meta property="og:image" content="https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"></meta>
                 <meta property="og:description" content="Spoti-Vote aims to improve your party! Ever had a fight over the music? Which song to play next? Spoti-Vote saves that problem! Simply start a new room, choose a playlist and invite your friends!"></meta>
                 <meta property="og:title" content="Get your party grooving with Spoti-Vote"></meta>
+                <meta property="og:type" content="website"/>
+                <meta property="og:url" content={window.location.href}/>
             </Helmet>
             <Header/>
             <CookieMessage/>
@@ -175,18 +177,16 @@ class Login extends Component {
                     </div>
                 </div>
             </section>
-            <LazyLoad height={500} once={true}>
-                <section className={`${styles.plainSection}`}>
-                    <div className={`${styles.plainContainer}`}>
-                        <h2 id='features' className={`${styles.plainHeading}`}>Why Spoti-Vote?</h2>
-                        <div className={`${styles.reasonWrapper}`}>
-                            <Reason icon={faPiggyBank} title="No Costs" text="Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!"/>
-                            <Reason icon={faUsers} title="No Dictatorship" text="We empower the users! The DJ plays a song you don't like? Use your voice and just skip it!"/>
-                            <Reason icon={faUnlink} title="No Registration" text="We have no strings on you! Just log in with your Spotify Premium account and invite your friends to join your room!"/>
-                        </div>
+            <section className={`${styles.plainSection}`}>
+                <div className={`${styles.plainContainer}`}>
+                    <h2 id='features' className={`${styles.plainHeading}`}>Why Spoti-Vote?</h2>
+                    <div className={`${styles.reasonWrapper}`}>
+                        <Reason icon={faPiggyBank} title="No Costs" text="Save your piggy bank by using Spoti-Vote. Our service is completely free of charge!"/>
+                        <Reason icon={faUsers} title="No Dictatorship" text="We empower the users! The DJ plays a song you don't like? Use your voice and just skip it!"/>
+                        <Reason icon={faUnlink} title="No Registration" text="We have no strings on you! Just log in with your Spotify Premium account and invite your friends to join your room!"/>
                     </div>
-                </section>
-            </LazyLoad>
+                </div>
+            </section>
             <LazyLoad height={500} offset={100} once={true}>
                 <section className={`${styles.imageSection}`} style={{
                     backgroundImage: 'url(' + this.state.image + ')'
@@ -201,18 +201,16 @@ class Login extends Component {
                     </div>
                 </section>
             </LazyLoad>
-            <LazyLoad height={250} offset={100} once={true}>
-                <section className={`${styles.socialSection}`}>
-                    <div className={`${styles.plainContainer}`}>
-                        <h2 className={`${styles.socialHeading}`}>Connect with us</h2>
-                        <div className={`${styles.socialWrapper}`}>
-                            <SocialIcon icon={faFacebookF} url={'https://www.facebook.com/Spoti-Vote-600357846990340/'}/>
-                            <SocialIcon icon={faTwitter} url={'https://twitter.com/SpotiVote'}/>
-                            <SocialIcon icon={faGithub} url={'https://github.com/Gabsii/spoti-vote'}/>
-                        </div>
+            <section className={`${styles.socialSection}`}>
+                <div className={`${styles.plainContainer}`}>
+                    <h2 className={`${styles.socialHeading}`}>Connect with us</h2>
+                    <div className={`${styles.socialWrapper}`}>
+                        <SocialIcon icon={faFacebookF} url={'https://www.facebook.com/Spoti-Vote-600357846990340/'}/>
+                        <SocialIcon icon={faTwitter} url={'https://twitter.com/SpotiVote'}/>
+                        <SocialIcon icon={faGithub} url={'https://github.com/Gabsii/spoti-vote'}/>
                     </div>
-                </section>
-            </LazyLoad>
+                </div>
+            </section>
             <LoginFooter/>
         </main>);
     }

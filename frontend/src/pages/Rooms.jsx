@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
 import Cookies from 'universal-cookie';
+import {Helmet} from 'react-helmet';
 
 import SharedSidebar from '../components/Shared/SharedSidebar.jsx';
 import RoomContainer from '../components/Rooms/RoomContainer.jsx';
@@ -74,6 +75,11 @@ class Rooms extends Component {
 
     render() {
         return (<div className={`${styles.main}`}>
+            <Helmet>
+                <html lang="en"   />
+                <title>Rooms | Spoti-Vote</title>
+                <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
+            </Helmet>
             <RoomContainer/>
             <SharedSidebar profile={this.state.profile}/>
         </div>);

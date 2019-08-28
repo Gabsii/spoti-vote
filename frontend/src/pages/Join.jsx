@@ -39,7 +39,7 @@ class Join extends Component {
         return (<main className={`${styles.main}`}>
             <Helmet>
                 <html lang="en"   />
-                <title>Spoti-Vote | Join</title>
+                <title>Join | Spoti-Vote</title>
                 <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
                 <meta name="description" content="Spoti-Vote aims to improve your party! Ever had a fight over the music? Which song to play next? Spoti-Vote saves that problem! Simply start a new room, choose a playlist and invite your friends!"></meta>
                 <meta property="og:image" content="https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"></meta>

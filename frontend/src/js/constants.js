@@ -7,7 +7,7 @@ if (process.env.PORTBACK === 443) {
     config.url = 'http://';
 }
 if (process.env.NODE_ENV !== 'production') {
-    config.url += process.env.ADDRESS + ':' + process.env.PORTBACK;
+    config.url += (process.env.ADDRESS || 'localhost') + ':' + (process.env.PORTBACK || 8888);
 }else{
     config.url = 'https://backend.spoti-vote.com:443';
 }
