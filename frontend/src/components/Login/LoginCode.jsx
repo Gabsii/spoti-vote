@@ -9,7 +9,7 @@ const styles = {
     input: css({
         marginTop: '1em',
         textAlign: 'center',
-        backgroundColor: constants.colors.background,
+        backgroundColor: constants.colors.backgroundLite,
         color: constants.colors.font,
         borderRadius: '500px',
         padding: '17px 40px',

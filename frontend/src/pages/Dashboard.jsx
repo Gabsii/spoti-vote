@@ -52,6 +52,7 @@ class Dashboard extends Component {
 
         this.fetchProfileData(token);
         this.fetchTopTracks(token);
+        window.addEventListener('resize', this.fetchTopTracks.bind(this,token));
     }
 
     // asynchronously fetch all the comments for the current post and add it to the comments array in the state
