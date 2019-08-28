@@ -3,10 +3,17 @@
     "name": "spoti-vote",
     "alias": ["www.spoti-vote.com", "spoti-vote.com"],
     "public": false,
+    "builds": [
+        {"src": "package.json", "use": "@now/static-build"},
+        {"src": "backend/server.js", "use": "@now/node"}
+    ],
     "routes": [{
         "src": "^http://(.*)",
         "status": 301,
         "headers": { "Location": "https://spoti-vote.com/$1" }
+    },{
+        "src": "/api/{.*}", 
+        "dest": "/backend/server.js"
     }, {
         "src": "/static/(.*)",
         "dest": "/static/$1",
@@ -27,11 +34,8 @@
         "src": "/service-worker.js",
         "dest": "/service-worker.js",
         "headers": { "Cache-Control": "no-cache" }
-    }, {
-        "src": "/example",
-        "dest": "/404.html",
-        "status": 404
-    }],
+    }
+    ],
     "env": {
         "PORT": "443",
         "PORTBACK": "443",

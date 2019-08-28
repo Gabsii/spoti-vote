@@ -30,7 +30,10 @@ const styles = {
         width: '100%',
         padding: '2px 0 10px 5px',
         borderBottom: '1px solid' + constants.colors.barBackground,
-        color: 'white'
+        color: 'white',
+        ':hover': {
+            cursor: 'pointer'
+        }
     }),
     tracksWrapper: css({display: 'flex', flexDirection: 'row', justifyContent: 'center', overflow: 'hidden'}),
     minimizer: css({
@@ -62,15 +65,15 @@ class Carousel extends Component {
 
     render() {
         return (<footer id="carousel" className={`${styles.wrapper}`}>
-            <h2 className={`${styles.heading}`}>
+            <h2 className={`${styles.heading}`} onClick={this.minimizeFooter.bind(this)}>
                 {
                     this.state.minimized
                         ? <FontAwesomeIcon icon={faCaretRight} size='1x' className={`${styles.minimizer}`} style={{
                             marginRight: '10px'
-                        }} onClick={this.minimizeFooter.bind(this)}/>
+                        }}/>
                         : <FontAwesomeIcon icon={faCaretDown} size='1x' className={`${styles.minimizer}`} style={{
                             marginRight: '10px'
-                        }} onClick={this.minimizeFooter.bind(this)}/>
+                        }}/>
                 }
 
                 Your Top Tracks:
