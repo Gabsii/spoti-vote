@@ -10,6 +10,7 @@
     "start-backend": "nodemon ./backend/server.js",
     "build": "node frontend/scripts/build.js && mv frontend/build public",
     "deploy": "now --prod",
+    "deploy-backend": "pm2 delete backendSpotivote; pm2 start backend/server.js --name \"backendSpotivote\"",
     "test": "node scripts/test.js --env=jsdom",
     "update": "npm-update-all"
   },
