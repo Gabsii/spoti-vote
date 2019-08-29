@@ -6,7 +6,7 @@ import Card from '../components/App/Cards/Card';
 import CardContainer from '../components/App/Cards/CardContainer';
 import ShareButton from '../components/App/Cards/ShareButton';
 import Footer from '../components/App/Footer';
-import Buttons from '../components/App/Footer/Buttons';
+import PlayButtons from '../components/App/Footer/PlayButtons';
 import ProgressBar from '../components/App/Footer/ProgressBar';
 import SongAggregation from '../components/App/Footer/SongAggregation';
 import SongIcon from '../components/App/Footer/SongIcon';
@@ -91,9 +91,9 @@ describe('Pages render', () => {
             });
         });
         describe('App Footer components render', () => {
-            it('Buttons', () => {
+            it('PlayButtons', () => {
                 const div = document.createElement('div');
-                ReactDOM.render(<Buttons/>, div);
+                ReactDOM.render(<PlayButtons/>, div);
                 ReactDOM.unmountComponentAtNode(div);
             });
             it('ProgressBar', () => {

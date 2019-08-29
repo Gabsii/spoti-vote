@@ -39,8 +39,6 @@ class Footer extends PureComponent {
             }
         }
 
-        console.log(this.props.activePlayer);
-
         return (<footer className={`${styles.wrapper}`}>
             <SongIcon background={track.img}/>
             <SongAggregation songName={track.name} artists={track.artists}/>

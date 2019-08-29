@@ -34,13 +34,8 @@ const styles = {
         marginBottom: '5px',
         fontSize: '14px'
     }),
-    breaker: css({
-        display: 'none',
-        '@media(min-width: 760px)': {
-            display: 'block'
-        }
-    }),
-    playlistName: css({marginBottom: '20px', textAlign: 'center'}),
+
+    playlistName: css({marginBottom: '20px', textAlign: 'center', display: 'block'}),
     playlistImage: css({
         height: '150px',
         width: '150px',
@@ -52,11 +47,22 @@ const styles = {
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         border: '1px solid black',
-        display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',       
+        display: 'none',
+        '@media(min-width: 760px)': {
+            display: 'flex'
+        }
     }),
-    hostWrapper: css({marginBottom: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center'}),
+    hostWrapper: css({
+        marginBottom: '15px', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        display: 'none',
+        '@media(min-width: 760px)': {
+            display: 'flex'
+        }
+    }),
     hostName: css({marginLeft: '10px'})
 };
 

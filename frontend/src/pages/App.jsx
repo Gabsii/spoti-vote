@@ -17,7 +17,11 @@ const styles = {
 class App extends Component {
     constructor() {
         super();
-        this.socket = socketIOClient(constants.config.url);
+        try {
+            this.socket = socketIOClient(constants.config.url);
+        } catch (error) {
+            console.error(error);
+        }
         let token = cookies.get('token');
         if (token === undefined) {
             token = null;
@@ -207,7 +211,6 @@ class App extends Component {
         this.socket.on('errorEvent', (data) => {
             if (data.message !== null && data.message !== undefined) {
                 swal.fire({type: 'error', title: 'Oops...', text: data.message}).then( () => { // (value)
-                    // console.log(value);
                     this.socket.emit('logout');
                     // if the user has a token he will stay on /dashboard, otherwise he will be redirected to /
                     window.location.pathname = '/dashboard';
@@ -271,7 +274,7 @@ class App extends Component {
         return (<main className={`${styles.main}`}>
             <Helmet>
                 <html lang="en"   />
-                <title> {this.state.roomId} | Spoti-Vote</title>
+                <title> {this.state.roomId || ''} | Spoti-Vote</title>
                 <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
             </Helmet>
             <AppSidebar skipHandler={this.skipHandler.bind(this)} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>

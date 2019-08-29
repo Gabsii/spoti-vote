@@ -10,7 +10,7 @@
     "start-backend": "nodemon ./backend/server.js",
     "build": "node frontend/scripts/build.js && mv frontend/build public",
     "deploy": "now --prod",
-    "test": "node scripts/test.js --env=jsdom",
+    "test": "node frontend/scripts/test.js",
     "update": "npm-update-all"
   },
   "cacheDirectories": [
@@ -37,68 +37,51 @@
   },
   "homepage": "https://spoti-vote.com",
   "jest": {
-    "watchPlugins": [
-      "jest-runner-eslint/watch-fix"
+    "roots": [
+      "<rootDir>/frontend/src"
     ],
-    "projects": [
-      {
-        "displayName": "backend",
-        "testMatch": [
-          "<rootDir>/backend/**/__tests__/**/*.{js,jsx,mjs}"
-        ]
-      },
-      {
-        "runner": "jest-runner-eslint",
-        "displayName": "backend-lint",
-        "testMatch": [
-          "<rootDir>/backend/**/*.js"
-        ]
-      },
-      {
-        "runner": "jest-runner-eslint",
-        "displayName": "frontend-lint",
-        "testMatch": [
-          "<rootDir>/frontend/src/**/*.{js,jsx}"
-        ]
-      },
-      {
-        "displayName": "frontend",
-        "collectCoverageFrom": [
-          "/frontend/src/**/*.{js,jsx,mjs}"
-        ],
-        "setupFiles": [
-          "<rootDir>/frontend/config/polyfills.js"
-        ],
-        "testMatch": [
-          "<rootDir>/frontend/src/**/__tests__/**/*.{js,jsx,mjs}",
-          "<rootDir>/frontend/src/**/?(*.)(spec|test).{js,jsx,mjs}"
-        ],
-        "testPathIgnorePatterns": [
-          "<rootDir>/(build|docs|node_modules)/"
-        ],
-        "testEnvironment": "node",
-        "testURL": "http://localhost",
-        "transform": {
-          "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
-          "^.+\\.css$": "<rootDir>/frontend/config/jest/cssTransform.js",
-          "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/frontend/config/jest/fileTransform.js"
-        },
-        "transformIgnorePatterns": [
-          "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
-        ],
-        "moduleNameMapper": {
-          "^react-native$": "react-native-web"
-        },
-        "moduleFileExtensions": [
-          "web.js",
-          "mjs",
-          "js",
-          "json",
-          "web.jsx",
-          "jsx",
-          "node"
-        ]
-      }
+    "collectCoverageFrom": [
+      "frontend/src/**/*.{js,jsx,ts,tsx}",
+      "!frontend/src/**/*.d.ts"
+    ],
+    "setupFiles": [
+      "react-app-polyfill/jsdom"
+    ],
+    "setupFilesAfterEnv": [],
+    "testMatch": [
+      "<rootDir>/frontend/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "<rootDir>/frontend/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+    ],
+    "testEnvironment": "jest-environment-jsdom-fourteen",
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.css$": "<rootDir>/frontend/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/frontend/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
+      "^.+\\.module\\.(css|sass|scss)$"
+    ],
+    "modulePaths": [],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web",
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ],
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
     ]
   },
   "babel": {
@@ -146,6 +129,8 @@
     "helmet-csp": "^2.7.1",
     "html-webpack-plugin": "^4.0.0-beta.5",
     "jest": "^24.8.0",
+    "jest-environment-jsdom-fourteen": "^0.1.0",
+    "jest-watch-typeahead": "^0.4.0",
     "lodash": "^4.17.11",
     "mini-css-extract-plugin": "^0.8.0",
     "node-fetch": "^2.6.0",
@@ -162,6 +147,7 @@
     "promise": "^8.0.3",
     "raf": "^3.4.1",
     "react": "^16.8.6",
+    "react-app-polyfill": "^1.0.2",
     "react-dev-utils": "^9.0.1",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",
