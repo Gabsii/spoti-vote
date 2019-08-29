@@ -60,7 +60,9 @@
         "testMatch": [
           "<rootDir>/frontend/src/**/*.{js,jsx}"
         ]
-      },
+      }
+    ],
+    "brokenProjects": [
       {
         "displayName": "frontend",
         "collectCoverageFrom": [
@@ -146,7 +148,8 @@
     "helmet-csp": "^2.7.1",
     "html-webpack-plugin": "^4.0.0-beta.5",
     "jest": "^24.8.0",
-    "lodash": "^4.17.11",
+    "jest-runner-eslint": "^0.7.4",
+    "lodash": "^4.17.15",
     "mini-css-extract-plugin": "^0.8.0",
     "node-fetch": "^2.6.0",
     "nodemon": "^1.19.1",

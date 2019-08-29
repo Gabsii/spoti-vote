@@ -7,14 +7,14 @@
 * @return {Room} The room object with the id of the parameter
 */
 function getRoomById(roomId, rooms) {
-	let room = null;
-	for (var i = 0; i < rooms.length; i++) {
-		if (rooms[i].id === roomId) {
-			room = rooms[i];
-			return room;
-		}
-	}
-	return null;
+    let room = null;
+    for (var i = 0; i < rooms.length; i++) {
+        if (rooms[i].id === roomId) {
+            room = rooms[i];
+            return room;
+        }
+    }
+    return null;
 }
 
 /**
@@ -26,25 +26,25 @@ function getRoomById(roomId, rooms) {
 * @return {Room} The room object with the id of the parameter
 */
 function getUserById(id, users) {
-	let user = null;
-	for (var i = 0; i < users.length; i++) {
-		if (users[i].id === id) {
-			user = users[i];
-			return user;
-		}
-	}
-	return null;
+    let user = null;
+    for (var i = 0; i < users.length; i++) {
+        if (users[i].id === id) {
+            user = users[i];
+            return user;
+        }
+    }
+    return null;
 }
 
 let codes = {
-	SUCCESS: 200,
-	NOTFOUND: 404,
-	PLNOTFOUND: 414,
-	ERROR: 500
+    SUCCESS: 200,
+    NOTFOUND: 404,
+    PLNOTFOUND: 414,
+    ERROR: 500
 };
 
 module.exports = {
-	getRoomById: getRoomById,
-	getUserById: getUserById,
-	codes: codes
+    getRoomById: getRoomById,
+    getUserById: getUserById,
+    codes: codes
 };

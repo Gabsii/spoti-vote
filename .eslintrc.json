@@ -31,7 +31,7 @@
             "always"
         ],
 		"no-console": [
-            "off"
+            "warn"
         ],
 		"jest/no-disabled-tests": "warn",
 		"jest/no-focused-tests": "error",
