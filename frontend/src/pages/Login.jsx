@@ -150,7 +150,7 @@ class Login extends Component {
         window.addEventListener('touchmove', () => {}, {passive: true}); // (event)
         return (<main>
             <Helmet>
-                <html lang="en"   />
+                <html lang="en" />
                 <title>Get your party grooving with Spoti-Vote</title>
                 <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
                 <meta name="description" content="Spoti-Vote aims to improve your party! Ever had a fight over the music? Which song to play next? Spoti-Vote saves that problem! Simply start a new room, choose a playlist and invite your friends!"></meta>

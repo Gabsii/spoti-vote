@@ -273,7 +273,7 @@ class App extends Component {
     render() {
         return (<main className={`${styles.main}`}>
             <Helmet>
-                <html lang="en"   />
+                <html lang="en" />
                 <title> {this.state.roomId || ''} | Spoti-Vote</title>
                 <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
             </Helmet>

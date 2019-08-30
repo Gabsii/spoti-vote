@@ -70,7 +70,7 @@ class Rooms extends Component {
             } else if (response.error.status === 401) {
                 window.location.href = constants.config.url + '/login';
             }
-        }).catch((err) => console.log(err));
+        }).catch((err) => console.error(err));
     }
 
     render() {
