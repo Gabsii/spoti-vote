@@ -186,11 +186,11 @@ class App extends Component {
                     } else {
                         newState.activePlayer = {
                             progress: data.activePlayer.progress,
+                            isPlaying: data.activePlayer.isPlaying,
                             track: this.state.activePlayer.track
                         };
                     }
                 }
-
                 if (data.playlists !== null && data.playlists !== undefined) {
                     newState.playlists = data.playlists;
                 }
@@ -210,7 +210,7 @@ class App extends Component {
 
         this.socket.on('errorEvent', (data) => {
             if (data.message !== null && data.message !== undefined) {
-                swal.fire({type: 'error', title: 'Oops...', text: data.message}).then( () => { // (value)
+                swal.fire({type: 'error', title: 'Oops...', text: data.message}).then( () => {
                     this.socket.emit('logout');
                     // if the user has a token he will stay on /dashboard, otherwise he will be redirected to /
                     window.location.pathname = '/dashboard';
