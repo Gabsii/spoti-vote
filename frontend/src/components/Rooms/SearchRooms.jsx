@@ -24,7 +24,7 @@ const styles = {
         lineHeight: 1,
         borderWidth: 0,
         letterSpacing: '2px',
-        minWidth: 'calc(100% - 200px)',
+        minWidth: 'calc(100% - 95px)',
         maxHeight: '50px',
         textTransform: 'uppercase',
         whiteSpace: 'normal',

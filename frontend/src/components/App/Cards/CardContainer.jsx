@@ -83,7 +83,7 @@ class CardContainer extends Component {
     }
 
     handlePermissionGranted() {
-        // console.log('Permission Granted');
+        // 'Permission Granted'
         this.setState({
             notification: {
                 ignore: false
@@ -91,7 +91,7 @@ class CardContainer extends Component {
         });
     }
     handlePermissionDenied() {
-        // console.log('Permission Denied');
+        // 'Permission Denied'
         this.setState({
             notification: {
                 ignore: true
@@ -99,7 +99,7 @@ class CardContainer extends Component {
         });
     }
     handleNotSupported() {
-        // console.log('Web Notification not Supported');
+        // 'Web Notification not Supported'
         this.setState({
             notification: {
                 ignore: true
@@ -107,13 +107,13 @@ class CardContainer extends Component {
         });
     }
     handleNotificationOnClick(e, tag) {
-        // console.log(e, 'Notification clicked tag:' + tag);
+        // 'Notification clicked tag:' + tag
     }
     handleNotificationOnError(e, tag) {
-        // console.log(e, 'Notification error tag:' + tag);
+        // 'Notification error tag:' + tag
     }
     handleNotificationOnClose(e, tag) {
-        // console.log(e, 'Notification closed tag:' + tag);
+        // 'Notification closed tag:' + tag
     }
     componentWillReceiveProps(nextProps) {
         if (this.props.activeTracks[0] !== undefined && this.props.activeTracks[1] !== undefined && this.props.activeTracks[2] !== undefined && this.props.activeTracks[3] !== undefined) {

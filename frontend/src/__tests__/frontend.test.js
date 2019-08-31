@@ -6,7 +6,7 @@ import Card from '../components/App/Cards/Card';
 import CardContainer from '../components/App/Cards/CardContainer';
 import ShareButton from '../components/App/Cards/ShareButton';
 import Footer from '../components/App/Footer';
-import Buttons from '../components/App/Footer/Buttons';
+import PlayButtons from '../components/App/Footer/PlayButtons';
 import ProgressBar from '../components/App/Footer/ProgressBar';
 import SongAggregation from '../components/App/Footer/SongAggregation';
 import SongIcon from '../components/App/Footer/SongIcon';
@@ -14,7 +14,7 @@ import VolumeBar from '../components/App/Footer/VolumeBar';
 import AppSidebar from '../components/App/AppSidebar';
 import Infos from '../components/App/AppSidebar/Infos';
 import SettingsBar from '../components/App/AppSidebar/SettingsBar';
-import SkipButton from '../components/App/AppSidebar/SkipButton';
+import RerollButton from '../components/App/AppSidebar/RerollButton';
 import User from '../components/App/AppSidebar/User';
 import UserContainer from '../components/App/AppSidebar/UserContainer';
 
@@ -91,9 +91,9 @@ describe('Pages render', () => {
             });
         });
         describe('App Footer components render', () => {
-            it('Buttons', () => {
+            it('PlayButtons', () => {
                 const div = document.createElement('div');
-                ReactDOM.render(<Buttons/>, div);
+                ReactDOM.render(<PlayButtons/>, div);
                 ReactDOM.unmountComponentAtNode(div);
             });
             it('ProgressBar', () => {
@@ -128,9 +128,9 @@ describe('Pages render', () => {
                 ReactDOM.render(<SettingsBar/>, div);
                 ReactDOM.unmountComponentAtNode(div);
             });
-            it('SkipButton', () => {
+            it('RerollButton', () => {
                 const div = document.createElement('div');
-                ReactDOM.render(<SkipButton/>, div);
+                ReactDOM.render(<RerollButton/>, div);
                 ReactDOM.unmountComponentAtNode(div);
             });
             it('User', () => {

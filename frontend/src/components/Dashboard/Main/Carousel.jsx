@@ -76,14 +76,13 @@ class Carousel extends Component {
                         }}/>
                 }
 
-                Your Top Tracks:
+                Your Top Track{this.props.topTracks !== null && this.props.topTracks !== undefined && this.props.topTracks.length !== 0 ? this.props.topTracks.items.length > 1 ? 's' : '' : ''}:
             </h2>
             <div className={`${styles.tracksWrapper}`}>
                 {
                     this.props.topTracks !== null && this.props.topTracks !== undefined
                         ? this.props.topTracks.length !== 0
                             ? this.props.topTracks.items.map((track, index) => {
-                                // console.log(track);
                                 let artistString = '';
                                 for (var i = 0; i < track.artists.length; i++) {
                                     artistString += track.artists[i].name;

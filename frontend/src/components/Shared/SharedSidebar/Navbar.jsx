@@ -11,6 +11,7 @@ const cookies = new Cookies();
 const styles = {
     wrapper: css({
         width: '100%',
+        maxHeight: 'calc(100% - 10px)',
         minWidth: 0,
         boxSizing: 'border-box',
         padding: '4px 16px',
@@ -18,7 +19,7 @@ const styles = {
         marginTop: '10px',
         alignItems: 'center',
         textAlign: 'center',
-        color: constants.colors.backgroundLite,
+        color: constants.colors.fontSecondary,
         justifyContent: 'space-between',
         '@media(min-width: 760px)': {
             flexDirection: 'column',
@@ -28,9 +29,6 @@ const styles = {
             ':hover': {
                 color: constants.colors.fontSecondary
             }
-        },
-        ':hover': {
-            color: constants.colors.fontSecondary
         }
     }),
     buttonWrapper: css({
@@ -45,18 +43,6 @@ const styles = {
 };
 
 class SettingsBar extends Component {
-    constructor() {
-        super();
-        this.state = {
-            hover: false
-        };
-    }
-
-    toggleHover() {
-        this.setState({
-            hover: !this.state.hover
-        });
-    }
 
     logoutHandler() {
         if (window.confirm('Are you sure you want to log out?')) {
