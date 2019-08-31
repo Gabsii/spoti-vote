@@ -5,7 +5,7 @@ import SongIcon from './Footer/SongIcon.jsx';
 import SongAggregation from './Footer/SongAggregation.jsx';
 import VolumeBar from './Footer/VolumeBar.jsx';
 import ProgressBar from './Footer/ProgressBar.jsx';
-// import PlayButtons from './Footer/PlayButtons.jsx';
+import PlayButtons from './Footer/PlayButtons.jsx';
 
 let constants = require('../../js/constants');
 const styles = {
@@ -47,9 +47,7 @@ class Footer extends PureComponent {
                     ? <VolumeBar activePlayer={this.props.activePlayer} socket={this.props.socket}/>
                     : ''
             }
-            {
-                // <PlayButtons activePlayer={this.props.activePlayer} host={this.props.isHost} socket={this.props.socket}/>
-            }
+            <PlayButtons playHandler={this.props.playHandler} skipHandler={this.props.skipHandler} activePlayer={this.props.activePlayer} isHost={this.props.isHost} socket={this.props.socket}/>
         </footer>);
     }
 }

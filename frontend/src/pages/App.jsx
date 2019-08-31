@@ -259,7 +259,7 @@ class App extends Component {
         }
     }
 
-    skipHandler() { // (socket)
+    rerollHandler() { 
         const cards = document.getElementsByClassName('card');
         if (cards.length > 0) {
             this.setState({voted: null});
@@ -270,6 +270,14 @@ class App extends Component {
         }
     }
 
+    skipHandler() {
+        this.socket.emit('skip');
+    }
+
+    pauseHandler() { 
+        this.socket.emit('pause');
+    }
+    
     render() {
         return (<main className={`${styles.main}`}>
             <Helmet>
@@ -277,9 +285,9 @@ class App extends Component {
                 <title> {this.state.roomId || ''} | Spoti-Vote</title>
                 <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
             </Helmet>
-            <AppSidebar skipHandler={this.skipHandler.bind(this)} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
+            <AppSidebar rerollHandler={this.rerollHandler.bind(this)} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
             <CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
-            <Footer isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
+            <Footer pauseHandler={this.pauseHandler.bind(this)} skipHandler={this.skipHandler.bind(this)} isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
         </main>);
     }
 }

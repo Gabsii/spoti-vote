@@ -36,7 +36,7 @@ class AppSidebar extends Component {
                     ? <UserContainer activeTracks={this.props.activeTracks} connectedUser={this.props.connectedUser}/>
                     : ''
             }
-            <SettingsBar skipHandler={this.props.skipHandler} isPhone={false} isHost={this.props.isHost} socket={this.props.socket} connectedUser={this.props.connectedUser} host={this.props.host}/>
+            <SettingsBar rerollHandler={this.props.rerollHandler} isPhone={false} isHost={this.props.isHost} socket={this.props.socket} connectedUser={this.props.connectedUser} host={this.props.host}/>
         </aside>);
     }
 }
