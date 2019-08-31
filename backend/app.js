@@ -199,7 +199,6 @@ function ioOnConnect(socket) {
 	* @param {string} roomId Id of the room
 	*/
     socket.on('roomId', data => {
-        console.log(data)
         let room = lib.getRoomById(data.roomId, rooms);
 
         if (room !== null) {

@@ -2,7 +2,7 @@ let server = require('../app').server;
 let socket;
 let address = 'http://localhost:8888/';
 const request = require('supertest');
-const socketIoClient = require('socket.io-client')
+const socketIoClient = require('socket.io-client');
 const ioBack = require('socket.io')(server);
 const ioOnConnect = require('../app').ioOnConnect;
 
@@ -42,9 +42,10 @@ afterAll((done) => {
 
 
 describe('Full Backend Test', () => {
-    describe('Normal Get Requests', () => {
-        test('Get /', (done) => {
+    describe('Get / Method', () => {
+        test('It should responde with a little greeting', (done) =>  {
             request(server).get('/').then((response) => {
+                expect(response.statusCode).toBe(200);
                 expect(response.text).toBe('Hello There');
                 done();
             });
@@ -63,6 +64,7 @@ describe('Full Backend Test', () => {
                 token: '',
                 isPhone: false
             });
+            done();
         });
     });
 });
