@@ -634,37 +634,50 @@ method.vote = async function(trackId, isHost, name) {
 method.play = async function() {
     let track = this.activeTracks[0];
 
-    for (let i = 1; i < this.activeTracks.length; i++) {
-        if (this.activeTracks[i].votes > track.votes || (track.votes === (null||undefined) && this.activeTracks[i].votes >= 1)) {
-            track = this.activeTracks[i];
+    if (this.activePlaylist !== undefined && this.activePlaylist !== null) {
+        for (let i = 1; i < this.activeTracks.length; i++) {
+            if (this.activeTracks[i].votes > track.votes || (track.votes === (null||undefined) && this.activeTracks[i].votes >= 1)) {
+                track = this.activeTracks[i];
+            }
         }
-    }
-
-    let possibleTracks = [];
-
-    for (let i = 0; i < this.activeTracks.length; i++) {
-        if (this.activeTracks[i].votes === track.votes) {
-            possibleTracks.push(this.activeTracks[i]);
+    
+        let possibleTracks = [];
+    
+        for (let i = 0; i < this.activeTracks.length; i++) {
+            if (this.activeTracks[i].votes === track.votes) {
+                possibleTracks.push(this.activeTracks[i]);
+            }
         }
+    
+        track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
+    
+        console.log('INFO-[ROOM: '+this.id+']: ['+track.name+'] is now playing, since it had ['+track.votes+'] votes.');
+    
+        let payload = {
+            uris: ['spotify:track:' + track.id]
+        };
+    
+        await fetch('https://api.spotify.com/v1/me/player/play', {
+            headers: {
+                'Authorization': 'Bearer ' + this.user.token
+            },
+            method: 'PUT',
+            body: JSON.stringify(payload)
+        });
+    
+        return this.getRandomTracks(this.activePlaylist.id, track);
+    } else {
+        console.log('No song')
+        let request = await fetch('https://api.spotify.com/v1/me/player/next', {
+            headers: {
+                'Authorization': 'Bearer ' + this.user.token
+            },
+            method: 'POST'
+        });
+        console.log(request);
     }
-
-    track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
-
-    console.log('INFO-[ROOM: '+this.id+']: ['+track.name+'] is now playing, since it had ['+track.votes+'] votes.');
-
-    let payload = {
-        uris: ['spotify:track:' + track.id]
-    };
-
-    await fetch('https://api.spotify.com/v1/me/player/play', {
-        headers: {
-            'Authorization': 'Bearer ' + this.user.token
-        },
-        method: 'PUT',
-        body: JSON.stringify(payload)
-    });
-
-    return this.getRandomTracks(this.activePlaylist.id, track);
+    
+    return false;
 };
 
 /**
@@ -732,15 +745,15 @@ method.togglePlaystate = async function() {
             },
             method: 'PUT'
         });
-        console.log('INFO-[ROOM: '+this.id+']: Song is now Playing');
+        console.log('INFO-[ROOM: '+this.id+']: Song is now Paused');
     } else {
-        await fetch('https://api.spotify.com/v1/me/player/play' + volume,{
+        await fetch('https://api.spotify.com/v1/me/player/play',{
             headers: {
                 'Authorization': 'Bearer ' + this.user.token
             },
             method: 'PUT'
         });
-        console.log('INFO-[ROOM: '+this.id+']: Song is now Stopped');
+        console.log('INFO-[ROOM: '+this.id+']: Song is now Playing');
     }
     return true;
 };
