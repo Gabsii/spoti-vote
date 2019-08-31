@@ -22,6 +22,9 @@ const styles = {
         '@media(min-width: 760px)': {
             flexBasis: 'calc(50% - 40px)',
             margin: '20px'
+        }, 
+        ':hover': {
+            cursor: 'pointer'
         }
     }),
     image: css({
@@ -44,19 +47,6 @@ const styles = {
 
 class Card extends PureComponent {
 
-    constructor() {
-        super();
-        this.state = {
-            hover: false
-        };
-    }
-
-    toggleHover() {
-        this.setState({
-            hover: !this.state.hover
-        });
-    }
-
     hexToRgb(hex) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result
@@ -69,17 +59,6 @@ class Card extends PureComponent {
     }
 
     render() {
-        let linkStyle;
-        if (this.state.hover) {
-            linkStyle = {
-                cursor: 'pointer'
-            };
-        } else {
-            linkStyle = {
-                cursor: 'context-menu'
-            };
-        }
-
         //declare variables that are generated through the hexToRgb function
 
         let redValue,
@@ -121,8 +100,7 @@ class Card extends PureComponent {
 
         }
 
-        return (<button onMouseLeave={this.toggleHover.bind(this)} onClick={this.props.onClick} onMouseEnter={this.toggleHover.bind(this)} className={`card ${styles.button}`} style={{
-            ...linkStyle,
+        return (<button onClick={this.props.onClick} className={`card ${styles.button}`} style={{
             backgroundImage: 'url(' + albumUrl + ')'
         }} id={id || 0}>
             <div className={`${styles.image}`} style={{

@@ -43,18 +43,6 @@ const styles = {
 };
 
 class SettingsBar extends Component {
-    constructor() {
-        super();
-        this.state = {
-            hover: false
-        };
-    }
-
-    toggleHover() {
-        this.setState({
-            hover: !this.state.hover
-        });
-    }
 
     logoutHandler() {
         if (window.confirm('Are you sure you want to log out?')) {

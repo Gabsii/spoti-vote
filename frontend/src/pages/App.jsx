@@ -274,7 +274,7 @@ class App extends Component {
         this.socket.emit('skip');
     }
 
-    playHandler() { 
+    playHandler() {
         this.socket.emit('pause');
     }
     
