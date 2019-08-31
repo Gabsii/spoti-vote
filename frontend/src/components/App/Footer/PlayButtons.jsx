@@ -1,7 +1,7 @@
 import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faPlayCircle} from '@fortawesome/free-solid-svg-icons/faPlayCircle';
-import {faPauseCircle} from '@fortawesome/free-solid-svg-icons/faPauseCircle';
+import {faPlay} from '@fortawesome/free-solid-svg-icons/faPlay';
+import {faPause} from '@fortawesome/free-solid-svg-icons/faPause';
 import {faStepForward} from '@fortawesome/free-solid-svg-icons/faStepForward';
 import {css} from 'glamor';
 
@@ -10,31 +10,36 @@ const styles = {
     wrapper: css({
         position: 'absolute',
         bottom: 0,
-        left: '235px',
+        left: '50%',
+        transform: 'translateX(-50%)',
         color: constants.colors.fontSecondary,
         display: 'flex',
-        lineHeight: '75px',
+        lineHeight: '60px', // kleiner cheat weil fontawesome icons zu hoch sind
         verticalAlign: 'center'
     }),
-    play: css({}),
-    skip: css({bottom: 0})
+    play: css({paddingRight: '10px', ':hover': { cursor: 'pointer' }}),
+    skip: css({paddingLeft: '5px', ':hover': { cursor: 'pointer' }})
 };
 
 class PlayButtons extends React.PureComponent {
 
     render() {
         return (<div className={`${styles.wrapper}`}>
-            <div className={`${styles.play}`}>
+            <div className={`${styles.play}`} onClick={this.props.playHandler}>
                 {
                     this.props.isHost
                         ? this.props.activePlayer.isPlaying
-                            ? <FontAwesomeIcon icon={faPauseCircle} size='3x'/>
-                            : <FontAwesomeIcon icon={faPlayCircle} size='3x'/>
+                            ? <FontAwesomeIcon icon={faPause} size='2x'/>
+                            : <FontAwesomeIcon icon={faPlay} size='2x'/>
                         : ''
                 }
             </div>
-            <div className={`${styles.skip}`}>
-                <FontAwesomeIcon icon={faStepForward} size='3x'/> {/* <div> skips/users </div> */}
+            <div className={`${styles.skip}`} onClick={this.props.skipHandler}>
+                {
+                    this.props.isHost
+                        ?<FontAwesomeIcon icon={faStepForward} size='2x'/> /* <div> skips/users </div> */
+                        : ''
+                }
             </div>
         </div>);
     }

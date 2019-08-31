@@ -4,7 +4,7 @@ import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
 import {css} from 'glamor';
 import swal from 'sweetalert2';
 
-import SkipButton from './SkipButton.jsx';
+import RerollButton from './RerollButton.jsx';
 
 let constants = require('../../../js/constants');
 const styles = {
@@ -23,7 +23,7 @@ const styles = {
             marginBottom: 0
         }
     }),
-    button: css({border: 0, color: constants.colors.fontSecondary, background: 'none'})
+    button: css({border: 0, color: constants.colors.fontSecondary, background: 'none', ':hover': {cursor: 'pointer'}})
 };
 
 class SettingsBar extends PureComponent {
@@ -62,18 +62,9 @@ class SettingsBar extends PureComponent {
     }
 
     render() {
-        let linkStyle;
-        this.state.hover
-            ? linkStyle = {
-                cursor: 'pointer'
-            }
-            : linkStyle = {
-                cursor: 'context-menu'
-            };
-
         return (<div className={`${styles.wrapper}`}>
-            <SkipButton socket={this.props.socket} skipHandler={this.props.skipHandler} connectedUser={this.props.connectedUser} host={this.props.host}/>
-            <button style={linkStyle} className={`${styles.button}`} onClick={this.logoutHandler.bind(this)} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+            <RerollButton socket={this.props.socket} rerollHandler={this.props.rerollHandler} connectedUser={this.props.connectedUser} host={this.props.host}/>
+            <button className={`${styles.button}`} onClick={this.logoutHandler.bind(this)}>
                 <FontAwesomeIcon icon={faSignOutAlt} size='2x'/>
             </button>
         </div>);
