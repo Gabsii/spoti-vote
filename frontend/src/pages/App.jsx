@@ -274,7 +274,7 @@ class App extends Component {
         this.socket.emit('skip');
     }
 
-    pauseHandler() { 
+    playHandler() { 
         this.socket.emit('pause');
     }
     
@@ -287,7 +287,7 @@ class App extends Component {
             </Helmet>
             <AppSidebar rerollHandler={this.rerollHandler.bind(this)} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
             <CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
-            <Footer pauseHandler={this.pauseHandler.bind(this)} skipHandler={this.skipHandler.bind(this)} isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
+            <Footer playHandler={this.playHandler.bind(this)} skipHandler={this.skipHandler.bind(this)} isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
         </main>);
     }
 }

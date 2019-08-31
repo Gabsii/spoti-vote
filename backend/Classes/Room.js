@@ -668,15 +668,13 @@ method.play = async function() {
         return this.getRandomTracks(this.activePlaylist.id, track);
     } else {
         console.log('No song')
-        let request = await fetch('https://api.spotify.com/v1/me/player/next', {
+        await fetch('https://api.spotify.com/v1/me/player/next', {
             headers: {
                 'Authorization': 'Bearer ' + this.user.token
             },
             method: 'POST'
         });
-        console.log(request);
     }
-    
     return false;
 };
 
@@ -738,24 +736,26 @@ method.changeVolume = async function(volume) {
 */
 method.togglePlaystate = async function() {
 
-    if (this.activePlayer.isPlaying) {
-        await fetch('https://api.spotify.com/v1/me/player/pause',{
-            headers: {
-                'Authorization': 'Bearer ' + this.user.token
-            },
-            method: 'PUT'
-        });
-        console.log('INFO-[ROOM: '+this.id+']: Song is now Paused');
-    } else {
-        await fetch('https://api.spotify.com/v1/me/player/play',{
-            headers: {
-                'Authorization': 'Bearer ' + this.user.token
-            },
-            method: 'PUT'
-        });
-        console.log('INFO-[ROOM: '+this.id+']: Song is now Playing');
+    if (this.activePlayer !== null && this.activePlayer !== undefined) {
+        if (this.activePlayer.isPlaying) {
+            await fetch('https://api.spotify.com/v1/me/player/pause',{
+                headers: {
+                    'Authorization': 'Bearer ' + this.user.token
+                },
+                method: 'PUT'
+            });
+            console.log('INFO-[ROOM: '+this.id+']: Song is now Paused');
+        } else {
+            await fetch('https://api.spotify.com/v1/me/player/play',{
+                headers: {
+                    'Authorization': 'Bearer ' + this.user.token
+                },
+                method: 'PUT'
+            });
+            console.log('INFO-[ROOM: '+this.id+']: Song is now Playing');
+        }
+        return true;
     }
-    return true;
 };
 
 module.exports = {Room: Room, makeid: makeid};

@@ -443,7 +443,6 @@ function ioOnConnect(socket) {
     socket.on('pause', () => {
         let room = lib.getRoomById(socket.roomId, rooms);
         if (room !== null) {
-            console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] switched the state of the song.');
             room.togglePlaystate();
 
             let update = room.getDifference(socket.oldUpdate);
