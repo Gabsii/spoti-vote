@@ -47,7 +47,7 @@ class Dashboard extends Component {
         }
 
         //Gets rid of the search in window.location
-        var myNewURL = window.location.protocol + '//' + window.location.hostname + window.location.pathname;
+        var myNewURL = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + window.location.pathname;
         window.history.pushState({}, document.title, myNewURL);
 
         this.fetchProfileData(token);

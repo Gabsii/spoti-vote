@@ -11,6 +11,7 @@
     "build": "node frontend/scripts/build.js && mv frontend/build public",
     "deploy": "now --prod",
     "test": "node frontend/scripts/test.js",
+    "deploy-backend": "pm2 delete backendSpotivote; pm2 start backend/server.js --name \"backendSpotivote\"",
     "update": "npm-update-all"
   },
   "cacheDirectories": [

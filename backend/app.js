@@ -174,7 +174,9 @@ app.get('/rooms', async (req, res) => {
 /**
 * Is called when a new connection is established
 */
-io.on('connection', (socket) => {
+io.sockets.on('connection', socket => ioOnConnect(socket));
+
+function ioOnConnect(socket) {
     //Local varibles, can only be used by the same connection (but in every call)
     socket.state = 0; //0 Dashboard / 1 App
     socket.isHost = false;
@@ -453,7 +455,7 @@ io.on('connection', (socket) => {
             console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] auto-disconnected.');
         }
     });
-});
+}
 
 
 /**
@@ -513,6 +515,5 @@ async function theUpdateFunction(socket) {
 
 module.exports = {
     server: server,
-    users: users,
-    rooms: rooms
+    ioOnConnect: ioOnConnect
 };
