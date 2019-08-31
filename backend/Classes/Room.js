@@ -371,7 +371,6 @@ method.changePlaylist = async function(playlistId) {
     return true;
 };
 
-
 /**
 * Updates all Playlists if ithey have changed (THIS LOOKS KINDA WRONG)
 *
@@ -702,7 +701,7 @@ method.skip = async function() {
 };
 
 /**
-* Changes the volume to a given value
+* Changes the volume to a given valueW
 *
 * @author: Michiocre
 * @param {int} volume The volume in percent
@@ -715,6 +714,34 @@ method.changeVolume = async function(volume) {
         },
         method: 'PUT'
     });
+    return true;
+};
+
+/**
+* Pauses and Starts the song.
+*
+* @author: Michiocre
+* @return {boolean} True if swapped
+*/
+method.togglePlaystate = async function() {
+
+    if (this.activePlayer.isPlaying) {
+        await fetch('https://api.spotify.com/v1/me/player/pause',{
+            headers: {
+                'Authorization': 'Bearer ' + this.user.token
+            },
+            method: 'PUT'
+        });
+        console.log('INFO-[ROOM: '+this.id+']: Song is now Playing');
+    } else {
+        await fetch('https://api.spotify.com/v1/me/player/play' + volume,{
+            headers: {
+                'Authorization': 'Bearer ' + this.user.token
+            },
+            method: 'PUT'
+        });
+        console.log('INFO-[ROOM: '+this.id+']: Song is now Stopped');
+    }
     return true;
 };
 
