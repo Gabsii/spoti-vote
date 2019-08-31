@@ -27,20 +27,7 @@ const styles = {
 };
 
 class SettingsBar extends PureComponent {
-
-    constructor() {
-        super();
-        this.state = {
-            hover: false
-        };
-    }
-
-    toggleHover() {
-        this.setState({
-            hover: !this.state.hover
-        });
-    }
-
+    
     logoutHandler() {
         if (this.props.isHost === true) {
             swal.fire({

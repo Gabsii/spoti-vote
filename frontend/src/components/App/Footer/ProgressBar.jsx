@@ -17,6 +17,9 @@ const styles = {
         top: '-2px',
         '@media(min-width: 760px)': {
             width: 'calc(100% - 200px)'
+        },
+        ':hover': {
+            cursor: 'pointer'
         }
     }),
     progress: css({
@@ -32,25 +35,12 @@ const styles = {
 
 class Progressbar extends Component {
 
-    constructor() {
-        super();
-        this.state = {
-            hover: false
-        };
-    }
-
-    toggleHover() {
-        this.setState({
-            hover: !this.state.hover
-        });
-    }
-
     render() {
         if (this.props.activePlayer !== null && this.props.activePlayer !== undefined) {
             progress.width = this.props.activePlayer.progress + '%';
         }
 
-        return (<div className={`${styles.wrapper}`} onMouseEnter={this.toggleHover.bind(this)} onMouseLeave={this.toggleHover.bind(this)}>
+        return (<div className={`${styles.wrapper}`}>
             <div role='progressbar' className={`${styles.progress}`} style={{
                 ...progress
             }}></div>

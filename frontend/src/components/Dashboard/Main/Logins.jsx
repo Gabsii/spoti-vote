@@ -71,19 +71,6 @@ const styles = {
 
 class Logins extends Component {
 
-    constructor() {
-        super();
-        this.state = {
-            hover: false
-        };
-    }
-
-    toggleHover() {
-        this.setState({
-            hover: !this.state.hover
-        });
-    }
-
     login() {
         window.location.href = constants.config.url + '/createRoom?id=' + this.props.profile.id;
     }

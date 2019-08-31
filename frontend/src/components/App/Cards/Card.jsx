@@ -22,6 +22,9 @@ const styles = {
         '@media(min-width: 760px)': {
             flexBasis: 'calc(50% - 40px)',
             margin: '20px'
+        }, 
+        ':hover': {
+            cursor: 'pointer'
         }
     }),
     image: css({
@@ -43,19 +46,6 @@ const styles = {
 };
 
 class Card extends PureComponent {
-
-    constructor() {
-        super();
-        this.state = {
-            hover: false
-        };
-    }
-
-    toggleHover() {
-        this.setState({
-            hover: !this.state.hover
-        });
-    }
 
     hexToRgb(hex) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -121,7 +111,7 @@ class Card extends PureComponent {
 
         }
 
-        return (<button onMouseLeave={this.toggleHover.bind(this)} onClick={this.props.onClick} onMouseEnter={this.toggleHover.bind(this)} className={`card ${styles.button}`} style={{
+        return (<button onClick={this.props.onClick} className={`card ${styles.button}`} style={{
             ...linkStyle,
             backgroundImage: 'url(' + albumUrl + ')'
         }} id={id || 0}>
