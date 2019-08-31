@@ -59,17 +59,6 @@ class Card extends PureComponent {
     }
 
     render() {
-        let linkStyle;
-        if (this.state.hover) {
-            linkStyle = {
-                cursor: 'pointer'
-            };
-        } else {
-            linkStyle = {
-                cursor: 'context-menu'
-            };
-        }
-
         //declare variables that are generated through the hexToRgb function
 
         let redValue,
@@ -112,7 +101,6 @@ class Card extends PureComponent {
         }
 
         return (<button onClick={this.props.onClick} className={`card ${styles.button}`} style={{
-            ...linkStyle,
             backgroundImage: 'url(' + albumUrl + ')'
         }} id={id || 0}>
             <div className={`${styles.image}`} style={{
