@@ -438,6 +438,22 @@ function ioOnConnect(socket) {
     });
 
     /**
+	* Called when the song should be paused or played
+	*/
+    socket.on('pause', () => {
+        let room = lib.getRoomById(socket.roomId, rooms);
+        if (room !== null) {
+            room.togglePlaystate();
+
+            let update = room.getDifference(socket.oldUpdate);
+            socket.oldUpdate = _.cloneDeep(room);
+            socket.emit('update', update);
+        } else {
+            socket.emit('errorEvent', {message: 'Room was closed'});
+        }
+    });
+
+    /**
 	* Called when a connection is closed
 	*/
     socket.on('disconnect', () => {
