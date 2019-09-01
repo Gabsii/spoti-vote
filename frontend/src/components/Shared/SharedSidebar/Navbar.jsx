@@ -42,7 +42,7 @@ const styles = {
     button: css({border: 0, color: constants.colors.fontSecondary, background: 'none', paddingBottom: '5px', ':hover': {cursor: 'pointer'}})
 };
 
-class SettingsBar extends Component {
+class NavBar extends Component {
 
     logoutHandler() {
         if (window.confirm('Are you sure you want to log out?')) {
@@ -80,4 +80,4 @@ class SettingsBar extends Component {
     }
 }
 
-export default SettingsBar;
+export default NavBar;
