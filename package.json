@@ -8,7 +8,7 @@
     "start": "concurrently --kill-others-on-fail \"npm:start-frontend\" \"npm:start-backend\"",
     "start-frontend": "node frontend/scripts/start.js",
     "start-backend": "nodemon ./backend/server.js",
-    "build": "node frontend/scripts/build.js && mv frontend/build public",
+    "build": "node frontend/scripts/build.js",
     "deploy": "now --prod",
     "test": "node frontend/scripts/test.js",
     "deploy-backend": "pm2 delete backendSpotivote; pm2 start backend/server.js --name \"backendSpotivote\"",
