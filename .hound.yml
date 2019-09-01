@@ -3,5 +3,3 @@ eslint:
   version: 5.16.0
   config_file: .eslintrc
   ignore_file: .eslintignore
-
-fail_on_violations: true
