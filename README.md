@@ -2,7 +2,8 @@
 Web application to vote for the next song in Spotify Queue
 
 [![Front‑End_Checklist followed](https://img.shields.io/badge/Front‑End_Checklist-followed-brightgreen.svg)](https://github.com/thedaviddias/Front-End-Checklist/)
-
+[![CircleCI](https://circleci.com/gh/Gabsii/spoti-vote/tree/master.svg?style=svg)](https://circleci.com/gh/Gabsii/spoti-vote/tree/master)
+[![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 # Project Description:
 
