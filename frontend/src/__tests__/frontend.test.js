@@ -27,7 +27,7 @@ import TopType from '../components/Dashboard/Main/TopType';
 
 import SharedSidebar from '../components/Shared/SharedSidebar';
 import Profile from '../components/Shared/SharedSidebar/Profile';
-import NavBar from '../components/Shared/SharedSidebar/NavBar';
+import Navbar from '../components/Shared/SharedSidebar/Navbar';
 
 import Rooms from '../pages/Rooms';
 import Room from '../components/Rooms/Room';
@@ -193,9 +193,9 @@ describe('Pages render', () => {
                 ReactDOM.render(<Profile/>, div);
                 ReactDOM.unmountComponentAtNode(div);
             });
-            it('NavBar', () => {
+            it('Navbar', () => {
                 const div = document.createElement('div');
-                ReactDOM.render(<NavBar/>, div);
+                ReactDOM.render(<Navbar/>, div);
                 ReactDOM.unmountComponentAtNode(div);
             });
         });
