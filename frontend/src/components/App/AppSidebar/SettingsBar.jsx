@@ -44,7 +44,18 @@ class SettingsBar extends PureComponent {
                 }
             });
         } else {
-            window.location.pathname = '/dashboard';
+            swal.fire({
+                title: 'Logout.',
+                text: 'Do you really want to leave us already?',
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, close it!',
+                cancelButtonText: 'No, dont do it!'
+            }).then((result) => {
+                if (!result.dismiss) {
+                    window.location.pathname = '/dashboard';
+                }
+            });
         }
     }
 

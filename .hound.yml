@@ -1,4 +1,5 @@
 eslint:
   enabled: true
+  version: 5.16.0
   config_file: .eslintrc
   ignore_file: .eslintignore
