@@ -429,7 +429,7 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
     }
 
     if (activeTrack === null || activeTrack === undefined) {
-        if (this.activePlayer !== null) {
+        if (this.activePlayer !== null && this.activePlayer !== undefined) {
             activeTrack = this.activePlayer.track;
         } else {
             activeTrack = null;
