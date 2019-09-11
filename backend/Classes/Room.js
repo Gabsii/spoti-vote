@@ -434,6 +434,8 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
         } else {
             activeTrack = null;
         }
+    } else {
+        activeTrack = null;
     }
 
     //Reset all the votes
