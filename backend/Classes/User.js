@@ -90,9 +90,11 @@ method.fetchPlaylists = async function() {
 
     let returnPlaylists = [];
 
-    for (var i = 0; i < playlists.length; i++) {
-        if (playlists[i].tracks.total > 5) {
-            returnPlaylists.push(playlists[i]);
+    if (playlists !== null && playlists !== undefined) {
+        for (var i = 0; i < playlists.length; i++) {
+            if (playlists[i].tracks.total > 5) {
+                returnPlaylists.push(playlists[i]);
+            }
         }
     }
     return returnPlaylists;
