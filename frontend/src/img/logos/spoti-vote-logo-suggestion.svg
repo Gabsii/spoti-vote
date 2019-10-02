@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="73px" height="88px" viewBox="0 0 73 88" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>spoti-vote-logo</title>
+    <defs>
+        <linearGradient x1="33.411874%" y1="6.62846235%" x2="69.5154109%" y2="99.2468126%" id="linearGradient-1">
+            <stop stop-color="#B4EC51" offset="0%"></stop>
+            <stop stop-color="#429321" offset="100%"></stop>
+        </linearGradient>
+        <path d="M43.0596702,20.8353681 C41.472656,19.3594795 40.1194326,18.0810235 39,17 C35.5289244,13.6480213 30.0196478,8.05532864 22.4721702,0.221922035 C17.6601229,5.82749508 14.1693995,9.75352107 12,12 C9.83060052,14.2464789 6.14318741,17.7536309 0.937760688,22.5214558 C5.00352209,26.0107406 8.64582754,29.2297908 11.864677,32.1786062 C8.17913615,37.1616187 6,43.3263271 6,50 C6,66.5685425 19.4314575,80 36,80 C52.5685425,80 66,66.5685425 66,50 C66,35.8630987 56.2217085,24.0100398 43.0596702,20.8353681 Z" id="path-2"></path>
+        <filter x="-10.8%" y="-6.3%" width="121.5%" height="117.5%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#5F5F5F" offset="0%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="39.5305023%" y1="0%" x2="62.0295654%" y2="100%" id="linearGradient-5">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#ECECEC" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="spoti-vote-logo">
+            <g id="Group-2" transform="translate(3.000000, 2.000000)">
+                <g id="Combined-Shape">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                    <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+                </g>
+                <g id="Group" transform="translate(37.000000, 50.500000) rotate(-15.000000) translate(-37.000000, -50.500000) translate(17.000000, 40.000000)" fill="url(#linearGradient-4)">
+                    <path d="M0,5 C0,2 15,-5.27355937e-16 21,0 C27,3.51570624e-16 40,2 40,5 C40,8 34,5 21,5 C8,5 1.29980563e-15,8 0,5 Z" id="Rectangle-2"></path>
+                    <path d="M3,12.2105263 C3,9.68421053 15.375,8 20.325,8 C25.275,8 36,9.68421053 36,12.2105263 C36,14.7368421 31.05,12.2105263 20.325,12.2105263 C9.6,12.2105263 3,14.7368421 3,12.2105263 Z" id="Rectangle-2-Copy"></path>
+                    <path d="M6,19.2105263 C6,16.6842105 16.125,15 20.175,15 C24.225,15 33,16.6842105 33,19.2105263 C33,21.7368421 28.95,19.2105263 20.175,19.2105263 C11.4,19.2105263 6,21.7368421 6,19.2105263 Z" id="Rectangle-2-Copy-2"></path>
+                </g>
+                <path d="M40.3889398,47.4237218 C42.263871,45.0496209 43.8008911,43.2417136 45,42 C47.2594745,39.6602457 50.9783605,36.5771303 56.156658,32.7506538 C48.1899615,25.6021966 42.4710756,20.3519787 39,17 C35.5289244,13.6480213 30.0196478,8.05532864 22.4721702,0.221922035 C17.6601229,5.82749508 14.1693995,9.75352107 12,12 C9.83060052,14.2464789 6.14318741,17.7536309 0.937760688,22.5214558 C7.34273544,28.0182814 12.6968152,32.8444628 17,37 C20.4147522,40.2975879 24.8187097,44.7671811 30.2118723,50.4087795 C32.2480702,49.5615664 34.1104024,48.8892134 35.5834691,48.4668183 C36.9264556,48.0817231 38.575256,47.7239217 40.3889398,47.4237218 Z" id="Combined-Shape" fill="url(#linearGradient-5)"></path>
+                <text id="S" fill="url(#linearGradient-4)" transform="translate(31.000000, 27.500000) rotate(-318.000000) translate(-31.000000, -27.500000) " font-family="ComicSansMS-Bold, Comic Sans MS" font-size="28" font-weight="bold">
+                    <tspan x="21.2929688" y="39">S</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>
