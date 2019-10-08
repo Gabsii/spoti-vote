@@ -428,8 +428,6 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
         playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
     }
 
-    console.log(playlist.tracks);
-
     if (activeTrack === null || activeTrack === undefined) {
         if (this.activePlayer !== null && this.activePlayer !== undefined) {
             activeTrack = this.activePlayer.track;
