@@ -453,6 +453,7 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
         let active;
         do {
             active = false;
+            console.log(playlist.tracks.length);
             track = playlist.tracks[Math.floor(Math.random() * playlist.tracks.length)].track;
 
             if (activeTrack !== null && activeTrack !== undefined) {
