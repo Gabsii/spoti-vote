@@ -4,7 +4,7 @@ const http = require('http');
 const app = express();
 const server = http.createServer(app);
 
-app.use(express.urlencoded())
+app.use(express.urlencoded());
 
 app.get('/', (req, res) => {
     res.send('Hello There');

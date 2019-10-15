@@ -369,6 +369,7 @@ method.changePlaylist = async function(playlistId) {
         await this.getRandomTracks(playlist.id);
     }
     this.activePlaylist = playlist;
+    // eslint-disable-next-line no-console
     console.log('INFO-[ROOM: '+this.id+']: Playlist changed to ['+playlist.name+'].');
     return true;
 };
@@ -387,6 +388,7 @@ method.updatePlaylists = async function() {
         let playlist = this.getPlaylistById(newPlaylists[i].id);
         if (playlist === null) {
             this.user.playlists.push(newPlaylists[i]);
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: '+this.id+']: Added new Playlist: ['+newPlaylists[i].name+'].');
         } else {
             toBeRemoved[this.user.playlists.indexOf(playlist)] = null;
@@ -394,11 +396,13 @@ method.updatePlaylists = async function() {
             if (Array.isArray(playlist.tracks) === false) {
                 if (playlist.tracks.total !== newPlaylists[i].tracks.total) {
                     this.user.playlists[this.user.playlists.indexOf(playlist)] = newPlaylists[i];
+                    // eslint-disable-next-line no-console
                     console.log('INFO-[ROOM: '+this.id+']: Changed Playlist: ['+newPlaylists[i].name+'].');
                 }
             } else {
                 if (playlist.tracks.length !== newPlaylists[i].tracks.total) {
                     this.user.playlists[this.user.playlists.indexOf(playlist)] = newPlaylists[i];
+                    // eslint-disable-next-line no-console
                     console.log('INFO-[ROOM: '+this.id+']: Changed Playlist: ['+newPlaylists[i].name+'].');
                 }
             }
@@ -409,6 +413,7 @@ method.updatePlaylists = async function() {
             let playlist = this.getPlaylistById(toBeRemoved[i].id);
             if (playlist.id !== this.activePlaylist.id) {
                 this.user.playlists.splice(this.user.playlists.indexOf(playlist),1);
+                // eslint-disable-next-line no-console
                 console.log('INFO-[ROOM: '+this.id+']: Deleted Playlist: ['+playlist.name+'].');
             }
         }
@@ -452,23 +457,33 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
     let selectedTracks = [];
     for (let i = 0; i < 4; i++) {
         let track;
-        let active;
+        let reroll;
         do {
-            active = false;
-            console.log(playlist.tracks.length);
+            reroll = false;
+
             track = playlist.tracks[Math.floor(Math.random() * playlist.tracks.length)].track;
 
             if (activeTrack !== null && activeTrack !== undefined) {
                 if (track.id === activeTrack.id) {
-                    active = true;
+                    reroll = true;
                 }
             }
-        } while (selectedTracks.some(t => t.id === track.id) || active);
+            if (!reroll) {
+                for (let j = 0; j < this.activeTracks.length; j++) {
+                    if (this.activeTracks[i] !== null && this.activeTracks[i] !== undefined) {
+                        if (track.id === this.activeTracks[i].id) {
+                            reroll = true;
+                        }
+                    }
+                }
+            }
+        } while (selectedTracks.some(reroll));
         selectedTracks.push(_.cloneDeep(track));
     }
 
     this.activeTracks = selectedTracks;
 
+    // eslint-disable-next-line no-console
     console.log('INFO-[ROOM: '+this.id+']: NewTracks: [' +selectedTracks[0].name+','+selectedTracks[1].name+','+selectedTracks[2].name+','+selectedTracks[3].name+ '] have been selected.');
 
     return true;
@@ -497,7 +512,9 @@ method.getActiveTrackById = function(id) {
 * @return: boolean if completed successfull
 */
 method.refreshToken = async function() {
+    // eslint-disable-next-line no-console
     console.log('Before REFRESH:');
+    // eslint-disable-next-line no-console
     console.log('  - Access Token: ' + this.user.token);
     let authOptions = {
         url: this.spotifyAccountAddress + '/api/token',
@@ -512,7 +529,9 @@ method.refreshToken = async function() {
     };
     request.post(authOptions, async (error, response, body) => {
         this.user.token = body.access_token;
+        // eslint-disable-next-line no-console
         console.log('After REFRESH:');
+        // eslint-disable-next-line no-console
         console.log('  - Access Token: ' + this.user.token);
         return true;
     });
@@ -534,6 +553,7 @@ method.update = async function() {
             }
         });
     } catch (e) {
+        // eslint-disable-next-line no-console
         console.error('ERROR-[ROOM: '+this.id+']: THERE WAS AN ERROR GETTING THE ACTIVE PLAYER.');
     }
 
@@ -570,6 +590,7 @@ method.update = async function() {
             this.isChanging = true;
             await this.play();
         } else if (this.activePlayer.progressMs > 3000 && this.activePlayer.timeLeft > 3000 && this.isChanging) {
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: '+this.id+']: Reset Cooldown');
             this.isChanging = false;
         }
@@ -655,7 +676,7 @@ method.play = async function() {
         }
     
         track = possibleTracks[Math.floor(Math.random() * Math.floor(possibleTracks.length))];
-    
+        // eslint-disable-next-line no-console
         console.log('INFO-[ROOM: '+this.id+']: ['+track.name+'] is now playing, since it had ['+track.votes+'] votes.');
     
         let payload = {
@@ -672,7 +693,6 @@ method.play = async function() {
     
         return this.getRandomTracks(this.activePlaylist.id, track);
     } else {
-        console.log('No song');
         await fetch(this.spotifyApiAddress + '/v1/me/player/next', {
             headers: {
                 'Authorization': 'Bearer ' + this.user.token
@@ -705,9 +725,10 @@ method.skip = async function() {
         if (this.user.voted === 'skip') {
             skips += 1;
         }
-
+        // eslint-disable-next-line no-console
         console.log('INFO-[ROOM: '+this.id+']: Skips/NoSkip: ['+skips+'/'+((this.connectedUser.length+1)-skips)+'].');
         if (skips >= (2 * (this.connectedUser.length+1) / 3)) {
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: '+this.id+']: Skipped.');
             this.getRandomTracks(this.activePlaylist.id, track);
             return true;
@@ -749,6 +770,7 @@ method.togglePlaystate = async function() {
                 },
                 method: 'PUT'
             });
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: '+this.id+']: Song is now Paused');
         } else {
             await fetch(this.spotifyApiAddress + '/v1/me/player/play',{
@@ -757,6 +779,7 @@ method.togglePlaystate = async function() {
                 },
                 method: 'PUT'
             });
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: '+this.id+']: Song is now Playing');
         }
         return true;

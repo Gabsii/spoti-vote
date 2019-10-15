@@ -22,5 +22,6 @@ let Application = new App(true, env, secTillDelete, spotifyAccountAddress, spoti
 * Starts the server
 */
 Application.server.listen(env.backendPort, () => {
+    // eslint-disable-next-line no-console
     console.log('INFO: Server started on port: ' + Application.server.address().port);
 });

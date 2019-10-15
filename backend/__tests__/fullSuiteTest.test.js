@@ -3,6 +3,8 @@ const socketIoClient = require('socket.io-client');
 const socketIo = require('socket.io');
 const App = require('../Classes/App').App;
 
+let spotifyServer = require('../testHelper/spotifyServer').server;
+
 let secTillDelete = 60;
 let env = {
     backendPort: '8888',
@@ -16,7 +18,6 @@ let spotifyApiAddress = 'http://localhost:8889/api';
 let Application = new App(false, env, secTillDelete, spotifyAccountAddress, spotifyApiAddress);
 
 let ioBack = socketIo(Application.server);
-let spotifyServer = require('./helpers/spotifyServer').server;
 
 let socket;
 let address = 'http://localhost:8888/';

@@ -66,7 +66,6 @@ class LoginCode extends PureComponent {
             let str = event.target.value.toUpperCase();
             let exists = false;
             fetch(constants.config.url + '/rooms').then((response) => response.json().then(data => {
-                console.log(data[0]);
                 for (var i = 0; i < data.length; i++) {
                     if (data[i].roomName === str) {
                         exists = true;

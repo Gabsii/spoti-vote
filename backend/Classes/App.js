@@ -61,6 +61,7 @@ function App(production, env, secTillDelete, spotifyAccountAddress, spotifyApiAd
     this.rooms = [];
     this.users = [];
 
+    // eslint-disable-next-line no-console
     console.log('INFO: Redirect URL: ' + this.redirect_uri);
 
     this.setHeaders();
@@ -124,6 +125,7 @@ method.httpCalls = function() {
     this.app.get('/login', (req, res) => {
         try {
             this.referer = req.headers.referer.substring(0, req.headers.referer.lastIndexOf('/'));
+            // eslint-disable-next-line no-console
             console.log('INFO: User was sent to Spotify login');
             let redirect_uri = this.redirect_uri;
             res.redirect(this.spotifyAccountAddress + '/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
@@ -159,7 +161,7 @@ method.httpCalls = function() {
                 // res.cookie('token', body.access_token, options); // options is optional
                 if (await user.fetchData() === true) {
                     this.users.push(user);
-
+                    // eslint-disable-next-line no-console
                     console.log('INFO-[USER: '+user.name+']: This user has logged in');
                     res.redirect(uri + '?token=' + body.access_token);
                 } else {
@@ -196,6 +198,7 @@ method.httpCalls = function() {
     * @Returns content Array of all the rooms
     */
     this.app.get('/rooms', async (req, res) => {
+        // eslint-disable-next-line no-console
         console.log('INFO: /rooms has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -255,6 +258,7 @@ method.socketCall = function(socket) {
                 }
             }
             for (let i = 0; i < toBeDeleted.length; i++) {
+                // eslint-disable-next-line no-console
                 console.log('INFO-[ROOM: ' + toBeDeleted[i].id + ']: This room has been deleted due to inactivity.');
                 this.rooms.splice(this.rooms.indexOf(toBeDeleted[i]), 1);
             }
@@ -277,6 +281,7 @@ method.socketCall = function(socket) {
 
                 if (room.firstConnection === true) {
                     room.firstConnection = false;
+                    // eslint-disable-next-line no-console
                     console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token). [Phone: ' + data.isPhone + ']');
 
                     socket.isHost = true;
@@ -293,6 +298,7 @@ method.socketCall = function(socket) {
                     room.hostDisconnect = null;
                 } else {
                     if (room.hostDisconnect !== null && data.token === room.user.token) { //If host is gone
+                        // eslint-disable-next-line no-console
                         console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
                         socket.isHost = true;
@@ -326,6 +332,7 @@ method.socketCall = function(socket) {
         let oldRoom = lib.getRoomById(data.roomId, this.rooms);
         let room = lib.getRoomById(socket.roomId, this.rooms);
         if (data.value === true) {
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + oldRoom.id + ']: This room has been deleted due to host creating a new one.');
             this.rooms.splice(this.rooms.indexOf(oldRoom), 1);
 
@@ -333,6 +340,7 @@ method.socketCall = function(socket) {
 
             if (room.firstConnection === true) {
                 room.firstConnection = false;
+                // eslint-disable-next-line no-console
                 console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token). [Phone: ' + data.isPhone + ']');
 
                 socket.isHost = true;
@@ -349,6 +357,7 @@ method.socketCall = function(socket) {
                 room.hostDisconnect = null;
             } else {
                 if (room.hostDisconnect !== null && data.token === room.user.token) { //If host is gone
+                    // eslint-disable-next-line no-console
                     console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
 
                     socket.isHost = true;
@@ -366,6 +375,7 @@ method.socketCall = function(socket) {
                 }
             }
         } else {
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted due to more then 1 room (Host choose the old room).');
             this.rooms.splice(this.rooms.indexOf(room), 1);
             socket.emit('errorEvent', {message: 'Room has been closed'});
@@ -388,6 +398,7 @@ method.socketCall = function(socket) {
             } else if (data.name.length > 15) {
                 socket.emit('nameEvent', {title: 'This name is too long, enter a different name.'});
             } else {
+                // eslint-disable-next-line no-console
                 console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + data.name + '] has connected.');
                 socket.name = data.name;
                 room.addUser(socket.name);
@@ -410,6 +421,7 @@ method.socketCall = function(socket) {
     socket.on('changeVolume', data => {
         let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + socket.roomId + ']: Volume changed to [' + data.volume + '].');
             room.changeVolume(data.volume);
         } else {
@@ -437,6 +449,7 @@ method.socketCall = function(socket) {
     socket.on('vote', data => {
         let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] voted for [' + data.trackId + '].');
             room.vote(data.trackId, socket.isHost, socket.name);
 
@@ -454,6 +467,7 @@ method.socketCall = function(socket) {
     socket.on('skip', data => {
         let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] skiped the song.');
             room.play();
 
@@ -471,6 +485,7 @@ method.socketCall = function(socket) {
     socket.on('logout', () => {
         let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted by host.');
             this.rooms.splice(this.rooms.indexOf(room), 1);
         } else {
@@ -502,6 +517,7 @@ method.socketCall = function(socket) {
 
         clearInterval(updateInterval);
         if (room !== null) {
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] disconnected.');
             if (socket.isHost === false) {
                 room.removeUser(socket.name);
@@ -509,6 +525,7 @@ method.socketCall = function(socket) {
                 room.hostDisconnect = Date.now();
             }
         } else {
+            // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] auto-disconnected.');
         }
     });
@@ -541,7 +558,6 @@ method.theUpdateFunction = async function(socket) {
 
         if (update !== null) {
             socket.emit('update', update);
-            //console.log(JSON.stringify(update).length);
         }
 
         socket.oldUpdate = _.cloneDeep(room);
@@ -556,6 +572,7 @@ method.theUpdateFunction = async function(socket) {
                 }
             }
             for (let i = 0; i < toBeDeleted.length; i++) {
+                // eslint-disable-next-line no-console
                 console.log('INFO-[ROOM: ' + toBeDeleted[i].id + ']: This room has been deleted due to inactivity.');
                 this.rooms.splice(this.rooms.indexOf(toBeDeleted[i]), 1);
             }
