@@ -215,6 +215,27 @@ describe('Full Backend Test', () => {
     });
 
     describe('Socket Connection', () => {
+        let user = {
+            token: '1',
+            name: 'jest',
+            id: 'jest_id'
+        };
+        let room = {
+            host: user
+        };
+        beforeAll( async (done) => {
+            await request(Application.server)
+                .get('/callback')
+                .query({code: '1'});
+            await request(Application.server)
+                .get('/createRoom')
+                .query({id: 'jest_id'})
+                .then((response) => {
+                    room.id = response.headers.location.split('/')[2];
+                });
+            done();
+        });
+
         beforeEach( (done) => {
             socket = socketIoClient(address, {forceNew: true});
             socket.on('connect', () => {
@@ -232,19 +253,33 @@ describe('Full Backend Test', () => {
         test('Room does not exist', (done) => {
             socket.on('roomId', () => {
                 socket.emit('roomId', {
-                    roomId: 'ABCDE',
+                    roomId: '',
                     token: '',
                     isPhone: false
                 });
-
-                socket.on('errorEvent', (data) => {
-                    done();
-                });
+            });
+            socket.on('errorEvent', (data) => {
+                expect(data.message).toBe('Room has been closed');
+                done();
             });
         });
 
         test('Room does exist', (done) => {
-            done();
+            socket.on('roomId', () => {
+                socket.emit('roomId', {
+                    roomId: room.id,
+                    token: '',
+                    isPhone: false
+                });
+            });
+            socket.on('initData', (update) => {
+                expect(update).toBeDefined();
+                done();
+            });
+            socket.on('errorEvent', (data) => {
+                expect('This error').toBe('not to happen');
+                done();
+            });
         });
     });
 });
