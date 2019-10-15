@@ -28,7 +28,9 @@ function makeid(length) {
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function Room(user, rooms) {
+function Room(spotifyAccountAddress, spotifyApiAddress, user, rooms) {
+    this.spotifyAccountAddress = spotifyAccountAddress;
+    this.spotifyApiAddress = spotifyApiAddress;
     //The host object
     this.user = user;
     this.firstConnection = true;
@@ -498,7 +500,7 @@ method.refreshToken = async function() {
     console.log('Before REFRESH:');
     console.log('  - Access Token: ' + this.user.token);
     let authOptions = {
-        url: 'https://accounts.spotify.com/api/token',
+        url: this.spotifyAccountAddress + '/api/token',
         form: {
             grant_type: 'refresh_token',
             refresh_token: this.user.refreshToken
@@ -526,7 +528,7 @@ method.update = async function() {
     this.lastUpdate = Date.now();
     let request;
     try {
-        request = await fetch('https://api.spotify.com/v1/me/player', {
+        request = await fetch(this.spotifyApiAddress + '/v1/me/player', {
             headers: {
                 'Authorization': 'Bearer ' + this.user.token
             }
@@ -660,7 +662,7 @@ method.play = async function() {
             uris: ['spotify:track:' + track.id]
         };
     
-        await fetch('https://api.spotify.com/v1/me/player/play', {
+        await fetch(this.spotifyApiAddress + '/v1/me/player/play', {
             headers: {
                 'Authorization': 'Bearer ' + this.user.token
             },
@@ -671,7 +673,7 @@ method.play = async function() {
         return this.getRandomTracks(this.activePlaylist.id, track);
     } else {
         console.log('No song');
-        await fetch('https://api.spotify.com/v1/me/player/next', {
+        await fetch(this.spotifyApiAddress + '/v1/me/player/next', {
             headers: {
                 'Authorization': 'Bearer ' + this.user.token
             },
@@ -722,7 +724,7 @@ method.skip = async function() {
 * @return {boolean} True if completed
 */
 method.changeVolume = async function(volume) {
-    await fetch('https://api.spotify.com/v1/me/player/volume?volume_percent=' + volume,{
+    await fetch(this.spotifyApiAddress + '/v1/me/player/volume?volume_percent=' + volume,{
         headers: {
             'Authorization': 'Bearer ' + this.user.token
         },
@@ -741,7 +743,7 @@ method.togglePlaystate = async function() {
 
     if (this.activePlayer !== null && this.activePlayer !== undefined) {
         if (this.activePlayer.isPlaying) {
-            await fetch('https://api.spotify.com/v1/me/player/pause',{
+            await fetch(this.spotifyApiAddress + '/v1/me/player/pause',{
                 headers: {
                     'Authorization': 'Bearer ' + this.user.token
                 },
@@ -749,7 +751,7 @@ method.togglePlaystate = async function() {
             });
             console.log('INFO-[ROOM: '+this.id+']: Song is now Paused');
         } else {
-            await fetch('https://api.spotify.com/v1/me/player/play',{
+            await fetch(this.spotifyApiAddress + '/v1/me/player/play',{
                 headers: {
                     'Authorization': 'Bearer ' + this.user.token
                 },

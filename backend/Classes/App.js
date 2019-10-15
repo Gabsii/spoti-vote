@@ -27,16 +27,24 @@ const helmet = require('helmet');
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function App(env, secTillDelete) {
+function App(production, env, secTillDelete, spotifyAccountAddress, spotifyApiAddress) {
     //Setup of the server
     this.app = express();
     this.app.use(cookieParser());
     this.server = http.createServer(this.app);
-    this.io = socketIo(this.server);
+    if (production) {
+        this.io = socketIo(this.server);
+    }
 
     this.backendPort = env.backendPort;
     this.frontendPort = env.frontendPort;
     this.ipAddress = env.ipAddress;
+
+    this.spotifyClientId = env.spotifyClientId;
+    this.spotifyClientSecret = env.spotifyClientSecret;
+
+    this.spotifyAccountAddress = spotifyAccountAddress;
+    this.spotifyApiAddress = spotifyApiAddress;
 
     this.secTillDelete = secTillDelete;
 
@@ -62,7 +70,9 @@ function App(env, secTillDelete) {
     /**
     * Is called when a new connection is established
     */
-   this.io.sockets.on('connection', socket => this.socketCall(socket));
+    if (production) {
+        this.io.sockets.on('connection', socket => this.socketCall(socket));       
+    }
 }
 
 method.setHeaders = function() {
@@ -111,12 +121,12 @@ method.httpCalls = function() {
     /**
     * Login using the Spotify API (This is only a Redirect)
     */
-   this.app.get('/login', (req, res) => {
+    this.app.get('/login', (req, res) => {
         try {
             this.referer = req.headers.referer.substring(0, req.headers.referer.lastIndexOf('/'));
             console.log('INFO: User was sent to Spotify login');
             let redirect_uri = this.redirect_uri;
-            res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
+            res.redirect(this.spotifyAccountAddress + '/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
         } catch (error) {
             res.status(400).send('Login from the main page.');
         }
@@ -125,35 +135,40 @@ method.httpCalls = function() {
 
     /**
     * The callback that will be called when the Login with the Spotify API is completed
-    * Will redirect the user to the newly created room
+    * Will get User-Date from the api and redirect to the Dashboard
     */
     this.app.get('/callback', async (req, res) => {
         let code = req.query.code || null;
         let authOptions = {
-            url: 'https://accounts.spotify.com/api/token',
+            url: this.spotifyAccountAddress +'/api/token',
             form: {
                 code: code,
                 redirect_uri: this.redirect_uri,
                 grant_type: 'authorization_code'
             },
             headers: {
-                'Authorization': 'Basic ' + (new Buffer(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64'))
+                'Authorization': 'Basic ' + (new Buffer(this.spotifyClientId + ':' + this.spotifyClientSecret).toString('base64'))
             },
             json: true
         };
         request.post(authOptions, async (error, response, body) => {
-            let uri = this.referer + '/dashboard';
-            let user = new User(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
-            // Set cookie
-            // res.cookie('token', body.access_token, options); // options is optional
-            if (await user.fetchData() === true) {
-                this.users.push(user);
+            if (response.statusCode === 200) {
+                let uri = this.referer + '/dashboard';
+                let user = new User(this.spotifyAccountAddress, this.spotifyApiAddress, body.access_token, body.refresh_token, this.spotifyClientId, this.spotifyClientSecret);
+                // Set cookie
+                // res.cookie('token', body.access_token, options); // options is optional
+                if (await user.fetchData() === true) {
+                    this.users.push(user);
 
-                console.log('INFO-[USER: '+user.name+']: This user has logged in');
-                res.redirect(uri + '?token=' + body.access_token);
+                    console.log('INFO-[USER: '+user.name+']: This user has logged in');
+                    res.redirect(uri + '?token=' + body.access_token);
+                } else {
+                    res.status(400).send();
+                }
             } else {
-                res.status(400).end();
+                res.status(400).send();
             }
+            
         });
     });
 
@@ -166,7 +181,7 @@ method.httpCalls = function() {
         if (user === null) {
             res.status(400).end();
         } else {
-            let room = new Room(user, this.rooms);
+            let room = new Room(this.spotifyAccountAddress, this.spotifyApiAddress, user, this.rooms);
             let uri = this.referer + '/app';
             this.rooms.push(room);
         
@@ -197,7 +212,7 @@ method.httpCalls = function() {
             returnRooms.push(roomI);
         }
 
-        res.send({responseCode: lib.codes.SUCCESS, content: returnRooms});
+        res.status(200).send(returnRooms);
     });
 };
 
@@ -457,7 +472,7 @@ method.socketCall = function(socket) {
         let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
             console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted by host.');
-            rooms.splice(rooms.indexOf(room), 1);
+            this.rooms.splice(this.rooms.indexOf(room), 1);
         } else {
             socket.emit('errorEvent', {message: 'Room was closed'});
         }
@@ -552,17 +567,17 @@ method.theUpdateFunction = async function(socket) {
     } else {
         socket.emit('errorEvent', {message: null});
     }
-}
+};
 
 
 method.addRoom = function(user) {
-    let room = new Room(user, this.rooms);
+    let room = new Room(this.spotifyAccountAddress, this.spotifyApiAddress, user, this.rooms);
     this.rooms.push(room);
     return room;
 };
 
-method.addUser = function addUser(access_token, refresh_token, client_id, client_secret) {
-    let user = new User(access_token, refresh_token, client_id, client_secret);
+method.addUser = function addUser(access_token, refresh_token) {
+    let user = new User(this.spotifyAccountAddress, this.spotifyApiAddress, access_token, refresh_token, this.spotifyClientId, this.spotifyClientSecret);
     this.users.push(user);
     return user;
 };
