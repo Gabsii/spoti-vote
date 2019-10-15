@@ -670,7 +670,7 @@ method.play = async function() {
     
         return this.getRandomTracks(this.activePlaylist.id, track);
     } else {
-        console.log('No song')
+        console.log('No song');
         await fetch('https://api.spotify.com/v1/me/player/next', {
             headers: {
                 'Authorization': 'Bearer ' + this.user.token

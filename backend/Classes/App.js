@@ -1,183 +1,209 @@
-const express = require('express');
+let method = App.prototype;
+
 const http = require('http');
+const express = require('express');
 const socketIo = require('socket.io');
 const querystring = require('querystring');
 const request = require('request');
 const _ = require('lodash');
 const cookieParser = require('cookie-parser');
-const dotenv = require('dotenv');
 
 //Import of used files
-const Room = require('./Classes/Room').Room;
-const User = require('./Classes/User').User;
-const lib = require('./lib.js');
-
-//Setup of the server
-const app = express();
-app.use(cookieParser());
-const server = http.createServer(app);
-const io = socketIo(server);
+const Room = require('./Room').Room;
+const User = require('./User').User;
+const lib = require('../lib.js');
 
 //Security
 const csp = require('helmet-csp');
 const cors = require('cors');
 const helmet = require('helmet');
 
-//Global Varibles
-dotenv.config();
-const ipAddress = process.env.ADDRESS;
-const port = process.env.PORT;
-const portBack = process.env.PORTBACK;
-
-const uriBack = (ipAddress === 'localhost' ? 'http://' + ipAddress + ':' + portBack : 'https://' + ipAddress + ':' + port);
-const redirect_uri = uriBack + '/callback';
-const secTillDelete = 60;
-
-let referer = '';
-let rooms = [];
-let users = [];
-
-console.log('INFO: Redirect URL: ' + redirect_uri);
-
-app.disable('x-powered-by');
-app.use(function (req, res, next) {
-    res.set('Server', 'Yes');
-    next();
-});
-app.use(
-    csp({
-        directives: {
-            defaultSrc: ['"self"']
-        }
-    }),
-    helmet.featurePolicy({
-        features: {
-            fullscreen: ['"self"'],
-            vibrate: ['"none"'],
-            payment: ['"none"'],
-            syncXhr: ['"none"']
-        }
-    }),
-    helmet.referrerPolicy({ policy: 'same-origin' }),
-    helmet.frameguard({
-        action: 'deny'
-    }),
-    helmet.hsts({
-        maxAge: 15768000 //Six Months in Seconds
-    }),
-    helmet.xssFilter(),
-    helmet.noSniff(),
-    cors({
-        origin: '*',
-        methods: 'GET',
-        preflightContinue: false,
-        optionsSuccessStatus: 204
-    })
-);
-
-app.get('/', (req, res) => {
-    res.send('Hello There');
-});
-
 /**
-* Login using the Spotify API (This is only a Redirect)
+* Constructor for a new / room
+*
+* @author: Michiocre
+* @constructor
+* @param {string} token The access token needed to connect to the spotify API
+* @param {string} rooms The list of all rooms, to make sure no duplicate id
+* @return {Room} The new room
 */
-app.get('/login', (req, res) => {
-    try {
-        referer = req.headers.referer.substring(0, req.headers.referer.lastIndexOf('/'));
-        console.log('INFO: User was sent to Spotify login');
-        res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
-    } catch (error) {
-        res.status(400).send('Login from the main page');
+function App(env, secTillDelete) {
+    //Setup of the server
+    this.app = express();
+    this.app.use(cookieParser());
+    this.server = http.createServer(this.app);
+    this.io = socketIo(this.server);
+
+    this.backendPort = env.backendPort;
+    this.frontendPort = env.frontendPort;
+    this.ipAddress = env.ipAddress;
+
+    this.secTillDelete = secTillDelete;
+
+    this.uriBack = '';
+
+    if (this.ipAddress === 'localhost') {
+        this.uriBack = 'http://' + this.ipAddress + ':' + this.backendPort;
+    } else {
+        this.uriBack = 'https://' + this.ipAddress + ':' + this.frontendPort;
     }
+    this.redirect_uri = this.uriBack + '/callback';
 
-});
+    this.referer = '';
+    this.rooms = [];
+    this.users = [];
 
-/**
-* The callback that will be called when the Login with the Spotify API is completed
-* Will redirect the user to the newly created room
-*/
-app.get('/callback', async (req, res) => {
-    let code = req.query.code || null;
-    let authOptions = {
-        url: 'https://accounts.spotify.com/api/token',
-        form: {
-            code: code,
-            redirect_uri,
-            grant_type: 'authorization_code'
-        },
-        headers: {
-            'Authorization': 'Basic ' + (new Buffer(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64'))
-        },
-        json: true
-    };
-    request.post(authOptions, async (error, response, body) => {
-        let uri = referer + '/dashboard';
-        let user = new User(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
-        // Set cookie
-        // res.cookie('token', body.access_token, options); // options is optional
-        if (await user.fetchData() === true) {
-            users.push(user);
+    console.log('INFO: Redirect URL: ' + this.redirect_uri);
 
-            console.log('INFO-[USER: '+user.name+']: This user has logged in');
-            res.redirect(uri + '?token=' + body.access_token);
-        } else {
+    this.setHeaders();
+
+    this.httpCalls();
+    
+    /**
+    * Is called when a new connection is established
+    */
+   this.io.sockets.on('connection', socket => this.socketCall(socket));
+}
+
+method.setHeaders = function() {
+    this.app.disable('x-powered-by');
+    this.app.use(function (req, res, next) {
+        res.set('Server', 'Yes');
+        next();
+    });
+    this.app.use(
+        csp({
+            directives: {
+                defaultSrc: ['"self"']
+            }
+        }),
+        helmet.featurePolicy({
+            features: {
+                fullscreen: ['"self"'],
+                vibrate: ['"none"'],
+                payment: ['"none"'],
+                syncXhr: ['"none"']
+            }
+        }),
+        helmet.referrerPolicy({ policy: 'same-origin' }),
+        helmet.frameguard({
+            action: 'deny'
+        }),
+        helmet.hsts({
+            maxAge: 15768000 //Six Months in Seconds
+        }),
+        helmet.xssFilter(),
+        helmet.noSniff(),
+        cors({
+            origin: '*',
+            methods: 'GET',
+            preflightContinue: false,
+            optionsSuccessStatus: 204
+        })
+    );
+};
+
+method.httpCalls = function() {
+    this.app.get('/', (req, res) => {
+        res.send('Hello There');
+    });
+
+    /**
+    * Login using the Spotify API (This is only a Redirect)
+    */
+   this.app.get('/login', (req, res) => {
+        try {
+            this.referer = req.headers.referer.substring(0, req.headers.referer.lastIndexOf('/'));
+            console.log('INFO: User was sent to Spotify login');
+            let redirect_uri = this.redirect_uri;
+            res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
+        } catch (error) {
+            res.status(400).send('Login from the main page.');
+        }
+
+    });
+
+    /**
+    * The callback that will be called when the Login with the Spotify API is completed
+    * Will redirect the user to the newly created room
+    */
+    this.app.get('/callback', async (req, res) => {
+        let code = req.query.code || null;
+        let authOptions = {
+            url: 'https://accounts.spotify.com/api/token',
+            form: {
+                code: code,
+                redirect_uri: this.redirect_uri,
+                grant_type: 'authorization_code'
+            },
+            headers: {
+                'Authorization': 'Basic ' + (new Buffer(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64'))
+            },
+            json: true
+        };
+        request.post(authOptions, async (error, response, body) => {
+            let uri = this.referer + '/dashboard';
+            let user = new User(body.access_token, body.refresh_token, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
+            // Set cookie
+            // res.cookie('token', body.access_token, options); // options is optional
+            if (await user.fetchData() === true) {
+                this.users.push(user);
+
+                console.log('INFO-[USER: '+user.name+']: This user has logged in');
+                res.redirect(uri + '?token=' + body.access_token);
+            } else {
+                res.status(400).end();
+            }
+        });
+    });
+
+    /**
+    * The callback that will be called when the Login with the Spotify API is completed
+    * Will redirect the user to the newly created room
+    */
+    this.app.get('/createRoom', async (req, res) => {
+        let user = lib.getUserById(req.query.id, this.users);
+        if (user === null) {
             res.status(400).end();
+        } else {
+            let room = new Room(user, this.rooms);
+            let uri = this.referer + '/app';
+            this.rooms.push(room);
+        
+            res.redirect(uri + '/' + room.id);
         }
     });
-});
 
-/**
-* The callback that will be called when the Login with the Spotify API is completed
-* Will redirect the user to the newly created room
-*/
-app.get('/createRoom', async (req, res) => {
-    let user = lib.getUserById(req.query.id, users);
-    if (user === null) {
-        res.status(400).end();
-    } else {
-        let room = new Room(user, rooms);
-        let uri = referer + '/app';
-	
-        rooms.push(room);
-	
-        res.redirect(uri + '/' + room.id);
-    }
-});
+    /**
+    * Get a list of all rooms
+    *
+    * @Returns ResponseCode of 200
+    * @Returns content Array of all the rooms
+    */
+    this.app.get('/rooms', async (req, res) => {
+        console.log('INFO: /rooms has been called.');
+        res.setHeader('Access-Control-Allow-Origin', '*');
 
-/**
-* Get a list of all rooms
-*
-* @Returns ResponseCode of 200
-* @Returns content Array of all the rooms
-*/
-app.get('/rooms', async (req, res) => {
-    console.log('INFO: /rooms has been called.');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    let returnRooms = [];
-    for (var i = 0; i < rooms.length; i++) {
-        let roomI = {
-            roomName: rooms[i].id,
-            roomHost: rooms[i].user.name,
-            roomCover: 'https://via.placeholder.com/152x152'
-        };
-        if (rooms[i].activePlaylist !== null) {
-            roomI.roomCover = rooms[i].activePlaylist.images[0].url;
+        let returnRooms = [];
+        for (var i = 0; i < this.rooms.length; i++) {
+            let roomI = {
+                roomName: this.rooms[i].id,
+                roomHost: this.rooms[i].user.name,
+                roomCover: 'https://via.placeholder.com/152x152'
+            };
+            if (this.rooms[i].activePlaylist !== null) {
+                roomI.roomCover = this.rooms[i].activePlaylist.images[0].url;
+            }
+            returnRooms.push(roomI);
         }
-        returnRooms.push(roomI);
-    }
 
-    res.send({responseCode: lib.codes.SUCCESS, content: returnRooms});
-});
+        res.send({responseCode: lib.codes.SUCCESS, content: returnRooms});
+    });
+};
 
-/**
-* Is called when a new connection is established
-*/
-io.sockets.on('connection', socket => ioOnConnect(socket));
-
-function ioOnConnect(socket) {
+method.socketCall = function(socket) {
     //Local varibles, can only be used by the same connection (but in every call)
+    
     socket.state = 0; //0 Dashboard / 1 App
     socket.isHost = false;
     socket.name = null;
@@ -187,7 +213,7 @@ function ioOnConnect(socket) {
     socket.oldUpdate = null;
 
     //This function is called every 500ms
-    let updateInterval = setInterval(() => theUpdateFunction(socket), 500);
+    let updateInterval = setInterval(() => this.theUpdateFunction(socket), 500);
 
     //This is what happens when a user connects
     socket.emit('roomId');
@@ -199,30 +225,30 @@ function ioOnConnect(socket) {
 	* @param {string} roomId Id of the room
 	*/
     socket.on('roomId', data => {
-        let room = lib.getRoomById(data.roomId, rooms);
+        let room = lib.getRoomById(data.roomId, this.rooms);
 
         if (room !== null) {
             socket.roomId = room.id;
 
             //Delete if old
             let toBeDeleted = [];
-            for (let i = 0; i < rooms.length; i++) {
-                if (rooms[i].hostPhone === false) {
-                    if (Date.now() - rooms[i].hostDisconnect > 1000 * secTillDelete && rooms[i].hostDisconnect !== null) {
-                        toBeDeleted.push(rooms[i]);
+            for (let i = 0; i < this.rooms.length; i++) {
+                if (this.rooms[i].hostPhone === false) {
+                    if (Date.now() - this.rooms[i].hostDisconnect > 1000 * this.secTillDelete && this.rooms[i].hostDisconnect !== null) {
+                        toBeDeleted.push(this.rooms[i]);
                     }
                 }
             }
             for (let i = 0; i < toBeDeleted.length; i++) {
                 console.log('INFO-[ROOM: ' + toBeDeleted[i].id + ']: This room has been deleted due to inactivity.');
-                rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
+                this.rooms.splice(this.rooms.indexOf(toBeDeleted[i]), 1);
             }
 
             //Count how many rooms this user is already hosting
             let x = -1;
-            for (let i = 0; i < rooms.length; i++) {
-                if (rooms[i].user !== null) {
-                    if (rooms[i].user.id === room.user.id && rooms[i].id !== room.id) {
+            for (let i = 0; i < this.rooms.length; i++) {
+                if (this.rooms[i].user !== null) {
+                    if (this.rooms[i].user.id === room.user.id && this.rooms[i].id !== room.id) {
                         x = i;
                         break;
                     }
@@ -230,7 +256,7 @@ function ioOnConnect(socket) {
             }
 
             if (x >= 0) {
-                socket.emit('twoRooms', {oldRoom: rooms[x].id});
+                socket.emit('twoRooms', {oldRoom: this.rooms[x].id});
             } else {
                 socket.name = room.user.name;
 
@@ -282,11 +308,11 @@ function ioOnConnect(socket) {
 	* @param {boolean} roomId Id of the old room
 	*/
     socket.on('twoRooms', data => {
-        let oldRoom = lib.getRoomById(data.roomId, rooms);
-        let room = lib.getRoomById(socket.roomId, rooms);
+        let oldRoom = lib.getRoomById(data.roomId, this.rooms);
+        let room = lib.getRoomById(socket.roomId, this.rooms);
         if (data.value === true) {
             console.log('INFO-[ROOM: ' + oldRoom.id + ']: This room has been deleted due to host creating a new one.');
-            rooms.splice(rooms.indexOf(oldRoom), 1);
+            this.rooms.splice(this.rooms.indexOf(oldRoom), 1);
 
             socket.name = room.user.name;
 
@@ -326,7 +352,7 @@ function ioOnConnect(socket) {
             }
         } else {
             console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted due to more then 1 room (Host choose the old room).');
-            rooms.splice(rooms.indexOf(room), 1);
+            this.rooms.splice(this.rooms.indexOf(room), 1);
             socket.emit('errorEvent', {message: 'Room has been closed'});
         }
     });
@@ -338,7 +364,7 @@ function ioOnConnect(socket) {
 	* @param {string} name Name of the user
 	*/
     socket.on('nameEvent', data => {
-        let room = lib.getRoomById(socket.roomId, rooms);
+        let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
             if (room.getUserNames().includes(data.name) === true) {
                 socket.emit('nameEvent', {title: 'This name is already taken, enter a different name.'});
@@ -367,7 +393,7 @@ function ioOnConnect(socket) {
 	* @param {int} volume Volume in percent
 	*/
     socket.on('changeVolume', data => {
-        let room = lib.getRoomById(socket.roomId, rooms);
+        let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
             console.log('INFO-[ROOM: ' + socket.roomId + ']: Volume changed to [' + data.volume + '].');
             room.changeVolume(data.volume);
@@ -381,7 +407,7 @@ function ioOnConnect(socket) {
 	* @param {string} playlistId Id of the Playlist
 	*/
     socket.on('changePlaylist', data => {
-        let room = lib.getRoomById(socket.roomId, rooms);
+        let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
             room.changePlaylist(data.playlistId);
         } else {
@@ -394,7 +420,7 @@ function ioOnConnect(socket) {
 	* @param {string} trackId Id of the track
 	*/
     socket.on('vote', data => {
-        let room = lib.getRoomById(socket.roomId, rooms);
+        let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
             console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] voted for [' + data.trackId + '].');
             room.vote(data.trackId, socket.isHost, socket.name);
@@ -411,7 +437,7 @@ function ioOnConnect(socket) {
 	* Called when the host decides to skip the currently playing song
 	*/
     socket.on('skip', data => {
-        let room = lib.getRoomById(socket.roomId, rooms);
+        let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
             console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] skiped the song.');
             room.play();
@@ -428,7 +454,7 @@ function ioOnConnect(socket) {
 	* Called when the host wants to close the room
 	*/
     socket.on('logout', () => {
-        let room = lib.getRoomById(socket.roomId, rooms);
+        let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
             console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted by host.');
             rooms.splice(rooms.indexOf(room), 1);
@@ -441,7 +467,7 @@ function ioOnConnect(socket) {
 	* Called when the song should be paused or played
 	*/
     socket.on('pause', () => {
-        let room = lib.getRoomById(socket.roomId, rooms);
+        let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
             room.togglePlaystate();
 
@@ -457,7 +483,7 @@ function ioOnConnect(socket) {
 	* Called when a connection is closed
 	*/
     socket.on('disconnect', () => {
-        let room = lib.getRoomById(socket.roomId, rooms);
+        let room = lib.getRoomById(socket.roomId, this.rooms);
 
         clearInterval(updateInterval);
         if (room !== null) {
@@ -471,7 +497,7 @@ function ioOnConnect(socket) {
             console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] auto-disconnected.');
         }
     });
-}
+};
 
 
 /**
@@ -480,8 +506,8 @@ function ioOnConnect(socket) {
 * @author: Michiocre
 * @param {socket} socket The socket object passed down from the call
 */
-async function theUpdateFunction(socket) {
-    let room = lib.getRoomById(socket.roomId, rooms);
+method.theUpdateFunction = async function(socket) {
+    let room = lib.getRoomById(socket.roomId, this.rooms);
 
     socket.updateCounter.amount += 1;
 
@@ -507,16 +533,16 @@ async function theUpdateFunction(socket) {
 
         if (socket.updateCounter.amount % 30 === 0) {
             let toBeDeleted = [];
-            for (let i = 0; i < rooms.length; i++) {
-                if (rooms[i].hostPhone === false) {
-                    if (Date.now() - rooms[i].hostDisconnect > 1000 * secTillDelete && rooms[i].hostDisconnect !== null) {
-                        toBeDeleted.push(rooms[i]);
+            for (let i = 0; i < this.rooms.length; i++) {
+                if (this.rooms[i].hostPhone === false) {
+                    if (Date.now() - this.rooms[i].hostDisconnect > 1000 * this.secTillDelete && this.rooms[i].hostDisconnect !== null) {
+                        toBeDeleted.push(this.rooms[i]);
                     }
                 }
             }
             for (let i = 0; i < toBeDeleted.length; i++) {
                 console.log('INFO-[ROOM: ' + toBeDeleted[i].id + ']: This room has been deleted due to inactivity.');
-                rooms.splice(rooms.indexOf(toBeDeleted[i]), 1);
+                this.rooms.splice(this.rooms.indexOf(toBeDeleted[i]), 1);
             }
         }
 
@@ -526,10 +552,19 @@ async function theUpdateFunction(socket) {
     } else {
         socket.emit('errorEvent', {message: null});
     }
-
 }
 
-module.exports = {
-    server: server,
-    ioOnConnect: ioOnConnect
+
+method.addRoom = function(user) {
+    let room = new Room(user, this.rooms);
+    this.rooms.push(room);
+    return room;
 };
+
+method.addUser = function addUser(access_token, refresh_token, client_id, client_secret) {
+    let user = new User(access_token, refresh_token, client_id, client_secret);
+    this.users.push(user);
+    return user;
+};
+
+module.exports = {App: App};

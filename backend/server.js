@@ -1,14 +1,22 @@
 const dotenv = require('dotenv');
 //Setup of the server
-const server = require('./app').server;
+const App = require('./Classes/App').App;
 
 dotenv.config();
 
-let portBack = process.env.PORTBACK;
+let secTillDelete = 60;
+
+let env = {
+    backendPort: process.env.PORTBACK,
+    frontendPort: process.env.PORT,
+    ipAddress: process.env.ADDRESS
+};
+
+let Application = new App(env, secTillDelete);
 
 /**
 * Starts the server
 */
-server.listen(portBack, () => {
-    console.log('INFO: Server started on port: ' + server.address().port);
+Application.server.listen(env.backendPort, () => {
+    console.log('INFO: Server started on port: ' + Application.server.address().port);
 });
