@@ -71,7 +71,7 @@ class RoomContainer extends Component {
     fetchRoomData() {
         return new Promise((resolve, reject) => {
             fetch(constants.config.url + '/rooms').then(response => response.json()).then(response => {
-                this.setState({rooms: response.content});
+                this.setState({rooms: response});
                 resolve();
             }).catch((err) => reject(err));
         });
