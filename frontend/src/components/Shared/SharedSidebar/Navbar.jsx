@@ -5,6 +5,7 @@ import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers';
 import {faHome} from '@fortawesome/free-solid-svg-icons/faHome';
 import Cookies from 'universal-cookie';
 import {css} from 'glamor';
+import swal from 'sweetalert2';
 
 let constants = require('../../../js/constants');
 const cookies = new Cookies();
@@ -42,13 +43,22 @@ const styles = {
     button: css({border: 0, color: constants.colors.fontSecondary, background: 'none', paddingBottom: '5px', ':hover': {cursor: 'pointer'}})
 };
 
-class SettingsBar extends Component {
+class NavBar extends Component {
 
     logoutHandler() {
-        if (window.confirm('Are you sure you want to log out?')) {
-            cookies.remove('token');
-            window.location = '/';
-        }
+        swal.fire({
+            title: 'Logout.',
+            text: 'Do you really want to leave us already?',
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, close it!',
+            cancelButtonText: 'No, dont do it!'
+        }).then((result) => {
+            if (!result.dismiss) {
+                cookies.remove('token');
+                window.location.pathname = '/';
+            }
+        });
     }
 
     render() {
@@ -80,4 +90,4 @@ class SettingsBar extends Component {
     }
 }
 
-export default SettingsBar;
+export default NavBar;
