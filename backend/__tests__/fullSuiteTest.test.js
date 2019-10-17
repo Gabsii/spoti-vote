@@ -215,24 +215,22 @@ describe('Full Backend Test', () => {
     });
 
     describe('Socket Connection', () => {
-        let user = {
-            token: '1',
-            name: 'jest',
-            id: 'jest_id'
-        };
-        let room = {
-            host: user
-        };
-        beforeAll( async (done) => {
-            await request(Application.server)
-                .get('/callback')
-                .query({code: '1'});
-            await request(Application.server)
-                .get('/createRoom')
-                .query({id: 'jest_id'})
-                .then((response) => {
-                    room.id = response.headers.location.split('/')[2];
-                });
+        let user;
+        let room;
+        let room2;
+        beforeAll((done) => {
+            user = Application.addUser('1', '', 'jest', 'jest_id');
+            room = Application.addRoom(user);
+            //room2 = Application.addRoom(user);
+            // await request(Application.server)
+            //     .get('/callback')
+            //     .query({code: '1'});
+            // await request(Application.server)
+            //     .get('/createRoom')
+            //     .query({id: 'jest_id'})
+            //     .then((response) => {
+            //         room.id = response.headers.location.split('/')[2];
+            //     });
             done();
         });
 
@@ -250,35 +248,131 @@ describe('Full Backend Test', () => {
             done();
         });
 
-        test('Room does not exist', (done) => {
-            socket.on('roomId', () => {
-                socket.emit('roomId', {
-                    roomId: '',
-                    token: '',
-                    isPhone: false
+        describe('Correct Sequence', () => {
+            test('First connection', (done) => {
+                socket.on('roomId', () => {
+                    socket.emit('roomId', {
+                        roomId: room.id,
+                        token: user.token,
+                        isPhone: false
+                    });
+                });
+                socket.on('initData', (update) => {
+                    expect(update).toBeDefined();
+                    expect(update.host.name).toBe('jest');
+                    done();
+                });
+                socket.on('errorEvent', (data) => {
+                    expect(data.message).toBe('NO ERROR');
+                    done();
+                });
+                socket.on('nameEvent', (data) => {
+                    expect('This event').toBe('not to happen');
+                    done();
                 });
             });
-            socket.on('errorEvent', (data) => {
-                expect(data.message).toBe('Room has been closed');
-                done();
+    
+            test('Reconnecting', (done) => {
+                socket.on('roomId', () => {
+                    socket.emit('roomId', {
+                        roomId: room.id,
+                        token: user.token,
+                        isPhone: false
+                    });
+                });
+                socket.on('initData', (update) => {
+                    
+                    expect(update).toBeDefined();
+                    expect(update.host.name).toBe('jest');
+                    done();
+                });
+                socket.on('errorEvent', (data) => {
+                    expect(data.message).toBe('NO ERROR');
+                    done();
+                });
+                socket.on('nameEvent', (data) => {
+                    expect('This event').toBe('not to happen');
+                    done();
+                });
             });
+            test('First connection to new Room (old not deleted)', (done) => {
+                room2 = Application.addRoom(user);
+                socket.on('roomId', () => {
+                    socket.emit('roomId', {
+                        roomId: room2.id,
+                        token: user.token,
+                        isPhone: false
+                    });
+                });
+                socket.on('twoRooms', (data) => {
+                    expect(data.oldRoom).toBe(room.id);
+                    socket.emit('twoRooms', {
+                        roomId: room.id,
+                        value: true
+                    });
+                });
+                socket.on('initData', (update) => {
+                    expect('This event').toBe('not to happen');
+                    done();
+                });
+                socket.on('errorEvent', (data) => {
+                    expect(data.message).toBe('NO ERROR');
+                    done();
+                });
+                socket.on('nameEvent', (data) => {
+                    expect('This event').toBe('not to happen');
+                    done();
+                });
+            });    
         });
 
-        test('Room does exist', (done) => {
-            socket.on('roomId', () => {
-                socket.emit('roomId', {
-                    roomId: room.id,
-                    token: '',
-                    isPhone: false
+        describe('Error Sequence', () => {
+            test('Connecting to wrong Room', (done) => {
+                socket.on('roomId', () => {
+                    socket.emit('roomId', {
+                        roomId: '',
+                        token: user.token,
+                        isPhone: false
+                    });
+                });
+                socket.on('initData', (update) => {
+                    expect('This event').toBe('not to happen');
+                    done();
+                });
+                socket.on('errorEvent', (data) => {
+                    expect(data.message).toBe('NO ERROR');
+                    done();
+                });
+                socket.on('nameEvent', (data) => {
+                    expect(data.title).toBe('What is your name?');
+                    done();
                 });
             });
-            socket.on('initData', (update) => {
-                expect(update).toBeDefined();
-                done();
-            });
-            socket.on('errorEvent', (data) => {
-                expect('This error').toBe('not to happen');
-                done();
+            
+            test('Connecting to Room with wrong token', (done) => {
+                socket.on('roomId', () => {
+                    socket.emit('roomId', {
+                        roomId: room.id,
+                        token: '',
+                        isPhone: false
+                    });
+                });
+                socket.on('initData', (update) => {
+                    expect('This event').toBe('not to happen');
+                    done();
+                });
+                socket.on('errorEvent', (data) => {
+                    expect(data.message).toBe('NO ERROR');
+                    done();
+                });
+                socket.on('nameEvent', (data) => {
+                    expect(data.title).toBe('What is your name?');
+                    done();
+                });
+                socket.on('twoRooms', (data) => {
+                    expect('This event').toBe('not to happen');
+                    done();
+                });
             });
         });
     });

@@ -274,7 +274,7 @@ method.socketCall = function(socket) {
                 }
             }
 
-            if (x >= 0) {
+            if (x >= 0 && room.firstConnection === true) {
                 socket.emit('twoRooms', {oldRoom: this.rooms[x].id});
             } else {
                 socket.name = room.user.name;
@@ -593,8 +593,13 @@ method.addRoom = function(user) {
     return room;
 };
 
-method.addUser = function addUser(access_token, refresh_token) {
+method.addUser = function(access_token, refresh_token, name, id) {
     let user = new User(this.spotifyAccountAddress, this.spotifyApiAddress, access_token, refresh_token, this.spotifyClientId, this.spotifyClientSecret);
+    
+    user.playlists = [];
+    user.name = name;
+    user.id = id;
+    
     this.users.push(user);
     return user;
 };

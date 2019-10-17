@@ -56,7 +56,6 @@ method.fetchData = async function() {
     this.country = hostRequestData.country;
 
     this.playlists = await this.fetchPlaylists();
-
     return true;
 };
 
