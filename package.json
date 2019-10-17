@@ -63,9 +63,7 @@
         "displayName": "frontend-lint",
         "runner": "jest-runner-eslint",
         "testMatch": [
-          "<rootDir>/frontend/src/**/*.{js,jsx}",
-          "<rootDir>/frontend/config/**/*.{js,jsx}",
-          "<rootDir>/frontend/scripts/**/*.{js,jsx}"
+          "<rootDir>/frontend/src/**/*.{js,jsx}"
         ]
       },
       {

@@ -217,24 +217,10 @@ describe('Full Backend Test', () => {
     describe('Socket Connection', () => {
         let user;
         let room;
-        let room2;
-        beforeAll((done) => {
-            user = Application.addUser('1', '', 'jest', 'jest_id');
-            room = Application.addRoom(user);
-            //room2 = Application.addRoom(user);
-            // await request(Application.server)
-            //     .get('/callback')
-            //     .query({code: '1'});
-            // await request(Application.server)
-            //     .get('/createRoom')
-            //     .query({id: 'jest_id'})
-            //     .then((response) => {
-            //         room.id = response.headers.location.split('/')[2];
-            //     });
-            done();
-        });
 
         beforeEach( (done) => {
+            user = Application.addUser('1', '', 'jest', 'jest_id');
+            room = Application.addRoom(user);
             socket = socketIoClient(address, {forceNew: true});
             socket.on('connect', () => {
                 done();
@@ -242,6 +228,8 @@ describe('Full Backend Test', () => {
         });
 
         afterEach( (done) => {
+            Application.users = [];
+            Application.rooms = [];
             if(socket.connected) {
                 socket.disconnect();
             }
@@ -267,7 +255,7 @@ describe('Full Backend Test', () => {
                     done();
                 });
                 socket.on('nameEvent', (data) => {
-                    expect('This event').toBe('not to happen');
+                    expect(data).toBe('TO NOT HAPPEN');
                     done();
                 });
             });
@@ -291,12 +279,12 @@ describe('Full Backend Test', () => {
                     done();
                 });
                 socket.on('nameEvent', (data) => {
-                    expect('This event').toBe('not to happen');
+                    expect(data).toBe('TO NOT HAPPEN');
                     done();
                 });
             });
             test('First connection to new Room (old not deleted)', (done) => {
-                room2 = Application.addRoom(user);
+                let room2 = Application.addRoom(user);
                 socket.on('roomId', () => {
                     socket.emit('roomId', {
                         roomId: room2.id,
@@ -312,7 +300,8 @@ describe('Full Backend Test', () => {
                     });
                 });
                 socket.on('initData', (update) => {
-                    expect('This event').toBe('not to happen');
+                    expect(update).toBeDefined();
+                    expect(update.host.name).toBe('jest');
                     done();
                 });
                 socket.on('errorEvent', (data) => {
@@ -320,7 +309,7 @@ describe('Full Backend Test', () => {
                     done();
                 });
                 socket.on('nameEvent', (data) => {
-                    expect('This event').toBe('not to happen');
+                    expect(data).toBe('TO NOT HAPPEN');
                     done();
                 });
             });    
@@ -331,20 +320,20 @@ describe('Full Backend Test', () => {
                 socket.on('roomId', () => {
                     socket.emit('roomId', {
                         roomId: '',
-                        token: user.token,
+                        token: '',
                         isPhone: false
                     });
                 });
                 socket.on('initData', (update) => {
-                    expect('This event').toBe('not to happen');
+                    expect(update).toBe('TO NOT HAPPEN');
                     done();
                 });
                 socket.on('errorEvent', (data) => {
-                    expect(data.message).toBe('NO ERROR');
+                    expect(data.message).toBe('Room has been closed');
                     done();
                 });
                 socket.on('nameEvent', (data) => {
-                    expect(data.title).toBe('What is your name?');
+                    expect(data).toBe('TO NOT HAPPEN');
                     done();
                 });
             });
@@ -353,13 +342,18 @@ describe('Full Backend Test', () => {
                 socket.on('roomId', () => {
                     socket.emit('roomId', {
                         roomId: room.id,
-                        token: '',
+                        token: '1',
                         isPhone: false
                     });
                 });
                 socket.on('initData', (update) => {
-                    expect('This event').toBe('not to happen');
-                    done();
+                    expect(update).toBeDefined();
+                    expect(update.host.name).toBe('jest');
+                    socket.emit('roomId', {
+                        roomId: room.id,
+                        token: '',
+                        isPhone: false
+                    });
                 });
                 socket.on('errorEvent', (data) => {
                     expect(data.message).toBe('NO ERROR');
@@ -370,7 +364,7 @@ describe('Full Backend Test', () => {
                     done();
                 });
                 socket.on('twoRooms', (data) => {
-                    expect('This event').toBe('not to happen');
+                    expect(data).toBe('TO NOT HAPPEN');
                     done();
                 });
             });
