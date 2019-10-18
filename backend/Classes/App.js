@@ -27,7 +27,7 @@ const helmet = require('helmet');
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function App(production, env, secTillDelete, spotifyAccountAddress, spotifyApiAddress) {
+function App(production, env, secTillDelete, spotifyAccountAddress, spotifyApiAddress, updateSpeed) {
     //Setup of the server
     this.app = express();
     this.app.use(cookieParser());
@@ -47,6 +47,7 @@ function App(production, env, secTillDelete, spotifyAccountAddress, spotifyApiAd
     this.spotifyApiAddress = spotifyApiAddress;
 
     this.secTillDelete = secTillDelete;
+    this.updateSpeed = updateSpeed;
 
     this.uriBack = '';
 
@@ -231,7 +232,7 @@ method.socketCall = function(socket) {
     socket.oldUpdate = null;
 
     //This function is called every 500ms
-    let updateInterval = setInterval(() => this.theUpdateFunction(socket), 500);
+    let updateInterval = setInterval(() => this.theUpdateFunction(socket), this.updateSpeed);
 
     //This is what happens when a user connects
     socket.emit('roomId');
@@ -275,7 +276,10 @@ method.socketCall = function(socket) {
             }
 
             if (x >= 0 && room.firstConnection === true) {
+                room.firstConnection = false;
                 socket.emit('twoRooms', {oldRoom: this.rooms[x].id});
+            } else if (x >= 0) {
+                socket.emit('errorEvent', {message: 'Room is still generating.'});
             } else {
                 socket.name = room.user.name;
 
@@ -338,42 +342,21 @@ method.socketCall = function(socket) {
 
             socket.name = room.user.name;
 
-            if (room.firstConnection === true) {
-                room.firstConnection = false;
-                // eslint-disable-next-line no-console
-                console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token). [Phone: ' + data.isPhone + ']');
+            // eslint-disable-next-line no-console
+            console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token). [Phone: ' + data.isPhone + ']');
 
-                socket.isHost = true;
-                room.hostPhone = data.isPhone;
+            socket.isHost = true;
+            room.hostPhone = data.isPhone;
 
-                let update = room.getDifference(null);
-                socket.oldUpdate = _.cloneDeep(room);
+            let update = room.getDifference(null);
+            socket.oldUpdate = _.cloneDeep(room);
 
-                update.isHost = socket.isHost;
+            update.isHost = socket.isHost;
 
-                update.token = room.user.token;
+            update.token = room.user.token;
 
-                socket.emit('initData', update);
-                room.hostDisconnect = null;
-            } else {
-                if (room.hostDisconnect !== null && data.token === room.user.token) { //If host is gone
-                    // eslint-disable-next-line no-console
-                    console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
-
-                    socket.isHost = true;
-                    room.hostPhone = data.isPhone;
-
-                    let update = room.getDifference(null);
-                    socket.oldUpdate = _.cloneDeep(room);
-
-                    update.isHost = socket.isHost;
-
-                    socket.emit('initData', update);
-                    room.hostDisconnect = null;
-                } else {
-                    socket.emit('nameEvent', {title: 'What is your name?'});
-                }
-            }
+            socket.emit('initData', update);
+            room.hostDisconnect = null;
         } else {
             // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted due to more then 1 room (Host choose the old room).');
@@ -482,12 +465,14 @@ method.socketCall = function(socket) {
     /**
 	* Called when the host wants to close the room
 	*/
-    socket.on('logout', () => {
+    socket.on('logout', (data) => {
         let room = lib.getRoomById(socket.roomId, this.rooms);
         if (room !== null) {
-            // eslint-disable-next-line no-console
-            console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted by host.');
-            this.rooms.splice(this.rooms.indexOf(room), 1);
+            if (data.token === room.token) {
+                this.rooms.splice(this.rooms.indexOf(room), 1);
+                // eslint-disable-next-line no-console
+                console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted by host.');
+            }
         } else {
             socket.emit('errorEvent', {message: 'Room was closed'});
         }
@@ -582,7 +567,7 @@ method.theUpdateFunction = async function(socket) {
             socket.updateCounter.amount = 0;
         }
     } else {
-        socket.emit('errorEvent', {message: null});
+        //socket.emit('errorEvent', {message: 'Room does not exist'});
     }
 };
 

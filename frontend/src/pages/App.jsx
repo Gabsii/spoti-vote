@@ -211,7 +211,7 @@ class App extends Component {
         this.socket.on('errorEvent', (data) => {
             if (data.message !== null && data.message !== undefined) {
                 swal.fire({type: 'error', title: 'Oops...', text: data.message}).then( () => {
-                    this.socket.emit('logout');
+                    this.socket.emit('logout', {token: this.state.token});
                     // if the user has a token he will stay on /dashboard, otherwise he will be redirected to /
                     window.location.pathname = '/dashboard';
                 });
@@ -285,7 +285,7 @@ class App extends Component {
                 <title> {this.state.roomId || ''} | Spoti-Vote</title>
                 <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
             </Helmet>
-            <AppSidebar rerollHandler={this.rerollHandler.bind(this)} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
+            <AppSidebar rerollHandler={this.rerollHandler.bind(this)} socket={this.socket} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} token={this.state.token} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
             <CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks} socket={this.socket}/>
             <Footer playHandler={this.playHandler.bind(this)} skipHandler={this.skipHandler.bind(this)} isHost={this.state.isHost} activePlayer={this.state.activePlayer} socket={this.socket}/>
         </main>);

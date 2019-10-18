@@ -364,14 +364,19 @@ method.getPlaylistById = function(playlistId) {
 method.changePlaylist = async function(playlistId) {
     let playlist = this.getPlaylistById(playlistId);
 
-    //Generate 4 new songs if the playlist changed
-    if (playlist !== this.activePlaylist) {
-        await this.getRandomTracks(playlist.id);
+    if (playlist === null || playlist === undefined) {
+        console.error('[ERROR] Playlist: ' + playlistId + ' does not exist');
+        return false;
+    } else {
+        //Generate 4 new songs if the playlist changed
+        if (playlist !== this.activePlaylist) {
+            await this.getRandomTracks(playlist.id);
+        }
+        this.activePlaylist = playlist;
+        // eslint-disable-next-line no-console
+        console.log('INFO-[ROOM: '+this.id+']: Playlist changed to ['+playlist.name+'].');
+        return true;
     }
-    this.activePlaylist = playlist;
-    // eslint-disable-next-line no-console
-    console.log('INFO-[ROOM: '+this.id+']: Playlist changed to ['+playlist.name+'].');
-    return true;
 };
 
 /**
@@ -460,7 +465,6 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
         let reroll;
         do {
             reroll = false;
-
             track = playlist.tracks[Math.floor(Math.random() * playlist.tracks.length)].track;
 
             if (activeTrack !== null && activeTrack !== undefined) {
@@ -477,7 +481,7 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
                     }
                 }
             }
-        } while (selectedTracks.some(reroll));
+        } while (reroll);
         selectedTracks.push(_.cloneDeep(track));
     }
 

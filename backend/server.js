@@ -16,7 +16,14 @@ let env = {
     spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET
 };
 
-let Application = new App(true, env, secTillDelete, spotifyAccountAddress, spotifyApiAddress);
+let Application = new App(
+    true, 
+    env, 
+    secTillDelete, 
+    spotifyAccountAddress, 
+    spotifyApiAddress,
+    500
+);
 
 /**
 * Starts the server
