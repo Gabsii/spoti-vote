@@ -12,7 +12,10 @@ const fetch = require('node-fetch');
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function User(token, refreshToken, clientId, clientSecret) {
+function User(spotifyAcountAddress, spotifyApiAddress, token, refreshToken, clientId, clientSecret) {
+    this.spotifyAcountAddress = spotifyAcountAddress;
+    this.spotifyApiAddress = spotifyApiAddress;
+
     this.token = token;
     this.refreshToken = refreshToken;
     this.clientId = clientId;
@@ -32,7 +35,7 @@ function User(token, refreshToken, clientId, clientSecret) {
 * @return: boolean if completed successfull
 */
 method.fetchData = async function() {
-    let hostRequest = await fetch('https://api.spotify.com/v1/me', {
+    let hostRequest = await fetch(this.spotifyApiAddress + '/v1/me', {
         headers: {
             'Authorization': 'Bearer ' + this.token
         }
@@ -53,7 +56,6 @@ method.fetchData = async function() {
     this.country = hostRequestData.country;
 
     this.playlists = await this.fetchPlaylists();
-
     return true;
 };
 
@@ -64,7 +66,7 @@ method.fetchData = async function() {
 * @return: array All the playlists
 */
 method.fetchPlaylists = async function() {
-    let playlistRequest = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
+    let playlistRequest = await fetch(this.spotifyApiAddress + '/v1/me/playlists?limit=50', {
         headers: {
             'Authorization': 'Bearer ' + this.token
         }

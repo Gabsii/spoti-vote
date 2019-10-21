@@ -40,6 +40,13 @@
   "jest": {
     "projects": [
       {
+        "displayName": "other-lint",
+        "runner": "jest-runner-eslint",
+        "testMatch": [
+          "<rootDir>/scripts/**/*.js"
+        ]
+      },
+      {
         "displayName": "backend-lint",
         "runner": "jest-runner-eslint",
         "testMatch": [
@@ -137,8 +144,8 @@
     "deep-equal": "^1.0.1",
     "dotenv": "^8.0.0",
     "dotenv-expand": "^5.1.0",
-    "eslint": "^5.16.0",
-    "eslint-config-react-app": "^4.0.1",
+    "eslint": "^6.5.1",
+    "eslint-config-react-app": "^5.0.2",
     "eslint-loader": "^3.0.2",
     "eslint-plugin-flowtype": "^3.13.0",
     "eslint-plugin-import": "^2.18.2",
@@ -151,10 +158,10 @@
     "file-loader": "^4.0.0",
     "fs-extra": "^8.0.1",
     "glamor": "^2.20.40",
-    "helmet": "^3.18.0",
-    "helmet-csp": "^2.7.1",
+    "helmet": "^3.21.1",
+    "helmet-csp": "^2.9.3",
     "html-webpack-plugin": "^4.0.0-beta.5",
-    "jest": "^24.8.0",
+    "jest": "^24.9.0",
     "jest-environment-jsdom-fourteen": "^0.1.0",
     "jest-runner-eslint": "^0.7.4",
     "jest-watch-typeahead": "^0.4.0",
