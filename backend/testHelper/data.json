@@ -17,6 +17,8 @@
                         {
                             "isLocal": true,
                             "track": {
+								"id": "track_1",
+								"name": "Hello from this side",
 								"is_playable": true,
 								"album": {
 									"images": [
@@ -35,6 +37,8 @@
 						{
                             "isLocal": true,
                             "track": {
+								"id": "track_2",
+								"name": "Greetings",
 								"is_playable": true,
 								"album": {
 									"images": [
@@ -53,6 +57,8 @@
 						{
                             "isLocal": true,
                             "track": {
+								"id": "track_3",
+								"name": "Such a banger",
 								"is_playable": true,
 								"album": {
 									"images": [
@@ -71,6 +77,8 @@
 						{
                             "isLocal": true,
                             "track": {
+								"id": "track_4",
+								"name": "ya yeet",
 								"is_playable": true,
 								"album": {
 									"images": [
@@ -89,6 +97,8 @@
 						{
                             "isLocal": true,
                             "track": {
+								"id": "track_5",
+								"name": "Wowoe",
 								"is_playable": true,
 								"album": {
 									"images": [
@@ -107,6 +117,8 @@
 						{
                             "isLocal": true,
                             "track": {
+								"id": "track_6",
+								"name": "Tracku sixu",
 								"is_playable": true,
 								"album": {
 									"images": [

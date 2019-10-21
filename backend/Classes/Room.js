@@ -481,6 +481,13 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
                     }
                 }
             }
+            if (!reroll) {
+                for (let j = 0; j < selectedTracks.length; j++) {
+                    if (selectedTracks[j].id === track.id) {
+                        reroll = true;
+                    }                    
+                }
+            }
         } while (reroll);
         selectedTracks.push(_.cloneDeep(track));
     }

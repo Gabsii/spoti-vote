@@ -34,29 +34,30 @@ let address = 'http://' + env.ipAddress + ':' + env.backendPort;
 
 ioBack.on('connection', (s) => Application.socketCall(s));
 
-/**
- * Setup HTTP servers
- */
-beforeAll((done) => {
-    spotifyServer.listen(env.spotifyServerPort, () => {
-    });
-
-    Application.server.listen(env.backendPort, () => {
-
-    });
-    done();
-});
-
-/**
- * Close HTTP servers
- */
-afterAll((done) => {
-    Application.server.close();
-    spotifyServer.close();
-    done();
-});
-
 describe('Full Backend Test', () => {
+    
+    /**
+     * Setup HTTP servers
+     */
+    beforeAll((done) => {
+        spotifyServer.listen(env.spotifyServerPort, () => {
+        });
+
+        Application.server.listen(env.backendPort, () => {
+
+        });
+        done();
+    });
+
+    /**
+     * Close HTTP servers
+     */
+    afterAll((done) => {
+        Application.server.close();
+        spotifyServer.close();
+        done();
+    });
+
     describe('Http Calls', () => {
 
         afterAll( () => {
@@ -582,9 +583,13 @@ describe('Full Backend Test', () => {
         });
         
         describe('Correct Sequence', () => {
-            test('update function', (done) => {
+            let lastEvent = '';
+            let activeTracks = [];
+            test('Update function', (done) => {
                 hostSocket.on('update', (data) => {
-                    expect(data).toBeDefined();
+                    if (lastEvent === '') {
+                        expect(data).toBeDefined();
+                    }
                     done();
                 });
             });
@@ -592,8 +597,41 @@ describe('Full Backend Test', () => {
                 hostSocket.emit('changePlaylist', {
                     playlistId: 'pl123'
                 });
+                lastEvent = 'changePlaylist';
                 hostSocket.on('update', (data) => {
-                    expect(data).toBeDefined();
+                    if (lastEvent === 'changePlaylist') {
+                        activeTracks = data.activeTracks;
+                        expect(data.host).toBeDefined();
+                        expect(data.activeTracks).toHaveLength(4);
+                        expect(data.activePlaylist.name).toBe('MyPlaylist');
+                        expect(data.playlists).toHaveLength(1);
+                    }
+                    done();
+                });
+            });
+            test('Voting Host', (done) => {
+                let vote = activeTracks[0].id;
+                hostSocket.emit('vote', {
+                    trackId: vote
+                });
+                lastEvent = 'voteHost';
+                hostSocket.on('update', (data) => {
+                    if (lastEvent === 'voteHost') {
+                        expect(data.host.voted).toBe(vote);
+                    }
+                    done();
+                });
+            });
+            test('Voting Client', (done) => {
+                let vote = activeTracks[0].id;
+                clientSocket.emit('vote', {
+                    trackId: vote
+                });
+                lastEvent = 'voteClient';
+                clientSocket.on('update', (data) => {
+                    if (lastEvent === 'voteClient') {
+                        expect(data.connectedUser[0].voted).toBe(vote);
+                    }
                     done();
                 });
             });
@@ -603,4 +641,8 @@ describe('Full Backend Test', () => {
             
         });
     });
+});
+
+describe('Function Tests', () => {
+    
 });
