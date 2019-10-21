@@ -2,6 +2,9 @@ const request = require('supertest');
 const socketIoClient = require('socket.io-client');
 const socketIo = require('socket.io');
 const App = require('../Classes/App').App;
+const Room = require('../Classes/Room').Room;
+
+const orgData = require('../testHelper/data.json');
 
 let spotifyServer = require('../testHelper/spotifyServer').server;
 
@@ -603,8 +606,7 @@ describe('Full Backend Test', () => {
                         activeTracks = data.activeTracks;
                         expect(data.host).toBeDefined();
                         expect(data.activeTracks).toHaveLength(4);
-                        expect(data.activePlaylist.name).toBe('MyPlaylist');
-                        expect(data.playlists).toHaveLength(1);
+                        expect(data.playlists[0].name).toBe('MyPlaylist');
                     }
                     done();
                 });
@@ -644,5 +646,26 @@ describe('Full Backend Test', () => {
 });
 
 describe('Function Tests', () => {
-    
+    let testRoom;
+    beforeAll(() => {
+        testRoom = new Room('', '');
+        testRoom.playlists = orgData.users[0].playlists;
+    });
+
+    test('Get Random Tracks', () => {
+        let playlist = testRoom.playlists[0];
+        playlist.tracks = playlist.tracks.items;
+        for (let i = 0; i < 20; i++) {
+            expect(testRoom.getRandomTracks(testRoom.playlists[0])).toBe(true);
+            expect(testRoom.activeTracks).toBeDefined();
+
+            for (let j = 0; j < testRoom.activeTracks.length; j++) {
+                for (let ji = 0; ji < testRoom.activeTracks.length; ji++) {
+                    if (j !== ji) {
+                        expect(testRoom.activeTracks[j].id).not.toBe(testRoom.activeTracks[ji].id);
+                    }
+                }
+            }
+        }
+    });
 });

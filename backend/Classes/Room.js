@@ -370,7 +370,10 @@ method.changePlaylist = async function(playlistId) {
     } else {
         //Generate 4 new songs if the playlist changed
         if (playlist !== this.activePlaylist) {
-            await this.getRandomTracks(playlist.id);
+            if (!Array.isArray(playlist.tracks)) {
+                playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
+            }    
+            return this.getRandomTracks(playlist);
         }
         this.activePlaylist = playlist;
         // eslint-disable-next-line no-console
@@ -433,13 +436,8 @@ method.updatePlaylists = async function() {
 * @param {string} playlistId The id that identifies the playlist
 * @return {boolean} True if completed
 */
-method.getRandomTracks = async function(playlistId, activeTrack) {
-    let playlist = this.getPlaylistById(playlistId);
-    //Load tracks into Playlist if its empty
-    if (!Array.isArray(playlist.tracks)) {
-        playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
-    }
-
+method.getRandomTracks = function(playlist, activeTrack) {
+    
     if (activeTrack === null || activeTrack === undefined) {
         if (this.activePlayer !== null && this.activePlayer !== undefined) {
             activeTrack = this.activePlayer.track;
@@ -451,7 +449,9 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
     }
 
     //Reset all the votes
-    this.user.voted = null;
+    if (this.user !== undefined && this.user !== null) {
+        this.user.voted = null;
+    }
     for (let i = 0; i < this.connectedUser.length; i++) {
         this.connectedUser[i].voted = null;
     }
@@ -701,8 +701,13 @@ method.play = async function() {
             method: 'PUT',
             body: JSON.stringify(payload)
         });
-    
-        return this.getRandomTracks(this.activePlaylist.id, track);
+
+        let playlist = this.getPlaylistById(this.activePlaylist.id);
+        //Load tracks into Playlist if its empty
+        if (!Array.isArray(playlist.tracks)) {
+            playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
+        }    
+        return this.getRandomTracks(playlist, track);
     } else {
         await fetch(this.spotifyApiAddress + '/v1/me/player/next', {
             headers: {
@@ -741,7 +746,13 @@ method.skip = async function() {
         if (skips >= (2 * (this.connectedUser.length+1) / 3)) {
             // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: '+this.id+']: Skipped.');
-            this.getRandomTracks(this.activePlaylist.id, track);
+            
+            let playlist = this.getPlaylistById(this.activePlaylist.id);
+            //Load tracks into Playlist if its empty
+            if (!Array.isArray(playlist.tracks)) {
+                playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
+            }    
+            this.getRandomTracks(playlist, track);
             return true;
         }
     }
