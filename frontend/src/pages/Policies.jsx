@@ -35,7 +35,7 @@ class Policies extends React.Component {
 
                     <p {... styles.paragraph}>Effective date: November 14, 2018</p>
 
-                    <p {... styles.paragraph}>Spoti-Vote ("us", "we", or "our") operates the https:\/\/spoti-vote.com website (the "Service").</p>
+                    <p {... styles.paragraph}>Spoti-Vote ("us", "we", or "our") operates the https://spoti-vote.com website (the "Service").</p>
 
                     <p {... styles.paragraph}>This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data. Our Privacy Policy for Spoti-Vote is managed through
                         <a href="https://www.freeprivacypolicy.com/free-privacy-policy-generator.php">Free Privacy Policy Website</a>.</p>
