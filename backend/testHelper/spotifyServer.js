@@ -27,6 +27,29 @@ app.get('/api/v1/me/player', (req, res) => {
     res.send(data.users[token].player);
 });
 
+app.put('/api/v1/me/player/pause', (req, res) => {
+    let token = req.headers.authorization.split(' ')[1];
+    data.users[token].player.is_playing = false;
+});
+
+app.put('/api/v1/me/player/play', (req, res) => {
+    let token = req.headers.authorization.split(' ')[1];
+    if (req.body.uris !== null && req.body.uris !== undefined) {
+        let trackId = req.body.uris[0].split(':')[2];
+        let track;
+        for (let i = 0; i < data.users[token].playlists[0].tracks.items.length; i++) {
+            const tracki = data.users[token].playlists[0].tracks.items[i];
+            if (tracki.id === trackId) {
+                track = tracki;
+            } else {
+                track = null;
+            }
+        }
+        data.users[token].player.item = track;
+    }
+    data.users[token].player.is_playing = true;
+});
+
 app.get('/api/v1/me/playlists', (req, res) => {
     let token = req.headers.authorization.split(' ')[1];
     let response = {

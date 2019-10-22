@@ -147,6 +147,9 @@
 				}
             }],
             "player": {
+				"device": {
+                    "volume_percent": "1"
+                }
             }
         },
         {

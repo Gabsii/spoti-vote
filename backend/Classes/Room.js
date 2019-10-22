@@ -370,14 +370,15 @@ method.changePlaylist = async function(playlistId) {
     } else {
         //Generate 4 new songs if the playlist changed
         if (playlist !== this.activePlaylist) {
+            // eslint-disable-next-line no-console
+            console.log('INFO-[ROOM: '+this.id+']: Playlist changed to ['+playlist.name+'].');
             if (!Array.isArray(playlist.tracks)) {
                 playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
-            }    
+            }
+            
+            this.activePlaylist = playlist;
             return this.getRandomTracks(playlist);
         }
-        this.activePlaylist = playlist;
-        // eslint-disable-next-line no-console
-        console.log('INFO-[ROOM: '+this.id+']: Playlist changed to ['+playlist.name+'].');
         return true;
     }
 };

@@ -26,7 +26,7 @@ let Application = new App(
     secTillDelete, 
     spotifyAccountAddress, 
     spotifyApiAddress,
-    100
+    10
 );
 
 let ioBack = socketIo(Application.server);
@@ -586,13 +586,24 @@ describe('Full Backend Test', () => {
         });
         
         describe('Correct Sequence', () => {
-            let lastEvent = '';
+            let hostUpdateCounter = 0;
+            let clientUpdateCounter = 0;
             let activeTracks = [];
             test('Update function', (done) => {
+                clientSocket.on('update', data => {
+                    clientUpdateCounter++;
+                    console.log('-----------' + clientUpdateCounter + ' Client----------');
+                    console.log(data);
+                });
                 hostSocket.on('update', (data) => {
-                    if (lastEvent === '') {
-                        expect(data).toBeDefined();
+                    hostUpdateCounter++;
+                    console.log('-----------' + hostUpdateCounter + ' Host----------');
+                    console.log(data);
+                    if (hostUpdateCounter === 1) {
+                        expect(data.connectedUser).toHaveLength(1);
+                        console.warn('Update Done');
                     }
+                    
                     done();
                 });
             });
@@ -600,26 +611,54 @@ describe('Full Backend Test', () => {
                 hostSocket.emit('changePlaylist', {
                     playlistId: 'pl123'
                 });
-                lastEvent = 'changePlaylist';
                 hostSocket.on('update', (data) => {
-                    if (lastEvent === 'changePlaylist') {
+                    if (hostUpdateCounter === 2) {
                         activeTracks = data.activeTracks;
                         expect(data.host).toBeDefined();
                         expect(data.activeTracks).toHaveLength(4);
                         expect(data.playlists[0].name).toBe('MyPlaylist');
+                        expect(data.activePlaylist.name).toBe('MyPlaylist');
+                        console.warn('Select PL Done');
                     }
                     done();
                 });
             });
+
+            test('Reroll Host', (done) => {
+                hostSocket.emit('vote', {
+                    trackId: 'skip'
+                });
+                hostSocket.on('update', (data) => {
+                    if (hostUpdateCounter === 3) {
+                        expect(data.host.voted).toBe('skip');
+                        console.warn('Reroll Host Done');
+                    }
+                    done();
+                });
+            });
+
+            test('Reroll Client', (done) => {
+                clientSocket.emit('vote', {
+                    trackId: 'skip'
+                });
+                clientSocket.on('update', (data) => {
+                    if (clientUpdateCounter === 3) {
+                        expect(data.activeTracks).toHaveLength(4);
+                        console.warn('Reroll Client Done');
+                    }
+                    done();
+                });
+            });
+
             test('Voting Host', (done) => {
                 let vote = activeTracks[0].id;
                 hostSocket.emit('vote', {
                     trackId: vote
                 });
-                lastEvent = 'voteHost';
                 hostSocket.on('update', (data) => {
-                    if (lastEvent === 'voteHost') {
+                    if (hostUpdateCounter === 5) {
                         expect(data.host.voted).toBe(vote);
+                        console.warn('Voting Host Done');
                     }
                     done();
                 });
@@ -629,18 +668,36 @@ describe('Full Backend Test', () => {
                 clientSocket.emit('vote', {
                     trackId: vote
                 });
-                lastEvent = 'voteClient';
                 clientSocket.on('update', (data) => {
-                    if (lastEvent === 'voteClient') {
+                    if (clientUpdateCounter === 5) {
                         expect(data.connectedUser[0].voted).toBe(vote);
+                        console.warn('Voting Client Done');
                     }
                     done();
                 });
             });
-        });
 
-        describe('Incorrect Sequence', () => {
-            
+            test('Skipping', (done) => {
+                hostSocket.emit('skip');
+                hostSocket.on('update', (data) => {
+                    if (hostUpdateCounter === 7) {
+                        expect(data).toBe(null);
+                        console.warn('Skipping Done');
+                    }
+                    done();
+                });
+            });
+
+            test('Pausing', (done) => {
+                hostSocket.emit('pause');
+                hostSocket.on('update', (data) => {
+                    if (hostUpdateCounter === 8) {
+                        expect(data).toBe(null);
+                        console.warn('Pausing Done');
+                    }
+                    done();
+                });
+            });
         });
     });
 });
