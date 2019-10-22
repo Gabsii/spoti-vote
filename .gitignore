@@ -25,3 +25,7 @@ package-lock.json
 
 # Config files
 /frontend/src/js/config.json
+
+# Editor configs
+.idea
+
