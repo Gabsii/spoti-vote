@@ -126,7 +126,7 @@ class Policies extends React.Component {
                             <p {... styles.paragraph}>Google Analytics is a web analytics service offered by Google that tracks and reports website traffic. Google uses the data collected to track and monitor the use of our Service. This data is shared with other Google services. Google may use the collected data to contextualize and personalize the ads of its own advertising network.</p>
                             <p {... styles.paragraph}>You can opt-out of having made your activity on the Service available to Google Analytics by installing the Google Analytics opt-out browser add-on. The add-on prevents the Google Analytics JavaScript (ga.js, analytics.js, and dc.js) from sharing information with Google Analytics about visits activity.</p>
                             <p {... styles.paragraph}>For more information on the privacy practices of Google, please visit the Google Privacy & Terms web page:
-                                <a href="https://policies.google.com/privacy?hl=en">https://policies.google.com/privacy?hl=en</a>
+                                &nbsp;<a href="https://policies.google.com/privacy?hl=en">https://policies.google.com/privacy?hl=en</a>
                             </p>
                         </li>
                     </ul>
@@ -180,7 +180,7 @@ class Policies extends React.Component {
                     <p {... styles.paragraph}>You can prevent the setting of cookies by adjusting the settings on your browser (see your browser Help for how to do this). Be aware that disabling cookies will affect the functionality of this and many other websites that you visit. Disabling cookies will usually result in also disabling certain functionality and features of the this site. Therefore it is recommended that you do not disable cookies.</p>
 
                     <p {... styles.paragraph}>You can learn how to manage cookies on your web browser by following the
-                        <a href="https://privacypolicies.com/blog/browser-cookies-guide/">Browser Cookies Guide</a>.</p>
+                        &nbsp;<a href="https://privacypolicies.com/blog/browser-cookies-guide/">Browser Cookies Guide</a>.</p>
 
                     <p>
                         <strong {... styles.heading}>The Cookies We Set</strong>
@@ -220,7 +220,7 @@ class Policies extends React.Component {
                     </p>
 
                     <p {... styles.paragraph}>Hopefully that has clarified things for you and as was previously mentioned if there is something that you aren't sure whether you need or not it's usually safer to leave cookies enabled in case it does interact with one of the features you use on our site. This Cookies Policy was created with the help of the Generator of
-                        <a href="https://cookiepolicygenerator.com">GDPR Cookies Policy</a>.</p>
+                        &nbsp;<a href="https://cookiepolicygenerator.com">GDPR Cookies Policy</a>.</p>
 
                     <p {... styles.paragraph}>However if you are still looking for more information then you can contact us through one of our preferred contact methods:</p>
 
