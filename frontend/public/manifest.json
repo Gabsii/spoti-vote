@@ -2,7 +2,7 @@
   "short_name": "Spoti Vote",
   "name": "Spoti-Vote",
   "lang" : "English",
-  "start_url": "/",
+  "start_url": ".",
   "orientation": "portrait",
   "display": "fullscreen",
   "theme_color": "#282828",
