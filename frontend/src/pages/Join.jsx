@@ -1,11 +1,16 @@
 import React, {Component} from 'react';
+import socketIOClient from 'socket.io-client';
+import Cookies from 'universal-cookie';
 import {css} from 'glamor';
 import {Helmet} from 'react-helmet';
 
 import Header from '../components/Login/Header.jsx';
 import LoginCode from '../components/Login/LoginCode.jsx';
 import bg from '../img/mohammad-metri-421904-unsplash.jpg';
+import Footer from "../components/App/Footer";
+import LoginFooter from "../components/Login/LoginFooter";
 
+const cookies = new Cookies();
 const constants = require('../js/constants');
 const styles = {
     main: css({
@@ -30,7 +35,12 @@ const styles = {
     }),
     heading: css({fontSize: '2em', marginTop: '1.5em', textAlign: 'center'}),
     subheading: css({fontSize: '1.5em'}),
-    text: css({textAlign: 'center'})
+    text: css({textAlign: 'center'}),
+    footerContainer: css({
+        position: 'absolute',
+        bottom: 0,
+        width: '100%'
+    })
 };
 
 class Join extends Component {
@@ -56,6 +66,9 @@ class Join extends Component {
                 <br/>
                 <h2 className={`${styles.subHeading}`}>Room Code</h2>
                 <LoginCode/>
+            </div>
+            <div className={`${styles.footerContainer}`}>
+                <LoginFooter/>
             </div>
         </main>);
     }
