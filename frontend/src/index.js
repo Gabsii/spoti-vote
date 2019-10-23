@@ -5,7 +5,7 @@ import {BrowserRouter, Switch} from 'react-router-dom';
 
 import Loading from './pages/Loading.jsx';
 import Login from './pages/Login.jsx';
-import * as serviceWorker from './registerServiceWorker';
+import * as serviceWorker from './serviceWorker';
 
 // preloads css => no render blocking
 import './css/reset.css'; /* webpackPrefetch: true */
