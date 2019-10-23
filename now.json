@@ -35,7 +35,11 @@
             "src": "/service-worker.js",
             "dest": "/service-worker.js",
             "headers": { "Cache-Control": "no-cache" }
-        },{ 
+        }, {
+            "src": "/precache-manifest.*.js",
+            "dest": "/precache-manifest.*.js",
+            "headers": { "Cache-Control": "no-cache" }
+        },{  
             "src": "/(.*)", 
             "dest": "/index.html", 
             "headers": {"cache-control": "s-maxage=0"}
