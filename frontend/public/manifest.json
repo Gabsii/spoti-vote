@@ -2,7 +2,7 @@
   "short_name": "Spoti Vote",
   "name": "Spoti-Vote",
   "lang" : "English",
-  "start_url": "/",
+  "start_url": ".",
   "orientation": "portrait",
   "display": "fullscreen",
   "theme_color": "#282828",
@@ -39,6 +39,10 @@
         "type": "image/png"
     },
     {
+        "src": "./logos/icon-180x180.png",
+        "sizes": "180x180",
+        "type": "image/png"
+    },{
         "src": "./logos/icon-192x192.png",
         "sizes": "192x192",
         "type": "image/png"

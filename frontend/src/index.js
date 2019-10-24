@@ -5,7 +5,7 @@ import {BrowserRouter, Switch} from 'react-router-dom';
 
 import Loading from './pages/Loading.jsx';
 import Login from './pages/Login.jsx';
-import registerServiceWorker from './registerServiceWorker';
+import * as serviceWorker from './serviceWorker';
 
 // preloads css => no render blocking
 import './css/reset.css'; /* webpackPrefetch: true */
@@ -36,4 +36,4 @@ ReactDOM.render((
         </Suspense>
     </BrowserRouter>
 ), document.getElementById('root'));
-registerServiceWorker();
+serviceWorker.register();
