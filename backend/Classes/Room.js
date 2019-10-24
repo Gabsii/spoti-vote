@@ -569,14 +569,12 @@ method.update = async function() {
         console.error('ERROR-[ROOM: '+this.id+']: THERE WAS AN ERROR GETTING THE ACTIVE PLAYER.');
     }
 
-
     let fetchData;
     try {
         fetchData = await request.json();
     } catch (e) {
         fetchData = null;
     }
-
     this.activePlayer = null;
     if (fetchData !== null) {
         if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
@@ -707,7 +705,7 @@ method.play = async function() {
         //Load tracks into Playlist if its empty
         if (!Array.isArray(playlist.tracks)) {
             playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
-        }    
+        }
         return this.getRandomTracks(playlist, track);
     } else {
         await fetch(this.spotifyApiAddress + '/v1/me/player/next', {
@@ -784,7 +782,6 @@ method.changeVolume = async function(volume) {
 * @return {boolean} True if swapped
 */
 method.togglePlaystate = async function() {
-
     if (this.activePlayer !== null && this.activePlayer !== undefined) {
         if (this.activePlayer.isPlaying) {
             await fetch(this.spotifyApiAddress + '/v1/me/player/pause',{

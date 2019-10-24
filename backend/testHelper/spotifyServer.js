@@ -30,6 +30,7 @@ app.get('/api/v1/me/player', (req, res) => {
 app.put('/api/v1/me/player/pause', (req, res) => {
     let token = req.headers.authorization.split(' ')[1];
     data.users[token].player.is_playing = false;
+    res.send();
 });
 
 app.put('/api/v1/me/player/play', (req, res) => {

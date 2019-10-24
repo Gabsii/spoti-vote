@@ -26,7 +26,7 @@ let Application = new App(
     secTillDelete, 
     spotifyAccountAddress, 
     spotifyApiAddress,
-    10
+    500
 );
 
 let ioBack = socketIo(Application.server);
@@ -624,12 +624,23 @@ describe('Full Backend Test', () => {
                 });
             });
 
+            test('Pause event early', (done) => {
+                hostSocket.emit('pause');
+                hostSocket.on('update', (data) => {
+                    if (hostUpdateCounter === 3) {
+                        expect(data.activePlayer).toBeDefined();
+                        console.warn('Pausing Done');
+                    }
+                    done();
+                });
+            });
+
             test('Reroll Host', (done) => {
                 hostSocket.emit('vote', {
                     trackId: 'skip'
                 });
                 hostSocket.on('update', (data) => {
-                    if (hostUpdateCounter === 3) {
+                    if (hostUpdateCounter === 4) {
                         expect(data.host.voted).toBe('skip');
                         console.warn('Reroll Host Done');
                     }
@@ -642,7 +653,7 @@ describe('Full Backend Test', () => {
                     trackId: 'skip'
                 });
                 clientSocket.on('update', (data) => {
-                    if (clientUpdateCounter === 3) {
+                    if (clientUpdateCounter === 2) {
                         expect(data.activeTracks).toHaveLength(4);
                         console.warn('Reroll Client Done');
                     }
@@ -669,7 +680,7 @@ describe('Full Backend Test', () => {
                     trackId: vote
                 });
                 clientSocket.on('update', (data) => {
-                    if (clientUpdateCounter === 5) {
+                    if (clientUpdateCounter === 3) {
                         expect(data.connectedUser[0].voted).toBe(vote);
                         console.warn('Voting Client Done');
                     }
@@ -681,7 +692,7 @@ describe('Full Backend Test', () => {
                 hostSocket.emit('skip');
                 hostSocket.on('update', (data) => {
                     if (hostUpdateCounter === 7) {
-                        expect(data).toBe(null);
+                        expect(data.activePlayer).toBeDefined();
                         console.warn('Skipping Done');
                     }
                     done();
@@ -691,8 +702,8 @@ describe('Full Backend Test', () => {
             test('Pausing', (done) => {
                 hostSocket.emit('pause');
                 hostSocket.on('update', (data) => {
-                    if (hostUpdateCounter === 8) {
-                        expect(data).toBe(null);
+                    if (hostUpdateCounter === 7) {
+                        expect(data.activePlayer).toBeDefined();
                         console.warn('Pausing Done');
                     }
                     done();
