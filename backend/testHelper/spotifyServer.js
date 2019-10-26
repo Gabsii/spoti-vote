@@ -87,14 +87,6 @@ app.post('/api/token', (req, res) => {
     }
 });
 
-let getUserById = function(id) {
-    for (let i = 0; i < data.users.length; i++) {
-        const user = data.users[i];
-        if (user.id === id) {
-            return user;
-        }
-    }
-};
 let getPlaylistById = function(user, id) {
     for (let i = 0; i < user.playlists.length; i++) {
         const playlist = user.playlists[i];

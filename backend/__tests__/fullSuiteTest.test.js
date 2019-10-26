@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const request = require('supertest');
 const socketIoClient = require('socket.io-client');
 const socketIo = require('socket.io');
@@ -37,7 +38,7 @@ let address = 'http://' + env.ipAddress + ':' + env.backendPort;
 
 ioBack.on('connection', (s) => Application.socketCall(s));
 
-describe('Full Backend Test', () => {
+describe('Backend Main Test', () => {
     
     /**
      * Setup HTTP servers

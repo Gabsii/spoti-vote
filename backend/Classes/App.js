@@ -49,6 +49,10 @@ function App(production, env, secTillDelete, spotifyAccountAddress, spotifyApiAd
     this.secTillDelete = secTillDelete;
     this.updateSpeed = updateSpeed;
 
+    //Time unit is amount of updates;
+    this.playlistRefreshTimer = 300;
+    this.tokenRefreshTimer = 3500;
+
     this.uriBack = '';
 
     if (this.ipAddress === 'localhost') {
@@ -203,27 +207,30 @@ method.httpCalls = function() {
         console.log('INFO: /rooms has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
 
-        let returnRooms = [];
-        for (var i = 0; i < this.rooms.length; i++) {
-            let roomI = {
-                roomName: this.rooms[i].id,
-                roomHost: this.rooms[i].user.name,
-                roomCover: 'https://via.placeholder.com/152x152'
-            };
-            if (this.rooms[i].activePlaylist !== null) {
-                roomI.roomCover = this.rooms[i].activePlaylist.images[0].url;
+        try {
+            let returnRooms = [];
+            for (var i = 0; i < this.rooms.length; i++) {
+                let roomI = {
+                    roomName: this.rooms[i].id,
+                    roomHost: this.rooms[i].user.name,
+                    roomCover: 'https://via.placeholder.com/152x152'
+                };
+                if (this.rooms[i].activePlaylist !== null) {
+                    roomI.roomCover = this.rooms[i].activePlaylist.images[0].url;
+                }
+                returnRooms.push(roomI);
             }
-            returnRooms.push(roomI);
-        }
 
-        res.status(200).send(returnRooms);
+            res.status(200).send(returnRooms);
+        } catch (error) {
+            res.status(400).send('Error while getting Room List');
+        }
     });
 };
 
 method.socketCall = function(socket) {
     //Local varibles, can only be used by the same connection (but in every call)
-    
-    socket.state = 0; //0 Dashboard / 1 App
+
     socket.isHost = false;
     socket.name = null;
     socket.updateCounter = {
@@ -394,7 +401,6 @@ method.socketCall = function(socket) {
         } else {
             socket.emit('errorEvent', {message: 'Room was closed'});
         }
-
     });
 
     /**
@@ -531,11 +537,11 @@ method.theUpdateFunction = async function(socket) {
     if (room !== null) {
         await room.update(socket.isHost);
 
-        if (socket.updateCounter.amount % 300 === 0 && socket.isHost === true) {
+        if (socket.updateCounter.amount % this.playlistRefreshTimer === 0 && socket.isHost === true) {
             room.updatePlaylists();
         }
 
-        if (socket.updateCounter.amount % 3500 === 0 && socket.isHost === true) {
+        if (socket.updateCounter.amount % this.tokenRefreshTimer === 0 && socket.isHost === true) {
             room.refreshToken();
         }
 
