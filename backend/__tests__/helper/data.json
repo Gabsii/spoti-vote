@@ -1,0 +1,204 @@
+{
+    "users": [
+        {
+            "images": [],
+            "display_name": "jest",
+            "id": "jest_id",
+            "external_urls": {
+                "spotify": "http://localhost:8890/jest"
+            },
+            "country": "Yes",
+            "playlists": [{
+                "id": "pl123",
+                "name": "MyPlaylist",
+                "href": "http://localhost:8890/v1/playlists/pl123",
+                "tracks": {
+                    "items": [
+                        {
+                            "isLocal": true,
+                            "track": {
+								"id": "track_1",
+								"name": "Hello from this side",
+								"is_playable": true,
+								"album": {
+									"images": [
+										{
+											"url": "https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"
+										}
+									]
+								},
+								"artists": [
+									{
+										"name": "Artist 1"
+									}
+								]
+                            }
+						},
+						{
+                            "isLocal": true,
+                            "track": {
+								"id": "track_2",
+								"name": "Greetings",
+								"is_playable": true,
+								"album": {
+									"images": [
+										{
+											"url": "https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"
+										}
+									]
+								},
+								"artists": [
+									{
+										"name": "Artist 1"
+									}
+								]
+                            }
+						},
+						{
+                            "isLocal": true,
+                            "track": {
+								"id": "track_3",
+								"name": "Such a banger",
+								"is_playable": true,
+								"album": {
+									"images": [
+										{
+											"url": "https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"
+										}
+									]
+								},
+								"artists": [
+									{
+										"name": "Artist 1"
+									}
+								]
+                            }
+						},
+						{
+                            "isLocal": true,
+                            "track": {
+								"id": "track_4",
+								"name": "ya yeet",
+								"is_playable": true,
+								"album": {
+									"images": [
+										{
+											"url": "https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"
+										}
+									]
+								},
+								"artists": [
+									{
+										"name": "Artist 1"
+									}
+								]
+                            }
+						},
+						{
+                            "isLocal": true,
+                            "track": {
+								"id": "track_5",
+								"name": "Wowoe",
+								"is_playable": true,
+								"album": {
+									"images": [
+										{
+											"url": "https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"
+										}
+									]
+								},
+								"artists": [
+									{
+										"name": "Artist 1"
+									}
+								]
+                            }
+						},
+						{
+                            "isLocal": true,
+                            "track": {
+								"id": "track_6",
+								"name": "Tracku sixu",
+								"is_playable": true,
+								"album": {
+									"images": [
+										{
+											"url": "https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"
+										}
+									]
+								},
+								"artists": [
+									{
+										"name": "Artist 1"
+									}
+								]
+                            }
+                        }
+                    ],
+                    "total": 6
+				},
+				"images": [
+					{
+						"url": "http://localhost:8890/v1/playlists/pl123"  
+					}
+				],
+				"external_urls": {
+					"spotify": "http://localhost:8890/v1/playlists/pl123"
+				}
+            }],
+            "player": {
+				"is_playing": true,
+				"device": {
+                    "volume_percent": "1"
+				},
+				"item": {
+					"id": "track_1",
+					"name": "Hello from this side",
+					"is_playable": true,
+					"album": {
+						"images": [
+							{
+								"url": "https://spoti-vote.com/static/media/spotiLogo.4d91de47.svg"
+							}
+						]
+					},
+					"artists": [
+						{
+							"name": "Artist 1"
+						}
+					]
+				}
+            }
+        },
+        {
+            "images": [],
+            "display_name": "yagnesh",
+            "id": "yagnesh_id",
+            "external_urls": {
+                "spotify": "http:localhost:8889/yagnesh"
+            },
+            "country": "Yes",
+            "playlists": [],
+            "player": {
+                "device": {
+                    "volume_percent": "1"
+                }
+            }
+        },
+        {
+            "images": [],
+            "display_name": "bruh",
+            "id": "bruh_id",
+            "external_urls": {
+                "spotify": "http:localhost:8889/bruh"
+            },
+            "country": "Yes",
+            "playlists": [],
+            "player": {
+                "device": {
+                    "volume_percent": "1"
+                }
+            }
+        }
+    ]
+}

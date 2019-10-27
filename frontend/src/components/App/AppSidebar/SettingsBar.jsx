@@ -39,7 +39,7 @@ class SettingsBar extends PureComponent {
                 cancelButtonText: 'No, dont do it!'
             }).then((result) => {
                 if (!result.dismiss) {
-                    this.props.socket.emit('logout');
+                    this.props.socket.emit('logout', {data: this.props.token});
                     window.location.pathname = '/dashboard';
                 }
             });
