@@ -681,9 +681,11 @@ describe('Backend Main Test', () => {
                     trackId: vote
                 });
                 clientSocket.on('update', (data) => {
-                    if (clientUpdateCounter === 3) {
-                        expect(data.connectedUser[0].voted).toBe(vote);
+                    if (clientUpdateCounter > 3) {
+                        if (data.connectedUser !== undefined) {
+                            expect(data.connectedUser[0].voted).toBe(vote);
                         console.warn('Voting Client Done');
+                        }
                     }
                     done();
                 });
