@@ -5,9 +5,9 @@ const socketIo = require('socket.io');
 const App = require('../Classes/App').App;
 const Room = require('../Classes/Room').Room;
 
-const orgData = require('../testHelper/data.json');
+const orgData = require('./helper/data.json');
 
-let spotifyServer = require('../testHelper/spotifyServer').server;
+let spotifyServer = require('./helper/spotifyServer').server;
 
 let secTillDelete = 60;
 let env = {

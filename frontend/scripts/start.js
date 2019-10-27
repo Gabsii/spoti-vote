@@ -48,16 +48,16 @@ const HOST = process.env.HOST || '0.0.0.0';
 if (process.env.HOST) {
     console.log(
         chalk.cyan(
-            `Attempting to bind to HOST environment variable: ${chalk.yellow(
+            'Attempting to bind to HOST environment variable:' + chalk.yellow(
                 chalk.bold(process.env.HOST)
-            )}`
+            )
         )
     );
     console.log(
         'If this was unintentional, check that you haven\'t mistakenly set it in your shell.'
     );
     console.log(
-        `Learn more here: ${chalk.yellow('https://bit.ly/CRA-advanced-config')}`
+        'Learn more here:' + chalk.yellow('https://bit.ly/CRA-advanced-config')
     );
     console.log();
 }
