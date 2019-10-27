@@ -684,7 +684,7 @@ describe('Backend Main Test', () => {
                     if (clientUpdateCounter > 3) {
                         if (data.connectedUser !== undefined) {
                             expect(data.connectedUser[0].voted).toBe(vote);
-                        console.warn('Voting Client Done');
+                            console.warn('Voting Client Done');
                         }
                     }
                     done();
