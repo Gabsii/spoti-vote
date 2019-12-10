@@ -182,7 +182,7 @@
     "raf": "^3.4.1",
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.2",
-    "react-dev-utils": "^9.0.1",
+    "react-dev-utils": "^10.0.0",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",
     "react-lazyload": "^2.6.1",
