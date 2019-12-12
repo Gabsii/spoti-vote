@@ -198,7 +198,7 @@
     "style-loader": "^1.0.0",
     "supertest": "^4.0.2",
     "sw-precache-webpack-plugin": "^0.11.5",
-    "sweetalert2": "^8.13.0",
+    "sweetalert2": "^9.5.3",
     "terser-webpack-plugin": "^2.1.2",
     "universal-cookie": "^4.0.2",
     "url-loader": "^2.0.1",
