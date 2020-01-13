@@ -3,6 +3,8 @@ const request = require('request');
 const fetch = require('node-fetch');
 const _ = require('lodash');
 
+const env = require('../env').getEnv();
+
 /**
 * Constructor for a new / room
 *
@@ -12,20 +14,15 @@ const _ = require('lodash');
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function Room(spotifyAccountAddress, spotifyApiAddress, user, rooms) {
-    this.spotifyAccountAddress = spotifyAccountAddress;
-    this.spotifyApiAddress = spotifyApiAddress;
+function Room(host, rooms) {
     //The host object
-    this.user = user;
-    this.firstConnection = true;
+    this.host = host;
     this.activeTracks = [];
     this.activePlaylist = null;
-    this.connectedUser = [];
     this.activePlayer = {};
-    this.userDisconnect = Date.now();
+    this.connectedUser = [];
     this.isChanging = false;
     this.isSkipping = false;
-    this.userPhone = false;
 
     //Makes sure the id is unique
     do {
@@ -33,16 +30,16 @@ function Room(spotifyAccountAddress, spotifyApiAddress, user, rooms) {
     } while (getRoomById(this.id, rooms) !== null);
 }
 
-method.getData = function (token) {
+method.getData = function (isHost) {
     return {
-        roomdId: this.roomId,
-        isHost: (token !== null && token !== undefined)? (token === this.user.token): false,
+        roomId: this.id,
+        isHost: isHost,
         connectedUser: this.connectedUser,
-        playlists: this.user.playlists,
+        playlists: this.host.playlists,
         host: {
-            img: this.user.img,
-            name: this.user.name,
-            voted: this.user.voted
+            img: this.host.img,
+            name: this.host.name,
+            voted: this.host.voted
         },
         activePlaylist: this.activePlaylist,
         activeTracks: this.activeTracks,
@@ -65,7 +62,7 @@ method.getData = function (token) {
 */
 method.getUserNames = function() {
     let names = [];
-    names.push(this.user.name);
+    names.push(this.host.name);
     for (let i = 0; i < this.connectedUser.length; i++) {
         names.push(this.connectedUser[i].name);
     }
@@ -80,8 +77,8 @@ method.getUserNames = function() {
 * @return {object} The user object
 */
 method.getUserByName = function(name) {
-    if (name === this.user.name) {
-        return this.user;
+    if (name === this.host.name) {
+        return this.host;
     }
     for (let i = 0; i < this.connectedUser.length; i++) {
         if (this.connectedUser[i].name === name) {
@@ -134,9 +131,9 @@ method.removeUser = function(name) {
 * @return {object} The playlist object
 */
 method.getPlaylistById = function(playlistId) {
-    for (let i = 0; i < this.user.playlists.length; i++) {
-        if (this.user.playlists[i].id === playlistId) {
-            return this.user.playlists[i];
+    for (let i = 0; i < this.host.playlists.length; i++) {
+        if (this.host.playlists[i].id === playlistId) {
+            return this.host.playlists[i];
         }
     }
     return null;
@@ -174,27 +171,27 @@ method.changePlaylist = async function(playlistId) {
 * @return {boolean} True if completed
 */
 method.updatePlaylists = async function() {
-    let newPlaylists = await this.user.fetchPlaylists();
-    let toBeRemoved = _.cloneDeep(this.user.playlists);
+    let newPlaylists = await this.host.fetchPlaylists();
+    let toBeRemoved = _.cloneDeep(this.host.playlists);
 
     for (let i = 0; i < newPlaylists.length; i++) {
         let playlist = this.getPlaylistById(newPlaylists[i].id);
         if (playlist === null) {
-            this.user.playlists.push(newPlaylists[i]);
+            this.host.playlists.push(newPlaylists[i]);
             // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: '+this.id+']: Added new Playlist: ['+newPlaylists[i].name+'].');
         } else {
-            toBeRemoved[this.user.playlists.indexOf(playlist)] = null;
+            toBeRemoved[this.host.playlists.indexOf(playlist)] = null;
             //LOGIC FOR CHANGING A PLAYLIST
             if (Array.isArray(playlist.tracks) === false) {
                 if (playlist.tracks.total !== newPlaylists[i].tracks.total) {
-                    this.user.playlists[this.user.playlists.indexOf(playlist)] = newPlaylists[i];
+                    this.host.playlists[this.host.playlists.indexOf(playlist)] = newPlaylists[i];
                     // eslint-disable-next-line no-console
                     console.log('INFO-[ROOM: '+this.id+']: Changed Playlist: ['+newPlaylists[i].name+'].');
                 }
             } else {
                 if (playlist.tracks.length !== newPlaylists[i].tracks.total) {
-                    this.user.playlists[this.user.playlists.indexOf(playlist)] = newPlaylists[i];
+                    this.host.playlists[this.host.playlists.indexOf(playlist)] = newPlaylists[i];
                     // eslint-disable-next-line no-console
                     console.log('INFO-[ROOM: '+this.id+']: Changed Playlist: ['+newPlaylists[i].name+'].');
                 }
@@ -205,7 +202,7 @@ method.updatePlaylists = async function() {
         if (toBeRemoved[i] !== null) {
             let playlist = this.getPlaylistById(toBeRemoved[i].id);
             if (playlist.id !== this.activePlaylist.id) {
-                this.user.playlists.splice(this.user.playlists.indexOf(playlist),1);
+                this.host.playlists.splice(this.host.playlists.indexOf(playlist),1);
                 // eslint-disable-next-line no-console
                 console.log('INFO-[ROOM: '+this.id+']: Deleted Playlist: ['+playlist.name+'].');
             }
@@ -225,7 +222,7 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
     let playlist = this.getPlaylistById(playlistId);
     //Load tracks into Playlist if its empty
     if (!Array.isArray(playlist.tracks)) {
-        playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
+        playlist.tracks = await this.host.fetchPlaylistTracks(playlist);
     }
 
     if (activeTrack === null || activeTrack === undefined) {
@@ -239,7 +236,7 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
     }
 
     //Reset all the votes
-    this.user.voted = null;
+    this.host.voted = null;
     for (let i = 0; i < this.connectedUser.length; i++) {
         this.connectedUser[i].voted = null;
     }
@@ -307,24 +304,24 @@ method.refreshToken = async function() {
     // eslint-disable-next-line no-console
     console.log('Before REFRESH:');
     // eslint-disable-next-line no-console
-    console.log('  - Access Token: ' + this.user.token);
+    console.log('  - Access Token: ' + this.host.token);
     let authOptions = {
-        url: this.spotifyAccountAddress + '/api/token',
+        url: env.spotifyAccountAddress + '/api/token',
         form: {
             grant_type: 'refresh_token',
-            refresh_token: this.user.refreshToken
+            refresh_token: this.host.refreshToken
         },
         headers: {
-            'Authorization': 'Basic ' + (new Buffer(this.user.clientId + ':' + this.user.clientSecret).toString('base64'))
+            'Authorization': 'Basic ' + (new Buffer(this.host.clientId + ':' + this.host.clientSecret).toString('base64'))
         },
         json: true
     };
     request.post(authOptions, async (error, response, body) => {
-        this.user.token = body.access_token;
+        this.host.token = body.access_token;
         // eslint-disable-next-line no-console
         console.log('After REFRESH:');
         // eslint-disable-next-line no-console
-        console.log('  - Access Token: ' + this.user.token);
+        console.log('  - Access Token: ' + this.host.token);
         return true;
     });
 };
@@ -339,9 +336,9 @@ method.update = async function() {
     this.lastUpdate = Date.now();
     let request;
     try {
-        request = await fetch(this.spotifyApiAddress + '/v1/me/player', {
+        request = await fetch(env.spotifyApiAddress + '/v1/me/player', {
             headers: {
-                'Authorization': 'Bearer ' + this.user.token
+                'Authorization': 'Bearer ' + this.host.token
             }
         });
     } catch (e) {
@@ -398,12 +395,8 @@ method.update = async function() {
 * @param {string} trackId The track whomst the user has voted for
 * @return {boolean} True if the vote was successfully changed
 */
-method.vote = async function(trackId, isHost, name) {
+method.vote = async function(trackId, name) {
     let user = this.getUserByName(name);
-
-    if (isHost === true) {
-        user = this.user;
-    }
 
     if (user !== null && user !== undefined) {
         let oldVote = user.voted;
@@ -475,9 +468,9 @@ method.play = async function() {
             uris: ['spotify:track:' + track.id]
         };
     
-        await fetch(this.spotifyApiAddress + '/v1/me/player/play', {
+        await fetch(env.spotifyApiAddress + '/v1/me/player/play', {
             headers: {
-                'Authorization': 'Bearer ' + this.user.token
+                'Authorization': 'Bearer ' + this.host.token
             },
             method: 'PUT',
             body: JSON.stringify(payload)
@@ -485,9 +478,9 @@ method.play = async function() {
     
         return this.getRandomTracks(this.activePlaylist.id, track);
     } else {
-        await fetch(this.spotifyApiAddress + '/v1/me/player/next', {
+        await fetch(env.spotifyApiAddress + '/v1/me/player/next', {
             headers: {
-                'Authorization': 'Bearer ' + this.user.token
+                'Authorization': 'Bearer ' + this.host.token
             },
             method: 'POST'
         });
@@ -514,7 +507,7 @@ method.skip = async function() {
                 skips += 1;
             }
         }
-        if (this.user.voted === 'skip') {
+        if (this.host.voted === 'skip') {
             skips += 1;
         }
         // eslint-disable-next-line no-console
@@ -537,9 +530,9 @@ method.skip = async function() {
 * @return {boolean} True if completed
 */
 method.changeVolume = async function(volume) {
-    await fetch(this.spotifyApiAddress + '/v1/me/player/volume?volume_percent=' + volume,{
+    await fetch(env.spotifyApiAddress + '/v1/me/player/volume?volume_percent=' + volume,{
         headers: {
-            'Authorization': 'Bearer ' + this.user.token
+            'Authorization': 'Bearer ' + this.host.token
         },
         method: 'PUT'
     });
@@ -556,18 +549,18 @@ method.togglePlaystate = async function() {
 
     if (this.activePlayer !== null && this.activePlayer !== undefined) {
         if (this.activePlayer.isPlaying) {
-            await fetch(this.spotifyApiAddress + '/v1/me/player/pause',{
+            await fetch(env.spotifyApiAddress + '/v1/me/player/pause',{
                 headers: {
-                    'Authorization': 'Bearer ' + this.user.token
+                    'Authorization': 'Bearer ' + this.host.token
                 },
                 method: 'PUT'
             });
             // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: '+this.id+']: Song is now Paused');
         } else {
-            await fetch(this.spotifyApiAddress + '/v1/me/player/play',{
+            await fetch(env.spotifyApiAddress + '/v1/me/player/play',{
                 headers: {
-                    'Authorization': 'Bearer ' + this.user.token
+                    'Authorization': 'Bearer ' + this.host.token
                 },
                 method: 'PUT'
             });
@@ -598,6 +591,25 @@ function getRoomById(roomId, rooms) {
 }
 
 /**
+* Return the room with the same host id
+*
+* @author: Michiocre
+* @param {string} host The host object
+* @param {array} rooms Array of all the rooms
+* @return {Room} The room object with the id of the parameter
+*/
+function getRoomByHost(host, rooms) {
+    let room = null;
+    for (var i = 0; i < rooms.length; i++) {
+        if (rooms[i].host.id === host.id) {
+            room = rooms[i];
+            return room;
+        }
+    }
+    return null;
+}
+
+/**
 * Return a randomly generated string with a specified length, based on the possible symbols
 *
 * @author: agustinhaller
@@ -612,4 +624,9 @@ function makeid(length) {
     return text;
 }
 
-module.exports = {Room: Room, makeid: makeid, getRoomById: getRoomById};
+module.exports = {
+    Room: Room,
+    makeid: makeid,
+    getRoomById: getRoomById,
+    getRoomByHost: getRoomByHost
+};

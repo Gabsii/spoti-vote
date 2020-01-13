@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {css} from 'glamor';
 import Cookies from 'universal-cookie';
 import {Helmet} from 'react-helmet';
+import swal from 'sweetalert2';
 
 import SharedSidebar from '../components/Shared/SharedSidebar.jsx';
 import Main from '../components/Dashboard/Main.jsx';
@@ -20,6 +21,12 @@ const styles = {
 };
 
 class Dashboard extends Component {
+
+    errorMsg(message) {
+        swal.fire({type: 'error', title: 'Oops...', text: message}).then( () => {
+            window.location.pathname = '/';
+        });
+    }
 
     constructor() {
         super();
@@ -55,21 +62,23 @@ class Dashboard extends Component {
 
     fetchProfile(token) {
         fetch(constants.config.url + '/profile', {
-            headers: {
-                'Token': token
-            }
-        }).then(response => response.json().then(response => {
-            if (response === null) {
-                window.location.pathname = '';
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                token: token
+            })
+        }).then(response => response.json().then(data => {
+            if (data.error) {
+                this.errorMsg(data.message);
             } else {
                 this.setState({
                     profile: {
-                        name: response.display_name,
-                        id: response.id,
-                        img: response.img || 'https://via.placeholder.com/152x152',
-                        premium: response.premium
+                        name: data.host.display_name,
+                        id: data.host.id,
+                        img: data.host.img || 'https://via.placeholder.com/152x152',
+                        premium: data.host.premium
                     },
-                    topTracks: response.topTracks
+                    topTracks: data.host.topTracks
                 });
             }
         }));

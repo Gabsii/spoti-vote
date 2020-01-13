@@ -3,26 +3,15 @@ const express = require('express');
 const querystring = require('querystring');
 const request = require('request');
 const _ = require('lodash');
-const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
 //Security
 const csp = require('helmet-csp');
 const cors = require('cors');
 const helmet = require('helmet');
 //Import of used files
 const Room = require('./Classes/Room');
-const User = require('./Classes/User');
-
-dotenv.config();
-
-let env = {
-    backendPort: process.env.PORTBACK,
-    frontendPort: process.env.PORT,
-    ipAddress: process.env.ADDRESS,
-    spotifyClientId: process.env.SPOTIFY_CLIENT_ID, 
-    spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET
-};
+const Host = require('./Classes/Host');
+const env = require('./env').getEnv();
 
 let expressApp = express();
 //expressApp.use(cookieParser());
@@ -30,8 +19,6 @@ expressApp.use(bodyParser.json());
 let server = http.createServer(expressApp);
 
 let config = {
-    spotifyAccountAddress: 'https://accounts.spotify.com',
-    spotifyApiAddress: 'https://api.spotify.com',
     uriBack: '',
     redirect_uri: '',
     referer: ''
@@ -47,7 +34,7 @@ config.redirect_uri = config.uriBack + '/callback';
 
 let data = {
     rooms: [],
-    users: []
+    hosts: []
 };
 
 // eslint-disable-next-line no-console
@@ -107,9 +94,9 @@ function setHttpCalls() {
         try {
             config.referer = req.headers.referer.substring(0, req.headers.referer.lastIndexOf('/'));
             // eslint-disable-next-line no-console
-            console.log('INFO: User was sent to Spotify login');
+            console.log('INFO: Host was sent to Spotify login');
             let redirect_uri = config.redirect_uri;
-            res.redirect(config.spotifyAccountAddress + '/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
+            res.redirect(env.spotifyAccountAddress + '/authorize?' + querystring.stringify({response_type: 'code', client_id: process.env.SPOTIFY_CLIENT_ID, scope: 'user-read-private user-read-email user-read-currently-playing user-modify-playback-state user-read-playback-state user-top-read playlist-read-collaborative playlist-read-private', redirect_uri}));
         } catch (error) {
             res.status(400).send('Login from the main page.');
         }
@@ -117,12 +104,12 @@ function setHttpCalls() {
 
     /**
     * The callback that will be called when the Login with the Spotify API is completed
-    * Will get User-Date from the api and redirect to the Dashboard
+    * Will get Host-Date from the api and redirect to the Dashboard
     */
     expressApp.get('/callback', async (req, res) => {
         let code = req.query.code || null;
         let authOptions = {
-            url: config.spotifyAccountAddress +'/api/token',
+            url: env.spotifyAccountAddress +'/api/token',
             form: {
                 code: code,
                 redirect_uri: config.redirect_uri,
@@ -136,13 +123,11 @@ function setHttpCalls() {
         request.post(authOptions, async (error, response, body) => {
             if (response.statusCode === 200) {
                 let uri = config.referer + '/dashboard';
-                let user = new User.User(config.spotifyAccountAddress, config.spotifyApiAddress, body.access_token, body.refresh_token, env.spotifyClientId, env.spotifyClientSecret);
-                // Set cookie
-                // res.cookie('token', body.access_token, options); // options is optional
-                if (await user.fetchData() === true) {
-                    data.users.push(user);
+                let host = new Host.Host(body.access_token, body.refresh_token);
+                if (await host.fetchData() === true) {
+                    data.hosts.push(host);
                     // eslint-disable-next-line no-console
-                    console.log('INFO-[USER: '+user.name+']: This user has logged in');
+                    console.log('INFO-[HOST: '+host.name+']: This host has logged in');
                     res.redirect(uri + '?token=' + body.access_token);
                 } else {
                     res.status(400).send();
@@ -157,17 +142,22 @@ function setHttpCalls() {
     /**
      * 
     */
-    expressApp.get('/profile', async (req, res) => {
+    expressApp.post('/profile', async (req, res) => {
+        let response;
         // eslint-disable-next-line no-console
         console.log('INFO: /profile has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
-        let token = req.headers.token;
-        let user = User.getUserByToken(token, data.users);
-        if (user !== null) {
-            res.status(200).send(JSON.stringify(user.getData()));
+
+        let host = Host.getHostByToken(req.body.token, data.hosts);
+        if (host !== null) {
+            response = {error: false, host: host.getData()};
+            res.status(200);
         } else {
-            res.status(200).send(JSON.stringify(null));
+            response = {error: true, message: 'Login expired.'};
+            res.status(400);
         }
+
+        res.send(JSON.stringify(response));
     });
 
     /**
@@ -183,14 +173,24 @@ function setHttpCalls() {
 
         let returnRooms = [];
         for (var i = 0; i < data.rooms.length; i++) {
+            let roomData = data.rooms[i].getData(false);
             let roomI = {
-                roomName: data.rooms[i].id,
-                roomHost: data.rooms[i].user.name,
-                roomCover: 'https://via.placeholder.com/152x152'
+                roomName: roomData.roomId,
+                roomHost: roomData.host.name
             };
-            if (data.rooms[i].activePlaylist !== null) {
-                roomI.roomCover = data.rooms[i].activePlaylist.images[0].url;
+            try {
+                roomI.roomCover = roomData.activePlayer.track.album.images[0].url;
+            } catch (error) {
+                try {
+                    roomI.roomCover = roomData.activePlaylist;
+                } catch (error) {
+                    break;
+                }
             }
+            if (roomI.roomCover === null || roomI.roomCover === undefined) {
+                roomI.roomCover = roomData.host.img;
+            }
+            console.log(roomData);
             returnRooms.push(roomI);
         }
 
@@ -199,18 +199,44 @@ function setHttpCalls() {
 
     /**
     * The callback that will be called when the Login with the Spotify API is completed
-    * Will redirect the user to the newly created room
+    * Will redirect the host to the newly created room
     */
-    expressApp.get('/rooms/create', async (req, res) => {
-        let user = User.getUserById(req.query.id, data.users);
-        if (user === null) {
-            res.redirect(req.headers.referer.split('/dashboard')[0]);
+    expressApp.post('/rooms/checkCreate', async (req, res) => {
+        let host = Host.getHostById(req.body.id, data.hosts);
+        let response;
+        if (host === null) {
+            response = {error: true, message: 'Login expired.'};
+            res.status(400);
         } else {
-            let room = new Room.Room(config.spotifyAccountAddress, config.spotifyApiAddress, user, data.rooms);
-            let uri = config.referer + '/app';
-            data.rooms.push(room);
-            res.redirect(uri + '/' + room.id);
+            let room = Room.getRoomByHost(host, data.rooms);
+            if (room !== null) {
+                response = {error: false, roomId: room.id};
+            } else {
+                response = {error: false};
+            }
+            res.status(200);
         }
+        res.send(JSON.stringify(response));
+    });
+
+    /**
+    * The callback that will be called when the Login with the Spotify API is completed
+    * Will redirect the host to the newly created room
+    */
+    expressApp.post('/rooms/create', async (req, res) => {
+        let host = Host.getHostById(req.body.id, data.hosts);
+        let response;
+        if (host === null) {
+            response = JSON.stringify({error: true, message: 'Login expired.'});
+            res.status(400);
+        } else {
+            let room = new Room.Room(host, data.rooms);
+            data.rooms.push(room);
+            res.status(200);
+            
+            response = JSON.stringify({error: false, roomId: room.id});
+        }
+        res.send(response);
     });
 
     /**
@@ -220,13 +246,12 @@ function setHttpCalls() {
     * @Returns content of the room
     */
     expressApp.post('/rooms/:roomId/update', async (req, res) => {
-        // eslint-disable-next-line no-console
-        //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
         if (room === null) {
-            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
+            let response = JSON.stringify({error: true, message: 'Room not found'});
+            res.status(400).send(response);
         } else {
             if (_.keys(req.body).length > 1) {
                 if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
@@ -234,8 +259,8 @@ function setHttpCalls() {
                 }
             } else {
                 await room.update(req.body.token === room.token);
-                let response = JSON.stringify({error: false, room: room.getData(req.body.token)});
-                console.log(response.length);
+                let response = JSON.stringify({error: false, room: room.getData(req.body.token === room.host.token)});
+                console.log('Update size: ' + response.length);
                 res.status(200).send(response);
             }
         }
@@ -247,8 +272,6 @@ function setHttpCalls() {
     * @Returns ResponseCode of 200
     */
     expressApp.post('/rooms/:roomId/selectPlaylist', async (req, res) => {
-        // eslint-disable-next-line no-console
-        //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
@@ -269,8 +292,6 @@ function setHttpCalls() {
     * @Returns content of the room
     */
     expressApp.post('/rooms/:roomId/pause', async (req, res) => {
-        // eslint-disable-next-line no-console
-        //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
@@ -288,18 +309,15 @@ function setHttpCalls() {
     * @Returns ResponseCode of 200
     * @Returns content of the room
     */
-    expressApp.post('/rooms/:roomId/pause', async (req, res) => {
-    // eslint-disable-next-line no-console
-    //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
+    expressApp.post('/rooms/:roomId/delete', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
-        if (room === null) {
-            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
-        } else {
-            if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
-                room.changePlaylist(req.body.playlistId);
-            }
+
+        if (req.body.id === room.host.id) {
+            // eslint-disable-next-line no-console
+            console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted due to more then 1 room (Host choose the old room).');
+            data.rooms.splice(data.rooms.indexOf(room), 1);
         }
     });
     /**

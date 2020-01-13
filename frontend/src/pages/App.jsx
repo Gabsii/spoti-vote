@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import socketIOClient from 'socket.io-client';
 import Cookies from 'universal-cookie';
 import swal from 'sweetalert2';
 import {css} from 'glamor';

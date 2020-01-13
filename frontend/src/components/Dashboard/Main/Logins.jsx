@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
+import swal from 'sweetalert2';
 
 import LoginCode from '../../Login/LoginCode.jsx';
 
@@ -70,9 +71,83 @@ const styles = {
 };
 
 class Logins extends Component {
+    errorMsg(message) {
+        swal.fire({type: 'error', title: 'Oops...', text: message}).then( () => {
+            window.location.pathname = '/';
+        });
+    }
 
-    login() {
-        window.location.href = constants.config.url + '/rooms/create?id=' + this.props.profile.id;
+    createRoom() {
+        //Check if there is already a room
+        fetch(constants.config.url + '/rooms/checkCreate' , 
+            {
+                method: 'post',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    id: this.props.profile.id
+                })
+            }
+        ).then((response) => response.json()).then((data) => {
+            if (data.error) {
+                this.errorMsg(data.message);
+            } else {
+                if (data.roomId !== null && data.roomId !== undefined) {        //If there is a room
+                    swal.fire({
+                        title: 'You are already hosting a room.',
+                        text: 'You are currently hosting room [' + data.roomId + ']. Do you want to delete it?',
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'No, dont do it!'
+                    }).then((result) => {
+                        if (result.value) {                                     //If host wants to delete old / create new
+                            fetch(constants.config.url + '/rooms/' + data.roomId + '/delete' , 
+                                {
+                                    method: 'post',
+                                    headers: {'Content-Type': 'application/json'},
+                                    body: JSON.stringify({
+                                        id: this.props.profile.id
+                                    })
+                                }
+                            );
+                            fetch(constants.config.url + '/rooms/create' , 
+                                {
+                                    method: 'post',
+                                    headers: {'Content-Type': 'application/json'},
+                                    body: JSON.stringify({
+                                        id: this.props.profile.id
+                                    })
+                                }
+                            ).then((response2) => response2.json()).then((data2) => {
+                                if (data2.error) {
+                                    this.errorMsg(data2.message);
+                                } else {
+                                    window.location = '/app/' + data2.roomId;
+                                }
+                            });
+                        } else {                                                // If host wants to keep the old
+                            window.location = '/app/' + data.roomId;
+                        }
+                    });
+                } else {                                                        //If there is no old Roomd
+                    fetch(constants.config.url + '/rooms/create' , 
+                        {
+                            method: 'post',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                id: this.props.profile.id
+                            })
+                        }
+                    ).then((response2) => response2.json()).then((data2) => {
+                        if (data2.error) {
+                            this.errorMsg(data2.message);
+                        } else {
+                            window.location = '/app/' + data2.roomId;
+                        }
+                    });
+                }
+            }
+        });
     }
 
     render() {
@@ -81,11 +156,11 @@ class Logins extends Component {
             {
                 this.props.profile !== null && this.props.profile !== undefined
                     ? this.props.profile.premium
-                        ? <button id='loginbutton' className={`${styles.button}`} onClick={this.login.bind(this)} tabIndex='0'>
+                        ? <button id='loginbutton' className={`${styles.button}`} onClick={this.createRoom.bind(this)} tabIndex='0'>
                                 Host
                         </button>
                         : <div className={`${styles.buttonWrapper}`}>
-                            <button className={`${styles.buttonDisabled}`} onClick={this.login.bind(this)} tabIndex='0' disabled="disabled">
+                            <button className={`${styles.buttonDisabled}`} onClick={this.createRoom.bind(this)} tabIndex='0' disabled="disabled">
                                     Host
                             </button>
                             <div className={`${styles.error}`}>You need Spotify Premium to host a room!</div>

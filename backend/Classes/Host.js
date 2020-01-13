@@ -1,7 +1,8 @@
-let method = User.prototype; //This is used when programming object oriented in js to make everything a bit more organised
+let method = Host.prototype; //This is used when programming object oriented in js to make everything a bit more organised
 
 const fetch = require('node-fetch');
 
+const env = require('../env').getEnv();
 
 /**
 * Constructor for a new / room
@@ -12,14 +13,11 @@ const fetch = require('node-fetch');
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function User(spotifyAcountAddress, spotifyApiAddress, token, refreshToken, clientId, clientSecret) {
-    this.spotifyAcountAddress = spotifyAcountAddress;
-    this.spotifyApiAddress = spotifyApiAddress;
-
+function Host(token, refreshToken) {
     this.token = token;
     this.refreshToken = refreshToken;
-    this.clientId = clientId;
-    this.clientSecret = clientSecret;
+    this.clientId = env.spotifyClientId;
+    this.clientSecret = env.spotifyClientSecret;
     this.name = '';
     this.id = '';
     this.profileUrl = '';
@@ -48,7 +46,7 @@ method.getData = function() {
 * @return: boolean if completed successfull
 */
 method.fetchData = async function() {
-    let request = await fetch(this.spotifyApiAddress + '/v1/me', {
+    let request = await fetch(env.spotifyApiAddress + '/v1/me', {
         headers: {
             'Authorization': 'Bearer ' + this.token
         }
@@ -76,13 +74,13 @@ method.fetchData = async function() {
 };
 
 /**
-* Fetches all the playlists of a user
+* Fetches all the playlists of a host
 *
 * @author: Michiocre
 * @return: array All the playlists
 */
 method.fetchPlaylists = async function() {
-    let request = await fetch(this.spotifyApiAddress + '/v1/me/playlists?limit=50', {
+    let request = await fetch(env.spotifyApiAddress + '/v1/me/playlists?limit=50', {
         headers: {
             'Authorization': 'Bearer ' + this.token
         }
@@ -165,37 +163,37 @@ method.fetchTopTracks = async function(amount) {
 };
 
 /**
-* Return the user with the specified id
+* Return the host with the specified id
 *
 * @author: Michiocre
-* @param {string} id The id that identifies the user
-* @param {array} users Array of all the users
+* @param {string} id The id that identifies the hosz
+* @param {array} hosts Array of all the hosts
 * @return {Room} The room object with the id of the parameter
 */
-function getUserById(id, users) {
-    let user = null;
-    for (var i = 0; i < users.length; i++) {
-        if (users[i].id === id) {
-            user = users[i];
-            return user;
+function getHostById(id, hosts) {
+    let host = null;
+    for (var i = 0; i < hosts.length; i++) {
+        if (hosts[i].id === id) {
+            host = hosts[i];
+            return host;
         }
     }
     return null;
 }
 
-function getUserByToken(token, users) {
-    let user = null;
-    for (var i = 0; i < users.length; i++) {
-        if (users[i].token === token) {
-            user = users[i];
-            return user;
+function getHostByToken(token, hosts) {
+    let host = null;
+    for (var i = 0; i < hosts.length; i++) {
+        if (hosts[i].token === token) {
+            host = hosts[i];
+            return host;
         }
     }
     return null;
 }
 
 module.exports = {
-    User: User,
-    getUserById: getUserById,
-    getUserByToken: getUserByToken
+    Host: Host,
+    getHostById: getHostById,
+    getHostByToken: getHostByToken
 };
