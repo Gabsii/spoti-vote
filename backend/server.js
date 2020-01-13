@@ -140,7 +140,7 @@ function setHttpCalls() {
     });
     
     /**
-     * 
+    * 
     */
     expressApp.post('/profile', async (req, res) => {
         let response;
@@ -190,7 +190,6 @@ function setHttpCalls() {
             if (roomI.roomCover === null || roomI.roomCover === undefined) {
                 roomI.roomCover = roomData.host.img;
             }
-            console.log(roomData);
             returnRooms.push(roomI);
         }
 
@@ -227,16 +226,16 @@ function setHttpCalls() {
         let host = Host.getHostById(req.body.id, data.hosts);
         let response;
         if (host === null) {
-            response = JSON.stringify({error: true, message: 'Login expired.'});
+            response = {error: true, message: 'Login expired.'};
             res.status(400);
         } else {
             let room = new Room.Room(host, data.rooms);
             data.rooms.push(room);
             res.status(200);
             
-            response = JSON.stringify({error: false, roomId: room.id});
+            response = {error: false, roomId: room.id};
         }
-        res.send(response);
+        res.send(JSON.stringify(response));
     });
 
     /**
@@ -248,22 +247,25 @@ function setHttpCalls() {
     expressApp.post('/rooms/:roomId/update', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
 
+        let response;
+
         let room = Room.getRoomById(req.params.roomId, data.rooms);
         if (room === null) {
-            let response = JSON.stringify({error: true, message: 'Room not found'});
-            res.status(400).send(response);
+            response = {error: true, message: 'Room not found'};
+            res.status(400);
         } else {
             if (_.keys(req.body).length > 1) {
                 if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
                     room.changePlaylist(req.body.playlistId);
                 }
             } else {
-                await room.update(req.body.token === room.token);
-                let response = JSON.stringify({error: false, room: room.getData(req.body.token === room.host.token)});
-                console.log('Update size: ' + response.length);
-                res.status(200).send(response);
+                await room.update();
+                response = {error: false, room: room.getData(req.body.token)};
+                res.status(200);
             }
         }
+        console.log('Update size: ' + JSON.stringify(response).length);
+        res.send(JSON.stringify(response));
     });
 
     /**
@@ -274,35 +276,20 @@ function setHttpCalls() {
     expressApp.post('/rooms/:roomId/selectPlaylist', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
 
-        let room = Room.getRoomById(req.params.roomId, data.rooms);
-        if (room === null) {
-            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
-        } else {
-            if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
-                room.changePlaylist(req.body.playlistId);
-                res.status(200).send(JSON.stringify({error: false}));
-            }
-        }
-    });
-
-    /**
-    * Returns the data of a given Room
-    *
-    * @Returns ResponseCode of 200
-    * @Returns content of the room
-    */
-    expressApp.post('/rooms/:roomId/pause', async (req, res) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        let response;
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
-        if (room === null) {
-            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
-        } else {
+        if (req.body.id === room.host.id) {
             if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
                 room.changePlaylist(req.body.playlistId);
+                response = {error: false};
+                res.status(200);
             }
         }
+
+        res.send(JSON.stringify(response));
     });
+
     /**
     * Returns the data of a given Room
     *
@@ -320,212 +307,86 @@ function setHttpCalls() {
             data.rooms.splice(data.rooms.indexOf(room), 1);
         }
     });
+
     /**
-    * Returns the data of a given Room
-    *
-    * @Returns ResponseCode of 200
-    * @Returns content of the room
+    * Change the volume of the room
+    * @Param req.params.roomId
+    * @Param req.body.id
+    * @Param req.body.volume
     */
-    expressApp.post('/rooms/:roomId/pause', async (req, res) => {
-    // eslint-disable-next-line no-console
-    //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
+    expressApp.post('/rooms/:roomId/volume', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
-        if (room === null) {
-            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
-        } else {
-            if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
-                room.changePlaylist(req.body.playlistId);
-            }
+
+        if (req.body.id === room.host.id) {
+            // eslint-disable-next-line no-console
+            console.log('INFO-[ROOM: ' + req.params.roomId + ']: Volume changed to [' + req.body.volume + '].');
+            room.changeVolume(req.body.volume);
         }
+        res.send();
     });
+
     /**
-    * Returns the data of a given Room
-    *
-    * @Returns ResponseCode of 200
-    * @Returns content of the room
+    * Adds a vote from user
+    * @Param req.params.roomId
+    * @Param req.body.id
+    * @Param req.body.username
+    * @Param req.body.trackId
     */
-    expressApp.post('/rooms/:roomId/pause', async (req, res) => {
-    // eslint-disable-next-line no-console
-    //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
+    expressApp.post('/rooms/:roomId/vote', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
-        if (room === null) {
-            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
+
+        if (req.body.id === room.host.id) {
+            // eslint-disable-next-line no-console
+            console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.id + '] voted for [' + req.body.trackId + '].');
+            room.vote(req.body.trackId, req.body.id);
         } else {
-            if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
-                room.changePlaylist(req.body.playlistId);
-            }
+            // eslint-disable-next-line no-console
+            console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.username + '] voted for [' + req.body.trackId + '].');
+            room.vote(req.body.trackId, req.body.username);
         }
+        res.send();
     });
+
     /**
-    * Returns the data of a given Room
-    *
-    * @Returns ResponseCode of 200
-    * @Returns content of the room
+    * Skips current song
+    * @Param req.params.roomId
+    * @Param req.body.id
     */
-    expressApp.post('/rooms/:roomId/pause', async (req, res) => {
-    // eslint-disable-next-line no-console
-    //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
+    expressApp.post('/rooms/:roomId/skip', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
-        if (room === null) {
-            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
-        } else {
-            if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
-                room.changePlaylist(req.body.playlistId);
-            }
+
+        if (req.body.id === room.host.id) {
+            // eslint-disable-next-line no-console
+            console.log('INFO-[ROOM: ' + room.id + ']: Host skiped the song.');
+            room.play();
         }
+        res.send();
+    });
+
+    /**
+    * Pause/Resume current song
+    * @Param req.params.roomId
+    * @Param req.body.id
+    */
+    expressApp.post('/rooms/:roomId/pause', async (req, res) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+
+        let room = Room.getRoomById(req.params.roomId, data.rooms);
+
+        if (req.body.id === room.host.id) {
+        // eslint-disable-next-line no-console
+            console.log('INFO-[ROOM: ' + room.id + ']: Host skiped the song.');
+            room.togglePlaystate();
+        }
+        res.send();
     });
 }
-
-// method.socketCall = function(socket) {
-//     //Local varibles, can only be used by the same connection (but in every call)
-
-//     socket.state = 0; //0 Dashboard / 1 App
-//     socket.isHost = false;
-//     socket.name = null;
-//     socket.updateCounter = {
-//         amount: 0
-//     };
-//     socket.oldUpdate = null;
-
-//     //This function is called every 500ms
-//     let updateInterval = setInterval(() => this.theUpdateFunction(socket), this.updateSpeed);
-
-//     //This is what happens when a user connects
-//     socket.emit('roomId');
-
-//     /**
-// 	* Called when a user wants to connect to a room
-// 	*
-// 	* Will set the local varible {room} and {isHost}
-// 	* @param {string} roomId Id of the room
-// 	*/
-//     socket.on('roomId', data => {
-//         let room = lib.getRoomById(data.roomId, this.rooms);
-
-//         if (room !== null) {
-//             socket.roomId = room.id;
-
-//             //Delete if old
-//             let toBeDeleted = [];
-//             for (let i = 0; i < this.rooms.length; i++) {
-//                 if (this.rooms[i].hostPhone === false) {
-//                     if (Date.now() - this.rooms[i].hostDisconnect > 1000 * this.secTillDelete && this.rooms[i].hostDisconnect !== null) {
-//                         toBeDeleted.push(this.rooms[i]);
-//                     }
-//                 }
-//             }
-//             for (let i = 0; i < toBeDeleted.length; i++) {
-//                 // eslint-disable-next-line no-console
-//                 console.log('INFO-[ROOM: ' + toBeDeleted[i].id + ']: This room has been deleted due to inactivity.');
-//                 this.rooms.splice(this.rooms.indexOf(toBeDeleted[i]), 1);
-//             }
-
-//             //Count how many rooms this user is already hosting
-//             let x = -1;
-//             for (let i = 0; i < this.rooms.length; i++) {
-//                 if (this.rooms[i].user !== null) {
-//                     if (this.rooms[i].user.id === room.user.id && this.rooms[i].id !== room.id) {
-//                         x = i;
-//                         break;
-//                     }
-//                 }
-//             }
-
-//             if (x >= 0 && room.firstConnection === true) {
-//                 room.firstConnection = false;
-//                 socket.emit('twoRooms', {oldRoom: this.rooms[x].id});
-//             } else if (x >= 0) {
-//                 socket.emit('errorEvent', {message: 'Room is still generating.'});
-//             } else {
-//                 socket.name = room.user.name;
-
-//                 if (room.firstConnection === true) {
-//                     room.firstConnection = false;
-//                     // eslint-disable-next-line no-console
-//                     console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token). [Phone: ' + data.isPhone + ']');
-
-//                     socket.isHost = true;
-//                     room.hostPhone = data.isPhone;
-
-//                     let update = room.getDifference(null);
-//                     socket.oldUpdate = _.cloneDeep(room);
-
-//                     update.isHost = socket.isHost;
-
-//                     update.token = room.user.token;
-
-//                     socket.emit('initData', update);
-//                     room.hostDisconnect = null;
-//                 } else {
-//                     if (room.hostDisconnect !== null && data.token === room.user.token) { //If host is gone
-//                         // eslint-disable-next-line no-console
-//                         console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
-
-//                         socket.isHost = true;
-//                         room.hostPhone = data.isPhone;
-
-//                         let update = room.getDifference(null);
-//                         socket.oldUpdate = _.cloneDeep(room);
-
-//                         update.isHost = socket.isHost;
-
-//                         socket.emit('initData', update);
-//                         room.hostDisconnect = null;
-//                     } else {
-//                         socket.emit('nameEvent', {title: 'What is your name?'});
-//                     }
-//                 }
-//             }
-//         } else {
-//             socket.emit('errorEvent', {message: 'Room has been closed'});
-//         }
-//     });
-
-//     /**
-// 	* Called when a user has decided wether to delete the oldRoom or use the new one
-// 	*
-// 	* Will delete the old room, or the new one
-// 	* @param {boolean} value True if the old room will be deleted
-// 	* @param {boolean} roomId Id of the old room
-// 	*/
-//     socket.on('twoRooms', data => {
-//         let oldRoom = lib.getRoomById(data.roomId, this.rooms);
-//         let room = lib.getRoomById(socket.roomId, this.rooms);
-//         if (data.value === true) {
-//             // eslint-disable-next-line no-console
-//             console.log('INFO-[ROOM: ' + oldRoom.id + ']: This room has been deleted due to host creating a new one.');
-//             this.rooms.splice(this.rooms.indexOf(oldRoom), 1);
-
-//             socket.name = room.user.name;
-
-//             // eslint-disable-next-line no-console
-//             console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token). [Phone: ' + data.isPhone + ']');
-
-//             socket.isHost = true;
-//             room.hostPhone = data.isPhone;
-
-//             let update = room.getDifference(null);
-//             socket.oldUpdate = _.cloneDeep(room);
-
-//             update.isHost = socket.isHost;
-
-//             update.token = room.user.token;
-
-//             socket.emit('initData', update);
-//             room.hostDisconnect = null;
-//         } else {
-//             // eslint-disable-next-line no-console
-//             console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted due to more then 1 room (Host choose the old room).');
-//             this.rooms.splice(this.rooms.indexOf(room), 1);
-//             socket.emit('errorEvent', {message: 'Room has been closed'});
-//         }
-//     });
 
 //     /**
 // 	* Called when a user thats not a host wants to enter a room
@@ -558,198 +419,6 @@ function setHttpCalls() {
 //         }
 
 //     });
-
-//     /**
-// 	* Called when the host changes the volume
-// 	* @param {int} volume Volume in percent
-// 	*/
-//     socket.on('changeVolume', data => {
-//         let room = lib.getRoomById(socket.roomId, this.rooms);
-//         if (room !== null) {
-//             // eslint-disable-next-line no-console
-//             console.log('INFO-[ROOM: ' + socket.roomId + ']: Volume changed to [' + data.volume + '].');
-//             room.changeVolume(data.volume);
-//         } else {
-//             socket.emit('errorEvent', {message: 'Room was closed'});
-//         }
-//     });
-
-//     /**
-// 	* Called when the host changes the playlist
-// 	* @param {string} playlistId Id of the Playlist
-// 	*/
-//     socket.on('changePlaylist', data => {
-//         let room = lib.getRoomById(socket.roomId, this.rooms);
-//         if (room !== null) {
-//             room.changePlaylist(data.playlistId);
-//         } else {
-//             socket.emit('errorEvent', {message: 'Room was closed'});
-//         }
-//     });
-
-//     /**
-// 	* Called when a user votes on a track
-// 	* @param {string} trackId Id of the track
-// 	*/
-//     socket.on('vote', data => {
-//         let room = lib.getRoomById(socket.roomId, this.rooms);
-//         if (room !== null) {
-//             // eslint-disable-next-line no-console
-//             console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] voted for [' + data.trackId + '].');
-//             room.vote(data.trackId, socket.isHost, socket.name);
-
-//             let update = room.getDifference(socket.oldUpdate);
-//             socket.oldUpdate = _.cloneDeep(room);
-//             socket.emit('update', update);
-//         } else {
-//             socket.emit('errorEvent', {message: 'Room was closed'});
-//         }
-//     });
-
-//     /**
-// 	* Called when the host decides to skip the currently playing song
-// 	*/
-//     socket.on('skip', data => {
-//         let room = lib.getRoomById(socket.roomId, this.rooms);
-//         if (room !== null) {
-//             // eslint-disable-next-line no-console
-//             console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] skiped the song.');
-//             room.play();
-
-//             let update = room.getDifference(socket.oldUpdate);
-//             socket.oldUpdate = _.cloneDeep(room);
-//             socket.emit('update', update);
-//         } else {
-//             socket.emit('errorEvent', {message: 'Room was closed'});
-//         }
-//     });
-
-//     /**
-// 	* Called when the host wants to close the room
-// 	*/
-//     socket.on('logout', (data) => {
-//         let room = lib.getRoomById(socket.roomId, this.rooms);
-//         if (room !== null) {
-//             if (data.token === room.token) {
-//                 this.rooms.splice(this.rooms.indexOf(room), 1);
-//                 // eslint-disable-next-line no-console
-//                 console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted by host.');
-//             }
-//         } else {
-//             socket.emit('errorEvent', {message: 'Room was closed'});
-//         }
-//     });
-
-//     /**
-// 	* Called when the song should be paused or played
-// 	*/
-//     socket.on('pause', () => {
-//         let room = lib.getRoomById(socket.roomId, this.rooms);
-//         if (room !== null) {
-//             room.togglePlaystate();
-
-//             let update = room.getDifference(socket.oldUpdate);
-//             socket.oldUpdate = _.cloneDeep(room);
-//             socket.emit('update', update);
-//         } else {
-//             socket.emit('errorEvent', {message: 'Room was closed'});
-//         }
-//     });
-
-//     /**
-// 	* Called when a connection is closed
-// 	*/
-//     socket.on('disconnect', () => {
-//         let room = lib.getRoomById(socket.roomId, this.rooms);
-
-//         clearInterval(updateInterval);
-//         if (room !== null) {
-//             // eslint-disable-next-line no-console
-//             console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] disconnected.');
-//             if (socket.isHost === false) {
-//                 room.removeUser(socket.name);
-//             } else {
-//                 room.hostDisconnect = Date.now();
-//             }
-//         } else {
-//             // eslint-disable-next-line no-console
-//             console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + socket.name + '] auto-disconnected.');
-//         }
-//     });
-// };
-
-
-// /**
-// * This function will be called every interval and is used to update the users
-// *
-// * @author: Michiocre
-// * @param {socket} socket The socket object passed down from the call
-// */
-// method.theUpdateFunction = async function(socket) {
-//     let room = lib.getRoomById(socket.roomId, this.rooms);
-
-//     socket.updateCounter.amount += 1;
-
-//     if (room !== null) {
-//         await room.update(socket.isHost);
-
-//         if (socket.updateCounter.amount % 300 === 0 && socket.isHost === true) {
-//             room.updatePlaylists();
-//         }
-
-//         if (socket.updateCounter.amount % 3500 === 0 && socket.isHost === true) {
-//             room.refreshToken();
-//         }
-
-//         let update = room.getDifference(socket.oldUpdate);
-
-//         if (update !== null) {
-//             socket.emit('update', update);
-//         }
-
-//         socket.oldUpdate = _.cloneDeep(room);
-
-//         if (socket.updateCounter.amount % 30 === 0) {
-//             let toBeDeleted = [];
-//             for (let i = 0; i < this.rooms.length; i++) {
-//                 if (this.rooms[i].hostPhone === false) {
-//                     if (Date.now() - this.rooms[i].hostDisconnect > 1000 * this.secTillDelete && this.rooms[i].hostDisconnect !== null) {
-//                         toBeDeleted.push(this.rooms[i]);
-//                     }
-//                 }
-//             }
-//             for (let i = 0; i < toBeDeleted.length; i++) {
-//                 // eslint-disable-next-line no-console
-//                 console.log('INFO-[ROOM: ' + toBeDeleted[i].id + ']: This room has been deleted due to inactivity.');
-//                 this.rooms.splice(this.rooms.indexOf(toBeDeleted[i]), 1);
-//             }
-//         }
-
-//         if (socket.updateCounter.amount > 30000) {
-//             socket.updateCounter.amount = 0;
-//         }
-//     } else {
-//         //socket.emit('errorEvent', {message: 'Room does not exist'});
-//     }
-// };
-
-
-// method.addRoom = function(user) {
-//     let room = new Room(this.spotifyAccountAddress, this.spotifyApiAddress, user, this.rooms);
-//     this.rooms.push(room);
-//     return room;
-// };
-
-// method.addUser = function(access_token, refresh_token, name, id) {
-//     let user = new User(this.spotifyAccountAddress, this.spotifyApiAddress, access_token, refresh_token, this.spotifyClientId, this.spotifyClientSecret);
-    
-//     user.playlists = [];
-//     user.name = name;
-//     user.id = id;
-    
-//     this.users.push(user);
-//     return user;
-// };
 
 
 /**

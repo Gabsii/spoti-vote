@@ -30,16 +30,17 @@ function Room(host, rooms) {
     } while (getRoomById(this.id, rooms) !== null);
 }
 
-method.getData = function (isHost) {
+method.getData = function (token) {
     return {
         roomId: this.id,
-        isHost: isHost,
+        isHost: (token !== null && token !== undefined)? (token === this.host.token): false,
         connectedUser: this.connectedUser,
         playlists: this.host.playlists,
         host: {
             img: this.host.img,
             name: this.host.name,
-            voted: this.host.voted
+            voted: this.host.voted,
+            id: this.host.id
         },
         activePlaylist: this.activePlaylist,
         activeTracks: this.activeTracks,
@@ -77,7 +78,7 @@ method.getUserNames = function() {
 * @return {object} The user object
 */
 method.getUserByName = function(name) {
-    if (name === this.host.name) {
+    if (name === this.host.id) {
         return this.host;
     }
     for (let i = 0; i < this.connectedUser.length; i++) {
@@ -113,7 +114,7 @@ method.removeUser = function(name) {
     if (user !== null) {
         let i = this.connectedUser.indexOf(user);
         if (i >= 0) {
-            if (user.voted !== null && user.voted !== 'skip') {
+            if (user.voted !== null && user.voted !== 'reroll') {
                 let track = this.getActiveTrackById(user.voted);
                 track.votes -= 1;
             }
@@ -248,25 +249,24 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
     for (let i = 0; i < 4; i++) {
         let track;
         let reroll;
+        
         do {
             reroll = false;
             track = playlist.tracks[Math.floor(Math.random() * playlist.tracks.length)].track;
-
             if (activeTrack !== null && activeTrack !== undefined) {
                 if (track.id === activeTrack.id) {
                     reroll = true;
                 }
             }
             if (!reroll) {
-                for (let j = 0; j < this.activeTracks.length; j++) {
-                    if (this.activeTracks[i] !== null && this.activeTracks[i] !== undefined) {
-                        if (track.id === this.activeTracks[i].id) {
-                            reroll = true;
-                        }
-                    }
+                for (let j = 0; j < selectedTracks.length; j++) {
+                    if (selectedTracks[j].id === track.id) {
+                        reroll = true;
+                    }                    
                 }
             }
         } while (reroll);
+
         selectedTracks.push(_.cloneDeep(track));
     }
 
@@ -421,15 +421,16 @@ method.vote = async function(trackId, name) {
 
         }
 
-        if (trackId === 'skip') {
+        if (trackId === 'reroll') {
             if (this.activePlayer !== null) {
                 if (this.activePlayer.progress <= 90) {
-                    await this.skip();
+                    await this.reroll();
                 }
             } else {
-                await this.skip();
+                await this.reroll();
             }
         }
+
         return true;
     }
 
@@ -494,27 +495,27 @@ method.play = async function() {
 * @author: Michiocre
 * @return {boolean} True if new tracks were chosen
 */
-method.skip = async function() {
+method.reroll = async function() {
     if (this.activePlaylist !== null && this.activePlaylist !== undefined) {
         let track = null;
         if (this.activePlayer !== null && this.activePlayer !== undefined) {
             track = this.activePlayer.track;
         }
 
-        let skips = 0;
+        let rerolls = 0;
         for (var i = 0; i < this.connectedUser.length; i++) {
-            if (this.connectedUser[i].voted === 'skip') {
-                skips += 1;
+            if (this.connectedUser[i].voted === 'reroll') {
+                rerolls += 1;
             }
         }
-        if (this.host.voted === 'skip') {
-            skips += 1;
+        if (this.host.voted === 'reroll') {
+            rerolls += 1;
         }
         // eslint-disable-next-line no-console
-        console.log('INFO-[ROOM: '+this.id+']: Skips/NoSkip: ['+skips+'/'+((this.connectedUser.length+1)-skips)+'].');
-        if (skips >= (2 * (this.connectedUser.length+1) / 3)) {
+        console.log('INFO-[ROOM: '+this.id+']: Reroll/NoReroll: ['+rerolls+'/'+((this.connectedUser.length+1)-rerolls)+'].');
+        if (rerolls >= (2 * (this.connectedUser.length+1) / 3)) {
             // eslint-disable-next-line no-console
-            console.log('INFO-[ROOM: '+this.id+']: Skipped.');
+            console.log('INFO-[ROOM: '+this.id+']: Rerolled.');
             this.getRandomTracks(this.activePlaylist.id, track);
             return true;
         }

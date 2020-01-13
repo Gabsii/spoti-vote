@@ -39,7 +39,15 @@ class SettingsBar extends PureComponent {
                 cancelButtonText: 'No, dont do it!'
             }).then((result) => {
                 if (!result.dismiss) {
-                    this.props.socket.emit('logout', {data: this.props.token});
+                    fetch(constants.config.url + '/rooms/' + window.location.pathname.split('/')[2] + '/delete' , 
+                        {
+                            method: 'post',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                id: this.props.host.id
+                            })
+                        }
+                    );
                     window.location.pathname = '/dashboard';
                 }
             });
@@ -61,7 +69,7 @@ class SettingsBar extends PureComponent {
 
     render() {
         return (<div className={`${styles.wrapper}`}>
-            <RerollButton socket={this.props.socket} rerollHandler={this.props.rerollHandler} connectedUser={this.props.connectedUser} host={this.props.host}/>
+            <RerollButton rerollHandler={this.props.rerollHandler} connectedUser={this.props.connectedUser} host={this.props.host}/>
             <button className={`${styles.button}`} onClick={this.logoutHandler.bind(this)}>
                 <FontAwesomeIcon icon={faSignOutAlt} size='2x'/>
             </button>

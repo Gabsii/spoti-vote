@@ -44,10 +44,10 @@ class Footer extends PureComponent {
             <SongAggregation songName={track.name} artists={track.artists}/>
             <ProgressBar activePlayer={this.props.activePlayer}/> {
                 this.props.isHost
-                    ? <VolumeBar activePlayer={this.props.activePlayer} socket={this.props.socket}/>
+                    ? <VolumeBar activePlayer={this.props.activePlayer} host={this.props.host}/>
                     : ''
             }
-            <PlayButtons playHandler={this.props.playHandler} skipHandler={this.props.skipHandler} activePlayer={this.props.activePlayer} isHost={this.props.isHost} socket={this.props.socket}/>
+            <PlayButtons playHandler={this.props.playHandler} skipHandler={this.props.skipHandler} activePlayer={this.props.activePlayer} isHost={this.props.isHost} host={this.props.host}/>
         </footer>);
     }
 }
