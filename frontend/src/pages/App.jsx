@@ -22,7 +22,13 @@ class App extends Component {
             token = null;
         }
 
+        let username = cookies.get('username');
+        if (username === undefined) {
+            username = null;
+        }
+
         this.state = {
+            username: username,
             isPhone: (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1),
             token: token,
             roomId: window.location.pathname.split('/')[2],
@@ -53,6 +59,27 @@ class App extends Component {
     }
 
     componentDidMount() {
+        // if (this.state.username === null) {
+        //     swal.fire({
+        //         title: 'Enter your name.',
+        //         type: 'question',
+        //         allowOutsideClick: false,
+        //         allowEscapeKey: false,
+        //         input: 'text',
+        //         inputPlaceholder: 'Enter your name or nickname',
+        //         inputValidator: () => { // (value)
+        //             return new Promise((resolve) => {
+        //                 return resolve();
+        //             });
+        //         }
+        //     }).then((result) => {
+        //         this.setState({
+        //             username: result.value
+        //         });
+        //     });
+        // }
+        
+
         this.timer = setInterval(()=> this.getData(), 1000);
 
         if (this.state.isHost) {
@@ -66,7 +93,8 @@ class App extends Component {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    token: this.state.token
+                    token: this.state.token,
+                    username: this.state.username
                 })
             })
             .then((response) => response.json())
@@ -102,7 +130,7 @@ class App extends Component {
                     method: 'post',
                     headers: {'Content-Type':'application/json'},
                     body: JSON.stringify({
-                        id: this.state.host.id,
+                        id: this.state.username,
                         playlistId: playlistId
                     })
                 }
@@ -141,7 +169,7 @@ class App extends Component {
                     method: 'post',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        id: this.state.host.id,
+                        id: this.state.username,
                         username: this.state.username,
                         trackId: trackId
                     })
@@ -160,7 +188,7 @@ class App extends Component {
                     method: 'post',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        id: this.state.host.id,
+                        id: this.state.username,
                         username: this.state.username,
                         trackId: 'reroll'
                     })
@@ -179,7 +207,7 @@ class App extends Component {
                 method: 'post',
                 headers: {'Content-Type':'application/json'},
                 body: JSON.stringify({
-                    id: this.state.host.id
+                    id: this.state.username
                 })
             }
         );
@@ -191,7 +219,7 @@ class App extends Component {
                 method: 'post',
                 headers: {'Content-Type':'application/json'},
                 body: JSON.stringify({
-                    id: this.state.host.id
+                    id: this.state.username
                 })
             }
         );

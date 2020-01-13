@@ -44,7 +44,7 @@ class SettingsBar extends PureComponent {
                             method: 'post',
                             headers: {'Content-Type': 'application/json'},
                             body: JSON.stringify({
-                                id: this.props.host.id
+                                id: this.props.username
                             })
                         }
                     );

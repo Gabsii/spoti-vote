@@ -95,7 +95,7 @@ class Infos extends PureComponent {
         }
         if (this.props.host !== null && this.props.host !== undefined) {
             hostName = this.props.host.name;
-            hostId = this.props.host.id;
+            hostId = this.props.username;
         }
         if (this.props.activeTracks !== null && this.props.activeTracks !== undefined) {
 

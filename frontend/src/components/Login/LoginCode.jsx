@@ -7,6 +7,7 @@ let constants = require('../../js/constants.js');
 const styles = {
     wrapper: css({display: 'flex', textAlign: 'center', justifyContent: 'center', alignItems: 'center'}),
     input: css({
+        outline: 'none',
         marginTop: '1em',
         textAlign: 'center',
         backgroundColor: constants.colors.backgroundLite,
@@ -80,14 +81,19 @@ class LoginCode extends PureComponent {
                 }
                 return exists;
             }));
+        } else {
+            this.setState({roomExists: '', room: false});
         }
     }
+
 
     componentDidUpdate() {
         if (this.state.room === false && this.state.roomExists === false) {
             document.getElementById('code').style.border = '1px solid ' + constants.colors.redCard;
-        } else {
+        } else if (this.state.roomExists === true) {
             document.getElementById('code').style.border = '1px solid ' + constants.colors.greenCard;
+        } else {
+            document.getElementById('code').style.border = '';
         }
     }
 

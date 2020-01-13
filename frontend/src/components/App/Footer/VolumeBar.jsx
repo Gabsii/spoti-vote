@@ -35,7 +35,7 @@ class VolumeBar extends PureComponent {
                         method: 'post',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
-                            id: this.props.host.id,
+                            id: this.props.username,
                             volume: event.target.value
                         })
                     }

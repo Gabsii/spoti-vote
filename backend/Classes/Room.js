@@ -15,7 +15,6 @@ const env = require('../env').getEnv();
 * @return {Room} The new room
 */
 function Room(host, rooms) {
-    //The host object
     this.host = host;
     this.activeTracks = [];
     this.activePlaylist = null;
@@ -30,17 +29,17 @@ function Room(host, rooms) {
     } while (getRoomById(this.id, rooms) !== null);
 }
 
-method.getData = function (token) {
+//TODO: Make this more efficient (data-transfer)
+method.getData = function (isHost) {
     return {
         roomId: this.id,
-        isHost: (token !== null && token !== undefined)? (token === this.host.token): false,
+        isHost: isHost,
         connectedUser: this.connectedUser,
         playlists: this.host.playlists,
         host: {
             img: this.host.img,
             name: this.host.name,
-            voted: this.host.voted,
-            id: this.host.id
+            voted: this.host.voted
         },
         activePlaylist: this.activePlaylist,
         activeTracks: this.activeTracks,

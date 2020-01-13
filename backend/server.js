@@ -125,6 +125,12 @@ function setHttpCalls() {
                 let uri = config.referer + '/dashboard';
                 let host = new Host.Host(body.access_token, body.refresh_token);
                 if (await host.fetchData() === true) {
+                    let oldHost = Host.getHostById(host.id, data.hosts);
+                    if (oldHost !== null && oldHost !== undefined) {
+                        let oldRoom = Room.getRoomByHost(oldHost, data.rooms);
+                        data.rooms.splice(data.rooms.indexOf(oldRoom), 1);
+                        data.hosts.splice(data.hosts.indexOf(oldHost), 1);
+                    }
                     data.hosts.push(host);
                     // eslint-disable-next-line no-console
                     console.log('INFO-[HOST: '+host.name+']: This host has logged in');
@@ -150,6 +156,7 @@ function setHttpCalls() {
 
         let host = Host.getHostByToken(req.body.token, data.hosts);
         if (host !== null) {
+
             response = {error: false, host: host.getData()};
             res.status(200);
         } else {
@@ -244,6 +251,33 @@ function setHttpCalls() {
     * @Returns ResponseCode of 200
     * @Returns content of the room
     */
+    expressApp.post('/rooms/:roomId/setName', async (req, res) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+
+        let response;
+
+        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (room === null) {
+            response = {error: true, message: 'Room not found'};
+            res.status(400);
+        } else {
+            if (req.body.token === room.host.token) {
+                response = {error: false, name: room.host.id};
+                res.status(200);
+            } else {
+                response = {error: false, name: req.body.username};
+                res.status(200);
+            }
+        }
+        res.send(JSON.stringify(response));
+    });
+
+    /**
+    * Returns the data of a given Room and updates the room state
+    *
+    * @Returns ResponseCode of 200
+    * @Returns content of the room
+    */
     expressApp.post('/rooms/:roomId/update', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -254,13 +288,12 @@ function setHttpCalls() {
             response = {error: true, message: 'Room not found'};
             res.status(400);
         } else {
-            if (_.keys(req.body).length > 1) {
-                if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
-                    room.changePlaylist(req.body.playlistId);
-                }
+            await room.update();
+            if (req.body.token === room.host.token) {
+                response = {error: false, room: room.getData(true)};
+                res.status(200);
             } else {
-                await room.update();
-                response = {error: false, room: room.getData(req.body.token)};
+                response = {error: false, room: room.getData(false)};
                 res.status(200);
             }
         }
