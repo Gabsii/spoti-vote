@@ -65,9 +65,11 @@ class App extends Component {
     getData(token) {
         fetch(constants.config.url + '/rooms/get/' + this.state.roomId , 
             {
-                headers: {
-                    'Token': token
-                }
+                method: 'post',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    token: this.state.token
+                })
             })
             .then((response) => response.json())
             .then((data) =>
@@ -78,11 +80,10 @@ class App extends Component {
                         window.location.pathname = '/dashboard';
                     });
                 } else {
-                    console.log(data);
+                    console.log(data.room);
                     this.setState({
-                        playlists: data.room.user.playlists,
+                        playlists: data.room.playlists,
                         isHost: data.room.isHost,
-                        token: data.room.token,
                         host: data.room.host,
                         activeTracks: data.room.activeTracks,
                         activePlaylist: data.room.activePlaylist,
@@ -90,7 +91,6 @@ class App extends Component {
                         activePlayer: data.room.activePlayer
                     });
                 }
-                
             })
             .catch((error) => {
                 console.error(error);
@@ -100,7 +100,16 @@ class App extends Component {
     selectPlaylist(event) {
         let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
         if (playlistId !== null && playlistId !== 'none') {
-            this.socket.emit('changePlaylist', {playlistId: playlistId});
+            fetch(constants.config.url + '/rooms/get/' + this.state.roomId , 
+                {
+                    method: 'post',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({
+                        token: this.state.token,
+                        playlistId: playlistId
+                    })
+                }
+            );
         }
     }
 

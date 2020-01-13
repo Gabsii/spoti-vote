@@ -61,6 +61,29 @@ function Room(spotifyAccountAddress, spotifyApiAddress, user, rooms) {
     this.lastUpdate = null;
 }
 
+method.getData = function (token) {
+    return {
+        roomdId: this.roomId,
+        isHost: (token !== null && token !== undefined)? (token === this.user.token): false,
+        connectedUser: this.connectedUser,
+        playlists: this.user.playlists,
+        host: {
+            img: this.user.img,
+            name: this.user.name,
+            voted: this.user.voted
+        },
+        activePlaylist: this.activePlaylist,
+        activeTracks: this.activeTracks,
+        activePlayer: {
+            volume: this.activePlayer.volume || 0,
+            timeLeft: this.activePlayer.timeLeft || 0,
+            progressMS: this.activePlayer.progressMS || 0,
+            progress: this.activePlayer.progress || 0,
+            isPlaying: this.activePlayer.isPlaying || false
+        }
+    };
+};
+
 /**
 * Returns all the changes between the last update and the current state
 *

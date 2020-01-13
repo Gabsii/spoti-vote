@@ -4,6 +4,7 @@ const querystring = require('querystring');
 const request = require('request');
 const _ = require('lodash');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 //Security
 const csp = require('helmet-csp');
@@ -25,7 +26,8 @@ let env = {
 };
 
 let expressApp = express();
-expressApp.use(cookieParser());
+//expressApp.use(cookieParser());
+expressApp.use(bodyParser.json());
 let server = http.createServer(expressApp);
 
 let config = {
@@ -87,7 +89,7 @@ function setHeaders() {
         helmet.noSniff(),
         cors({
             origin: '*',
-            methods: 'GET',
+            methods: 'GET, POST',
             preflightContinue: false,
             optionsSuccessStatus: 204
         })
@@ -152,6 +154,22 @@ function setHttpCalls() {
             
         });
     });
+    
+    /**
+     * 
+    */
+    expressApp.get('/profile', async (req, res) => {
+        // eslint-disable-next-line no-console
+        console.log('INFO: /profile has been called.');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        let token = req.headers.token;
+        let user = lib.getUserByToken(token, data.users);
+        if (user !== null) {
+            res.status(200).send(JSON.stringify(user.getData()));
+        } else {
+            res.status(200).send(JSON.stringify(null));
+        }
+    });
 
     /**
     * Get a list of all rooms
@@ -202,34 +220,23 @@ function setHttpCalls() {
     * @Returns ResponseCode of 200
     * @Returns content of the room
     */
-    expressApp.get('/rooms/get/:roomId', async (req, res) => {
+    expressApp.post('/rooms/get/:roomId', async (req, res) => {
         // eslint-disable-next-line no-console
-        console.log('INFO: /room/ ' + req.params.roomId + ' has been called.');
+        //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
 
         let room = lib.getRoomById(req.params.roomId, data.rooms);
         if (room === null) {
             res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
         } else {
-            await room.update(req.headers.token === room.token ? true : false);
-
-            res.status(200).send(JSON.stringify({error: false, room: room.getDifference(room.lastUpdate)}));
-        }
-    });
-
-    /**
-     * 
-    */
-    expressApp.get('/profile', async (req, res) => {
-        // eslint-disable-next-line no-console
-        console.log('INFO: /profile has been called.');
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        let token = req.headers.token;
-        let user = lib.getUserByToken(token, data.users);
-        if (user !== null) {
-            res.status(200).send(JSON.stringify(user.getData()));
-        } else {
-            res.status(200).send(JSON.stringify(null));
+            if (_.keys(req.body).length > 1) {
+                if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
+                    room.changePlaylist(req.body.playlistId);
+                }
+            } else {
+                await room.update(req.body.token === room.token);
+                res.status(200).send(JSON.stringify({error: false, room: room.getData(req.body.token)}));
+            }
         }
     });
 }
