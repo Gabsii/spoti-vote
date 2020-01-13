@@ -50,58 +50,29 @@ class Dashboard extends Component {
         var myNewURL = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + window.location.pathname;
         window.history.pushState({}, document.title, myNewURL);
 
-        this.fetchProfileData(token);
-        this.fetchTopTracks(token);
-        window.addEventListener('resize', this.fetchTopTracks.bind(this,token));
+        this.fetchProfile(token);
     }
 
-    // asynchronously fetch all the comments for the current post and add it to the comments array in the state
-    fetchProfileData(token) {
-        fetch('https://api.spotify.com/v1/me/', {
+    fetchProfile(token) {
+        fetch(constants.config.url + '/profile', {
             headers: {
-                'Authorization': 'Bearer ' + token
+                'Token': token
             }
-        }).then(response => response.json()).then(response => {
-            if (response.error === undefined) {
-                let premium;
-                if (response.product === 'premium') {
-                    premium = true;
-                } else {
-                    premium = false;
-                }
+        }).then(response => response.json().then(response => {
+            if (response === null) {
+                window.location.pathname = '';
+            } else {
                 this.setState({
                     profile: {
                         name: response.display_name,
                         id: response.id,
-                        img: response.images[0].url || 'https://via.placeholder.com/152x152',
-                        premium: premium
-                    }
+                        img: response.img || 'https://via.placeholder.com/152x152',
+                        premium: response.premium
+                    },
+                    topTracks: response.topTracks
                 });
-            } else if (response.error.status === 401) {
-                window.location.href = constants.config.url + '/login';
             }
-        }).catch((err) => console.error(err));
-
-    }
-
-    // asynchronously fetch all the comments for the current post and add it to the comments array in the state
-    fetchTopTracks(token) {
-        let maxTracks = Math.floor((window.innerWidth - 221) / 200);
-        let amountTopTracks = (maxTracks > 0)
-            ? maxTracks
-            : 1;
-        fetch('https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=' + amountTopTracks, {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        }).then(response => response.json()).then(response => {
-            if (response.error === undefined) {
-                this.setState({topTracks: response});
-            } else if (response.error.status === 401) {
-                window.location.href = constants.config.url + '/login';
-            }
-        }).catch((err) => console.error(err));
-
+        }));
     }
 
     render() {

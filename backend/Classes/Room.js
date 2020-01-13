@@ -57,6 +57,8 @@ function Room(spotifyAccountAddress, spotifyApiAddress, user, rooms) {
             this.id = makeid(5);
         }
     }
+
+    this.lastUpdate = null;
 }
 
 /**
@@ -266,6 +268,7 @@ method.getDifference = function(oldRoom) {
     if ((update.host === undefined && update.activeTracks === undefined && update.activePlaylist === undefined && update.connectedUser === undefined && update.activePlayer === undefined && update.playlists === undefined) || Object.keys(update).length === 0) {
         return null;
     }
+    this.lastUpdate = update;
     return update;
 };
 

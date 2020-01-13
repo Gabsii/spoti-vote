@@ -26,7 +26,20 @@ function User(spotifyAcountAddress, spotifyApiAddress, token, refreshToken, clie
     this.voted = null;
     this.country = '';
     this.img = '';
+
+    this.premium = '';
+    this.topTracks = [];
 }
+
+method.getData = function() {
+    return {
+        name: this.name,
+        id: this.id,
+        img: this.img,
+        premium: this.premium,
+        topTracks: this.topTracks
+    };
+};
 
 /**
 * Fetches the data of the host, and all his playlists
@@ -35,27 +48,30 @@ function User(spotifyAcountAddress, spotifyApiAddress, token, refreshToken, clie
 * @return: boolean if completed successfull
 */
 method.fetchData = async function() {
-    let hostRequest = await fetch(this.spotifyApiAddress + '/v1/me', {
+    let request = await fetch(this.spotifyApiAddress + '/v1/me', {
         headers: {
             'Authorization': 'Bearer ' + this.token
         }
     });
-    let hostRequestData = await hostRequest.json();
+    let data = await request.json();
 
-    if (hostRequestData.error !== undefined){
+    if (data.error !== undefined){
         return false;
     }
 
-    if (hostRequestData.images[0] !== undefined && hostRequestData.images[0] !== null) {
-        this.img = hostRequestData.images[0].url;
+    if (data.images[0] !== undefined && data.images[0] !== null) {
+        this.img = data.images[0].url;
     }
 
-    this.name = hostRequestData.display_name || hostRequestData.id;
-    this.id = hostRequestData.id;
-    this.profileUrl = hostRequestData.external_urls.spotify;
-    this.country = hostRequestData.country;
+    this.name = data.display_name || data.id;
+    this.id = data.id;
+    this.profileUrl = data.external_urls.spotify;
+    this.country = data.country;
+
+    this.premium = data.product;
 
     this.playlists = await this.fetchPlaylists();
+    this.topTracks = await this.fetchTopTracks(10);
     return true;
 };
 
@@ -66,28 +82,28 @@ method.fetchData = async function() {
 * @return: array All the playlists
 */
 method.fetchPlaylists = async function() {
-    let playlistRequest = await fetch(this.spotifyApiAddress + '/v1/me/playlists?limit=50', {
+    let request = await fetch(this.spotifyApiAddress + '/v1/me/playlists?limit=50', {
         headers: {
             'Authorization': 'Bearer ' + this.token
         }
     });
 
-    let playlistRequestData = await playlistRequest.json();
-    let next = playlistRequestData.next;
+    let data = await request.json();
+    let next = data.next;
 
-    let playlists = playlistRequestData.items;
+    let playlists = data.items;
 
     while (next !== null && next !== undefined) {
-        playlistRequest = await fetch(next, {
+        request = await fetch(next, {
             headers: {
                 'Authorization': 'Bearer ' + this.token
             }
         });
 
-        playlistRequestData = await playlistRequest.json();
-        next = playlistRequestData.next;
+        data = await request.json();
+        next = data.next;
 
-        playlists = playlists.concat(playlistRequestData.items);
+        playlists = playlists.concat(data.items);
     }
 
     let returnPlaylists = [];
@@ -103,28 +119,28 @@ method.fetchPlaylists = async function() {
 };
 
 method.fetchPlaylistTracks = async function(playlist) {
-    let trackRequest = await fetch(playlist.href + '/tracks?market='+this.country+'&fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal', {
+    let request = await fetch(playlist.href + '/tracks?market='+this.country+'&fields=items(track(name%2Cis_playable%2Chref%2Calbum(images)%2Cartists(name)%2C%20id))%2Cnext%2Coffset%2Ctotal', {
         headers: {
             'Authorization': 'Bearer ' + this.token
         }
     });
 
-    let trackRequestData = await trackRequest.json();
-    let next = trackRequestData.next;
+    let data = await request.json();
+    let next = data.next;
 
-    let tracks = trackRequestData.items;
+    let tracks = data.items;
 
     while (next !== null && next !== undefined) {
-        trackRequest = await fetch(next, {
+        request = await fetch(next, {
             headers: {
                 'Authorization': 'Bearer ' + this.token
             }
         });
 
-        trackRequestData = await trackRequest.json();
-        next = trackRequestData.next;
+        data = await request.json();
+        next = data.next;
 
-        tracks = tracks.concat(trackRequestData.items);
+        tracks = tracks.concat(data.items);
     }
 
     let returnTracks = [];
@@ -136,6 +152,16 @@ method.fetchPlaylistTracks = async function(playlist) {
         }
     }
     return returnTracks;
+};
+
+method.fetchTopTracks = async function(amount) {
+    let request = await fetch('https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=' + amount, {
+        headers: {
+            'Authorization': 'Bearer ' + this.token
+        }
+    });
+    let data = await request.json();
+    return data.items;
 };
 
 module.exports = {

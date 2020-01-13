@@ -36,6 +36,17 @@ function getUserById(id, users) {
     return null;
 }
 
+function getUserByToken(token, users) {
+    let user = null;
+    for (var i = 0; i < users.length; i++) {
+        if (users[i].token === token) {
+            user = users[i];
+            return user;
+        }
+    }
+    return null;
+}
+
 let codes = {
     SUCCESS: 200,
     NOTFOUND: 404,
@@ -46,5 +57,6 @@ let codes = {
 module.exports = {
     getRoomById: getRoomById,
     getUserById: getUserById,
+    getUserByToken: getUserByToken,
     codes: codes
 };

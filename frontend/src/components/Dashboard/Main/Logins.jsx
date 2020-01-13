@@ -72,7 +72,7 @@ const styles = {
 class Logins extends Component {
 
     login() {
-        window.location.href = constants.config.url + '/createRoom?id=' + this.props.profile.id;
+        window.location.href = constants.config.url + '/rooms/create?id=' + this.props.profile.id;
     }
 
     render() {
