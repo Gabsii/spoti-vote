@@ -117,7 +117,7 @@ class Infos extends PureComponent {
             </div>
             <div className={`${styles.breaker}`}>
                 <a href={playlistUrl}>
-                    <img alt='Current Playlist' src={playlistImage} className={`${styles.playlistImage}`}/>
+                    <img alt='Current Playlist' src={playlistImage || this.props.host.img} className={`${styles.playlistImage}`}/>
                 </a>
                 <div className={`${styles.playlistName}`}>{option}
                 </div>

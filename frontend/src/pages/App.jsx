@@ -55,14 +55,14 @@ class App extends Component {
 
     componentDidMount() {
 
-        this.timer = setInterval(()=> this.getData(this.state.token), 1000);
+        this.timer = setInterval(()=> this.getData(), 1000);
 
         if (this.state.isHost) {
             swal.fire({titleText: 'Hello from the other side!', type: 'info', text: 'Please make sure that you are running Spotify in the background!', allowOutsideClick: false, allowEscapeKey: false});
         }
     }
 
-    getData(token) {
+    getData() {
         fetch(constants.config.url + '/rooms/get/' + this.state.roomId , 
             {
                 method: 'post',
@@ -80,7 +80,7 @@ class App extends Component {
                         window.location.pathname = '/dashboard';
                     });
                 } else {
-                    console.log(data.room);
+                    console.log(data.room.activePlayer);
                     this.setState({
                         playlists: data.room.playlists,
                         isHost: data.room.isHost,
@@ -100,7 +100,7 @@ class App extends Component {
     selectPlaylist(event) {
         let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
         if (playlistId !== null && playlistId !== 'none') {
-            fetch(constants.config.url + '/rooms/get/' + this.state.roomId , 
+            fetch(constants.config.url + '/rooms/get/' + this.state.roomId + '/selectPlaylist', 
                 {
                     method: 'post',
                     headers: {'Content-Type':'application/json'},

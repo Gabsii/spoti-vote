@@ -11,9 +11,8 @@ const csp = require('helmet-csp');
 const cors = require('cors');
 const helmet = require('helmet');
 //Import of used files
-const Room = require('./Classes/Room').Room;
-const User = require('./Classes/User').User;
-const lib = require('./lib.js');
+const Room = require('./Classes/Room');
+const User = require('./Classes/User');
 
 dotenv.config();
 
@@ -137,7 +136,7 @@ function setHttpCalls() {
         request.post(authOptions, async (error, response, body) => {
             if (response.statusCode === 200) {
                 let uri = config.referer + '/dashboard';
-                let user = new User(config.spotifyAccountAddress, config.spotifyApiAddress, body.access_token, body.refresh_token, env.spotifyClientId, env.spotifyClientSecret);
+                let user = new User.User(config.spotifyAccountAddress, config.spotifyApiAddress, body.access_token, body.refresh_token, env.spotifyClientId, env.spotifyClientSecret);
                 // Set cookie
                 // res.cookie('token', body.access_token, options); // options is optional
                 if (await user.fetchData() === true) {
@@ -163,7 +162,7 @@ function setHttpCalls() {
         console.log('INFO: /profile has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
         let token = req.headers.token;
-        let user = lib.getUserByToken(token, data.users);
+        let user = User.getUserByToken(token, data.users);
         if (user !== null) {
             res.status(200).send(JSON.stringify(user.getData()));
         } else {
@@ -203,11 +202,11 @@ function setHttpCalls() {
     * Will redirect the user to the newly created room
     */
     expressApp.get('/rooms/create', async (req, res) => {
-        let user = lib.getUserById(req.query.id, data.users);
+        let user = User.getUserById(req.query.id, data.users);
         if (user === null) {
             res.redirect(req.headers.referer.split('/dashboard')[0]);
         } else {
-            let room = new Room(config.spotifyAccountAddress, config.spotifyApiAddress, user, data.rooms);
+            let room = new Room.Room(config.spotifyAccountAddress, config.spotifyApiAddress, user, data.rooms);
             let uri = config.referer + '/app';
             data.rooms.push(room);
             res.redirect(uri + '/' + room.id);
@@ -215,7 +214,7 @@ function setHttpCalls() {
     });
 
     /**
-    * Returns the data of a given Room
+    * Returns the data of a given Room and updates the room state
     *
     * @Returns ResponseCode of 200
     * @Returns content of the room
@@ -225,7 +224,7 @@ function setHttpCalls() {
         //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
 
-        let room = lib.getRoomById(req.params.roomId, data.rooms);
+        let room = Room.getRoomById(req.params.roomId, data.rooms);
         if (room === null) {
             res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
         } else {
@@ -236,6 +235,128 @@ function setHttpCalls() {
             } else {
                 await room.update(req.body.token === room.token);
                 res.status(200).send(JSON.stringify({error: false, room: room.getData(req.body.token)}));
+            }
+        }
+    });
+
+    /**
+    * Changes the rooms current Playlist and generates new Vote-Tracks
+    *
+    * @Returns ResponseCode of 200
+    */
+    expressApp.post('/rooms/get/:roomId/selectPlaylist', async (req, res) => {
+        // eslint-disable-next-line no-console
+        //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+
+        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (room === null) {
+            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
+        } else {
+            if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
+                room.changePlaylist(req.body.playlistId);
+                res.status(200).send(JSON.stringify({error: false}));
+            }
+        }
+    });
+
+    /**
+    * Returns the data of a given Room
+    *
+    * @Returns ResponseCode of 200
+    * @Returns content of the room
+    */
+    expressApp.post('/rooms/get/:roomId/pause', async (req, res) => {
+        // eslint-disable-next-line no-console
+        //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+
+        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (room === null) {
+            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
+        } else {
+            if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
+                room.changePlaylist(req.body.playlistId);
+            }
+        }
+    });
+    /**
+    * Returns the data of a given Room
+    *
+    * @Returns ResponseCode of 200
+    * @Returns content of the room
+    */
+    expressApp.post('/rooms/get/:roomId/pause', async (req, res) => {
+    // eslint-disable-next-line no-console
+    //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+
+        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (room === null) {
+            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
+        } else {
+            if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
+                room.changePlaylist(req.body.playlistId);
+            }
+        }
+    });
+    /**
+    * Returns the data of a given Room
+    *
+    * @Returns ResponseCode of 200
+    * @Returns content of the room
+    */
+    expressApp.post('/rooms/get/:roomId/pause', async (req, res) => {
+    // eslint-disable-next-line no-console
+    //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+
+        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (room === null) {
+            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
+        } else {
+            if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
+                room.changePlaylist(req.body.playlistId);
+            }
+        }
+    });
+    /**
+    * Returns the data of a given Room
+    *
+    * @Returns ResponseCode of 200
+    * @Returns content of the room
+    */
+    expressApp.post('/rooms/get/:roomId/pause', async (req, res) => {
+    // eslint-disable-next-line no-console
+    //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+
+        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (room === null) {
+            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
+        } else {
+            if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
+                room.changePlaylist(req.body.playlistId);
+            }
+        }
+    });
+    /**
+    * Returns the data of a given Room
+    *
+    * @Returns ResponseCode of 200
+    * @Returns content of the room
+    */
+    expressApp.post('/rooms/get/:roomId/pause', async (req, res) => {
+    // eslint-disable-next-line no-console
+    //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+
+        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (room === null) {
+            res.status(400).send(JSON.stringify({error: true, message: 'Room not found'}));
+        } else {
+            if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
+                room.changePlaylist(req.body.playlistId);
             }
         }
     });

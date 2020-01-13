@@ -164,6 +164,38 @@ method.fetchTopTracks = async function(amount) {
     return data.items;
 };
 
+/**
+* Return the user with the specified id
+*
+* @author: Michiocre
+* @param {string} id The id that identifies the user
+* @param {array} users Array of all the users
+* @return {Room} The room object with the id of the parameter
+*/
+function getUserById(id, users) {
+    let user = null;
+    for (var i = 0; i < users.length; i++) {
+        if (users[i].id === id) {
+            user = users[i];
+            return user;
+        }
+    }
+    return null;
+}
+
+function getUserByToken(token, users) {
+    let user = null;
+    for (var i = 0; i < users.length; i++) {
+        if (users[i].token === token) {
+            user = users[i];
+            return user;
+        }
+    }
+    return null;
+}
+
 module.exports = {
-    User: User
+    User: User,
+    getUserById: getUserById,
+    getUserByToken: getUserByToken
 };

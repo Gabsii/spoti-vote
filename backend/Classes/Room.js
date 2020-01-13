@@ -1,23 +1,7 @@
 let method = Room.prototype; //This is used when programming object oriented in js to make everything a bit more organised
 const request = require('request');
 const fetch = require('node-fetch');
-const deepEqual = require('deep-equal');
 const _ = require('lodash');
-
-/**
-* Return a randomly generated string with a specified length, based on the possible symbols
-*
-* @author: agustinhaller
-* @param {int} length The length of the string
-* @return {string} The random string
-*/
-function makeid(length) {
-    let text = '';
-    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; //ALl possible symbols
-    for (let i = 0; i < length; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    return text;
-}
 
 /**
 * Constructor for a new / room
@@ -38,27 +22,15 @@ function Room(spotifyAccountAddress, spotifyApiAddress, user, rooms) {
     this.activePlaylist = null;
     this.connectedUser = [];
     this.activePlayer = {};
-    this.id = makeid(5);
     this.userDisconnect = Date.now();
     this.isChanging = false;
     this.isSkipping = false;
     this.userPhone = false;
 
     //Makes sure the id is unique
-    let counter;
-    while (counter > 0) {
-        counter = 0;
-        for (let i = 0; i < rooms.length; i++) {
-            if (rooms[i].id === this.id) {
-                counter++;
-            }
-        }
-        if (counter > 0) {
-            this.id = makeid(5);
-        }
-    }
-
-    this.lastUpdate = null;
+    do {
+        this.id = makeid(5);
+    } while (getRoomById(this.id, rooms) !== null);
 }
 
 method.getData = function (token) {
@@ -79,220 +51,10 @@ method.getData = function (token) {
             timeLeft: this.activePlayer.timeLeft || 0,
             progressMS: this.activePlayer.progressMS || 0,
             progress: this.activePlayer.progress || 0,
-            isPlaying: this.activePlayer.isPlaying || false
+            isPlaying: this.activePlayer.isPlaying || false,
+            track: this.activePlayer.track || null
         }
     };
-};
-
-/**
-* Returns all the changes between the last update and the current state
-*
-* @author: Michiocre
-* @param {Room} oldRoom The old status of the room
-* @returns: Changes
-*/
-method.getDifference = function(oldRoom) {
-    let update = {};
-
-    if (oldRoom === null) {
-        //THIS IS FOR THE INIT DATA
-        update.host = {
-            name: this.user.name,
-            voted: this.user.voted,
-            img: this.user.img
-        };
-        update.activeTracks = [];
-        for (let i = 0; i < this.activeTracks.length; i++) {
-            update.activeTracks[i] = {
-                album: {images: [{url: this.activeTracks[i].album.images[0].url}]},
-                id: this.activeTracks[i].id,
-                name: this.activeTracks[i].name,
-                votes: this.activeTracks[i].votes
-            };
-            update.activeTracks[i].artists = [];
-            for (let j = 0; j < this.activeTracks[i].artists.length; j++) {
-                update.activeTracks[i].artists[j] = {
-                    name: this.activeTracks[i].artists[j].name
-                };
-            }
-        }
-
-        update.activePlaylist = {
-            name: 'Host is selecting',
-            images: [{url: 'https://via.placeholder.com/152x152'}],
-            external_urls: {spotify: ''}
-        };
-        if (this.activePlaylist !== null) {
-            update.activePlaylist = {
-                name: this.activePlaylist.name,
-                images: [{url: this.activePlaylist.images[0].url}],
-                external_urls: {spotify: this.activePlaylist.external_urls.spotify}
-            };
-        }
-
-        update.connectedUser = this.connectedUser;
-
-        update.activePlayer = {
-            progress: 0,
-            isPlaying: false,
-            track: {
-                name: 'Spotify isn\'t running',
-                album: {images: [{url: 'https://via.placeholder.com/75x75'}]},
-                artists: [{name: 'Start Spotify'}]
-            }
-        };
-
-        if (this.activePlayer !== null && Object.keys(this.activePlayer).length > 0) {
-            update.activePlayer = {
-                progress: this.activePlayer.progress,
-                isPlaying: this.activePlayer.isPlaying,
-                track: {
-                    name: this.activePlayer.track.name,
-                    album: {images: [{url: this.activePlayer.track.album.images[0].url}]},
-                }
-            };
-            update.activePlayer.track.artists = [];
-            for (let i = 0; i < this.activePlayer.track.artists.length; i++) {
-                update.activePlayer.track.artists[i] = {
-                    name: this.activePlayer.track.artists[i].name
-                };
-            }
-        }
-
-        update.playlists = [];
-        for (let i = 0; i < this.user.playlists.length; i++) {
-            update.playlists.push({
-                name: this.user.playlists[i].name,
-                id: this.user.playlists[i].id
-            });
-        }
-
-    } else {
-        //THIS IS FOR AN UPDATE (IF NOTHING ELSE TODO REWORK THIS)
-        if (!deepEqual(oldRoom.user, this.user)) {
-            update.host = {
-                voted: this.user.voted
-            };
-        }
-
-        if (!deepEqual(oldRoom.activeTracks, this.activeTracks)) {
-            update.activeTracks = [];
-            for (let i = 0; i < this.activeTracks.length; i++) {
-                update.activeTracks[i] = null;
-                if (!deepEqual(oldRoom.activeTracks[i], this.activeTracks[i])) {
-                    if (oldRoom.activeTracks[i] !== null && oldRoom.activeTracks[i] !== undefined) {
-                        if (!deepEqual(oldRoom.activeTracks[i].album, this.activeTracks[i].album)
-						|| !deepEqual(oldRoom.activeTracks[i].id, this.activeTracks[i].id)
-						|| !deepEqual(oldRoom.activeTracks[i].name, this.activeTracks[i].name)
-						|| !deepEqual(oldRoom.activeTracks[i].artists, this.activeTracks[i].artists)) {
-                            update.activeTracks[i] = {
-                                album: {images: [{url: this.activeTracks[i].album.images[0].url}]},
-                                id: this.activeTracks[i].id,
-                                name: this.activeTracks[i].name,
-                                votes: this.activeTracks[i].votes
-                            };
-                            update.activeTracks[i].artists = [];
-                            for (let j = 0; j < this.activeTracks[i].artists.length; j++) {
-                                update.activeTracks[i].artists[j] = {
-                                    name: this.activeTracks[i].artists[j].name
-                                };
-                            }
-                        } else {
-                            update.activeTracks[i] = {
-                                votes: this.activeTracks[i].votes
-                            };
-                        }
-                    } else {
-                        update.activeTracks[i] = {
-                            album: {images: [{url: this.activeTracks[i].album.images[0].url}]},
-                            id: this.activeTracks[i].id,
-                            name: this.activeTracks[i].name,
-                            votes: this.activeTracks[i].votes
-                        };
-                        update.activeTracks[i].artists = [];
-                        for (let j = 0; j < this.activeTracks[i].artists.length; j++) {
-                            update.activeTracks[i].artists[j] = {
-                                name: this.activeTracks[i].artists[j].name
-                            };
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!deepEqual(oldRoom.activePlaylist, this.activePlaylist)) {
-            let oldName = null;
-            if (oldRoom.activePlaylist !== null && oldRoom.activePlaylist !== undefined) {
-                oldName = oldRoom.activePlaylist.name;
-            }
-            if (!deepEqual(oldName, this.activePlaylist.name)) {
-                update.activePlaylist = {
-                    name: 'Host is selecting',
-                    images: [{url: 'https://via.placeholder.com/152x152'}],
-                    external_urls: {spotify: ''}
-                };
-                if (this.activePlaylist !== null) {
-                    update.activePlaylist = {
-                        name: this.activePlaylist.name,
-                        images: [{url: this.activePlaylist.images[0].url}],
-                        external_urls: {spotify: this.activePlaylist.external_urls.spotify}
-                    };
-                }
-            }
-        }
-
-        if (!deepEqual(oldRoom.connectedUser, this.connectedUser)) {
-            update.connectedUser = this.connectedUser;
-        }
-
-        if (this.activePlayer !== null && oldRoom.activePlayer) {
-            if (!deepEqual(oldRoom.activePlayer, this.activePlayer)) {
-                if (this.activePlayer.progress !== oldRoom.activePlayer.progress || this.activePlayer.isPlaying !== oldRoom.activePlayer.isPlaying) {
-                    update.activePlayer = {
-                        progress: this.activePlayer.progress,
-                        isPlaying: this.activePlayer.isPlaying
-                    };
-                    if (!deepEqual(oldRoom.activePlayer.track, this.activePlayer.track)) {
-                        update.activePlayer.track = {
-                            name: 'Spotify isn\'t running',
-                            album: {images: [{url: 'https://via.placeholder.com/75x75'}]},
-                            artists: [{name: 'Start Spotify'}]
-                        };
-                        if (this.activePlayer.track !== null) {
-                            update.activePlayer.track = {
-                                name: this.activePlayer.track.name,
-                                album: {images: [{url: this.activePlayer.track.album.images[0].url}]},
-                            };
-                            update.activePlayer.track.artists = [];
-                            for (let i = 0; i < this.activePlayer.track.artists.length; i++) {
-                                update.activePlayer.track.artists[i] = {
-                                    name: this.activePlayer.track.artists[i].name
-                                };
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (oldRoom.user.playlists !== null && this.user.playlists !== null) {
-            if (!deepEqual(oldRoom.user.playlists,this.user.playlists)) {
-                update.playlists = [];
-                for (let i = 0; i < this.user.playlists.length; i++) {
-                    update.playlists.push({
-                        name: this.user.playlists[i].name,
-                        id: this.user.playlists[i].id
-                    });
-                }
-            }
-        }
-
-    }
-    if ((update.host === undefined && update.activeTracks === undefined && update.activePlaylist === undefined && update.connectedUser === undefined && update.activePlayer === undefined && update.playlists === undefined) || Object.keys(update).length === 0) {
-        return null;
-    }
-    this.lastUpdate = update;
-    return update;
 };
 
 /**
@@ -816,4 +578,38 @@ method.togglePlaystate = async function() {
     }
 };
 
-module.exports = {Room: Room, makeid: makeid};
+/**
+* Return the room with the specified id
+*
+* @author: Michiocre
+* @param {string} roomId The id that identifies the room
+* @param {array} rooms Array of all the rooms
+* @return {Room} The room object with the id of the parameter
+*/
+function getRoomById(roomId, rooms) {
+    let room = null;
+    for (var i = 0; i < rooms.length; i++) {
+        if (rooms[i].id === roomId) {
+            room = rooms[i];
+            return room;
+        }
+    }
+    return null;
+}
+
+/**
+* Return a randomly generated string with a specified length, based on the possible symbols
+*
+* @author: agustinhaller
+* @param {int} length The length of the string
+* @return {string} The random string
+*/
+function makeid(length) {
+    let text = '';
+    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; //ALl possible symbols
+    for (let i = 0; i < length; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
+}
+
+module.exports = {Room: Room, makeid: makeid, getRoomById: getRoomById};
