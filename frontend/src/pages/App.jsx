@@ -63,7 +63,7 @@ class App extends Component {
     }
 
     getData() {
-        fetch(constants.config.url + '/rooms/get/' + this.state.roomId , 
+        fetch(constants.config.url + '/rooms/' + this.state.roomId + '/update' , 
             {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
@@ -80,7 +80,6 @@ class App extends Component {
                         window.location.pathname = '/dashboard';
                     });
                 } else {
-                    console.log(data.room.activePlayer);
                     this.setState({
                         playlists: data.room.playlists,
                         isHost: data.room.isHost,
@@ -100,7 +99,7 @@ class App extends Component {
     selectPlaylist(event) {
         let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
         if (playlistId !== null && playlistId !== 'none') {
-            fetch(constants.config.url + '/rooms/get/' + this.state.roomId + '/selectPlaylist', 
+            fetch(constants.config.url + '/rooms/' + this.state.roomId + '/selectPlaylist', 
                 {
                     method: 'post',
                     headers: {'Content-Type':'application/json'},

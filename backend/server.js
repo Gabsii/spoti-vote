@@ -219,7 +219,7 @@ function setHttpCalls() {
     * @Returns ResponseCode of 200
     * @Returns content of the room
     */
-    expressApp.post('/rooms/get/:roomId', async (req, res) => {
+    expressApp.post('/rooms/:roomId/update', async (req, res) => {
         // eslint-disable-next-line no-console
         //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -234,7 +234,9 @@ function setHttpCalls() {
                 }
             } else {
                 await room.update(req.body.token === room.token);
-                res.status(200).send(JSON.stringify({error: false, room: room.getData(req.body.token)}));
+                let response = JSON.stringify({error: false, room: room.getData(req.body.token)});
+                console.log(response.length);
+                res.status(200).send(response);
             }
         }
     });
@@ -244,7 +246,7 @@ function setHttpCalls() {
     *
     * @Returns ResponseCode of 200
     */
-    expressApp.post('/rooms/get/:roomId/selectPlaylist', async (req, res) => {
+    expressApp.post('/rooms/:roomId/selectPlaylist', async (req, res) => {
         // eslint-disable-next-line no-console
         //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -266,7 +268,7 @@ function setHttpCalls() {
     * @Returns ResponseCode of 200
     * @Returns content of the room
     */
-    expressApp.post('/rooms/get/:roomId/pause', async (req, res) => {
+    expressApp.post('/rooms/:roomId/pause', async (req, res) => {
         // eslint-disable-next-line no-console
         //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -286,7 +288,7 @@ function setHttpCalls() {
     * @Returns ResponseCode of 200
     * @Returns content of the room
     */
-    expressApp.post('/rooms/get/:roomId/pause', async (req, res) => {
+    expressApp.post('/rooms/:roomId/pause', async (req, res) => {
     // eslint-disable-next-line no-console
     //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -306,7 +308,7 @@ function setHttpCalls() {
     * @Returns ResponseCode of 200
     * @Returns content of the room
     */
-    expressApp.post('/rooms/get/:roomId/pause', async (req, res) => {
+    expressApp.post('/rooms/:roomId/pause', async (req, res) => {
     // eslint-disable-next-line no-console
     //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -326,7 +328,7 @@ function setHttpCalls() {
     * @Returns ResponseCode of 200
     * @Returns content of the room
     */
-    expressApp.post('/rooms/get/:roomId/pause', async (req, res) => {
+    expressApp.post('/rooms/:roomId/pause', async (req, res) => {
     // eslint-disable-next-line no-console
     //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -346,7 +348,7 @@ function setHttpCalls() {
     * @Returns ResponseCode of 200
     * @Returns content of the room
     */
-    expressApp.post('/rooms/get/:roomId/pause', async (req, res) => {
+    expressApp.post('/rooms/:roomId/pause', async (req, res) => {
     // eslint-disable-next-line no-console
     //console.log('INFO: /room/' + req.params.roomId + ' has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
