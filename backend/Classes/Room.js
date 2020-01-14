@@ -199,11 +199,15 @@ method.changePlaylist = async function(playlistId) {
     } else {
         //Generate 4 new songs if the playlist changed
         if (playlist !== this.activePlaylist) {
-            await this.getRandomTracks(playlist.id);
+            // eslint-disable-next-line no-console
+            console.log('INFO-[ROOM: '+this.id+']: Playlist changed to ['+playlist.name+'].');
+            if (!Array.isArray(playlist.tracks)) {
+                playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
+            }
+            
+            this.activePlaylist = playlist;
+            return this.getRandomTracks(playlist);
         }
-        this.activePlaylist = playlist;
-        // eslint-disable-next-line no-console
-        console.log('INFO-[ROOM: '+this.id+']: Playlist changed to ['+playlist.name+'].');
         return true;
     }
 };
@@ -262,13 +266,8 @@ method.updatePlaylists = async function() {
 * @param {string} playlistId The id that identifies the playlist
 * @return {boolean} True if completed
 */
-method.getRandomTracks = async function(playlistId, activeTrack) {
-    let playlist = this.getPlaylistById(playlistId);
-    //Load tracks into Playlist if its empty
-    if (!Array.isArray(playlist.tracks)) {
-        playlist.tracks = await this.host.fetchPlaylistTracks(playlist);
-    }
-
+method.getRandomTracks = function(playlist, activeTrack) {
+    
     if (activeTrack === null || activeTrack === undefined) {
         if (this.activePlayer !== null && this.activePlayer !== undefined) {
             activeTrack = this.activePlayer.track;
@@ -309,6 +308,13 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
             if (activeTrack !== null && activeTrack !== undefined) {
                 if (track.id === activeTrack.id) {
                     reroll = true;
+                }
+            }
+            if (!reroll) {
+                for (let j = 0; j < selectedTracks.length; j++) {
+                    if (selectedTracks[j].id === track.id) {
+                        reroll = true;
+                    }                    
                 }
             }
             if (!reroll) {
@@ -402,14 +408,12 @@ method.update = async function() {
         console.error('ERROR-[ROOM: '+this.id+']: THERE WAS AN ERROR GETTING THE ACTIVE PLAYER.');
     }
 
-
     let fetchData;
     try {
         fetchData = await request.json();
     } catch (e) {
         fetchData = null;
     }
-
     this.activePlayer = null;
     if (fetchData !== null) {
         if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
@@ -536,8 +540,13 @@ method.play = async function() {
             method: 'PUT',
             body: JSON.stringify(payload)
         });
-    
-        return this.getRandomTracks(this.activePlaylist.id, track);
+
+        let playlist = this.getPlaylistById(this.activePlaylist.id);
+        //Load tracks into Playlist if its empty
+        if (!Array.isArray(playlist.tracks)) {
+            playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
+        }
+        return this.getRandomTracks(playlist, track);
     } else {
         await fetch(env.spotifyApiAddress + '/v1/me/player/next', {
             headers: {
@@ -576,7 +585,13 @@ method.reroll = async function() {
         if (rerolls >= (2 * (this.connectedUser.length+1) / 3)) {
             // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: '+this.id+']: Rerolled.');
-            this.getRandomTracks(this.activePlaylist.id, track);
+            
+            let playlist = this.getPlaylistById(this.activePlaylist.id);
+            //Load tracks into Playlist if its empty
+            if (!Array.isArray(playlist.tracks)) {
+                playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
+            }    
+            this.getRandomTracks(playlist, track);
             return true;
         }
     }
@@ -607,7 +622,6 @@ method.changeVolume = async function(volume) {
 * @return {boolean} True if swapped
 */
 method.togglePlaystate = async function() {
-
     if (this.activePlayer !== null && this.activePlayer !== undefined) {
         if (this.activePlayer.isPlaying) {
             await fetch(env.spotifyApiAddress + '/v1/me/player/pause',{

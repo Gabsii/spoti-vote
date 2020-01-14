@@ -56,7 +56,7 @@
       {
         "displayName": "backend",
         "testMatch": [
-          "<rootDir>/backend/**/__tests__/**/*.{js,jsx,mjs}"
+          "<rootDir>/backend/**/__tests__/**/*test.{js,jsx,mjs}"
         ]
       },
       {
