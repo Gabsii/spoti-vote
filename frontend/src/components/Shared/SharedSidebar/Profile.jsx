@@ -32,10 +32,10 @@ class Profile extends Component {
         let img,
             name,
             id;
-        if (this.props.profile !== null && this.props.profile !== undefined) {
-            img = this.props.profile.img;
-            name = this.props.profile.name;
-            id = this.props.profile.id;
+        if (this.props.host !== null && this.props.host !== undefined) {
+            img = this.props.host.img;
+            name = this.props.host.name;
+            id = this.props.host.id;
         }
         return (<div className={`${styles.breaker}`}>
             <div>

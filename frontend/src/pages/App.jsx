@@ -17,20 +17,14 @@ class App extends Component {
     constructor() {
         super();
 
-        let token = cookies.get('token');
-        if (token === undefined) {
-            token = null;
-        }
-
-        let username = cookies.get('username');
-        if (username === undefined) {
-            username = null;
+        let myToken = cookies.get('myToken');
+        if (myToken === undefined) {
+            myToken = null;
         }
 
         this.state = {
-            username: username,
+            myToken: myToken,
             isPhone: (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1),
-            token: token,
             roomId: window.location.pathname.split('/')[2],
             loginPage: constants.config.url,
             isHost: false,
@@ -93,8 +87,7 @@ class App extends Component {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    token: this.state.token,
-                    username: this.state.username
+                    myToken: this.state.myToken
                 })
             })
             .then((response) => response.json())
@@ -130,7 +123,7 @@ class App extends Component {
                     method: 'post',
                     headers: {'Content-Type':'application/json'},
                     body: JSON.stringify({
-                        id: this.state.username,
+                        myToken: this.state.myToken,
                         playlistId: playlistId
                     })
                 }
@@ -169,8 +162,7 @@ class App extends Component {
                     method: 'post',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        id: this.state.username,
-                        username: this.state.username,
+                        myToken: this.state.myToken,
                         trackId: trackId
                     })
                 }
@@ -188,8 +180,7 @@ class App extends Component {
                     method: 'post',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        id: this.state.username,
-                        username: this.state.username,
+                        myToken: this.state.myToken,
                         trackId: 'reroll'
                     })
                 }
@@ -207,7 +198,7 @@ class App extends Component {
                 method: 'post',
                 headers: {'Content-Type':'application/json'},
                 body: JSON.stringify({
-                    id: this.state.username
+                    myToken: this.state.myToken,
                 })
             }
         );
@@ -219,7 +210,7 @@ class App extends Component {
                 method: 'post',
                 headers: {'Content-Type':'application/json'},
                 body: JSON.stringify({
-                    id: this.state.username
+                    myToken: this.state.myToken,
                 })
             }
         );
@@ -232,7 +223,7 @@ class App extends Component {
                 <title> {this.state.roomId || ''} | Spoti-Vote</title>
                 <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
             </Helmet>
-            <AppSidebar rerollHandler={this.rerollHandler.bind(this)} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} token={this.state.token} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
+            <AppSidebar rerollHandler={this.rerollHandler.bind(this)} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} myToken={this.state.myToken} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
             <CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks}/>
             <Footer playHandler={this.playHandler.bind(this)} skipHandler={this.skipHandler.bind(this)} isHost={this.state.isHost} activePlayer={this.state.activePlayer} host={this.state.host}/>
         </main>);

@@ -125,7 +125,7 @@ function setHttpCalls() {
                 let uri = config.referer + '/dashboard';
                 let host = new Host.Host(body.access_token, body.refresh_token);
                 if (await host.fetchData() === true) {
-                    let oldHost = Host.getHostById(host.id, data.hosts);
+                    let oldHost = Host.getHostByToken(host.myToken, data.hosts);
                     if (oldHost !== null && oldHost !== undefined) {
                         let oldRoom = Room.getRoomByHost(oldHost, data.rooms);
                         data.rooms.splice(data.rooms.indexOf(oldRoom), 1);
@@ -134,7 +134,7 @@ function setHttpCalls() {
                     data.hosts.push(host);
                     // eslint-disable-next-line no-console
                     console.log('INFO-[HOST: '+host.name+']: This host has logged in');
-                    res.redirect(uri + '?token=' + body.access_token);
+                    res.redirect(uri + '?token=' + host.myToken);
                 } else {
                     res.status(400).send();
                 }
@@ -154,7 +154,7 @@ function setHttpCalls() {
         console.log('INFO: /profile has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
 
-        let host = Host.getHostByToken(req.body.token, data.hosts);
+        let host = Host.getHostByToken(req.body.myToken, data.hosts);
         if (host !== null) {
 
             response = {error: false, host: host.getData()};
@@ -208,7 +208,7 @@ function setHttpCalls() {
     * Will redirect the host to the newly created room
     */
     expressApp.post('/rooms/checkCreate', async (req, res) => {
-        let host = Host.getHostById(req.body.id, data.hosts);
+        let host = Host.getHostByToken(req.body.myToken, data.hosts);
         let response;
         if (host === null) {
             response = {error: true, message: 'Login expired.'};
@@ -230,7 +230,7 @@ function setHttpCalls() {
     * Will redirect the host to the newly created room
     */
     expressApp.post('/rooms/create', async (req, res) => {
-        let host = Host.getHostById(req.body.id, data.hosts);
+        let host = Host.getHostByToken(req.body.myToken, data.hosts);
         let response;
         if (host === null) {
             response = {error: true, message: 'Login expired.'};
@@ -241,33 +241,6 @@ function setHttpCalls() {
             res.status(200);
             
             response = {error: false, roomId: room.id};
-        }
-        res.send(JSON.stringify(response));
-    });
-
-    /**
-    * Returns the data of a given Room and updates the room state
-    *
-    * @Returns ResponseCode of 200
-    * @Returns content of the room
-    */
-    expressApp.post('/rooms/:roomId/setName', async (req, res) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-
-        let response;
-
-        let room = Room.getRoomById(req.params.roomId, data.rooms);
-        if (room === null) {
-            response = {error: true, message: 'Room not found'};
-            res.status(400);
-        } else {
-            if (req.body.token === room.host.token) {
-                response = {error: false, name: room.host.id};
-                res.status(200);
-            } else {
-                response = {error: false, name: req.body.username};
-                res.status(200);
-            }
         }
         res.send(JSON.stringify(response));
     });
@@ -289,7 +262,7 @@ function setHttpCalls() {
             res.status(400);
         } else {
             await room.update();
-            if (req.body.token === room.host.token) {
+            if (req.body.myToken === room.host.myToken) {
                 response = {error: false, room: room.getData(true)};
                 res.status(200);
             } else {
@@ -304,7 +277,8 @@ function setHttpCalls() {
     /**
     * Changes the rooms current Playlist and generates new Vote-Tracks
     *
-    * @Returns ResponseCode of 200
+    * @Param req.params.roomId
+    * @Param req.body.myToken
     */
     expressApp.post('/rooms/:roomId/selectPlaylist', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -312,7 +286,7 @@ function setHttpCalls() {
         let response;
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
-        if (req.body.id === room.host.id) {
+        if (req.body.myToken === room.host.myToken) {
             if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
                 room.changePlaylist(req.body.playlistId);
                 response = {error: false};
@@ -324,27 +298,28 @@ function setHttpCalls() {
     });
 
     /**
-    * Returns the data of a given Room
-    *
-    * @Returns ResponseCode of 200
-    * @Returns content of the room
+    * Deletes a room
+    * 
+    * @Param req.params.roomId
+    * @Param req.body.myToken
     */
     expressApp.post('/rooms/:roomId/delete', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
 
-        if (req.body.id === room.host.id) {
+        if (req.body.myToken === room.host.myToken) {
             // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted due to more then 1 room (Host choose the old room).');
             data.rooms.splice(data.rooms.indexOf(room), 1);
         }
+        res.send();
     });
 
     /**
     * Change the volume of the room
     * @Param req.params.roomId
-    * @Param req.body.id
+    * @Param req.body.myToken
     * @Param req.body.volume
     */
     expressApp.post('/rooms/:roomId/volume', async (req, res) => {
@@ -352,7 +327,7 @@ function setHttpCalls() {
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
 
-        if (req.body.id === room.host.id) {
+        if (req.body.myToken === room.host.myToken) {
             // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + req.params.roomId + ']: Volume changed to [' + req.body.volume + '].');
             room.changeVolume(req.body.volume);
@@ -363,7 +338,7 @@ function setHttpCalls() {
     /**
     * Adds a vote from user
     * @Param req.params.roomId
-    * @Param req.body.id
+    * @Param req.body.myToken
     * @Param req.body.username
     * @Param req.body.trackId
     */
@@ -372,14 +347,15 @@ function setHttpCalls() {
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
 
-        if (req.body.id === room.host.id) {
+        if (req.body.myToken === room.host.myToken) {
             // eslint-disable-next-line no-console
-            console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.id + '] voted for [' + req.body.trackId + '].');
-            room.vote(req.body.trackId, req.body.id);
+            console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.myToken + '] voted for [' + req.body.trackId + '].');
+            room.vote(req.body.trackId, req.body.myToken);
         } else {
-            // eslint-disable-next-line no-console
-            console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.username + '] voted for [' + req.body.trackId + '].');
-            room.vote(req.body.trackId, req.body.username);
+            // Vote for user
+            // // eslint-disable-next-line no-console
+            // console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.username + '] voted for [' + req.body.trackId + '].');
+            // room.vote(req.body.trackId, req.body.username);
         }
         res.send();
     });
@@ -387,17 +363,20 @@ function setHttpCalls() {
     /**
     * Skips current song
     * @Param req.params.roomId
-    * @Param req.body.id
+    * @Param req.body.myToken
     */
     expressApp.post('/rooms/:roomId/skip', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
 
-        if (req.body.id === room.host.id) {
+        if (req.body.myToken === room.host.myToken) {
             // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + room.id + ']: Host skiped the song.');
-            room.play();
+            if (!(await room.play())) {
+                // eslint-disable-next-line no-console
+                console.warn('INFO-[ROOM: ' + room.id + ']: Skipping song did not work.');
+            }
         }
         res.send();
     });
@@ -405,14 +384,14 @@ function setHttpCalls() {
     /**
     * Pause/Resume current song
     * @Param req.params.roomId
-    * @Param req.body.id
+    * @Param req.body.myToken
     */
     expressApp.post('/rooms/:roomId/pause', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
 
-        if (req.body.id === room.host.id) {
+        if (req.body.myToken === room.host.myToken) {
         // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + room.id + ']: Host skiped the song.');
             room.togglePlaystate();

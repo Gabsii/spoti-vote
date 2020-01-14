@@ -14,6 +14,7 @@ const env = require('../env').getEnv();
 * @return {Room} The new room
 */
 function Host(token, refreshToken) {
+    this.myToken = createToken(20);
     this.token = token;
     this.refreshToken = refreshToken;
     this.clientId = env.spotifyClientId;
@@ -31,8 +32,8 @@ function Host(token, refreshToken) {
 
 method.getData = function() {
     return {
-        name: this.name,
-        id: this.id,
+        name: this.name || this.id,
+        myToken: this.myToken,
         img: this.img,
         premium: this.premium,
         topTracks: this.topTracks
@@ -162,18 +163,10 @@ method.fetchTopTracks = async function(amount) {
     return data.items;
 };
 
-/**
-* Return the host with the specified id
-*
-* @author: Michiocre
-* @param {string} id The id that identifies the hosz
-* @param {array} hosts Array of all the hosts
-* @return {Room} The room object with the id of the parameter
-*/
-function getHostById(id, hosts) {
+function getHostByToken(myToken, hosts) {
     let host = null;
     for (var i = 0; i < hosts.length; i++) {
-        if (hosts[i].id === id) {
+        if (hosts[i].myToken === myToken) {
             host = hosts[i];
             return host;
         }
@@ -181,19 +174,23 @@ function getHostById(id, hosts) {
     return null;
 }
 
-function getHostByToken(token, hosts) {
-    let host = null;
-    for (var i = 0; i < hosts.length; i++) {
-        if (hosts[i].token === token) {
-            host = hosts[i];
-            return host;
-        }
-    }
-    return null;
+/**
+* Return a randomly generated string with a specified length, based on the possible symbols
+*
+* @author: agustinhaller
+* @param {int} length The length of the string
+* @return {string} The random string
+*/
+function createToken(length) {
+    let text = '';
+    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; //ALl possible symbols
+    for (let i = 0; i < length; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
 }
 
 module.exports = {
     Host: Host,
-    getHostById: getHostById,
-    getHostByToken: getHostByToken
+    getHostByToken: getHostByToken,
+    createToken: createToken
 };

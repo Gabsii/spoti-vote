@@ -28,7 +28,7 @@ class Main extends Component {
 
     render() {
         return (<main className={`${styles.main}`}>
-            <Logins profile={this.props.profile}/>
+            <Logins host={this.props.host}/>
             <Carousel topTracks={this.props.topTracks}/>
         </main>);
     }

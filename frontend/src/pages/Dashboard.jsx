@@ -31,7 +31,7 @@ class Dashboard extends Component {
     constructor() {
         super();
         this.state = {
-            profile: {
+            host: {
                 name: null,
                 id: 0,
                 img: 'https://via.placeholder.com/152x152'
@@ -41,40 +41,40 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        let token = cookies.get('token');
+        let myToken = cookies.get('myToken');
 
         if (window.location.search) {
-            token = window.location.search.split('=')[1];
+            myToken = window.location.search.split('=')[1];
         }
 
-        if (token === undefined) {
+        if (myToken === undefined) {
             window.location.pathname = '';
         } else {
-            cookies.set('token', token);
+            cookies.set('myToken', myToken);
         }
 
         //Gets rid of the search in window.location
         var myNewURL = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + window.location.pathname;
         window.history.pushState({}, document.title, myNewURL);
 
-        this.fetchProfile(token);
+        this.fetchProfile(myToken);
     }
 
-    fetchProfile(token) {
+    fetchProfile(myToken) {
         fetch(constants.config.url + '/profile', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                token: token
+                myToken: myToken
             })
         }).then(response => response.json().then(data => {
             if (data.error) {
                 this.errorMsg(data.message);
             } else {
                 this.setState({
-                    profile: {
-                        name: data.host.display_name,
-                        id: data.host.id,
+                    host: {
+                        name: data.host.name,
+                        myToken: data.host.myToken,
                         img: data.host.img || 'https://via.placeholder.com/152x152',
                         premium: data.host.premium
                     },
@@ -91,8 +91,8 @@ class Dashboard extends Component {
                 <title>Dashboard | Spoti-Vote</title>
                 <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
             </Helmet>
-            <Main topTracks={this.state.topTracks} profile={this.state.profile}/>
-            <SharedSidebar profile={this.state.profile}/>
+            <Main topTracks={this.state.topTracks} host={this.state.host}/>
+            <SharedSidebar host={this.state.host}/>
         </div>);
     }
 }

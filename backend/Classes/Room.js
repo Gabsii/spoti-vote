@@ -43,13 +43,20 @@ method.getData = function (isHost) {
         },
         activePlaylist: this.activePlaylist,
         activeTracks: this.activeTracks,
-        activePlayer: {
+        activePlayer: (this.activePlayer !== null && this.activePlayer !== undefined)? {
             volume: this.activePlayer.volume || 0,
             timeLeft: this.activePlayer.timeLeft || 0,
             progressMS: this.activePlayer.progressMS || 0,
             progress: this.activePlayer.progress || 0,
             isPlaying: this.activePlayer.isPlaying || false,
             track: this.activePlayer.track || null
+        } : {
+            volume: 0,
+            timeLeft: 0,
+            progressMS: 0,
+            progress: 0,
+            isPlaying: false,
+            track: null
         }
     };
 };
@@ -82,6 +89,25 @@ method.getUserByName = function(name) {
     }
     for (let i = 0; i < this.connectedUser.length; i++) {
         if (this.connectedUser[i].name === name) {
+            return this.connectedUser[i];
+        }
+    }
+    return null;
+};
+
+/**
+* Returns the user with the given token
+*
+* @author: Michiocre
+* @param {string} myToken The token that identifies the user
+* @return {object} The user object
+*/
+method.getUserByToken = function(myToken) {
+    if (myToken === this.host.myToken) {
+        return this.host;
+    }
+    for (let i = 0; i < this.connectedUser.length; i++) {
+        if (this.connectedUser[i].myToken === myToken) {
             return this.connectedUser[i];
         }
     }
@@ -394,8 +420,8 @@ method.update = async function() {
 * @param {string} trackId The track whomst the user has voted for
 * @return {boolean} True if the vote was successfully changed
 */
-method.vote = async function(trackId, name) {
-    let user = this.getUserByName(name);
+method.vote = async function(trackId, myToken) {
+    let user = this.getUserByToken(myToken);
 
     if (user !== null && user !== undefined) {
         let oldVote = user.voted;
@@ -443,6 +469,9 @@ method.vote = async function(trackId, name) {
 * @return {boolean} True if the request to the spotify API was successfully changed
 */
 method.play = async function() {
+    if (this.activePlayer === null || this.activePlayer === undefined) {
+        return false;
+    }
     let track = this.activeTracks[0];
 
     if (this.activePlaylist !== undefined && this.activePlaylist !== null) {
@@ -601,7 +630,7 @@ function getRoomById(roomId, rooms) {
 function getRoomByHost(host, rooms) {
     let room = null;
     for (var i = 0; i < rooms.length; i++) {
-        if (rooms[i].host.id === host.id) {
+        if (rooms[i].host.myToken === host.myToken) {
             room = rooms[i];
             return room;
         }

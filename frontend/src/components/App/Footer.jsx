@@ -24,10 +24,11 @@ class Footer extends PureComponent {
 
     render() {
         let track = {
-            img: '',
-            name: '',
+            img: 'placeholder.img',
+            name: 'Spotify is not running',
             artists: []
         };
+
         if (this.props.activePlayer !== null && this.props.activePlayer !== undefined) {
 
             if (this.props.activePlayer.track !== null && this.props.activePlayer.track !== undefined) {

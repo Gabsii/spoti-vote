@@ -84,7 +84,7 @@ class Logins extends Component {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    id: this.props.profile.id
+                    myToken: this.props.host.myToken
                 })
             }
         ).then((response) => response.json()).then((data) => {
@@ -106,7 +106,7 @@ class Logins extends Component {
                                     method: 'post',
                                     headers: {'Content-Type': 'application/json'},
                                     body: JSON.stringify({
-                                        id: this.props.profile.id
+                                        myToken: this.props.host.myToken
                                     })
                                 }
                             );
@@ -115,7 +115,7 @@ class Logins extends Component {
                                     method: 'post',
                                     headers: {'Content-Type': 'application/json'},
                                     body: JSON.stringify({
-                                        id: this.props.profile.id
+                                        myTOken: this.props.host.myToken
                                     })
                                 }
                             ).then((response2) => response2.json()).then((data2) => {
@@ -135,7 +135,7 @@ class Logins extends Component {
                             method: 'post',
                             headers: {'Content-Type': 'application/json'},
                             body: JSON.stringify({
-                                id: this.props.profile.id
+                                myToken: this.props.host.myToken
                             })
                         }
                     ).then((response2) => response2.json()).then((data2) => {
@@ -154,8 +154,8 @@ class Logins extends Component {
         return (<div className={`${styles.wrapper}`}>
             <h1 className={`${styles.heading}`}>Create a Room:</h1>
             {
-                this.props.profile !== null && this.props.profile !== undefined
-                    ? this.props.profile.premium
+                this.props.host !== null && this.props.host !== undefined
+                    ? this.props.host.premium
                         ? <button id='loginbutton' className={`${styles.button}`} onClick={this.createRoom.bind(this)} tabIndex='0'>
                                 Host
                         </button>
