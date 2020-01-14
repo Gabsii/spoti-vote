@@ -1,8 +1,7 @@
 const http = require('http');
 const express = require('express');
-const querystring = require('querystring');
 const request = require('request');
-const _ = require('lodash');
+const querystring = require('querystring');
 const bodyParser = require('body-parser');
 //Security
 const csp = require('helmet-csp');
@@ -14,7 +13,6 @@ const Host = require('./Classes/Host');
 const env = require('./env').getEnv();
 
 let expressApp = express();
-//expressApp.use(cookieParser());
 expressApp.use(bodyParser.json());
 let server = http.createServer(expressApp);
 
@@ -24,6 +22,11 @@ let config = {
     referer: ''
 };
 
+let data = {
+    rooms: [],
+    hosts: []
+};
+
 if (env.frontendPort === 443) {
     config.uriBack = 'https://' + env.ipAddress + ':' + env.frontendPort;
 } else {
@@ -31,11 +34,6 @@ if (env.frontendPort === 443) {
 }
 
 config.redirect_uri = config.uriBack + '/callback';
-
-let data = {
-    rooms: [],
-    hosts: []
-};
 
 // eslint-disable-next-line no-console
 console.log('INFO: Redirect URL: ' + config.redirect_uri);
@@ -338,7 +336,8 @@ function setHttpCalls() {
                 res.status(200);
             }
         }
-        console.log('Update size: ' + JSON.stringify(response).length);
+        //TODO: OPTIMIZE THE BANDWITH
+        //console.log('Update size: ' + JSON.stringify(response).length);
         res.send(JSON.stringify(response));
     });
 

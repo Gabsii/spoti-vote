@@ -106,6 +106,7 @@ class Infos extends PureComponent {
             }
         }
         if (this.props.host !== null && this.props.host !== undefined) {
+            playlistImage = playlistImage || this.props.host.img;
             if (this.props.host.voted === 'skip') {
                 iconColor.color = constants.colors.skip;
             }
@@ -117,7 +118,7 @@ class Infos extends PureComponent {
             </div>
             <div className={`${styles.breaker}`}>
                 <a href={playlistUrl}>
-                    <img alt='Current Playlist' src={playlistImage || this.props.host.img} className={`${styles.playlistImage}`}/>
+                    <img alt='Current Playlist' src={playlistImage} className={`${styles.playlistImage}`}/>
                 </a>
                 <div className={`${styles.playlistName}`}>{option}
                 </div>

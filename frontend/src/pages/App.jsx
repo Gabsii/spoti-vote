@@ -72,7 +72,6 @@ class App extends Component {
                 myToken: this.state.myToken
             })
         }).then((response) => response.json()).then((data) =>{
-            console.log(this.state);
             if (data.error) {
                 clearInterval(this.timer);
                 this.errorMessage(data.message);
@@ -100,7 +99,6 @@ class App extends Component {
                                     clientName: result.value
                                 })
                             }).then((response) => response.json()).then((data) =>{
-                                console.log(data.myToken);
                                 if (data.myToken !== null && data.myToken !== undefined) {
                                     this.setState({
                                         myToken: data.myToken,
@@ -116,7 +114,9 @@ class App extends Component {
                             });
                         });
                     } else {
-                        this.state.myToken = cookies.get('myToken');
+                        this.setState({
+                            myToken: cookies.get('myToken')
+                        });
                         this.timer = setInterval(()=> this.getData(), 1000);
                     }
                 } else {
