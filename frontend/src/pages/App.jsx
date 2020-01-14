@@ -24,6 +24,7 @@ class App extends Component {
 
         this.state = {
             myToken: myToken,
+            clientName: '',
             isPhone: (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1),
             roomId: window.location.pathname.split('/')[2],
             loginPage: constants.config.url,
@@ -53,26 +54,31 @@ class App extends Component {
     }
 
     componentDidMount() {
-        // if (this.state.username === null) {
-        //     swal.fire({
-        //         title: 'Enter your name.',
-        //         type: 'question',
-        //         allowOutsideClick: false,
-        //         allowEscapeKey: false,
-        //         input: 'text',
-        //         inputPlaceholder: 'Enter your name or nickname',
-        //         inputValidator: () => { // (value)
-        //             return new Promise((resolve) => {
-        //                 return resolve();
-        //             });
-        //         }
-        //     }).then((result) => {
-        //         this.setState({
-        //             username: result.value
-        //         });
-        //     });
-        // }
-        
+        fetch(constants.config.url + '/rooms/' + this.state.roomId + '/checkToken' , {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                myToken: this.state.myToken
+            })
+        }).then((response) => response.json()).then((data) =>{
+            if (data.error) {
+                clearInterval(this.timer);
+                swal.fire({type: 'error', title: 'Oops...', text: data.message}).then( () => {
+                    window.location.pathname = '/dashboard';
+                });
+            } else {
+                this.setState({
+                    playlists: data.room.playlists,
+                    isHost: data.room.isHost,
+                    host: data.room.host,
+                    activeTracks: data.room.activeTracks,
+                    activePlaylist: data.room.activePlaylist,
+                    connectedUser: data.room.connectedUser,
+                    activePlayer: data.room.activePlayer
+                });
+            }
+        });
+
 
         this.timer = setInterval(()=> this.getData(), 1000);
 
@@ -82,52 +88,45 @@ class App extends Component {
     }
 
     getData() {
-        fetch(constants.config.url + '/rooms/' + this.state.roomId + '/update' , 
-            {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    myToken: this.state.myToken
-                })
+        fetch(constants.config.url + '/rooms/' + this.state.roomId + '/update' , {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                myToken: this.state.myToken
             })
-            .then((response) => response.json())
-            .then((data) =>
-            {
-                if (data.error) {
-                    clearInterval(this.timer);
-                    swal.fire({type: 'error', title: 'Oops...', text: data.message}).then( () => {
-                        window.location.pathname = '/dashboard';
-                    });
-                } else {
-                    this.setState({
-                        playlists: data.room.playlists,
-                        isHost: data.room.isHost,
-                        host: data.room.host,
-                        activeTracks: data.room.activeTracks,
-                        activePlaylist: data.room.activePlaylist,
-                        connectedUser: data.room.connectedUser,
-                        activePlayer: data.room.activePlayer
-                    });
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        }).then((response) => response.json()).then((data) =>{
+            if (data.error) {
+                clearInterval(this.timer);
+                swal.fire({type: 'error', title: 'Oops...', text: data.message}).then( () => {
+                    window.location.pathname = '/dashboard';
+                });
+            } else {
+                this.setState({
+                    playlists: data.room.playlists,
+                    isHost: data.room.isHost,
+                    host: data.room.host,
+                    activeTracks: data.room.activeTracks,
+                    activePlaylist: data.room.activePlaylist,
+                    connectedUser: data.room.connectedUser,
+                    activePlayer: data.room.activePlayer
+                });
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
     }
     
     selectPlaylist(event) {
         let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
         if (playlistId !== null && playlistId !== 'none') {
-            fetch(constants.config.url + '/rooms/' + this.state.roomId + '/selectPlaylist', 
-                {
-                    method: 'post',
-                    headers: {'Content-Type':'application/json'},
-                    body: JSON.stringify({
-                        myToken: this.state.myToken,
-                        playlistId: playlistId
-                    })
-                }
-            );
+            fetch(constants.config.url + '/rooms/' + this.state.roomId + '/selectPlaylist', {
+                method: 'post',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                    myToken: this.state.myToken,
+                    playlistId: playlistId
+                })
+            });
         }
     }
 
@@ -157,16 +156,14 @@ class App extends Component {
         if (this.state.voted !== trackId) {
             this.setState({voted: trackId});
 
-            fetch(constants.config.url + '/rooms/' + window.location.pathname.split('/')[2] + '/vote' , 
-                {
-                    method: 'post',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        myToken: this.state.myToken,
-                        trackId: trackId
-                    })
-                }
-            );
+            fetch(constants.config.url + '/rooms/' + window.location.pathname.split('/')[2] + '/vote' , {
+                method: 'post',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    myToken: this.state.myToken,
+                    trackId: trackId
+                })
+            });
         }
     }
 
@@ -175,16 +172,14 @@ class App extends Component {
         if (cards.length > 0) {
             this.setState({voted: null});
 
-            fetch(constants.config.url + '/rooms/' + window.location.pathname.split('/')[2] + '/vote' , 
-                {
-                    method: 'post',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        myToken: this.state.myToken,
-                        trackId: 'reroll'
-                    })
-                }
-            );
+            fetch(constants.config.url + '/rooms/' + window.location.pathname.split('/')[2] + '/vote' , {
+                method: 'post',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    myToken: this.state.myToken,
+                    trackId: 'reroll'
+                })
+            });
 
             for (var i = 0; i < cards.length; i++) {
                 cards[i].style.opacity = 1;
@@ -193,27 +188,23 @@ class App extends Component {
     }
 
     skipHandler() {
-        fetch(constants.config.url + '/rooms/' + this.state.roomId + '/skip', 
-            {
-                method: 'post',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({
-                    myToken: this.state.myToken,
-                })
-            }
-        );
+        fetch(constants.config.url + '/rooms/' + this.state.roomId + '/skip', {
+            method: 'post',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                myToken: this.state.myToken,
+            })
+        });
     }
 
     playHandler() {
-        fetch(constants.config.url + '/rooms/' + this.state.roomId + '/pause', 
-            {
-                method: 'post',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({
-                    myToken: this.state.myToken,
-                })
-            }
-        );
+        fetch(constants.config.url + '/rooms/' + this.state.roomId + '/pause', {
+            method: 'post',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                myToken: this.state.myToken,
+            })
+        });
     }
     
     render() {
@@ -223,9 +214,9 @@ class App extends Component {
                 <title> {this.state.roomId || ''} | Spoti-Vote</title>
                 <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
             </Helmet>
-            <AppSidebar rerollHandler={this.rerollHandler.bind(this)} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} myToken={this.state.myToken} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
-            <CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={false} room={this.state.roomId} name={this.state.name} isHost={this.state.isHost} activeTracks={this.state.activeTracks}/>
-            <Footer playHandler={this.playHandler.bind(this)} skipHandler={this.skipHandler.bind(this)} isHost={this.state.isHost} activePlayer={this.state.activePlayer} host={this.state.host}/>
+            <AppSidebar rerollHandler={this.rerollHandler.bind(this)} isHost={this.state.isHost} connectedUser={this.state.connectedUser} host={this.state.host} playlistHandler={this.selectPlaylist.bind(this)} activePlaylist={this.state.activePlaylist} activeTracks={this.state.activeTracks} playlists={this.state.playlists}/>
+            <CardContainer voteHandler={this.voteHandler.bind(this)} isPhone={false} roomId={this.state.roomId} activeTracks={this.state.activeTracks}/>
+            <Footer playHandler={this.playHandler.bind(this)} skipHandler={this.skipHandler.bind(this)} isHost={this.state.isHost} activePlayer={this.state.activePlayer} myToken={this.state.myToken}/>
         </main>);
     }
 }
