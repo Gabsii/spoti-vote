@@ -202,7 +202,7 @@ method.changePlaylist = async function(playlistId) {
             // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: '+this.id+']: Playlist changed to ['+playlist.name+'].');
             if (!Array.isArray(playlist.tracks)) {
-                playlist.tracks = await this.user.fetchPlaylistTracks(playlist);
+                playlist.tracks = await this.host.fetchPlaylistTracks(playlist);
             }
             
             this.activePlaylist = playlist;
