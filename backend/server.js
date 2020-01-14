@@ -248,8 +248,76 @@ function setHttpCalls() {
     /**
     * Returns the data of a given Room and updates the room state
     *
-    * @Returns ResponseCode of 200
-    * @Returns content of the room
+    * @Param req.params.roomId
+    * @Param req.body.myToken
+    */
+    expressApp.post('/rooms/:roomId/checkToken', async (req, res) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+
+        let response;
+
+        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (room === null) {
+            response = {error: true, message: 'Room not found'};
+            res.status(400);
+        } else {
+            if (req.body.myToken === room.host.myToken) {
+                response = {error: false, isHost: true};
+                res.status(200);
+            } else {
+                let user = room.getUserByToken(req.body.myToken);
+                if (user !== null) {
+                    response = {error: false, isHost: false, name: user.name};
+                } else {
+                    response = {error: false, isHost: false, name: ''};
+                }
+                
+                res.status(200);
+            }
+        }
+        res.send(JSON.stringify(response));
+    });
+
+    /**
+    * Returns the data of a given Room and updates the room state
+    *
+    * @Param req.params.roomId
+    * @Param req.body.myToken
+    * @Param req.body.clientName
+    */
+    expressApp.post('/rooms/:roomId/connectUser', async (req, res) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+
+        let response;
+
+        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (room === null) {
+            response = {error: true, message: 'Room not found'};
+            res.status(400);
+        } else {
+            if (req.body.myToken === room.host.myToken) {
+                response = {error: false};
+                res.status(200);
+            } else {
+                if (req.body.myToken !== null) {
+                    room.addUser(req.body.clientName, req.body.myToken);
+                    response = {error: false};
+                } else {
+                    let newUser = room.addUser(req.body.clientName, Host.createToken(20));
+                    response = {error: false, myToken: newUser.myToken};
+                }
+
+                res.status(200);
+            }
+        }
+        res.send(JSON.stringify(response));
+    });
+
+    /**
+    * Returns the data of a given Room and updates the room state
+    *
+    * @Param req.params.roomId
+    * @Param req.body.myToken
     */
     expressApp.post('/rooms/:roomId/update', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -347,16 +415,10 @@ function setHttpCalls() {
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
 
-        if (req.body.myToken === room.host.myToken) {
-            // eslint-disable-next-line no-console
-            console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.myToken + '] voted for [' + req.body.trackId + '].');
-            room.vote(req.body.trackId, req.body.myToken);
-        } else {
-            // Vote for user
-            // // eslint-disable-next-line no-console
-            // console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.username + '] voted for [' + req.body.trackId + '].');
-            // room.vote(req.body.trackId, req.body.username);
-        }
+        // eslint-disable-next-line no-console
+        console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.myToken + '] voted for [' + req.body.trackId + '].');
+        room.vote(req.body.trackId, req.body.myToken);
+
         res.send();
     });
 
@@ -399,39 +461,6 @@ function setHttpCalls() {
         res.send();
     });
 }
-
-//     /**
-// 	* Called when a user thats not a host wants to enter a room
-// 	*
-// 	* Will set the local varible {name}
-// 	* @param {string} name Name of the user
-// 	*/
-//     socket.on('nameEvent', data => {
-//         let room = lib.getRoomById(socket.roomId, this.rooms);
-//         if (room !== null) {
-//             if (room.getUserNames().includes(data.name) === true) {
-//                 socket.emit('nameEvent', {title: 'This name is already taken, enter a different name.'});
-//             } else if (data.name.trim() === '') {
-//                 socket.emit('nameEvent', {title: 'This name can´t be emtpy, enter a different name.'});
-//             } else if (data.name.length > 15) {
-//                 socket.emit('nameEvent', {title: 'This name is too long, enter a different name.'});
-//             } else {
-//                 // eslint-disable-next-line no-console
-//                 console.log('INFO-[ROOM: ' + socket.roomId + ']: [' + data.name + '] has connected.');
-//                 socket.name = data.name;
-//                 room.addUser(socket.name);
-
-//                 let update = room.getDifference(null);
-//                 socket.oldUpdate = _.cloneDeep(room);
-
-//                 socket.emit('initData', update);
-//             }
-//         } else {
-//             socket.emit('errorEvent', {message: 'Room was closed'});
-//         }
-
-//     });
-
 
 /**
 * Starts the server

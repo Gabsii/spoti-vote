@@ -61,7 +61,7 @@ class SettingsBar extends PureComponent {
                 cancelButtonText: 'No, dont do it!'
             }).then((result) => {
                 if (!result.dismiss) {
-                    window.location.pathname = '/dashboard';
+                    window.location.pathname = '';
                 }
             });
         }

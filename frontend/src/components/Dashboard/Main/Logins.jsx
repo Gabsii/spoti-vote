@@ -115,7 +115,7 @@ class Logins extends Component {
                                     method: 'post',
                                     headers: {'Content-Type': 'application/json'},
                                     body: JSON.stringify({
-                                        myTOken: this.props.host.myToken
+                                        myToken: this.props.host.myToken
                                     })
                                 }
                             ).then((response2) => response2.json()).then((data2) => {

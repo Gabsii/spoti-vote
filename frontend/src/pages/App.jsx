@@ -14,6 +14,17 @@ const styles = {
     main: css({backgroundColor: constants.colors.background, height: '100vh', width: '100vw'})
 };
 class App extends Component {
+
+    errorMessage(message) {
+        swal.fire({type: 'error', title: 'Oops...', text: message}).then( () => {
+            if (this.state.isHost) {
+                window.location.pathname = '/dashboard';
+            } else {
+                window.location.pathname = '';
+            }
+        });
+    }
+
     constructor() {
         super();
 
@@ -61,30 +72,60 @@ class App extends Component {
                 myToken: this.state.myToken
             })
         }).then((response) => response.json()).then((data) =>{
+            console.log(this.state);
             if (data.error) {
                 clearInterval(this.timer);
-                swal.fire({type: 'error', title: 'Oops...', text: data.message}).then( () => {
-                    window.location.pathname = '/dashboard';
-                });
+                this.errorMessage(data.message);
             } else {
-                this.setState({
-                    playlists: data.room.playlists,
-                    isHost: data.room.isHost,
-                    host: data.room.host,
-                    activeTracks: data.room.activeTracks,
-                    activePlaylist: data.room.activePlaylist,
-                    connectedUser: data.room.connectedUser,
-                    activePlayer: data.room.activePlayer
-                });
+                if (!data.isHost) {
+                    if (data.name === '') {
+                        swal.fire({
+                            title: 'Whats your name?',
+                            type: 'question',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            input: 'text',
+                            inputPlaceholder: 'Enter your name or nickname',
+                            inputValidator: () => {
+                                return new Promise((resolve) => {
+                                    return resolve();
+                                });
+                            }
+                        }).then((result) => {
+                            fetch(constants.config.url + '/rooms/' + this.state.roomId + '/connectUser' , {
+                                method: 'post',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({
+                                    myToken: this.state.myToken,
+                                    clientName: result.value
+                                })
+                            }).then((response) => response.json()).then((data) =>{
+                                console.log(data.myToken);
+                                if (data.myToken !== null && data.myToken !== undefined) {
+                                    this.setState({
+                                        myToken: data.myToken,
+                                        clientName: result.value
+                                    });
+                                } else {
+                                    this.setState({
+                                        clientName: result.value
+                                    });
+                                }
+                                cookies.set('myToken', this.state.myToken);
+                                this.timer = setInterval(()=> this.getData(), 1000);
+                            });
+                        });
+                    } else {
+                        this.state.myToken = cookies.get('myToken');
+                        this.timer = setInterval(()=> this.getData(), 1000);
+                    }
+                } else {
+                    this.timer = setInterval(()=> this.getData(), 1000);
+                }
             }
         });
 
-
-        this.timer = setInterval(()=> this.getData(), 1000);
-
-        if (this.state.isHost) {
-            swal.fire({titleText: 'Hello from the other side!', type: 'info', text: 'Please make sure that you are running Spotify in the background!', allowOutsideClick: false, allowEscapeKey: false});
-        }
+        
     }
 
     getData() {
@@ -97,9 +138,7 @@ class App extends Component {
         }).then((response) => response.json()).then((data) =>{
             if (data.error) {
                 clearInterval(this.timer);
-                swal.fire({type: 'error', title: 'Oops...', text: data.message}).then( () => {
-                    window.location.pathname = '/dashboard';
-                });
+                this.errorMessage(data.message);
             } else {
                 this.setState({
                     playlists: data.room.playlists,

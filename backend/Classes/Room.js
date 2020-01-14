@@ -22,6 +22,7 @@ function Room(host, rooms) {
     this.connectedUser = [];
     this.isChanging = false;
     this.isSkipping = false;
+    this.lastUpdate = Date.now();
 
     //Makes sure the id is unique
     do {
@@ -29,12 +30,25 @@ function Room(host, rooms) {
     } while (getRoomById(this.id, rooms) !== null);
 }
 
+method.getConnectedUsers = function() {
+    let users = [];
+    this.connectedUser.forEach(user => {
+        if (user.timer < 3) {
+            users.push({
+                name: user.name,
+                voted: user.voted
+            });
+        }
+    });
+    return users;
+};
+
 //TODO: Make this more efficient (data-transfer)
 method.getData = function (isHost) {
     return {
         roomId: this.id,
         isHost: isHost,
-        connectedUser: this.connectedUser,
+        connectedUser: this.getConnectedUsers(),
         playlists: this.host.playlists,
         host: {
             img: this.host.img,
@@ -119,13 +133,17 @@ method.getUserByToken = function(myToken) {
 *
 * @author: Michiocre
 * @param {string} name The username that wants to be added
+* @param {string} myToken Token of the user
 */
-method.addUser = function(name) {
-    this.connectedUser.push({
+method.addUser = function(name, myToken) {
+    let newUser = {
+        myToken: myToken,
         name: name,
-        voted: null
-    });
-    return true;
+        voted: null,
+        timer: 0
+    };
+    this.connectedUser.push(newUser);
+    return newUser;
 };
 
 /**
@@ -262,13 +280,23 @@ method.getRandomTracks = async function(playlistId, activeTrack) {
     }
 
     //Reset all the votes
-    this.host.voted = null;
-    for (let i = 0; i < this.connectedUser.length; i++) {
-        this.connectedUser[i].voted = null;
-    }
-    for (let i = 0; i < this.activeTracks.length; i++) {
-        this.activeTracks[i].votes = 0;
-    }
+    let removeUsers = [];
+    this.connectedUser.forEach(user => {
+        if (user.voted === null) {
+            user.timer += 1;
+        } else {
+            user.timer = 0;
+        }
+        user.voted = null;
+    });
+
+    removeUsers.forEach(user => {
+        this.connectedUser.splice(this.connectedUser.indexOf(user), 1);
+    });
+
+    this.activeTracks.forEach(track => {
+        track.votes = 0;
+    });
 
     let selectedTracks = [];
     for (let i = 0; i < 4; i++) {
@@ -358,6 +386,9 @@ method.refreshToken = async function() {
 * @return {boolean} True when done
 */
 method.update = async function() {
+    if (Date.now() - this.lastUpdate < 900) {
+        return false;
+    }
     this.lastUpdate = Date.now();
     let request;
     try {
@@ -424,6 +455,7 @@ method.vote = async function(trackId, myToken) {
     let user = this.getUserByToken(myToken);
 
     if (user !== null && user !== undefined) {
+        user.timer = 0;
         let oldVote = user.voted;
         user.voted = trackId;
 

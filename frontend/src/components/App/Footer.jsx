@@ -45,7 +45,7 @@ class Footer extends PureComponent {
             <SongAggregation songName={track.name} artists={track.artists}/>
             <ProgressBar activePlayer={this.props.activePlayer}/> {
                 this.props.isHost
-                    ? <VolumeBar activePlayer={this.props.activePlayer} myToken={this.state.myToken}/>
+                    ? <VolumeBar activePlayer={this.props.activePlayer} myToken={this.props.myToken}/>
                     : ''
             }
             <PlayButtons playHandler={this.props.playHandler} skipHandler={this.props.skipHandler} activePlayer={this.props.activePlayer} isHost={this.props.isHost}/>

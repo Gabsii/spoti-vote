@@ -22,9 +22,9 @@ const styles = {
 
 class Dashboard extends Component {
 
-    errorMsg(message) {
+    errorMessage(message) {
         swal.fire({type: 'error', title: 'Oops...', text: message}).then( () => {
-            window.location.pathname = '/';
+            window.location.pathname = '';
         });
     }
 
@@ -69,7 +69,7 @@ class Dashboard extends Component {
             })
         }).then(response => response.json().then(data => {
             if (data.error) {
-                this.errorMsg(data.message);
+                this.errorMessage(data.message);
             } else {
                 this.setState({
                     host: {
