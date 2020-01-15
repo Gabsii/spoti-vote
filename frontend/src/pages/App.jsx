@@ -124,8 +124,6 @@ class App extends Component {
                 }
             }
         });
-
-        
     }
 
     getData() {
@@ -140,14 +138,16 @@ class App extends Component {
                 clearInterval(this.timer);
                 this.errorMessage(data.message);
             } else {
+                let newState = constants.insertObjectDifference(this.state, data.room);
+                console.log(newState);
                 this.setState({
-                    playlists: data.room.playlists,
-                    isHost: data.room.isHost,
-                    host: data.room.host,
-                    activeTracks: data.room.activeTracks,
-                    activePlaylist: data.room.activePlaylist,
-                    connectedUser: data.room.connectedUser,
-                    activePlayer: data.room.activePlayer
+                    playlists: newState.playlists,
+                    isHost: newState.isHost,
+                    host: newState.host,
+                    activeTracks: newState.activeTracks,
+                    activePlaylist: newState.activePlaylist,
+                    connectedUser: newState.connectedUser,
+                    activePlayer: newState.activePlayer
                 });
             }
         }).catch((error) => {

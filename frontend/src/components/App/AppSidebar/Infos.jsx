@@ -76,8 +76,8 @@ class Infos extends PureComponent {
             hostId;
         if (this.props.activePlaylist !== null && this.props.activePlaylist !== undefined) {
             option = <div>{this.props.activePlaylist.name}</div>;
-            playlistUrl = this.props.activePlaylist.external_urls.spotify;
-            playlistImage = this.props.activePlaylist.images[0].url;
+            playlistUrl = this.props.activePlaylist.playlistUrl;
+            playlistImage = this.props.activePlaylist.playlistImage;
 
         }
         if (this.props.isHost === true) {

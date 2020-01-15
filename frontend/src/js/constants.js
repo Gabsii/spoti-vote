@@ -62,10 +62,30 @@ let iterateCardColors = function(index) {
     }
 };
 
+function insertObjectDifference(data, diff) {
+    if(diff === null || diff === undefined) {
+        return data;
+    }
+    let newData = {};
+    Object.keys(data).forEach(key => {
+        if (diff[key] !== null && diff[key] !== undefined) {
+            if (typeof(data[key]) !== 'object' || data[key] === null || Array.isArray(data[key])) {
+                newData[key] = diff[key];
+            } else {
+                newData[key] = insertObjectDifference(data[key], diff[key]);
+            } 
+        } else {
+            newData[key] = data[key];
+        }
+    });
+    return newData;
+}
+
 module.exports = {
     config: config,
     colors: colors,
     iterateCardColors: iterateCardColors,
     codes: codes,
-    breakpoints: breakpoints
+    breakpoints: breakpoints,
+    insertObjectDifference: insertObjectDifference
 };

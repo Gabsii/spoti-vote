@@ -260,12 +260,14 @@ function setHttpCalls() {
             res.status(400);
         } else {
             if (req.body.myToken === room.host.myToken) {
+                room.host.lastUpdate = null;
                 response = {error: false, isHost: true};
                 res.status(200);
             } else {
                 let user = room.getUserByToken(req.body.myToken);
                 if (user !== null) {
                     response = {error: false, isHost: false, name: user.name};
+                    user.lastUpdate = null;
                 } else {
                     response = {error: false, isHost: false, name: ''};
                 }
@@ -329,15 +331,16 @@ function setHttpCalls() {
         } else {
             await room.update();
             if (req.body.myToken === room.host.myToken) {
-                response = {error: false, room: room.getData(true)};
+                response = {error: false, room: room.getData(true, room.host)};
                 res.status(200);
             } else {
-                response = {error: false, room: room.getData(false)};
+                let user = room.getUserByToken(req.body.myToken);
+                response = {error: false, room: room.getData(false, user)};
                 res.status(200);
             }
         }
         //TODO: OPTIMIZE THE BANDWITH
-        //console.log('Update size: ' + JSON.stringify(response).length);
+        console.log('Update size: ' + JSON.stringify(response).length);
         res.send(JSON.stringify(response));
     });
 

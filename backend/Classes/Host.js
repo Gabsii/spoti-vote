@@ -28,6 +28,8 @@ function Host(token, refreshToken) {
 
     this.premium = '';
     this.topTracks = [];
+    
+    this.lastUpdate = null;
 }
 
 method.getData = function() {

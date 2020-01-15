@@ -44,36 +44,97 @@ method.getConnectedUsers = function() {
 };
 
 //TODO: Make this more efficient (data-transfer)
-method.getData = function (isHost) {
-    return {
-        roomId: this.id,
-        isHost: isHost,
-        connectedUser: this.getConnectedUsers(),
-        playlists: this.host.playlists,
-        host: {
-            img: this.host.img,
-            name: this.host.name,
-            voted: this.host.voted
-        },
-        activePlaylist: this.activePlaylist,
-        activeTracks: this.activeTracks,
-        activePlayer: (this.activePlayer !== null && this.activePlayer !== undefined)? {
+method.getData = function (isHost, user) {
+
+    let data = {};
+    data.roomId = this.id;
+    data.isHost = isHost;
+    data.connectedUser = this.getConnectedUsers();
+    data.host = {
+        img: this.host.img,
+        name: this.host.name,
+        voted: this.host.voted
+    };
+    data.activeTracks = this.activeTracks;
+    data.activePlaylist = null;
+    if (this.activePlaylist !== null && this.activePlaylist !== undefined) {
+        data.activePlaylist = {
+            name: this.activePlaylist.name,
+            playlistUrl: this.activePlaylist.external_urls.spotify,
+            playlistImage: this.activePlaylist.images[0].url
+        };
+    }
+    data.activePlayer = null;
+    if (this.activePlayer !== null && this.activePlayer !== undefined) {
+        data.activePlayer = {
             volume: this.activePlayer.volume || 0,
             timeLeft: this.activePlayer.timeLeft || 0,
             progressMS: this.activePlayer.progressMS || 0,
             progress: this.activePlayer.progress || 0,
             isPlaying: this.activePlayer.isPlaying || false,
             track: this.activePlayer.track || null
-        } : {
-            volume: 0,
-            timeLeft: 0,
-            progressMS: 0,
-            progress: 0,
-            isPlaying: false,
-            track: null
+        };
+    }
+    if (isHost) {
+        data.playlists = null;
+        if (this.host.playlists !== null && this.host.playlists !== undefined) {
+            data.playlists = [];
+            this.host.playlists.forEach(playlist => {
+                data.playlists.push({
+                    id: playlist.id,
+                    name: playlist.name
+                });
+            });
         }
-    };
+    }
+
+    let diff = getObjectDifference(user.lastUpdate, data);
+
+    user.lastUpdate = data;
+    console.log(diff);
+
+    return diff;
 };
+
+function getObjectDifference(oldData, data) {
+    if(oldData === null || oldData === undefined) {
+        return data;
+    }
+    let diff = {};
+    Object.keys(data).forEach(key => {
+
+        if (data[key] !== null) {
+            if (typeof(data[key]) !== 'object' || data[key] === null) {
+                if (oldData[key] === null) {
+                    diff[key] = data[key];
+                } else {
+                    if (data[key] !== oldData[key]) {
+                        diff[key] = data[key];
+                    }
+                }
+            } else if (Array.isArray(data[key])) {
+                if (oldData[key] === null) {
+                    diff[key] = data[key];
+                } else {
+                    let nextData = getObjectDifference(oldData[key], data[key]);
+                    if (nextData !== null && nextData !== undefined && Object.entries(nextData).length > 0) {
+                        diff[key] = data[key];
+                    }
+                }
+            } else {
+                if (oldData[key] === null) {
+                    diff[key] = data[key];
+                } else {
+                    var nextData = getObjectDifference(oldData[key], data[key]);
+                    if (nextData !== null && nextData !== undefined && Object.entries(nextData).length > 0) {
+                        diff[key] = nextData;
+                    }
+                }
+            }
+        }
+    });
+    return diff;
+}
 
 /**
 * Gets a list of all usernames
@@ -140,7 +201,8 @@ method.addUser = function(name, myToken) {
         myToken: myToken,
         name: name,
         voted: null,
-        timer: 0
+        timer: 0,
+        lastUpdate: null
     };
     this.connectedUser.push(newUser);
     return newUser;
@@ -703,5 +765,6 @@ module.exports = {
     Room: Room,
     makeid: makeid,
     getRoomById: getRoomById,
-    getRoomByHost: getRoomByHost
+    getRoomByHost: getRoomByHost,
+    getObjectDifference: getObjectDifference
 };
