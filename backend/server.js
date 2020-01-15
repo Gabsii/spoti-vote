@@ -340,7 +340,7 @@ function setHttpCalls() {
             }
         }
         //TODO: OPTIMIZE THE BANDWITH
-        console.log('Update size: ' + JSON.stringify(response).length);
+        //console.log('Update size: ' + JSON.stringify(response).length);
         res.send(JSON.stringify(response));
     });
 

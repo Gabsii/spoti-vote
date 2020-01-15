@@ -59,7 +59,24 @@ class App extends Component {
                 ]
             },
             activeTracks: {},
-            activePlayer: null,
+            activePlayer: {
+                volume: 0,
+                timeLeft: 0,
+                progressMS: 0,
+                progress: 0,
+                isPlaying: false,
+                track: {
+                    album: {
+                        images: [
+                            {
+                                url: 'placeholder.img'
+                            }
+                        ]
+                    },
+                    name: 'Spotify is not running',
+                    artists: []
+                }
+            },
             voted: null
         };
     }
@@ -139,7 +156,6 @@ class App extends Component {
                 this.errorMessage(data.message);
             } else {
                 let newState = constants.insertObjectDifference(this.state, data.room);
-                console.log(newState);
                 this.setState({
                     playlists: newState.playlists,
                     isHost: newState.isHost,

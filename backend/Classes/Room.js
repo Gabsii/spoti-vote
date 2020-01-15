@@ -91,7 +91,6 @@ method.getData = function (isHost, user) {
     let diff = getObjectDifference(user.lastUpdate, data);
 
     user.lastUpdate = data;
-    console.log(diff);
 
     return diff;
 };
