@@ -111,14 +111,14 @@ method.getData = function (isHost, user) {
         }
     }
 
-    let diff = getObjectDifference(user.lastUpdate, data, 0);
+    let diff = getObjectDifference(user.lastUpdate, data);
 
     user.lastUpdate = data;
 
     return diff;
 };
 
-function getObjectDifference(oldData, data, deepness) {
+function getObjectDifference(oldData, data) {
     if(oldData === null || oldData === undefined) {
         return data;
     }
@@ -137,7 +137,7 @@ function getObjectDifference(oldData, data, deepness) {
                 if (oldData[key] === null) {
                     diff[key] = data[key];
                 } else {
-                    let nextData = getObjectDifference(oldData[key], data[key], deepness +1);
+                    let nextData = getObjectDifference(oldData[key], data[key]);
                     if (nextData !== null && nextData !== undefined && Object.entries(nextData).length > 0) {
                         diff[key] = data[key];
                     }
@@ -146,7 +146,7 @@ function getObjectDifference(oldData, data, deepness) {
                 if (oldData[key] === null) {
                     diff[key] = data[key];
                 } else {
-                    var nextData = getObjectDifference(oldData[key], data[key], deepness +1);
+                    var nextData = getObjectDifference(oldData[key], data[key]);
                     if (nextData !== null && nextData !== undefined && Object.entries(nextData).length > 0) {
                         diff[key] = nextData;
                     }
