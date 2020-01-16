@@ -83,7 +83,7 @@ class Card extends PureComponent {
 
         if (this.props.randomTrack !== null && this.props.randomTrack !== undefined) {
             votes = this.props.randomTrack.votes || 0;
-            albumUrl = this.props.randomTrack.album.images[0].url;
+            albumUrl = this.props.randomTrack.img;
             id = this.props.randomTrack.id;
             name = this.props.randomTrack.name;
 
@@ -92,7 +92,7 @@ class Card extends PureComponent {
             }
 
             for (var i = 0; i < this.props.randomTrack.artists.length; i++) {
-                artistString += this.props.randomTrack.artists[i].name;
+                artistString += this.props.randomTrack.artists[i];
                 if (i < this.props.randomTrack.artists.length - 1) {
                     artistString += ', ';
                 }

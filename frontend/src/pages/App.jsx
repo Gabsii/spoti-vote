@@ -7,6 +7,7 @@ import {Helmet} from 'react-helmet';
 import Footer from '../components/App/Footer.jsx';
 import AppSidebar from '../components/App/AppSidebar.jsx';
 import CardContainer from '../components/App/Cards/CardContainer.jsx';
+import placeHolderImage from '../img/logos/Spotivote_Logo_svg.svg';
 
 const constants = require('../js/constants');
 const cookies = new Cookies();
@@ -43,22 +44,16 @@ class App extends Component {
             connectedUser: [],
             playlists: [],
             host: {
-                img: '', //You now have the user icon in here
+                img: placeHolderImage, //You now have the user icon in here
                 name: null,
                 voted: null
             },
             activePlaylist: {
                 name: 'Loading',
-                external_urls: {
-                    spotify: ''
-                },
-                images: [
-                    {
-                        url: ''
-                    }
-                ]
+                playlistUrl: '',
+                playlistImage: placeHolderImage
             },
-            activeTracks: {},
+            activeTracks: [],
             activePlayer: {
                 volume: 0,
                 timeLeft: 0,
@@ -66,13 +61,8 @@ class App extends Component {
                 progress: 0,
                 isPlaying: false,
                 track: {
-                    album: {
-                        images: [
-                            {
-                                url: 'placeholder.img'
-                            }
-                        ]
-                    },
+                    img: placeHolderImage,
+                    id: '',
                     name: 'Spotify is not running',
                     artists: []
                 }
@@ -155,7 +145,7 @@ class App extends Component {
                 clearInterval(this.timer);
                 this.errorMessage(data.message);
             } else {
-                let newState = constants.insertObjectDifference(this.state, data.room);
+                let newState = constants.insertObjectDifference(this.state, data);
                 this.setState({
                     playlists: newState.playlists,
                     isHost: newState.isHost,

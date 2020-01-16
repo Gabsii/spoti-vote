@@ -43,9 +43,27 @@ method.getConnectedUsers = function() {
     return users;
 };
 
+method.getTrack = function(track) {
+    if (track !== null && track !== undefined) {
+        let artists = [];
+        track.artists.forEach(artist => {
+            artists.push(artist.name);
+        });
+        return {
+            name: track.name,
+            id: track.id,
+            artists: artists,
+            img: track.album.images[0].url,
+            votes: track.votes
+        };
+    } else {
+        return null;
+    }
+    
+};
+
 //TODO: Make this more efficient (data-transfer)
 method.getData = function (isHost, user) {
-
     let data = {};
     data.roomId = this.id;
     data.isHost = isHost;
@@ -55,7 +73,12 @@ method.getData = function (isHost, user) {
         name: this.host.name,
         voted: this.host.voted
     };
-    data.activeTracks = this.activeTracks;
+    data.activeTracks = [];
+    if (this.activeTracks !== null && this.activeTracks !== undefined && this.activeTracks.length > 0) {
+        this.activeTracks.forEach(track => {
+            data.activeTracks.push(this.getTrack(track)); 
+        });
+    }
     data.activePlaylist = null;
     if (this.activePlaylist !== null && this.activePlaylist !== undefined) {
         data.activePlaylist = {
@@ -67,12 +90,12 @@ method.getData = function (isHost, user) {
     data.activePlayer = null;
     if (this.activePlayer !== null && this.activePlayer !== undefined) {
         data.activePlayer = {
-            volume: this.activePlayer.volume || 0,
-            timeLeft: this.activePlayer.timeLeft || 0,
-            progressMS: this.activePlayer.progressMS || 0,
-            progress: this.activePlayer.progress || 0,
-            isPlaying: this.activePlayer.isPlaying || false,
-            track: this.activePlayer.track || null
+            volume: this.activePlayer.volume,
+            timeLeft: this.activePlayer.timeLeft,
+            progressMS: this.activePlayer.progressMS,
+            progress: this.activePlayer.progress,
+            isPlaying: this.activePlayer.isPlaying,
+            track: this.getTrack(this.activePlayer.track)
         };
     }
     if (isHost) {
@@ -88,20 +111,19 @@ method.getData = function (isHost, user) {
         }
     }
 
-    let diff = getObjectDifference(user.lastUpdate, data);
+    let diff = getObjectDifference(user.lastUpdate, data, 0);
 
     user.lastUpdate = data;
 
     return diff;
 };
 
-function getObjectDifference(oldData, data) {
+function getObjectDifference(oldData, data, deepness) {
     if(oldData === null || oldData === undefined) {
         return data;
     }
     let diff = {};
     Object.keys(data).forEach(key => {
-
         if (data[key] !== null) {
             if (typeof(data[key]) !== 'object' || data[key] === null) {
                 if (oldData[key] === null) {
@@ -115,7 +137,7 @@ function getObjectDifference(oldData, data) {
                 if (oldData[key] === null) {
                     diff[key] = data[key];
                 } else {
-                    let nextData = getObjectDifference(oldData[key], data[key]);
+                    let nextData = getObjectDifference(oldData[key], data[key], deepness +1);
                     if (nextData !== null && nextData !== undefined && Object.entries(nextData).length > 0) {
                         diff[key] = data[key];
                     }
@@ -124,7 +146,7 @@ function getObjectDifference(oldData, data) {
                 if (oldData[key] === null) {
                     diff[key] = data[key];
                 } else {
-                    var nextData = getObjectDifference(oldData[key], data[key]);
+                    var nextData = getObjectDifference(oldData[key], data[key], deepness +1);
                     if (nextData !== null && nextData !== undefined && Object.entries(nextData).length > 0) {
                         diff[key] = nextData;
                     }

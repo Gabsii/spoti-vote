@@ -106,7 +106,6 @@ class Infos extends PureComponent {
             }
         }
         if (this.props.host !== null && this.props.host !== undefined) {
-            playlistImage = playlistImage || this.props.host.img;
             if (this.props.host.voted === 'skip') {
                 iconColor.color = constants.colors.skip;
             }

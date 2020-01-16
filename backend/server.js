@@ -321,8 +321,8 @@ function setHttpCalls() {
     */
     expressApp.post('/rooms/:roomId/update', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
-
-        let response;
+        
+        let response = {};
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
         if (room === null) {
@@ -331,15 +331,15 @@ function setHttpCalls() {
         } else {
             await room.update();
             if (req.body.myToken === room.host.myToken) {
-                response = {error: false, room: room.getData(true, room.host)};
+                response = room.getData(true, room.host);
                 res.status(200);
             } else {
                 let user = room.getUserByToken(req.body.myToken);
-                response = {error: false, room: room.getData(false, user)};
+                response = room.getData(false, user);
                 res.status(200);
             }
         }
-        //TODO: OPTIMIZE THE BANDWITH
+        // TODO Reduce Update Size
         //console.log('Update size: ' + JSON.stringify(response).length);
         res.send(JSON.stringify(response));
     });
@@ -351,19 +351,21 @@ function setHttpCalls() {
     * @Param req.body.myToken
     */
     expressApp.post('/rooms/:roomId/selectPlaylist', async (req, res) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-
         let response;
 
         let room = Room.getRoomById(req.params.roomId, data.rooms);
-        if (req.body.myToken === room.host.myToken) {
-            if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
-                room.changePlaylist(req.body.playlistId);
-                response = {error: false};
-                res.status(200);
+        if (room !== null) {
+            if (req.body.myToken === room.host.myToken) {
+                if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
+                    room.changePlaylist(req.body.playlistId);
+                    response = {error: false};
+                    res.status(200);
+                }
             }
+        } else {
+            response = {error: true, message: 'Room has not been found'};
+            res.status(400);
         }
-
         res.send(JSON.stringify(response));
     });
 

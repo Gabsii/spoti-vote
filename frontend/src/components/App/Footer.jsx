@@ -32,21 +32,16 @@ class Footer extends PureComponent {
                 progress: 0,
                 isPlaying: false,
                 track: {
-                    album: {
-                        images: [
-                            {
-                                url: 'placeholder.img'
-                            }
-                        ]
-                    },
-                    name: 'Spotify is not running',
+                    img: '',
+                    id: '',
+                    name: '',
                     artists: []
                 }
             };
         }
 
         return (<footer className={`${styles.wrapper}`}>
-            <SongIcon background={activePlayer.track.album.images[0].url}/>
+            <SongIcon background={activePlayer.track.img}/>
             <SongAggregation songName={activePlayer.track.name} artists={activePlayer.track.artists}/>
             <ProgressBar activePlayer={activePlayer}/> {
                 this.props.isHost
