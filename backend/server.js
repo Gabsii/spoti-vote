@@ -80,9 +80,13 @@ function setHeaders() {
     );
 }
 
+
 function setHttpCalls() {
+    /**
+    * Response with small greeting
+    */
     expressApp.get('/', (req, res) => {
-        res.send('Hello There');
+        res.send('Hello There. This is the Spotivote Backend Server, as you can see I am working right now.');
     });
 
     /**
@@ -139,12 +143,18 @@ function setHttpCalls() {
             } else {
                 res.status(400).send();
             }
-            
         });
     });
     
     /**
+    * Response with the profile data of the host.
     * 
+    * @param myToken Authorization token of the host.
+    * 
+    * @returns JSON Object with:
+    *       boolean error
+    *       string message (only on error)
+    *       object host (only on success)
     */
     expressApp.post('/profile', async (req, res) => {
         let response;
@@ -152,24 +162,27 @@ function setHttpCalls() {
         console.log('INFO: /profile has been called.');
         res.setHeader('Access-Control-Allow-Origin', '*');
 
-        let host = Host.getHostByToken(req.body.myToken, data.hosts);
-        if (host !== null) {
-
-            response = {error: false, host: host.getData()};
-            res.status(200);
-        } else {
-            response = {error: true, message: 'Login expired.'};
+        if (req.body.myToken === null || req.body.myToken === undefined) {
+            response = {error: true, message: 'Authorization failed. No or expired token.'};
             res.status(400);
+        } else {
+            let host = Host.getHostByToken(req.body.myToken, data.hosts);
+            if (host == null) {
+                response = {error: true, message: 'Authorization failed. No or expired token.'};
+                res.status(400);
+            } else {
+                response = {error: false, host: host.getData()};
+                res.status(200);
+            }
         }
 
         res.send(JSON.stringify(response));
     });
 
     /**
-    * Get a list of all rooms
-    *
-    * @Returns ResponseCode of 200
-    * @Returns content Array of all the rooms
+    * Response with list of all the rooms
+    * 
+    * @returns array returnRooms
     */
     expressApp.get('/rooms', async (req, res) => {
         // eslint-disable-next-line no-console
@@ -202,52 +215,80 @@ function setHttpCalls() {
     });
 
     /**
-    * The callback that will be called when the Login with the Spotify API is completed
-    * Will redirect the host to the newly created room
+    * Checks if the host is already hosting a room
+    * 
+    * @param myToken Authorization token of the host.
+    * 
+    * @returns JSON Object with:
+    *       boolean error
+    *       string message (only on error)
+    *       string roomId (only on error)
     */
     expressApp.post('/rooms/checkCreate', async (req, res) => {
-        let host = Host.getHostByToken(req.body.myToken, data.hosts);
         let response;
-        if (host === null) {
-            response = {error: true, message: 'Login expired.'};
+        if (req.body.myToken === null || req.body.myToken === undefined) {
+            response = {error: true, message: 'Authorization failed. No or expired token.'};
             res.status(400);
         } else {
-            let room = Room.getRoomByHost(host, data.rooms);
-            if (room !== null) {
-                response = {error: false, roomId: room.id};
+            let host = Host.getHostByToken(req.body.myToken, data.hosts);
+            if (host === null) {
+                response = {error: true, message: 'Authorization failed. No or expired token.'};
+                res.status(400);
             } else {
-                response = {error: false};
+                let room = Room.getRoomByHost(host, data.rooms);
+                if (room !== null) {
+                    response = {error: false, roomId: room.id};
+                } else {
+                    response = {error: false};
+                }
+                res.status(200);
             }
-            res.status(200);
         }
         res.send(JSON.stringify(response));
     });
 
     /**
-    * The callback that will be called when the Login with the Spotify API is completed
-    * Will redirect the host to the newly created room
+    * Creates a new Room
+    * 
+    * @param myToken Authorization token of the host.
+    * 
+    * @returns JSON Object with:
+    *       boolean error
+    *       string message (only on error)
+    *       string roomId (only on success)
     */
     expressApp.post('/rooms/create', async (req, res) => {
-        let host = Host.getHostByToken(req.body.myToken, data.hosts);
         let response;
-        if (host === null) {
-            response = {error: true, message: 'Login expired.'};
+        if (req.body.myToken === null || req.body.myToken === undefined) {
+            response = {error: true, message: 'Authorization failed. No or expired token.'};
             res.status(400);
         } else {
-            let room = new Room.Room(host, data.rooms);
-            data.rooms.push(room);
-            res.status(200);
-            
-            response = {error: false, roomId: room.id};
+            let host = Host.getHostByToken(req.body.myToken, data.hosts);
+            if (host === null) {
+                response = {error: true, message: 'Authorization failed. No or expired token.'};
+                res.status(400);
+            } else {
+                let room = new Room.Room(host, data.rooms);
+                data.rooms.push(room);
+                res.status(200);
+                
+                response = {error: false, roomId: room.id};
+            }
         }
         res.send(JSON.stringify(response));
     });
 
     /**
-    * Returns the data of a given Room and updates the room state
-    *
-    * @Param req.params.roomId
-    * @Param req.body.myToken
+    * Checks if user is already in a room
+    * 
+    * @pathParam roomId
+    * 
+    * @param myToken Authorization token of the host/user
+    * 
+    * @returns JSON Object with:
+    *       boolean error
+    *       string message (only on error)
+    *       string roomId (only on success)
     */
     expressApp.post('/rooms/:roomId/checkToken', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -279,11 +320,16 @@ function setHttpCalls() {
     });
 
     /**
-    * Returns the data of a given Room and updates the room state
-    *
-    * @Param req.params.roomId
-    * @Param req.body.myToken
-    * @Param req.body.clientName
+    * Checks if user is already in a room
+    * 
+    * @pathParam roomId
+    * 
+    * @param myToken Authorization token of the host/user
+    * 
+    * @returns JSON Object with:
+    *       boolean error
+    *       string message (only on error)
+    *       string myToken (when no token was given and a new user was created)
     */
     expressApp.post('/rooms/:roomId/connectUser', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -314,97 +360,145 @@ function setHttpCalls() {
     });
 
     /**
-    * Returns the data of a given Room and updates the room state
-    *
-    * @Param req.params.roomId
-    * @Param req.body.myToken
+    * Response with the updated state of the room
+    * 
+    * @pathParam roomId
+    * 
+    * @param myToken Authorization token of the host/user
+    * 
+    * ON ERROR:
+    * @returns JSON Object with:
+    *       boolean error
+    *       string message
+    * ON SUCCESS:
+    * @returns JSON Object roomDiff
     */
     expressApp.post('/rooms/:roomId/update', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         
         let response = {};
-
-        let room = Room.getRoomById(req.params.roomId, data.rooms);
-        if (room === null) {
-            response = {error: true, message: 'Room not found'};
+        if (req.body.myToken === null || req.body.myToken === undefined) {
+            response = {error: true, message: 'Authorization failed. No or expired token.'};
             res.status(400);
         } else {
-            await room.update();
-            if (req.body.myToken === room.host.myToken) {
-                response = room.getData(true, room.host);
-                res.status(200);
+            let room = Room.getRoomById(req.params.roomId, data.rooms);
+            if (room === null) {
+                response = {error: true, message: 'Room not found'};
+                res.status(400);
             } else {
-                let user = room.getUserByToken(req.body.myToken);
-                response = room.getData(false, user);
-                res.status(200);
+                await room.update();
+                if (req.body.myToken === room.host.myToken) {
+                    response = room.getData(true, room.host);
+                    res.status(200);
+                } else {
+                    let user = room.getUserByToken(req.body.myToken);
+                    response = room.getData(false, user);
+                    res.status(200);
+                }
             }
         }
-        // TODO Reduce Update Size
-        //console.log('Update size: ' + JSON.stringify(response).length);
         res.send(JSON.stringify(response));
     });
 
     /**
-    * Changes the rooms current Playlist and generates new Vote-Tracks
-    *
-    * @Param req.params.roomId
-    * @Param req.body.myToken
+    * Changes the current playlist
+    * 
+    * @pathParam roomId
+    * 
+    * @param myToken Authorization token of the host/user
+    * @param playlistId
+    * 
+    * @returns JSON Object with:
+    *       boolean error
+    *       string message (On Error)
     */
     expressApp.post('/rooms/:roomId/selectPlaylist', async (req, res) => {
         let response;
 
-        let room = Room.getRoomById(req.params.roomId, data.rooms);
-        if (room !== null) {
-            if (req.body.myToken === room.host.myToken) {
-                if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
-                    room.changePlaylist(req.body.playlistId);
-                    response = {error: false};
-                    res.status(200);
-                }
-            }
-        } else {
-            response = {error: true, message: 'Room has not been found'};
+        if (req.body.myToken === null || req.body.myToken === undefined) {
+            response = {error: true, message: 'Authorization failed. No or expired token.'};
             res.status(400);
+        } else {
+            let room = Room.getRoomById(req.params.roomId, data.rooms);
+            if (room !== null) {
+                if (req.body.myToken === room.host.myToken) {
+                    if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
+                        room.changePlaylist(req.body.playlistId);
+                        response = {error: false};
+                        res.status(200);
+                    }
+                }
+            } else {
+                response = {error: true, message: 'Room has not been found'};
+                res.status(400);
+            }
         }
         res.send(JSON.stringify(response));
     });
 
     /**
-    * Deletes a room
+    * Deletes the room
     * 
-    * @Param req.params.roomId
-    * @Param req.body.myToken
+    * @pathParam roomId
+    * 
+    * @param myToken Authorization token of the host/user
+    * 
+    * @returns JSON Object with:
+    *       boolean error
+    *       string message (On Error)
     */
     expressApp.post('/rooms/:roomId/delete', async (req, res) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        let response;
 
-        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (req.body.myToken === null || req.body.myToken === undefined) {
+            response = {error: true, message: 'Authorization failed. No or expired token.'};
+            res.status(400);
+        } else {
+            let room = Room.getRoomById(req.params.roomId, data.rooms);
 
-        if (req.body.myToken === room.host.myToken) {
-            // eslint-disable-next-line no-console
-            console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted due to more then 1 room (Host choose the old room).');
-            data.rooms.splice(data.rooms.indexOf(room), 1);
+            if (req.body.myToken === room.host.myToken) {
+                // eslint-disable-next-line no-console
+                console.log('INFO-[ROOM: ' + room.id + ']: This room has been deleted due to more then 1 room (Host choose the old room).');
+                data.rooms.splice(data.rooms.indexOf(room), 1);
+            }
+            response = {error: false};
+            res.status(200);
         }
-        res.send();
+        res.send(JSON.stringify(response));
     });
 
     /**
-    * Change the volume of the room
-    * @Param req.params.roomId
-    * @Param req.body.myToken
-    * @Param req.body.volume
+    * Deletes the room
+    * 
+    * @pathParam roomId
+    * 
+    * @param myToken Authorization token of the host/user
+    * @param volume
+    * 
+    * @returns JSON Object with:
+    *       boolean error
+    *       string message (On Error)
     */
     expressApp.post('/rooms/:roomId/volume', async (req, res) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        let response;
 
-        let room = Room.getRoomById(req.params.roomId, data.rooms);
-
-        if (req.body.myToken === room.host.myToken) {
-            // eslint-disable-next-line no-console
-            console.log('INFO-[ROOM: ' + req.params.roomId + ']: Volume changed to [' + req.body.volume + '].');
-            room.changeVolume(req.body.volume);
+        if (req.body.myToken === null || req.body.myToken === undefined) {
+            response = {error: true, message: 'Authorization failed. No or expired token.'};
+            res.status(400);
+        } else {
+            let room = Room.getRoomById(req.params.roomId, data.rooms);
+            if (req.body.myToken === room.host.myToken) {
+                // eslint-disable-next-line no-console
+                console.log('INFO-[ROOM: ' + req.params.roomId + ']: Volume changed to [' + req.body.volume + '].');
+                room.changeVolume(req.body.volume);
+                response = {error: false};
+                res.status(200);
+            } else {
+                response = {error: true, message: 'Authorization failed. Expired token.'};
+                res.status(400);
+            }
         }
-        res.send();
+        res.send(JSON.stringify(response));
     });
 
     /**
@@ -415,15 +509,21 @@ function setHttpCalls() {
     * @Param req.body.trackId
     */
     expressApp.post('/rooms/:roomId/vote', async (req, res) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        let response;
 
-        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (req.body.myToken === null || req.body.myToken === undefined) {
+            response = {error: true, message: 'Authorization failed. No or expired token.'};
+            res.status(400);
+        } else {
+            let room = Room.getRoomById(req.params.roomId, data.rooms);
+            // eslint-disable-next-line no-console
+            console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.myToken + '] voted for [' + req.body.trackId + '].');
+            room.vote(req.body.trackId, req.body.myToken);
+            response = {error: false};
+            res.status(200);
+        }
 
-        // eslint-disable-next-line no-console
-        console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.myToken + '] voted for [' + req.body.trackId + '].');
-        room.vote(req.body.trackId, req.body.myToken);
-
-        res.send();
+        res.send(JSON.stringify(response));
     });
 
     /**
