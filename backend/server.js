@@ -502,12 +502,17 @@ function setHttpCalls() {
     });
 
     /**
-    * Adds a vote from user
-    * @Param req.params.roomId
-    * @Param req.body.myToken
-    * @Param req.body.username
-    * @Param req.body.trackId
-    */
+    * Adds a vote from a user to the song
+    * 
+    * @pathParam roomId
+    * 
+    * @param myToken Authorization token of the host/user
+    * @param trackId
+    * 
+    * @returns JSON Object with:
+    *       boolean error
+    *       string message (On Error)
+    */ 
     expressApp.post('/rooms/:roomId/vote', async (req, res) => {
         let response;
 
@@ -527,42 +532,78 @@ function setHttpCalls() {
     });
 
     /**
-    * Skips current song
-    * @Param req.params.roomId
-    * @Param req.body.myToken
-    */
+    * Skips the current song
+    * 
+    * @pathParam roomId
+    * 
+    * @param myToken Authorization token of the host/user
+    * 
+    * @returns JSON Object with:
+    *       boolean error
+    *       string message (On Error)
+    */ 
     expressApp.post('/rooms/:roomId/skip', async (req, res) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        let response;
 
-        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (req.body.myToken === null || req.body.myToken === undefined) {
+            response = {error: true, message: 'Authorization failed. No or expired token.'};
+            res.status(400);
+        } else {
+            let room = Room.getRoomById(req.params.roomId, data.rooms);
 
-        if (req.body.myToken === room.host.myToken) {
-            // eslint-disable-next-line no-console
-            console.log('INFO-[ROOM: ' + room.id + ']: Host skiped the song.');
-            if (!(await room.play())) {
+            if (req.body.myToken === room.host.myToken) {
                 // eslint-disable-next-line no-console
-                console.warn('INFO-[ROOM: ' + room.id + ']: Skipping song did not work.');
+                console.log('INFO-[ROOM: ' + room.id + ']: Host skiped the song.');
+                if (!(await room.play())) {
+                    // eslint-disable-next-line no-console
+                    console.warn('INFO-[ROOM: ' + room.id + ']: Skipping song did not work.');
+                    response = {error: true, message: 'Cant skip, no song is playing.'};
+                    res.status(400);
+                } else {
+                    response = {error: false};
+                    res.status(200);
+                }
+            } else {
+                response = {error: true, message: 'Authorization failed. No or expired token.'};
+                res.status(400);
             }
         }
-        res.send();
+        res.send(JSON.stringify(response));
     });
 
     /**
-    * Pause/Resume current song
-    * @Param req.params.roomId
-    * @Param req.body.myToken
-    */
+    * Toggles Playstate (play/pause)
+    * 
+    * @pathParam roomId
+    * 
+    * @param myToken Authorization token of the host/user
+    * 
+    * @returns JSON Object with:
+    *       boolean error
+    *       string message (On Error)
+    */ 
     expressApp.post('/rooms/:roomId/pause', async (req, res) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        let response;
 
-        let room = Room.getRoomById(req.params.roomId, data.rooms);
+        if (req.body.myToken === null || req.body.myToken === undefined) {
+            response = {error: true, message: 'Authorization failed. No or expired token.'};
+            res.status(400);
+        } else {
+            let room = Room.getRoomById(req.params.roomId, data.rooms);
 
-        if (req.body.myToken === room.host.myToken) {
-        // eslint-disable-next-line no-console
-            console.log('INFO-[ROOM: ' + room.id + ']: Host skiped the song.');
-            room.togglePlaystate();
+            if (req.body.myToken === room.host.myToken) {
+            // eslint-disable-next-line no-console
+                console.log('INFO-[ROOM: ' + room.id + ']: Host skiped the song.');
+                room.togglePlaystate();
+                response = {error: false};
+                res.status(200);
+            } else {
+                response = {error: true, message: 'Authorization failed. No or expired token.'};
+                res.status(400);
+            }
         }
-        res.send();
+
+        res.send(JSON.stringify(response));
     });
 }
 
