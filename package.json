@@ -141,7 +141,7 @@
     "cors": "^2.8.5",
     "create-react-app": "^3.0.1",
     "css-loader": "^3.0.0",
-    "deep-equal": "^1.0.1",
+    "deep-equal": "^2.0.1",
     "dotenv": "^8.0.0",
     "dotenv-expand": "^5.1.0",
     "eslint": "^6.5.1",
