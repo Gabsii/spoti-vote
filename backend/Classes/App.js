@@ -293,10 +293,9 @@ method.socketCall = function(socket) {
                 if (room.firstConnection === true) {
                     room.firstConnection = false;
                     // eslint-disable-next-line no-console
-                    console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token). [Phone: ' + data.isPhone + ']');
+                    console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token).');
 
                     socket.isHost = true;
-                    room.hostPhone = data.isPhone;
 
                     let update = room.getDifference(null);
                     socket.oldUpdate = _.cloneDeep(room);
@@ -310,10 +309,9 @@ method.socketCall = function(socket) {
                 } else {
                     if (room.hostDisconnect !== null && data.token === room.user.token) { //If host is gone
                         // eslint-disable-next-line no-console
-                        console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected. [Phone: ' + data.isPhone + ']');
+                        console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected.');
 
                         socket.isHost = true;
-                        room.hostPhone = data.isPhone;
 
                         let update = room.getDifference(null);
                         socket.oldUpdate = _.cloneDeep(room);
@@ -350,10 +348,9 @@ method.socketCall = function(socket) {
             socket.name = room.user.name;
 
             // eslint-disable-next-line no-console
-            console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token). [Phone: ' + data.isPhone + ']');
+            console.log('INFO-[ROOM: ' + socket.roomId + ']: The host [' + socket.name + '] has connected (Sending Token).');
 
             socket.isHost = true;
-            room.hostPhone = data.isPhone;
 
             let update = room.getDifference(null);
             socket.oldUpdate = _.cloneDeep(room);
