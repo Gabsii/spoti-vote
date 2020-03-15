@@ -115,6 +115,8 @@ const styles = {
     })
 };
 
+const images = [for1, for2, for3];
+
 class Login extends Component {
 
     constructor() {
@@ -129,25 +131,11 @@ class Login extends Component {
             window.location.search = '';
         }
         // document.getElementsByTagName('META')[2].content = 'Spoti Vote provides you with a party mode for Spotify. Let your friends choose the music!';
-        var random = Math.floor((Math.random() * 3) + 1);
-        switch (random) {
-        case 1:
-            this.setState({image: for1});
-            break;
-        case 2:
-            this.setState({image: for2});
-            break;
-        case 3:
-            this.setState({image: for3});
-            break;
-        default:
-            this.setState({image: null});
-            break;
-        }
+        let random = Math.floor((Math.random() * 3));
+        this.setState({image: images[random]});
     }
 
     render() {
-        window.addEventListener('touchmove', () => {}, {passive: true}); // (event)
         return (<main>
             <Helmet>
                 <html lang="en" />
