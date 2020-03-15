@@ -161,6 +161,7 @@
     "helmet": "^3.21.3",
     "helmet-csp": "^2.9.5",
     "html-webpack-plugin": "^4.0.0-beta.5",
+    "immer": "^6.0.1",
     "jest": "^24.9.0",
     "jest-environment-jsdom-fourteen": "^0.1.0",
     "jest-runner-eslint": "^0.7.6",
