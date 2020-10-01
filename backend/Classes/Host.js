@@ -69,7 +69,7 @@ method.fetchData = async function() {
     this.profileUrl = data.external_urls.spotify;
     this.country = data.country;
 
-    this.premium = (data.product != 'free' && data.product != 'open');
+    this.premium = (data.product !== 'free' && data.product !== 'open');
 
     this.playlists = await this.fetchPlaylists();
     this.topTracks = await this.fetchTopTracks(10);
