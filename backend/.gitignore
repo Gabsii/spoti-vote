@@ -1,7 +1,0 @@
-# dependencies
-/node_modules
-# vercel
-.vercel
-
-.env
-data.json
