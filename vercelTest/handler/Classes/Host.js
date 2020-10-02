@@ -2,8 +2,6 @@ let method = Host.prototype; //This is used when programming object oriented in 
 
 const fetch = require('node-fetch');
 
-const env = require('../handler').getEnv();
-
 /**
 * Constructor for a new / room
 *
@@ -13,23 +11,33 @@ const env = require('../handler').getEnv();
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function Host(token, refreshToken) {
-    this.myToken = createToken(20);
-    this.token = token;
-    this.refreshToken = refreshToken;
-    this.clientId = env.spotifyClientId;
-    this.clientSecret = env.spotifyClientSecret;
-    this.name = '';
-    this.id = '';
-    this.profileUrl = '';
-    this.voted = null;
-    this.country = '';
-    this.img = '';
-
-    this.premium = false;
-    this.topTracks = [];
+function Host(token, refreshToken, clientId, clientSecret, spotifyApiAddress, spotifyAccountAddress) {
+    if (typeof(token) !== 'string' || spotifyApiAddress === undefined) {
+        for(var prop in token){
+            // for safety you can use the hasOwnProperty function
+            this[prop] = token[prop];
+        }
+    } else {
+        this.myToken = createToken(20);
+        this.token = token;
+        this.refreshToken = refreshToken;
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.name = '';
+        this.id = '';
+        this.profileUrl = '';
+        this.voted = null;
+        this.country = '';
+        this.img = '';
     
-    this.lastUpdate = null;
+        this.premium = false;
+        this.topTracks = [];
+        
+        this.lastUpdate = null;
+    
+        this.spotifyApiAddress = spotifyApiAddress;
+        this.spotifyAccountAddress = spotifyAccountAddress;
+    }
 }
 
 method.getData = function() {
@@ -49,7 +57,7 @@ method.getData = function() {
 * @return: boolean if completed successfull
 */
 method.fetchData = async function() {
-    let request = await fetch(env.spotifyApiAddress + '/v1/me', {
+    let request = await fetch(this.spotifyApiAddress + '/v1/me', {
         headers: {
             'Authorization': 'Bearer ' + this.token
         }
@@ -83,7 +91,7 @@ method.fetchData = async function() {
 * @return: array All the playlists
 */
 method.fetchPlaylists = async function() {
-    let request = await fetch(env.spotifyApiAddress + '/v1/me/playlists?limit=50', {
+    let request = await fetch(this.spotifyApiAddress + '/v1/me/playlists?limit=50', {
         headers: {
             'Authorization': 'Bearer ' + this.token
         }

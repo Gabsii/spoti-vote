@@ -1,18 +1,35 @@
 const dotenv = require('dotenv');
 const fs = require('fs');
+const Host = require('./Classes/Host');
+const Room = require('./Classes/Room');
 
 const dataLoc = 'handler/data.json';
 
 function getData() {
     try {
         raw = fs.readFileSync(dataLoc);
-        return JSON.parse(raw);
+        parsed = JSON.parse(raw);
     } catch (error) {
-        return {
+        parsed =  {
             hosts: [],
             rooms: []
         };
     }
+
+    hosts = [];
+    parsed.hosts.forEach(obj => {
+        hosts.push(new Host.Host(obj));
+    });
+    rooms = [];
+    parsed.rooms.forEach(room => {
+        room.host = new Host.Host(room.host);
+        rooms.push(new Room.Room(room));
+    });
+
+    return {
+        hosts: hosts,
+        rooms: rooms
+    };
     
 }
 

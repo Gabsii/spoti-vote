@@ -1,6 +1,6 @@
-const handler = require('../handler/handler');
-const Room = require('../handler/Classes/Room');
-const Host = require('../handler/Classes/Host');
+const handler = require('../../../handler/handler');
+const Host = require('../../../handler/Classes/Host');
+const Room = require('../../../handler/Classes/Room');
 
 const allowCors = fn => async (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', true)
@@ -17,29 +17,35 @@ const allowCors = fn => async (req, res) => {
     return await fn(req, res)
 }
 
-
-const profile = (req, res) => {
-    let response;
-    // eslint-disable-next-line no-console
-    console.log('INFO: /profile has been called.');
+const update = async (req, res) => {
 
     let data = handler.getData();
-    
+
+    let response = {};
     if (req.body.myToken === null || req.body.myToken === undefined) {
         response = {error: true, message: 'Authorization failed. No or expired token.'};
         res.status(400);
     } else {
-        let myHost = Host.getHostByToken(req.body.myToken, data.hosts);
-        if (myHost == null) {
-            response = {error: true, message: 'Authorization failed. No or expired token.'};
+        let room = Room.getRoomById(req.query.roomId, data.rooms);
+        if (room === null) {
+            response = {error: true, message: 'Room not found'};
             res.status(400);
         } else {
-            response = {error: false, host: myHost.getData()};
-            res.status(200);
+            await room.update();
+            if (req.body.myToken === room.host.myToken) {
+                response = room.getData(true, room.host);
+                res.status(200);
+            } else {
+                let user = room.getUserByToken(req.body.myToken);
+                response = room.getData(false, user);
+                res.status(200);
+            }
         }
     }
+
+    handler.setData(data);
 
     res.send(JSON.stringify(response));
 }
 
-module.exports = allowCors(profile);
+module.exports = allowCors(update);

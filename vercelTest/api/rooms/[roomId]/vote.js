@@ -1,6 +1,6 @@
-const handler = require('../handler/handler');
-const Room = require('../handler/Classes/Room');
-const Host = require('../handler/Classes/Host');
+const handler = require('../../../handler/handler');
+const Host = require('../../../handler/Classes/Host');
+const Room = require('../../../handler/Classes/Room');
 
 const allowCors = fn => async (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', true)
@@ -17,29 +17,25 @@ const allowCors = fn => async (req, res) => {
     return await fn(req, res)
 }
 
-
-const profile = (req, res) => {
-    let response;
-    // eslint-disable-next-line no-console
-    console.log('INFO: /profile has been called.');
+const vote = async (req, res) => {
 
     let data = handler.getData();
-    
+
+    let response;
+
     if (req.body.myToken === null || req.body.myToken === undefined) {
         response = {error: true, message: 'Authorization failed. No or expired token.'};
         res.status(400);
     } else {
-        let myHost = Host.getHostByToken(req.body.myToken, data.hosts);
-        if (myHost == null) {
-            response = {error: true, message: 'Authorization failed. No or expired token.'};
-            res.status(400);
-        } else {
-            response = {error: false, host: myHost.getData()};
-            res.status(200);
-        }
+        let room = Room.getRoomById(req.query.roomId, data.rooms);
+        // eslint-disable-next-line no-console
+        console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.myToken + '] voted for [' + req.body.trackId + '].');
+        room.vote(req.body.trackId, req.body.myToken);
+        response = {error: false};
+        res.status(200);
     }
 
     res.send(JSON.stringify(response));
 }
 
-module.exports = allowCors(profile);
+module.exports = allowCors(vote);

@@ -3,8 +3,6 @@ const request = require('request');
 const fetch = require('node-fetch');
 const _ = require('lodash');
 
-const env = require('../handler').getEnv();
-
 /**
 * Constructor for a new / room
 *
@@ -14,20 +12,26 @@ const env = require('../handler').getEnv();
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function Room(host, rooms) {
-    this.host = host;
-    this.activeTracks = [];
-    this.activePlaylist = null;
-    this.activePlayer = {};
-    this.connectedUser = [];
-    this.isChanging = false;
-    this.isSkipping = false;
-    this.lastUpdate = Date.now();
+function Room(host, rooms, spotifyAccountAddress) {
+    if (rooms === undefined) {
+        for(var prop in host){
+            this[prop] = host[prop];
+        }
+    } else {
+        this.host = host;
+        this.activeTracks = [];
+        this.activePlaylist = null;
+        this.activePlayer = {};
+        this.connectedUser = [];
+        this.isChanging = false;
+        this.isSkipping = false;
+        this.lastUpdate = Date.now();
 
-    //Makes sure the id is unique
-    do {
-        this.id = makeid(5);
-    } while (getRoomById(this.id, rooms) !== null);
+        //Makes sure the id is unique
+        do {
+            this.id = makeid(5);
+        } while (getRoomById(this.id, rooms) !== null);
+    }
 }
 
 method.getConnectedUsers = function() {
@@ -63,7 +67,7 @@ method.getTrack = function(track) {
 };
 
 //TODO: Make this more efficient (data-transfer)
-method.getData = function (isHost, user) {
+method.getData = function (isHost) {
     let data = {};
     data.roomId = this.id;
     data.isHost = isHost;
@@ -111,9 +115,9 @@ method.getData = function (isHost, user) {
         }
     }
 
-    let diff = getObjectDifference(user.lastUpdate, data);
+    let diff = getObjectDifference(this.host.lastUpdate, data);
 
-    user.lastUpdate = data;
+    this.host.lastUpdate = data;
 
     return diff;
 };
@@ -448,7 +452,7 @@ method.refreshToken = async function() {
     // eslint-disable-next-line no-console
     console.log('  - Access Token: ' + this.host.token);
     let authOptions = {
-        url: env.spotifyAccountAddress + '/api/token',
+        url: this.host.spotifyAccountAddress + '/api/token',
         form: {
             grant_type: 'refresh_token',
             refresh_token: this.host.refreshToken
@@ -481,14 +485,14 @@ method.update = async function() {
     this.lastUpdate = Date.now();
     let request;
     try {
-        request = await fetch(env.spotifyApiAddress + '/v1/me/player', {
+        request = await fetch(this.host.spotifyApiAddress + '/v1/me/player', {
             headers: {
                 'Authorization': 'Bearer ' + this.host.token
             }
         });
     } catch (e) {
         // eslint-disable-next-line no-console
-        console.error('ERROR-[ROOM: '+this.id+']: THERE WAS AN ERROR GETTING THE ACTIVE PLAYER.');
+        console.error('ERROR-[ROOM: '+this.id+']: THERE WAS AN ERROR GETTING THE ACTIVE PLAYER.\n' + e);
     }
 
     let fetchData;
@@ -616,7 +620,7 @@ method.play = async function() {
             uris: ['spotify:track:' + track.id]
         };
     
-        await fetch(env.spotifyApiAddress + '/v1/me/player/play', {
+        await fetch(this.host.spotifyApiAddress + '/v1/me/player/play', {
             headers: {
                 'Authorization': 'Bearer ' + this.host.token
             },
@@ -631,7 +635,7 @@ method.play = async function() {
         }
         return this.getRandomTracks(playlist, track);
     } else {
-        await fetch(env.spotifyApiAddress + '/v1/me/player/next', {
+        await fetch(this.host.spotifyApiAddress + '/v1/me/player/next', {
             headers: {
                 'Authorization': 'Bearer ' + this.host.token
             },
@@ -689,7 +693,7 @@ method.reroll = async function() {
 * @return {boolean} True if completed
 */
 method.changeVolume = async function(volume) {
-    await fetch(env.spotifyApiAddress + '/v1/me/player/volume?volume_percent=' + volume,{
+    await fetch(this.host.spotifyApiAddress + '/v1/me/player/volume?volume_percent=' + volume,{
         headers: {
             'Authorization': 'Bearer ' + this.host.token
         },
@@ -707,7 +711,7 @@ method.changeVolume = async function(volume) {
 method.togglePlaystate = async function() {
     if (this.activePlayer !== null && this.activePlayer !== undefined) {
         if (this.activePlayer.isPlaying) {
-            await fetch(env.spotifyApiAddress + '/v1/me/player/pause',{
+            await fetch(this.host.spotifyApiAddress + '/v1/me/player/pause',{
                 headers: {
                     'Authorization': 'Bearer ' + this.host.token
                 },
@@ -716,7 +720,7 @@ method.togglePlaystate = async function() {
             // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: '+this.id+']: Song is now Paused');
         } else {
-            await fetch(env.spotifyApiAddress + '/v1/me/player/play',{
+            await fetch(this.host.spotifyApiAddress + '/v1/me/player/play',{
                 headers: {
                     'Authorization': 'Bearer ' + this.host.token
                 },

@@ -63,7 +63,7 @@ class Dashboard extends Component {
     fetchProfile(myToken) {
         fetch(constants.config.url + '/profile', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'content-type': 'application/json'},
             body: JSON.stringify({
                 myToken: myToken
             })

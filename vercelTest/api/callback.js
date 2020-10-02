@@ -22,12 +22,10 @@ module.exports = (req, res) => {
     request.post(authOptions, async (error, response, body) => {
         if (response.statusCode === 200) {
             let uri = env.frontendUri;
-            let host = new Host.Host(body.access_token, body.refresh_token);
+            let host = new Host.Host(body.access_token, body.refresh_token, env.spotifyClientId, env.spotifyClientSecret, env.spotifyApiAddress, env.spotifyAccountAddress);
             if (await host.fetchData() === true) {
 
                 let data = handler.getData();
-
-                console.log(data);
 
                 let oldHost = Host.getHostByToken(host.myToken, data.hosts);
                 if (oldHost !== null && oldHost !== undefined) {
