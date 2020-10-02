@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 const fs = require('fs');
 const Host = require('./Classes/Host');
 const Room = require('./Classes/Room');
+const { PassThrough } = require('stream');
 
 const dataLoc = 'handler/data.json';
 
@@ -13,7 +14,7 @@ function getData() {
     try {
         parsed = JSON.parse(fs.readFileSync(dataLoc));
     } catch (error) {
-        console.error(error);
+        console.error("data.json file had to be created.");
     }
 
     let hosts = [];

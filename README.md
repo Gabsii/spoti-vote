@@ -25,6 +25,9 @@ Then clone my repository using:
 ```
 git clone https://github.com/Gabsii/spoti-vote.git
 cd spoti-vote 
+```
+Then you can install all the dependencies of the projekt using npm:
+```
 npm install
 ```
 
@@ -36,9 +39,14 @@ PORT=80
 PORTBACK=8888
 ADDRESS="localhost"
 SPOTIFY_CLIENT_ID="foo"
-SPOTIFY_CLIENT_SECRET="foo"
+SPOTIFY_CLIENT_SECRET="bar"
 ```
-Replace `foo` with your `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET`.  
+Replace `foo` with your `SPOTIFY_CLIENT_ID` and `bar` with your `SPOTIFY_CLIENT_SECRET`.
+
+To setup the backend you need to start the backup process using npm and follow the creation of a new vercel project.
+```
+npm run start-backend
+```
 
 Then run `npm start` to get started
 ### Info
@@ -52,12 +60,10 @@ Congratulations! You now are able to use my webpage.
 
 By running `npm test` you can start a jest testing environment respectively.
 
-You can also run `npm run update` to update all npm packages.
-
 # Credits
 
 ## Frameworks/Tools
-* Git
+* [Git](https://git-scm.com/)
 * [React](https://reactjs.org/)
 * [FontAwesome](https://fontawesome.com/)
 

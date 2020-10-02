@@ -1,6 +1,6 @@
 {
   "name": "spoti-vote",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Vote for Spotify Queue",
   "author": "Gabsii",
   "license": "Apache-2.0",
@@ -10,8 +10,7 @@
     "start-backend": "dotenv -- cross-var vercel dev ./backend -l %PORTBACK%",
     "build": "node frontend/scripts/build.js",
     "deploy": "now --prod",
-    "test": "node frontend/scripts/test.js",
-    "deploy-backend": "pm2 delete backendSpotivote; pm2 start backend/server.js --name \"backendSpotivote\""
+    "test": "node frontend/scripts/test.js"
   },
   "cacheDirectories": [
     "node_modules"
