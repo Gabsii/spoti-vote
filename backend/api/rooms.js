@@ -9,25 +9,24 @@ module.exports = (req, res) => {
 
     let returnRooms = [];
     for (var i = 0; i < data.rooms.length; i++) {
-        let roomData = data.rooms[i].getData(false);
         let roomI = {
-            roomName: roomData.roomId,
-            roomHost: roomData.host.name
+            roomName: data.rooms[i].id,
+            roomHost: data.rooms[i].host.name
         };
         try {
-            roomI.roomCover = roomData.activePlayer.track.album.images[0].url;
+            roomI.roomCover = data.rooms[i].activePlayer.track.album.images[0].url;
         } catch (error) {
             try {
-                roomI.roomCover = roomData.activePlaylist;
+                roomI.roomCover = data.rooms[i].activePlaylist;
             } catch (error) {
                 break;
             }
         }
         if (roomI.roomCover === null || roomI.roomCover === undefined) {
-            roomI.roomCover = roomData.host.img;
+            roomI.roomCover = data.rooms[i].host.img;
         }
         returnRooms.push(roomI);
     }
 
     res.status(200).send(returnRooms);
-}
+};

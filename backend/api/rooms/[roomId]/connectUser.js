@@ -3,19 +3,19 @@ const Host = require('../../../handler/Classes/Host');
 const Room = require('../../../handler/Classes/Room');
 
 const allowCors = fn => async (req, res) => {
-    res.setHeader('Access-Control-Allow-Credentials', true)
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS')
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
     res.setHeader(
         'Access-Control-Allow-Headers',
         'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-    )
+    );
     if (req.method === 'OPTIONS') {
-        res.status(200).end()
-        return
+        res.status(200).end();
+        return;
     }
-    return await fn(req, res)
-}
+    return await fn(req, res);
+};
 
 const connectUser = async (req, res) => {
 
@@ -47,6 +47,6 @@ const connectUser = async (req, res) => {
     handler.setData(data);
 
     res.send(JSON.stringify(response));
-}
+};
 
 module.exports = allowCors(connectUser);

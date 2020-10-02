@@ -6,21 +6,23 @@ const Room = require('./Classes/Room');
 const dataLoc = 'handler/data.json';
 
 function getData() {
+    let parsed = {
+        hosts: [],
+        rooms: []
+    };
     try {
-        raw = fs.readFileSync(dataLoc);
-        parsed = JSON.parse(raw);
+        parsed = JSON.parse(fs.readFileSync(dataLoc));
     } catch (error) {
-        parsed =  {
-            hosts: [],
-            rooms: []
-        };
+        console.error(error);
     }
 
-    hosts = [];
+    let hosts = [];
+    let rooms = [];
+
     parsed.hosts.forEach(obj => {
         hosts.push(new Host.Host(obj));
     });
-    rooms = [];
+    
     parsed.rooms.forEach(room => {
         room.host = new Host.Host(room.host);
         rooms.push(new Room.Room(room));

@@ -10,4 +10,4 @@ module.exports = (req, res) => {
     } catch (error) {
         res.status(400).send('Login from the main page.');
     }
-}
+};
