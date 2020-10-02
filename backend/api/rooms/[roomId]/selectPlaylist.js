@@ -31,7 +31,7 @@ const selectPlaylist = async (req, res) => {
         if (room !== null) {
             if (req.body.myToken === room.host.myToken) {
                 if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
-                    room.changePlaylist(req.body.playlistId);
+                    await room.changePlaylist(req.body.playlistId);
                     response = {error: false};
                     res.status(200);
                 }
@@ -40,7 +40,10 @@ const selectPlaylist = async (req, res) => {
             response = {error: true, message: 'Room has not been found'};
             res.status(400);
         }
+        
+        console.log(room.activePlaylist);
     }
+
 
     handler.setData(data);
 

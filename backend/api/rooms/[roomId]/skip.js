@@ -46,7 +46,9 @@ const skip = async (req, res) => {
             res.status(400);
         }
     }
-    res.send(JSON.stringify(response));
+
+    handler.setData(data);
+    
     res.send(JSON.stringify(response));
 }
 

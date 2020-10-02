@@ -33,7 +33,7 @@ const volume = async (req, res) => {
         if (req.body.myToken === room.host.myToken) {
             // eslint-disable-next-line no-console
             console.log('INFO-[ROOM: ' + req.query.roomId + ']: Volume changed to [' + req.body.volume + '].');
-            room.changeVolume(req.body.volume);
+            await room.changeVolume(req.body.volume);
             response = {error: false};
             res.status(200);
         } else {
@@ -41,6 +41,9 @@ const volume = async (req, res) => {
             res.status(400);
         }
     }
+
+    handler.setData(data);
+
     res.send(JSON.stringify(response));
 }
 

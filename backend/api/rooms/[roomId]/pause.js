@@ -41,6 +41,8 @@ const pause = async (req, res) => {
         }
     }
 
+    handler.setData(data);
+
     res.send(JSON.stringify(response));
 }
 

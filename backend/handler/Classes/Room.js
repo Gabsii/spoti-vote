@@ -67,7 +67,7 @@ method.getTrack = function(track) {
 };
 
 //TODO: Make this more efficient (data-transfer)
-method.getData = function (isHost) {
+method.getData = function (isHost, user) {
     let data = {};
     data.roomId = this.id;
     data.isHost = isHost;
@@ -115,9 +115,9 @@ method.getData = function (isHost) {
         }
     }
 
-    let diff = getObjectDifference(this.host.lastUpdate, data);
+    let diff = getObjectDifference(user.lastUpdate, data);
 
-    this.host.lastUpdate = data;
+    user.lastUpdate = data;
 
     return diff;
 };

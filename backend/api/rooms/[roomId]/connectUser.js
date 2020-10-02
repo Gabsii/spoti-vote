@@ -43,6 +43,9 @@ const connectUser = async (req, res) => {
             res.status(200);
         }
     }
+
+    handler.setData(data);
+
     res.send(JSON.stringify(response));
 }
 

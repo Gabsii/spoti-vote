@@ -7,8 +7,6 @@ module.exports = (req, res) => {
 
     let data = handler.getData();
 
-    console.log(data.rooms);
-
     let returnRooms = [];
     for (var i = 0; i < data.rooms.length; i++) {
         let roomData = data.rooms[i].getData(false);
