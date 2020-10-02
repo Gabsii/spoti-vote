@@ -129,7 +129,7 @@
     "object-assign": "^4.1.1",
     "promise": "^8.1.0",
     "react-helmet": "^5.2.1",
-    "react-lazyload": "^2.6.9",
+    "react-lazyload": "^3.0.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-text-marquee": "^1.0.1",
