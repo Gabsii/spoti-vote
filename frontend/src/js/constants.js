@@ -93,7 +93,6 @@ const api = async (apiUrl, ...params) => {
     try {
         data = await apiResponse.json();
     } catch (err) {
-        console.error(err);
         error = [err.message || err];
     }
 

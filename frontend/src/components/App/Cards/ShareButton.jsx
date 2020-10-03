@@ -30,7 +30,7 @@ class ShareButton extends PureComponent {
 
     share() {
         if (navigator.share) {
-            navigator.share({title: 'Spoti-Vote', text: 'Join my room!', url: window.location.href}).catch((error) => console.error('Error sharing', error));
+            navigator.share({title: 'Spoti-Vote', text: 'Join my room!', url: window.location.href}).catch((error) => {/*console.error('Error sharing', error)*/});
         } else {
             const copyText = document.getElementById('share');
             copyText.select();
