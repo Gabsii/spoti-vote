@@ -1,0 +1,66 @@
+{
+  "version": 2,
+  "alias": ["www.spoti-vote.com", "spoti-vote.com"],
+  "public": false,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "frontend/build" }
+    },
+    { "src": "backend/server.js", "use": "@now/node" }
+  ],
+  "routes": [
+    {
+      "src": "^http://(.*)",
+      "status": 301,
+      "headers": { "Location": "https://spoti-vote.com/$1" }
+    },
+    {
+      "src": "/api/{.*}",
+      "dest": "/backend/server.js"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1",
+      "headers": { "Cache-Control": "max-age=60, s-maxage=86400" }
+    },
+    {
+      "src": "/logos/(.*)",
+      "dest": "/logos/$1",
+      "headers": { "Cache-Control": "max-age=60, s-maxage=86400" }
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/favicon.ico",
+      "headers": { "Cache-Control": "max-age=60, s-maxage=86400" }
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/manifest.json",
+      "headers": { "Cache-Control": "max-age=60, s-maxage=86400" }
+    },
+    {
+      "src": "/service-worker.js",
+      "dest": "/service-worker.js",
+      "headers": { "Cache-Control": "no-cache" }
+    },
+    {
+      "src": "/precache-manifest.*.js",
+      "dest": "/precache-manifest.*.js",
+      "headers": { "Cache-Control": "no-cache" }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html",
+      "headers": { "cache-control": "s-maxage=0" }
+    }
+  ],
+  "env": {
+    "PORT": "443",
+    "PORTBACK": "443",
+    "ADDRESS": "backend.spoti-vote.com",
+    "SPOTIFY_CLIENT_ID": "0",
+    "SPOTIFY_CLIENT_SECRET": "0"
+  }
+}
