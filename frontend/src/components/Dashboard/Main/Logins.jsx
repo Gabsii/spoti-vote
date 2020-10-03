@@ -88,7 +88,7 @@ class Logins extends Component {
         };
 
         //Check if there is already a room
-        let data = await constants.api('/rooms/checkCreate', defaultOptions);
+        let [data] = await constants.api('/rooms/checkCreate', defaultOptions);
         if (data.error) {
             this.errorMsg(data.message);
         } else {
@@ -103,7 +103,7 @@ class Logins extends Component {
                 }).then(async (result) => {
                     if (result.value) {                                     //If host wants to delete old / create new
                         constants.api('/rooms/' + data.roomId + '/delete', defaultOptions);
-                        let data2 = await constants.api('/rooms/create', defaultOptions);
+                        let [data2] = await constants.api('/rooms/create', defaultOptions);
                         if (data2.error) {
                             this.errorMsg(data2.message);
                         } else {
@@ -114,7 +114,7 @@ class Logins extends Component {
                     }
                 });
             } else {                                                        //If there is no old Roomd
-                let data2 = await constants.api('/rooms/create', defaultOptions);
+                let [data2] = await constants.api('/rooms/create', defaultOptions);
                 if (data2.error) {
                     this.errorMsg(data2.message);
                 } else {

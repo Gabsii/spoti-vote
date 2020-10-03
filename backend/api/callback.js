@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
     let code = req.query.code || null;
 
     let data = {
-        code: code,
+        code,
         redirect_uri: env.redirectUri,
         grant_type: 'authorization_code'
     };
@@ -41,9 +41,7 @@ module.exports = async (req, res) => {
     } catch (e) {
         fetchData = null;
     }
-
-    let uri = env.frontendUri;
-    let host = new Host.Host(fetchData.access_token, fetchData.refresh_token, env.spotifyClientId, env.spotifyClientSecret, env.spotifyApiAddress, env.spotifyAccountAddress);
+    const host = new Host.Host(fetchData.access_token, fetchData.refresh_token, env.spotifyClientId, env.spotifyClientSecret, env.spotifyApiAddress, env.spotifyAccountAddress);
     if (await host.fetchData() === true) {
 
         let data = handler.getData();
@@ -60,7 +58,7 @@ module.exports = async (req, res) => {
 
         handler.setData(data);
 
-        res.redirect(uri + '?token=' + host.myToken);
+        res.redirect(env.frontendUri + '/dashboard?token=' + host.myToken);
     } else {
         res.status(400).send();
     }

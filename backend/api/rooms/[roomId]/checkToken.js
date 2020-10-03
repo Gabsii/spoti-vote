@@ -29,8 +29,6 @@ const checkToken = (req, res) => {
         res.status(400);
     }
 
-    handler.setData(data);
-
     res.send(JSON.stringify(response));
 };
 

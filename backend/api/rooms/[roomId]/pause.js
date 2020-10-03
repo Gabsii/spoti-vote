@@ -18,11 +18,11 @@ const pause = async (req, res) => {
             res.status(200);
         } else {
             response = {error: true, message: 'Authorization failed. No or expired token.'};
-            res.status(400);
+            res.status(401);
         }
     } else {
         response = {error: true, message: 'Authorization failed. No or expired token.'};
-        res.status(400);
+        res.status(401);
     }
 
     handler.setData(data);

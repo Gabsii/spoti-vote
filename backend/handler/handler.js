@@ -16,7 +16,7 @@ function getEnv() {
     let spotifyApiAddress= 'https://api.spotify.com';
 
     let redirectUri = (backendPort === 443) ? 'https://': 'http://' + ipAddress + ':' + backendPort + '/api/callback';
-    let frontendUri = (frontendPort === 443) ? 'https://': 'http://' + ipAddress + ':' + frontendPort + '/dashboard';
+    let frontendUri = (frontendPort === 443) ? 'https://': 'http://' + ipAddress + ':' + frontendPort;
 
     return {
         backendPort: backendPort,

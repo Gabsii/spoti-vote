@@ -23,7 +23,7 @@ const styles = {
 class Footer extends PureComponent {
 
     render() {
-        let activePlayer = this.props.activePlayer;
+        let { activePlayer } = this.props;
         if (!activePlayer) {
             activePlayer = {
                 volume: 0,

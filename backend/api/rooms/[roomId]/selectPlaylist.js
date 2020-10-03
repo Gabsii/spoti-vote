@@ -17,11 +17,11 @@ const selectPlaylist = async (req, res) => {
             }
         } else {
             response = {error: true, message: 'Room has not been found'};
-            res.status(400);
+            res.status(401);
         }
     } else {
         response = {error: true, message: 'Authorization failed. No or expired token.'};
-        res.status(400);
+        res.status(401);
     }
 
 

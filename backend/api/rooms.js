@@ -1,28 +1,30 @@
 const handler = require('../handler/handler');
 
-module.exports = (req, res) => {
+const rooms = (req, res) => {
     // eslint-disable-next-line no-console
     console.log('INFO: /rooms has been called.');
-    res.setHeader('Access-Control-Allow-Origin', '*');
 
     let data = handler.getData();
 
-    let returnRooms = [];
-    for (var i = 0; i < data.rooms.length; i++) {
-        let roomI = {
-            roomName: data.rooms[i].id,
-            roomHost: data.rooms[i].host.name
+    let returnRooms = data.rooms.map((value, index) => {
+        let room = {
+            roomName: value.id,
+            roomHost: value.host.name,
+            roomCover: value.host.img
         };
-        roomI.roomCover = data.rooms[i].activePlayer.track.album.images[0].url;
-        
-        if (!roomI.roomCover) {
-            roomI.roomCover = data.rooms[i].activePlaylist;
+
+        if (value.activePlaylist) {
+            room.roomCover = value.activePlaylist;
         }
-        if (!roomI.roomCover) {
-            roomI.roomCover = data.rooms[i].host.img;
+
+        if (value.activePlayer && value.activePlayer.track && value.activePlayer.track.album) {
+            room.roomCover = value.activePlayer.track.album.images[0].url;
         }
-        returnRooms.push(roomI);
-    }
+
+        return room;
+    });
 
     res.status(200).send(returnRooms);
 };
+
+module.exports = handler.allowCors(rooms);
