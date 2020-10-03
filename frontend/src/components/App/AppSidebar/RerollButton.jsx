@@ -38,11 +38,13 @@ class RerollButton extends PureComponent {
         if (this.props.connectedUser) {
             users = this.props.connectedUser.length + 1;
             rerolls = 0;
-            this.props.connectedUser.forEach((value, index, array) => {
-                if (value.voted === 'reroll') {
-                    rerolls++;
-                }
-            });
+            if (this.props.connectedUser.length > 0) {
+                rerolls = this.props.connectedUser.reduce((accumulator, currentValue) => {
+                    if (currentValue.voted === 'reroll') {
+                        accumulator++;
+                    }
+                });
+            }
         }
 
         if (this.props.host && this.props.host.voted === 'reroll') {
