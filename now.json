@@ -4,18 +4,15 @@
     "alias": ["www.spoti-vote.com", "spoti-vote.com"],
     "public": false,
     "builds": [
-        {"src": "package.json", "use": "@now/static-build", "config": {"distDir": "frontend/build"}},
-        {"src": "backend/server.js", "use": "@now/node"}
+        {"src": "package.json", "use": "@now/static-build", "config": {"distDir": "frontend/build"}}
     ],
     "routes": [
         {
             "src": "^http://(.*)",
             "status": 301,
             "headers": { "Location": "https://spoti-vote.com/$1" }
-        },{
-            "src": "/api/{.*}", 
-            "dest": "/backend/server.js"
-        }, {
+        },
+        {
             "src": "/static/(.*)",
             "dest": "/static/$1",
             "headers": { "Cache-Control": "max-age=60, s-maxage=86400" }
@@ -48,7 +45,7 @@
     "env": {
         "PORT": "443",
         "PORTBACK": "443",
-        "ADDRESS": "backend.spoti-vote.com",
+        "ADDRESS": "spoti-vote.com",
         "SPOTIFY_CLIENT_ID": "0",
         "SPOTIFY_CLIENT_SECRET": "0"
     }
