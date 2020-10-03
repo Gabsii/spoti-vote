@@ -1,4 +1,4 @@
-const handler = require('../../handler/handler');
+const dataHandler = require('../../handler/dataHandler');
 const Host = require('../../handler/Classes/Host');
 const Room = require('../../handler/Classes/Room');
 
@@ -19,7 +19,7 @@ const allowCors = fn => async (req, res) => {
 
 const create = (req, res) => {
 
-    let data = handler.getData();
+    let data = dataHandler.getData();
 
     let response;
     if (req.body.myToken) {
@@ -41,7 +41,7 @@ const create = (req, res) => {
         res.status(400);
     }
 
-    handler.setData(data);
+    dataHandler.setData(data);
 
     res.send(JSON.stringify(response));
 };

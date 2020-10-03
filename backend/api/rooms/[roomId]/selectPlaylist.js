@@ -1,4 +1,4 @@
-const handler = require('../../../handler/handler');
+const dataHandler = require('../../../handler/dataHandler');
 const Room = require('../../../handler/Classes/Room');
 
 const allowCors = fn => async (req, res) => {
@@ -18,7 +18,7 @@ const allowCors = fn => async (req, res) => {
 
 const selectPlaylist = async (req, res) => {
 
-    let data = handler.getData();
+    let data = dataHandler.getData();
 
     let response;
 
@@ -42,7 +42,7 @@ const selectPlaylist = async (req, res) => {
     }
 
 
-    handler.setData(data);
+    dataHandler.setData(data);
 
     res.send(JSON.stringify(response));
 };

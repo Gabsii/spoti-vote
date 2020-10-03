@@ -1,4 +1,4 @@
-const handler = require('../handler/handler');
+const dataHandler = require('../handler/dataHandler');
 const Host = require('../handler/Classes/Host');
 
 const allowCors = fn => async (req, res) => {
@@ -22,7 +22,7 @@ const profile = (req, res) => {
     // eslint-disable-next-line no-console
     console.log('INFO: /profile has been called.');
 
-    let data = handler.getData();
+    let data = dataHandler.getData();
     
     if (req.body.myToken) {
         let myHost = Host.getHostByToken(req.body.myToken, data.hosts);
