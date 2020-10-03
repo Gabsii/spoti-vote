@@ -66,7 +66,7 @@ class LoginCode extends PureComponent {
         if (event.target.value.length === 5) {
             let str = event.target.value.toUpperCase();
             let exists = false;
-            let [data, error] = await constants.api('/rooms');
+            let data = await constants.api('/rooms');
             for (var i = 0; i < data.length; i++) {
                 if (data[i].roomName === str) {
                     exists = true;

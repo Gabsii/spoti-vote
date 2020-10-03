@@ -69,7 +69,7 @@ class RoomContainer extends Component {
     }
 
     async fetchRoomData() {
-        let [data, error] = await constants.api('/rooms');
+        let data = await constants.api('/rooms');
         this.setState({rooms: data});
     }
 

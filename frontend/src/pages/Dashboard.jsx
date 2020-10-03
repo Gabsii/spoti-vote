@@ -61,8 +61,7 @@ class Dashboard extends Component {
     }
 
     async fetchProfile(myToken) {
-        console.log(constants.api)
-        let [data, error] = await constants.api('/profile', {
+        let data = await constants.api('/profile', {
             method: 'POST',
             headers: {'content-type': 'application/json'},
             body: JSON.stringify({

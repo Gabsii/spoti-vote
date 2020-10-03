@@ -72,7 +72,7 @@ class App extends Component {
     }
 
     async componentDidMount() {
-        let [data, error] = await constants.api('/rooms/' + this.state.roomId + '/checkToken', {
+        let data = await constants.api('/rooms/' + this.state.roomId + '/checkToken', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -98,7 +98,7 @@ class App extends Component {
                             });
                         }
                     }).then(async (result) => {
-                        let [data2, error2] = await constants.api('/rooms/' + this.state.roomId + '/connectUser' , {
+                        let data2 = await constants.api('/rooms/' + this.state.roomId + '/connectUser' , {
                             method: 'post',
                             headers: {'Content-Type': 'application/json'},
                             body: JSON.stringify({
@@ -132,7 +132,7 @@ class App extends Component {
     }
 
     async getData() {
-        let [data, error] = await constants.api('/rooms/' + this.state.roomId + '/update' , {
+        let data = await constants.api('/rooms/' + this.state.roomId + '/update' , {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

@@ -86,17 +86,17 @@ const api = async (apiUrl, ...params) => {
     let error;
     let data;
     if (apiUrl.startsWith('/')) {
-      url = `${config.url}/api${apiUrl}`;
+        url = `${config.url}/api${apiUrl}`;
     }
     const apiResponse = await fetch(url, ...params);
-  
+
     try {
-      data = await apiResponse.json();
+        data = await apiResponse.json();
     } catch (err) {
-      console.error(err);
-      error = [err.message || err];
+        console.error(err);
+        error = [err.message || err];
     }
-  
+
     return [data, error];
 };
 

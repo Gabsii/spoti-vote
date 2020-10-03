@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
-import Cookies from 'universal-cookie';
+//import Cookies from 'universal-cookie';
 import {Helmet} from 'react-helmet';
 
 import SharedSidebar from '../components/Shared/SharedSidebar.jsx';
