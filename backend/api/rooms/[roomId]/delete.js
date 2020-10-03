@@ -16,7 +16,7 @@ const allowCors = fn => async (req, res) => {
     return await fn(req, res);
 };
 
-const deleteF = async (req, res) => {
+const del = async (req, res) => {
 
     let data = handler.getData();
 
@@ -42,4 +42,4 @@ const deleteF = async (req, res) => {
     res.send(JSON.stringify(response));
 };
 
-module.exports = allowCors(deleteF);
+module.exports = allowCors(del);

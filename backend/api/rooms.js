@@ -13,14 +13,10 @@ module.exports = (req, res) => {
             roomName: data.rooms[i].id,
             roomHost: data.rooms[i].host.name
         };
-        try {
-            roomI.roomCover = data.rooms[i].activePlayer.track.album.images[0].url;
-        } catch (error) {
-            try {
-                roomI.roomCover = data.rooms[i].activePlaylist;
-            } catch (error) {
-                break;
-            }
+        roomI.roomCover = data.rooms[i].activePlayer.track.album.images[0].url;
+        
+        if (!roomI.roomCover) {
+            roomI.roomCover = data.rooms[i].activePlaylist;
         }
         if (!roomI.roomCover) {
             roomI.roomCover = data.rooms[i].host.img;
