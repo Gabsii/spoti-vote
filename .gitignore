@@ -17,11 +17,12 @@ node_modules/
 # dotenv environment variables file
 .env
 
-# Package lock file
-package-lock.json
-
 # build folder
 /frontend/build
 
 # Config files
 /frontend/src/js/config.json
+
+.vercel
+*/handler/data
+logs.txt

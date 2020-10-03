@@ -29,7 +29,7 @@ class UserContainer extends PureComponent {
     render() {
         if (this.props.connectedUser !==null && this.props.connectedUser !==undefined) {
             for (var i = 0; i < this.props.connectedUser.length; i++) {
-                if (this.props.connectedUser[i].voted === null) {
+                if (!this.props.connectedUser[i].voted) {
                     this.props.connectedUser[i].color = constants.colors.font;
                 }
                 for (var j = 0; j < this.props.activeTracks.length; j++) {

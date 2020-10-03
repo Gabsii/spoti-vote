@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
-import Cookies from 'universal-cookie';
+//import Cookies from 'universal-cookie';
 import {Helmet} from 'react-helmet';
 
 import SharedSidebar from '../components/Shared/SharedSidebar.jsx';
 import RoomContainer from '../components/Rooms/RoomContainer.jsx';
 
-const cookies = new Cookies();
+//const cookies = new Cookies();
 const constants = require('../js/constants');
 const styles = {
     main: css({
@@ -33,16 +33,17 @@ class Rooms extends Component {
     }
 
     componentDidMount() {
+        /*
         let token = cookies.get('token');
 
         if (window.location.search) {
             token = window.location.search.split('=')[1];
         }
 
-        if (token === undefined) {
-            window.location.pathname = '';
-        } else {
+        if (token) {
             cookies.set('token', token);
+        } else {
+            window.location.pathname = '';
         }
 
         //Gets rid of the search in window.location
@@ -50,6 +51,7 @@ class Rooms extends Component {
         window.history.pushState({}, document.title, myNewURL);
 
         this.fetchProfileData(token);
+        */
     }
 
     // asynchronously fetch all the comments for the current post and add it to the comments array in the state
@@ -59,7 +61,7 @@ class Rooms extends Component {
                 'Authorization': 'Bearer ' + token
             }
         }).then(response => response.json()).then(response => {
-            if (response.error === undefined) {
+            if (!response.error) {
                 this.setState({
                     profile: {
                         name: response.display_name,

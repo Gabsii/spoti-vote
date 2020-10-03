@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
+import swal from 'sweetalert2';
 
 import LoginCode from '../../Login/LoginCode.jsx';
 
@@ -70,22 +71,70 @@ const styles = {
 };
 
 class Logins extends Component {
+    errorMsg(message) {
+        swal.fire({type: 'error', title: 'Oops...', text: message}).then( () => {
+            window.location.pathname = '/';
+        });
+    }
 
-    login() {
-        window.location.href = constants.config.url + '/createRoom?id=' + this.props.profile.id;
+    async createRoom() {
+
+        let defaultOptions = {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                myToken: this.props.host.myToken
+            })
+        };
+
+        //Check if there is already a room
+        let [data] = await constants.api('/rooms/checkCreate', defaultOptions);
+        if (data.error) {
+            this.errorMsg(data.message);
+        } else {
+            if (data.roomId) {        //If there is a room
+                swal.fire({
+                    title: 'You are already hosting a room.',
+                    text: 'You are currently hosting room [' + data.roomId + ']. Do you want to delete it?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, dont do it!'
+                }).then(async (result) => {
+                    if (result.value) {                                     //If host wants to delete old / create new
+                        constants.api('/rooms/' + data.roomId + '/delete', defaultOptions);
+                        let [data2] = await constants.api('/rooms/create', defaultOptions);
+                        if (data2.error) {
+                            this.errorMsg(data2.message);
+                        } else {
+                            window.location = '/app/' + data2.roomId;
+                        }
+                    } else {                                                // If host wants to keep the old
+                        window.location = '/app/' + data.roomId;
+                    }
+                });
+            } else {                                                        //If there is no old Roomd
+                let [data2] = await constants.api('/rooms/create', defaultOptions);
+                if (data2.error) {
+                    this.errorMsg(data2.message);
+                } else {
+                    window.location = '/app/' + data2.roomId;
+                }
+            }
+        }
     }
 
     render() {
         return (<div className={`${styles.wrapper}`}>
             <h1 className={`${styles.heading}`}>Create a Room:</h1>
             {
-                this.props.profile !== null && this.props.profile !== undefined
-                    ? this.props.profile.premium
-                        ? <button id='loginbutton' className={`${styles.button}`} onClick={this.login.bind(this)} tabIndex='0'>
+                this.props.host
+                    ? this.props.host.premium
+                        ? <button id='loginbutton' className={`${styles.button}`} onClick={this.createRoom.bind(this)} tabIndex='0'>
                                 Host
                         </button>
                         : <div className={`${styles.buttonWrapper}`}>
-                            <button className={`${styles.buttonDisabled}`} onClick={this.login.bind(this)} tabIndex='0' disabled="disabled">
+                            <button className={`${styles.buttonDisabled}`} onClick={this.createRoom.bind(this)} tabIndex='0' disabled="disabled">
                                     Host
                             </button>
                             <div className={`${styles.error}`}>You need Spotify Premium to host a room!</div>
