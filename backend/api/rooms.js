@@ -1,11 +1,11 @@
-const dataHandler = require('../handler/dataHandler');
+const handler = require('../handler/handler');
 
 module.exports = (req, res) => {
     // eslint-disable-next-line no-console
     console.log('INFO: /rooms has been called.');
     res.setHeader('Access-Control-Allow-Origin', '*');
 
-    let data = dataHandler.getData();
+    let data = handler.getData();
 
     let returnRooms = [];
     for (var i = 0; i < data.rooms.length; i++) {

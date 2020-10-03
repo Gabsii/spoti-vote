@@ -1,10 +1,9 @@
-const dataHandler = require('../../../handler/dataHandler');
-const allowCors = require('../../../handler/corsHandler').allowCors;
+const handler = require('../../../handler/handler');
 const Room = require('../../../handler/Classes/Room');
 
 const volume = async (req, res) => {
 
-    let data = dataHandler.getData();
+    let data = handler.getData();
 
     let response;
 
@@ -25,9 +24,9 @@ const volume = async (req, res) => {
         res.status(400);
     }
 
-    dataHandler.setData(data);
+    handler.setData(data);
 
     res.send(JSON.stringify(response));
 };
 
-module.exports = allowCors(volume);
+module.exports = handler.allowCors(volume);

@@ -1,5 +1,4 @@
-const dataHandler = require('../handler/dataHandler');
-const allowCors = require('../handler/corsHandler').allowCors;
+const handler = require('../handler/handler');
 const Host = require('../handler/Classes/Host');
 
 const profile = (req, res) => {
@@ -7,7 +6,7 @@ const profile = (req, res) => {
     // eslint-disable-next-line no-console
     console.log('INFO: /profile has been called.');
 
-    let data = dataHandler.getData();
+    let data = handler.getData();
     
     if (req.body.myToken) {
         let myHost = Host.getHostByToken(req.body.myToken, data.hosts);
@@ -26,4 +25,4 @@ const profile = (req, res) => {
     res.send(JSON.stringify(response));
 };
 
-module.exports = allowCors(profile);
+module.exports = handler.allowCors(profile);

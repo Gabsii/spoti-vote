@@ -85,7 +85,7 @@ class Logins extends Component {
             body: JSON.stringify({
                 myToken: this.props.host.myToken
             })
-        }
+        };
 
         //Check if there is already a room
         fetch(constants.config.url + '/rooms/checkCreate' , 

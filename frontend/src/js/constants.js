@@ -82,10 +82,10 @@ function insertObjectDifference(data, diff) {
 }
 
 module.exports = {
-    config: config,
-    colors: colors,
-    iterateCardColors: iterateCardColors,
-    codes: codes,
-    breakpoints: breakpoints,
-    insertObjectDifference: insertObjectDifference
+    config,
+    colors,
+    iterateCardColors,
+    codes,
+    breakpoints,
+    insertObjectDifference
 };

@@ -1,10 +1,9 @@
-const dataHandler = require('../../../handler/dataHandler');
-const allowCors = require('../../../handler/corsHandler').allowCors;
+const handler = require('../../../handler/handler');
 const Room = require('../../../handler/Classes/Room');
 
 const update = async (req, res) => {
 
-    let data = dataHandler.getData();
+    let data = handler.getData();
 
     let response = {};
     if (req.body.myToken) {
@@ -28,9 +27,9 @@ const update = async (req, res) => {
         res.status(400);
     }
 
-    dataHandler.setData(data);
+    handler.setData(data);
 
     res.send(JSON.stringify(response));
 };
 
-module.exports = allowCors(update);
+module.exports = handler.allowCors(update);

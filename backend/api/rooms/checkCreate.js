@@ -1,11 +1,10 @@
-const dataHandler = require('../../handler/dataHandler');
-const allowCors = require('../../handler/corsHandler').allowCors;
+const handler = require('../../handler/handler');
 const Host = require('../../handler/Classes/Host');
 const Room = require('../../handler/Classes/Room');
 
 const checkCreate = (req, res) => {
 
-    let data = dataHandler.getData();
+    let data = handler.getData();
 
     let response;
     if (req.body.myToken) {
@@ -31,4 +30,4 @@ const checkCreate = (req, res) => {
     res.send(JSON.stringify(response));
 };
 
-module.exports = allowCors(checkCreate);
+module.exports = handler.allowCors(checkCreate);

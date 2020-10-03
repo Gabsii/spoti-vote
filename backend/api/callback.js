@@ -1,9 +1,10 @@
-const env = require('../handler/envHandler').getEnv();
-const dataHandler = require('../handler/dataHandler');
+const handler = require('../handler/handler');
 const Room = require('../handler/Classes/Room');
 const Host = require('../handler/Classes/Host');
 const fetch = require('node-fetch');
 const URLSearchParams = require('url').URLSearchParams;
+
+const env = handler.getEnv();
 
 module.exports = async (req, res) => {
 
@@ -45,7 +46,7 @@ module.exports = async (req, res) => {
     let host = new Host.Host(fetchData.access_token, fetchData.refresh_token, env.spotifyClientId, env.spotifyClientSecret, env.spotifyApiAddress, env.spotifyAccountAddress);
     if (await host.fetchData() === true) {
 
-        let data = dataHandler.getData();
+        let data = handler.getData();
 
         let oldHost = Host.getHostByToken(host.myToken, data.hosts);
         if (oldHost) {
@@ -57,7 +58,7 @@ module.exports = async (req, res) => {
         // eslint-disable-next-line no-console
         console.log('INFO-[HOST: '+host.name+']: This host has logged in');
 
-        dataHandler.setData(data);
+        handler.setData(data);
 
         res.redirect(uri + '?token=' + host.myToken);
     } else {
