@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, {useEffect, useState} from 'react';
 import Cookies from 'universal-cookie';
 import {css} from 'glamor';
 
@@ -35,47 +35,31 @@ const styles = {
     link: css({color: 'white', textDecoration: 'none'})
 };
 
-class CookieMessage extends PureComponent {
-
-    constructor() {
-        super();
-        this.state = {
-            cookie: true
-        };
-    }
-
-    componentDidMount() {
-        let cookie = cookies.get('cookie');
-
-        /* If the cookie is set, dont show the message */
-        if (cookie) {
-            this.setState({cookie: false});
-        }
-    }
-
-    setCookie() {
+const CookieMessage = () => {
+    const [showCookie, setShowCookie] = useState(true)
+    
+    const setCookie = () => {
         cookies.set('cookie', true);
-
         let cookie = cookies.get('cookie');
+        setShowCookie(Boolean(!cookie));
+    }
 
+    useEffect(() => {
+        let cookie = cookies.get('cookie');
         /* If the cookie is set, dont show the message */
-        if (cookie) {
-            this.setState({cookie: false});
-        }
-    }
+        setShowCookie(Boolean(!cookie));
+    }, [])
+    
+    if (!showCookie) return null;
 
-    render() {
-        if (this.state.cookie) {
-            return (<div className={`${styles.wrapper}`}>
-                <div className={`${styles.text}`}>This page uses Cookies to work. Please press this button so we can stay within the law. {' '}
-                    <a href="/policies" className={`${styles.link}`}>More Infos about your rights.</a>
-                </div>
-                <button className={`${styles.button}`} onClick={this.setCookie.bind(this)}>I understand</button>
-            </div>);
-        } else {
-            return '';
-        }
-    }
+    return (
+        <div className={`${styles.wrapper}`}>
+            <div className={`${styles.text}`}>This page uses Cookies to work. Please press this button so we can stay within the law. {' '}
+                <a href="/policies" className={`${styles.link}`}>More Infos about your rights.</a>
+            </div>
+            <button className={`${styles.button}`} onClick={() => setCookie()}>I understand</button>
+        </div>
+    );
 }
 
 export default CookieMessage;

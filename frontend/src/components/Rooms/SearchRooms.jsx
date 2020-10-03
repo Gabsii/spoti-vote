@@ -36,18 +36,16 @@ const styles = {
     icon: css({})
 };
 
-class SearchRooms extends React.Component {
-
-    focusInput() {
+const SearchRooms = ({filterRooms} = {filterRooms: () => {}}) => {
+    const focusInput = ()  => {
         document.getElementById('code').focus();
     }
-
-    render() {
-        return (<div className={`${styles.wrapper}`}>
-            <FontAwesomeIcon icon={faSearch} size={'2x'} className={`${styles.icon}`} onClick={this.focusInput.bind(this)}/>
-            <input type='text' id='code' placeholder='Search for a Room...' className={`${styles.input}`} autoComplete='off' onChange={this.props.filterRooms.bind(this)}/>
-        </div>);
-    }
+    return (
+        <div className={`${styles.wrapper}`}>
+            <FontAwesomeIcon icon={faSearch} size={'2x'} className={`${styles.icon}`} onClick={() => focusInput()}/>
+            <input type='text' id='code' placeholder='Search for a Room...' className={`${styles.input}`} autoComplete='off' onChange={() => filterRooms()}/>
+        </div>
+    );
 }
 
 export default SearchRooms;

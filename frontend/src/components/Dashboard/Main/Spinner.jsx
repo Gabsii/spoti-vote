@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {css} from 'glamor';
 
 import '../../../css/Spinner.css';
@@ -20,13 +20,11 @@ const styles = {
     loading: css({color: 'white', fontSize: '1.2em', bottom: '30px', position: 'fixed'})
 };
 
-class Spinner extends Component {
-    render() {
-        return (<div className={`${styles.wrapper}`}>
-            <div id="spinner"></div>
-            <span className={`${styles.loading}`}>Loading...</span>
-        </div>);
-    }
-}
+const Spinner = () => (
+    <div className={`${styles.wrapper}`}>
+        <div id="spinner"></div>
+        <span className={`${styles.loading}`}>Loading...</span>
+    </div>
+)
 
 export default Spinner;

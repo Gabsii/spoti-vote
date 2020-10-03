@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {css} from 'glamor';
 
 import SearchRooms from './SearchRooms.jsx';
@@ -23,71 +23,52 @@ const styles = {
     roomWrapper: css({display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', flexWrap: 'wrap'})
 };
 
-class RoomContainer extends Component {
-
-    constructor() {
-        super();
-        this.state = {
-            rooms: [],
-            search: '',
-            searchRooms: []
-        };
-        this.displayRooms.bind(this);
-    }
-
-    componentDidMount() {
-        this.fetchRoomData().then(() => {
-            this.displayRooms();
-        });
-    }
-
-    filterRooms(e) {
+const RoomContainer = () => {
+    const [state, setState] = useState({ rooms: [], search: '', searchRooms: [] })
+    
+    const filterRooms = (e) => {
         let value = e.target.value.toLowerCase();
-        this.setState({
-            search: value
-        }, () => {
-            this.displayRooms();
-        });
+        setState( state => ({...state, search: value}));
     }
 
-    displayRooms() {
-        if (this.state.search === '' || !this.state.search) {
-            this.setState({searchRooms: this.state.rooms});
+    const fetchRoomData = async () => {
+        let [data] = await constants.api('/rooms');
+        this.setState(state => ({...state, rooms: data}));
+    }
+
+    const displayRooms = () => {
+        if (state.search === '' || !state.search) {
+            setState(state => ({...state, searchRooms: state.rooms}));
         } else {
             let res = [];
-            this.state.rooms.filter((room) => {
+            state.rooms.filter((room) => {
                 let roomName = room.roomName.toLowerCase();
                 let roomHost = room.roomHost.toLowerCase();
-                if (roomName.includes(this.state.search) || roomHost.includes(this.state.search)) {
+                if (roomName.includes(state.search) || roomHost.includes(state.search)) {
                     return res.push(room);
                 }
                 return null;
             });
-            this.setState({searchRooms: res});
+            setState(state => ({...state, searchRooms: res}));
         }
-
     }
 
-    async fetchRoomData() {
-        let [data] = await constants.api('/rooms');
-        this.setState({rooms: data});
-    }
-
-    render() {
-        return (<main className={`${styles.main}`}>
-            <SearchRooms rooms={this.state.rooms} filterRooms={this.filterRooms.bind(this)}/>
+    useEffect(() => {
+        fetchRoomData().then(() => displayRooms());
+    }, [])
+    
+    return (
+        <main className={`${styles.main}`}>
+            <SearchRooms rooms={state.rooms} filterRooms={() => filterRooms()}/>
             <div className={`${styles.roomWrapper}`}>
                 {
-                    this.state.rooms.length >= 1
-                        ? this.state.searchRooms.map((room, index) => {
+                    state.rooms.length >= 1
+                        ? state.searchRooms.map((room, index) => {
                             return (<Room name={room.roomName} host={room.roomHost} cover={room.roomCover} key={index}/>);
-                        })
-                        : <div style={{
-                            color: 'white'
-                        }}>No Rooms found</div>
+                        }) : <div style={{color: 'white'}}>No Rooms found</div>
                 }</div>
-        </main>);
-    }
+        </main>
+    );
 }
 
 export default RoomContainer;

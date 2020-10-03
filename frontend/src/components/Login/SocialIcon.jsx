@@ -16,13 +16,12 @@ const styles = {
     })
 };
 
-const SocialIcon = (props) => {
-
-    return (<a href={props.url} className={`${styles.link}`}>
+const SocialIcon = ({ url, icon }) => (
+    <a href={url} className={`${styles.link}`}>
         <div className={`${styles.wrapper}`}>
-            <FontAwesomeIcon icon={props.icon} size='4x'/>
+            <FontAwesomeIcon icon={icon} size='4x'/>
         </div>
-    </a>);
-};
+    </a>
+);
 
 export default SocialIcon;

@@ -16,14 +16,14 @@ const styles = {
     link: css({color: 'white', textDecoration: 'none'})
 };
 
-const LoginFooter = () => {
-
-    return (<footer className={`${styles.footer}`}>Help us to keep Spoti-Vote running
+const LoginFooter = () => (
+    <footer className={`${styles.footer}`}>
+        Help us to keep Spoti-Vote running
         <br/>
         &copy; Lukas Gabsi, Michael Blank
         <br/>
         <a href="/policies" className={`${styles.link}`}>Policies</a>
-    </footer>);
-};
+    </footer>
+);
 
 export default LoginFooter;

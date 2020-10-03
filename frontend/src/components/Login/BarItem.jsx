@@ -16,10 +16,10 @@ const styles = {
     })
 };
 
-const BarItem = (props) => {
-    return (<li className={`${styles.item}`}>
-        <a className={`${styles.link}`} href={props.url}>{props.name}</a>
-    </li>);
-};
+const BarItem = ({url, name}) => (
+    <li className={`${styles.item}`}>
+        <a className={`${styles.link}`} href={url}>{name}</a>
+    </li>
+);
 
 export default BarItem;

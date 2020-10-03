@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React from 'react';
 import {css} from 'glamor';
 
 import '../../css/selectors.css';
@@ -29,16 +29,15 @@ const styles = {
     })
 };
 
-class LoginButton extends PureComponent {
-    login() {
+const LoginButton = () => {
+    const login = () => {
         window.location.href = constants.config.url + '/api/login';
     }
-
-    render() {
-        return (<button id='loginbutton' className={`${styles.button}`} onClick={this.login.bind(this)} tabIndex='0'>
+    return (
+        <button id='loginbutton' className={`${styles.button}`} onClick={() => login()} tabIndex='0'>
             Start a party
-        </button>);
-    }
+        </button>
+    );
 }
 
 export default LoginButton;

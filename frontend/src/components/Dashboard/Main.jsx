@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {css} from 'glamor';
 
 import Logins from './Main/Logins.jsx';
@@ -24,14 +24,11 @@ const styles = {
     })
 };
 
-class Main extends Component {
-
-    render() {
-        return (<main className={`${styles.main}`}>
-            <Logins host={this.props.host}/>
-            <Carousel topTracks={this.props.topTracks}/>
-        </main>);
-    }
-}
+const Main = ({host, topTracks}) => (
+    <main className={`${styles.main}`}>
+        <Logins host={host}/>
+        <Carousel topTracks={topTracks}/>
+    </main>
+)
 
 export default Main;

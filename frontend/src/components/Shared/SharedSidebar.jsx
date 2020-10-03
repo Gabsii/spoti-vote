@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {css} from 'glamor';
 
 import Profile from './SharedSidebar/Profile.jsx';
@@ -22,14 +22,11 @@ const styles = {
     })
 };
 
-class DashboardSidebar extends Component {
-
-    render() {
-        return (<aside id='sidebar' className={`${styles.wrapper}`}>
-            <Profile host={this.props.host}/>
-            <Navbar/>
-        </aside>);
-    }
-}
+const DashboardSidebar = () => (
+    <aside id='sidebar' className={`${styles.wrapper}`}>
+        <Profile host={this.props.host}/>
+        <Navbar/>
+    </aside>
+)
 
 export default DashboardSidebar;

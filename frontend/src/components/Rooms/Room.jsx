@@ -40,19 +40,15 @@ const styles = {
     })
 };
 
-class Room extends React.Component {
-
-    joinRoom() {
-        window.location = window.location.origin + '/app/' + this.props.name;
+const Room = ({cover, name, host}) => {
+    const joinRoom = () => {
+        window.location = window.location.origin + '/app/' + name;
     }
-
-    render() {
-        return (<button className={`${styles.wrapper}`} onClick={this.joinRoom.bind(this)} style={{
-            backgroundImage: 'url(' + this.props.cover + ')'
-        }}>
-            <div className={`${styles.room}`}>{this.props.name + ' - ' + this.props.host}</div>
-        </button>);
-    }
+    return (
+        <button className={`${styles.wrapper}`} onClick={() => joinRoom()} style={{backgroundImage: 'url(' + cover + ')'}}>
+            <div className={`${styles.room}`}>{name + ' - ' + host}</div>
+        </button>
+    );
 }
 
 export default Room;

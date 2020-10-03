@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {css} from 'glamor';
 
 const styles = {
@@ -26,27 +26,16 @@ const styles = {
     hostName: css({marginLeft: '10px'})
 };
 
-class Profile extends Component {
-
-    render() {
-        let img,
-            name,
-            id;
-        if (this.props.host) {
-            img = this.props.host.img;
-            name = this.props.host.name;
-            id = this.props.host.id;
-        }
-        return (<div className={`${styles.breaker}`}>
-            <div>
-                <img alt='Current Playlist' src={img} className={`${styles.playlistImage}`}/>
+const Profile = ({host: {img, name, id}} = {host: {}}) => (
+    <div className={`${styles.breaker}`}>
+        <div>
+            <img alt='Current Playlist' src={img} className={`${styles.playlistImage}`}/>
+        </div>
+        <div className={`${styles.hostWrapper}`}>
+            <div className={`${styles.hostName}`}>{name || id}
             </div>
-            <div className={`${styles.hostWrapper}`}>
-                <div className={`${styles.hostName}`}>{name || id}
-                </div>
-            </div>
-        </div>);
-    }
-}
+        </div>
+    </div>
+)
 
 export default Profile;

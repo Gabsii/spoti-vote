@@ -25,11 +25,10 @@ const styles = {
     })
 };
 
-const NavItem = (props) => {
-
-    return (<li className={`${styles.item}`}>
-        <a className={`${styles.link}`} href={props.href}>{props.name}</a>
-    </li>);
-};
+const NavItem = ({name, href}) => (
+    <li className={`${styles.item}`}>
+        <a className={`${styles.link}`} href={href}>{name}</a>
+    </li>
+);
 
 export default NavItem;

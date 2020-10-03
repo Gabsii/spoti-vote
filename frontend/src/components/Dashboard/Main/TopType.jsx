@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {css} from 'glamor';
 
 let constants = require('../../../js/constants');
@@ -19,17 +19,14 @@ const styles = {
     subHeading: css({fontSize: '0.8em', color: constants.colors.fontSecondary})
 };
 
-class TopType extends Component {
-
-    render() {
-        return (<div className={`${styles.wrapper}`}>
-            <img className={`${styles.album}`} alt={this.props.name} src={this.props.img || 'https://via.placeholder.com/152x152'}/>
-            <div>
-                <h3 className={`${styles.heading}`}>{this.props.name}</h3>
-                <h4 className={`${styles.subHeading}`}>{this.props.artist}</h4>
-            </div>
-        </div>);
-    }
-}
+const TopType = ({name, img, artist}) => (
+    <div className={`${styles.wrapper}`}>
+        <img className={`${styles.album}`} alt={name} src={img || 'https://via.placeholder.com/152x152'}/>
+        <div>
+            <h3 className={`${styles.heading}`}>{name}</h3>
+            <h4 className={`${styles.subHeading}`}>{artist}</h4>
+        </div>
+    </div>
+)
 
 export default TopType;

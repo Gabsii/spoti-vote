@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {css} from 'glamor';
 import swal from 'sweetalert2';
 
@@ -70,23 +70,20 @@ const styles = {
     error: css({fontWeight: 'bold', color: constants.colors.redCard})
 };
 
-class Logins extends Component {
-    errorMsg(message) {
+const Logins = ({host}) => {
+    const errorMsg = (message) => {
         swal.fire({type: 'error', title: 'Oops...', text: message}).then( () => {
             window.location.pathname = '/';
         });
     }
-
-    async createRoom() {
-
+    const createRoom = async() => {
         let defaultOptions = {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                myToken: this.props.host.myToken
+                myToken: host.myToken
             })
         };
-
         //Check if there is already a room
         let [data] = await constants.api('/rooms/checkCreate', defaultOptions);
         if (data.error) {
@@ -105,7 +102,7 @@ class Logins extends Component {
                         constants.api('/rooms/' + data.roomId + '/delete', defaultOptions);
                         let [data2] = await constants.api('/rooms/create', defaultOptions);
                         if (data2.error) {
-                            this.errorMsg(data2.message);
+                            errorMsg(data2.message);
                         } else {
                             window.location = '/app/' + data2.roomId;
                         }
@@ -123,29 +120,27 @@ class Logins extends Component {
             }
         }
     }
-
-    render() {
-        return (<div className={`${styles.wrapper}`}>
+    return (
+        <div className={`${styles.wrapper}`}>
             <h1 className={`${styles.heading}`}>Create a Room:</h1>
             {
-                this.props.host
-                    ? this.props.host.premium
-                        ? <button id='loginbutton' className={`${styles.button}`} onClick={this.createRoom.bind(this)} tabIndex='0'>
-                                Host
+                host
+                    ? host.premium
+                        ? <button id='loginbutton' className={`${styles.button}`} onClick={() => createRoom()} tabIndex='0'>
+                            Host
                         </button>
                         : <div className={`${styles.buttonWrapper}`}>
-                            <button className={`${styles.buttonDisabled}`} onClick={this.createRoom.bind(this)} tabIndex='0' disabled="disabled">
-                                    Host
+                            <button className={`${styles.buttonDisabled}`} onClick={() => createRoom()} tabIndex='0' disabled="disabled">
+                                Host
                             </button>
                             <div className={`${styles.error}`}>You need Spotify Premium to host a room!</div>
                         </div>
-                    : ''
+                    : null
             }
-
             <h2 className={`${styles.subHeading}`}>Or join one:</h2>
             <LoginCode/>
-        </div>);
-    }
+        </div>
+    );
 }
 
 export default Logins;

@@ -19,18 +19,16 @@ const styles = {
     text: css({textAlign: 'center', fontSize: '1.1em'})
 };
 
-const Reason = (props) => {
-
-    return (<div className={`${styles.wrapper}`}>
-
-        <FontAwesomeIcon icon={props.icon} size='4x'/>
+const Reason = ({ icon, title, text }) => (
+    <div className={`${styles.wrapper}`}>
+        <FontAwesomeIcon icon={icon} size='4x'/>
         <h3 className={`${styles.heading}`}>
-            {props.title}
+            {title}
         </h3>
         <div className={`${styles.text}`}>
-            {props.text}
+            {text}
         </div>
-    </div>);
-};
+    </div>
+);
 
 export default Reason;

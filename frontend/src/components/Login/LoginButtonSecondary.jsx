@@ -29,17 +29,15 @@ const styles = {
     })
 };
 
-class LoginButtonSecondary extends PureComponent {
-
-    login() {
+const LoginButtonSecondary = () => {
+    const login = () => {
         window.location.pathname = '/join';
     }
-
-    render() {
-        return (<button id='loginbuttonsecondary' className={`${styles.button}`} onClick={this.login.bind(this)} tabIndex='0'>
+    return (
+        <button id='loginbuttonsecondary' className={`${styles.button}`} onClick={() => login()} tabIndex='0'>
             Join a party
-        </button>);
-    }
+        </button>
+    );
 }
 
 export default LoginButtonSecondary;

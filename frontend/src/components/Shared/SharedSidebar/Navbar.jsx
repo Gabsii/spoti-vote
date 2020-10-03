@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
 import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers'; 
@@ -43,9 +43,8 @@ const styles = {
     button: css({border: 0, color: constants.colors.fontSecondary, background: 'none', paddingBottom: '5px', ':hover': {cursor: 'pointer'}})
 };
 
-class NavBar extends Component {
-
-    logoutHandler() {
+const NavBar = ({} = {}) => {
+    const logoutHandler = () => {
         swal.fire({
             title: 'Logout.',
             text: 'Do you really want to leave us already?',
@@ -60,34 +59,34 @@ class NavBar extends Component {
             }
         });
     }
-
-    render() {
-        return (<div className={`${styles.wrapper}`}>
+    const pathname = window.location.pathname
+    return (
+        <div className={`${styles.wrapper}`}>
             {
-                window.location.pathname === '/dashboard'
+                pathname === '/dashboard'
                     ? <div className={`${styles.buttonWrapper}`}>
                         <a className={`${styles.button}`} href="/rooms">
                             <FontAwesomeIcon icon={faUsers} size='3x'/>
                         </a>
                         <span>Rooms</span>
                     </div>
-                    : window.location.pathname === '/rooms'
+                    : pathname === '/rooms'
                         ? <div className={`${styles.buttonWrapper}`}>
                             <a className={`${styles.button}`} href="/dashboard">
                                 <FontAwesomeIcon icon={faHome} size='3x'/>
                             </a>
                             <span>Home</span>
                         </div>
-                        : ''
+                        : null
             }
             <div className={`${styles.buttonWrapper}`}>
-                <button className={`${styles.button}`} onClick={this.logoutHandler.bind(this)}>
+                <button className={`${styles.button}`} onClick={() => logoutHandler()}>
                     <FontAwesomeIcon icon={faSignOutAlt} size='3x'/>
                 </button>
                 <span>Logout</span>
             </div>
-        </div>);
-    }
+        </div>
+    )
 }
 
 export default NavBar;

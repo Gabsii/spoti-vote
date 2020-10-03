@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {css} from 'glamor';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCaretDown} from '@fortawesome/free-solid-svg-icons/faCaretDown';
@@ -43,45 +43,31 @@ const styles = {
     })
 };
 
-class Carousel extends Component {
-
-    constructor() {
-        super();
-        this.state = {
-            minimized: false
-        };
-    }
-
-    //height: 35px
-    minimizeFooter() {
-        if (this.state.minimized) {
+const Carousel = ({topTracks}) => {
+    const [minimized, setMinimized] = useState(false);
+    const minimizeFooter = () => {
+        if (minimized) {
             document.getElementById('carousel').style.height = '340px';
-            this.setState({minimized: false});
+            setMinimized(false);
         } else {
             document.getElementById('carousel').style.height = '35px';
-            this.setState({minimized: true});
+            setMinimized(true);
         }
     }
-
-    render() {
-        return (<footer id="carousel" className={`${styles.wrapper}`}>
-            <h2 className={`${styles.heading}`} onClick={this.minimizeFooter.bind(this)}>
+    return (
+        <footer id="carousel" className={`${styles.wrapper}`}>
+            <h2 className={`${styles.heading}`} onClick={() => minimizeFooter()}>
                 {
-                    this.state.minimized
-                        ? <FontAwesomeIcon icon={faCaretRight} size='1x' className={`${styles.minimizer}`} style={{
-                            marginRight: '10px'
-                        }}/>
-                        : <FontAwesomeIcon icon={faCaretDown} size='1x' className={`${styles.minimizer}`} style={{
-                            marginRight: '10px'
-                        }}/>
+                    minimized
+                        ? <FontAwesomeIcon icon={faCaretRight} size='1x' className={`${styles.minimizer}`} style={{marginRight: '10px'}}/>
+                        : <FontAwesomeIcon icon={faCaretDown} size='1x' className={`${styles.minimizer}`} style={{marginRight: '10px'}}/>
                 }
-
-                Your Top Track{this.props.topTracks && this.props.topTracks.length > 1 ? 's' : ''}:
+                Your Top Track{topTracks && topTracks.length > 1 ? 's' : ''}:
             </h2>
             <div className={`${styles.tracksWrapper}`}>
                 {
-                    this.props.topTracks && this.props.topTracks.length !== 0
-                        ? this.props.topTracks.map((track, index) => {
+                    topTracks && topTracks.length !== 0
+                        ? topTracks.map((track, index) => {
                             let artistString = '';
                             for (var i = 0; i < track.artists.length; i++) {
                                 artistString += track.artists[i].name;
@@ -94,8 +80,8 @@ class Carousel extends Component {
                         : <Spinner/>
                 }
             </div>
-        </footer>);
-    }
+        </footer>
+    );
 }
 
 export default Carousel;

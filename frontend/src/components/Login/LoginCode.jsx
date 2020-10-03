@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, {PureComponent, useEffect, useState} from 'react';
 import {css} from 'glamor';
 
 import '../../css/selectors.css';
@@ -45,24 +45,15 @@ const styles = {
     error: css({color: constants.colors.redCard, marginTop: '5px', textShadow: 'none'})
 };
 
-class LoginCode extends PureComponent {
-
-    constructor() {
-        super();
-        this.state = {
-            roomExists: '',
-            room: false
-        };
-    }
-
-    submitHandler(event) {
+const LoginCode = ({isPhone}) => {
+    const [state, setState] = useState({ roomExists: '', room: false })
+    const submitHandler = (event) => {
         event.preventDefault();
-        if (this.state.room) {
-            window.location.href = window.location.origin + '/app/' + this.state.room;
+        if (state.room) {
+            window.location.href = window.location.origin + '/app/' + state.room;
         }
     }
-
-    async checkRoom(event) {
+    const checkRoom = async (event) => {
         if (event.target.value.length === 5) {
             let str = event.target.value.toUpperCase();
             let exists = false;
@@ -70,45 +61,43 @@ class LoginCode extends PureComponent {
             for (var i = 0; i < data.length; i++) {
                 if (data[i].roomName === str) {
                     exists = true;
-                    this.setState({room: str, roomExists: true});
+                    setState(state => ({...state, room: str, roomExists: true}));
                 }
             }
-            if (this.state.room && this.props.isPhone) {
-                window.location.href = window.location.origin + '/app/' + this.state.room;
+            if (state.room && isPhone) {
+                window.location.href = window.location.origin + '/app/' + state.room;
             }
             if (!exists) {
-                this.setState({roomExists: false});
+                setState(state => ({...state, roomExists: false}));
             }
             return exists;
         } else {
-            this.setState({roomExists: '', room: false});
+            setState(state => ({...state, roomExists: '', room: false}));
         }
     }
-
-
-    componentDidUpdate() {
-        if (this.state.room === false && this.state.roomExists === false) {
+    useEffect(() => {
+        if (state.room === false && state.roomExists === false) {
             document.getElementById('code').style.border = '1px solid ' + constants.colors.redCard;
-        } else if (this.state.roomExists === true) {
+        } else if (state.roomExists === true) {
             document.getElementById('code').style.border = '1px solid ' + constants.colors.greenCard;
         } else {
             document.getElementById('code').style.border = '';
         }
-    }
-
-    render() {
-        return (<div className={`${styles.wrapper}`}>
-            <form onSubmit={this.submitHandler.bind(this)}>
-                <input type='text' id='code' maxLength='5' placeholder='Room Code' className={`${styles.input}`} autoComplete='off' onChange={this.checkRoom.bind(this)} pattern='[A-Za-z]{5}'/>
+    }, [state.roomExists, state.room])
+    
+    return (
+        <div className={`${styles.wrapper}`}>
+            <form onSubmit={() => submitHandler()}>
+                <input type='text' id='code' maxLength='5' placeholder='Room Code' className={`${styles.input}`} autoComplete='off' onChange={() => checkRoom()} pattern='[A-Za-z]{5}'/>
                 <input type='submit' id='loginCode' value='join' className={`${styles.submit}`}/>
             </form>
             {
-                this.state.room === false && this.state.roomExists === false
+                state.room === false && state.roomExists === false
                     ? <h5 className={`${styles.error}`}>Room doesn't exist</h5>
-                    : ''
+                    : null
             }
-        </div>);
-    }
+        </div>
+    );
 }
 
 export default LoginCode;
