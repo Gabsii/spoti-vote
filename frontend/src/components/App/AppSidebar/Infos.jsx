@@ -74,10 +74,10 @@ class Infos extends PureComponent {
             playlistImage,
             hostName,
             hostId;
-        if (this.props.activePlaylist !== null && this.props.activePlaylist !== undefined) {
+        if (this.props.activePlaylist) {
             option = <div>{this.props.activePlaylist.name}</div>;
-            playlistUrl = this.props.activePlaylist.external_urls.spotify;
-            playlistImage = this.props.activePlaylist.images[0].url;
+            playlistUrl = this.props.activePlaylist.playlistUrl;
+            playlistImage = this.props.activePlaylist.playlistImage;
 
         }
         if (this.props.isHost === true) {
@@ -90,14 +90,13 @@ class Infos extends PureComponent {
         }
 
         let iconColor = {};
-        if (this.props.host === null) {
+        if (this.props.host) {
+            hostName = this.props.host.name;
+            hostId = this.props.username;
+        } else {
             iconColor.color = constants.colors.font;
         }
-        if (this.props.host !== null && this.props.host !== undefined) {
-            hostName = this.props.host.name;
-            hostId = this.props.host.id;
-        }
-        if (this.props.activeTracks !== null && this.props.activeTracks !== undefined) {
+        if (this.props.activeTracks) {
 
             for (var j = 0; j < this.props.activeTracks.length; j++) {
                 if (this.props.activeTracks[j].id === this.props.host.voted) {
@@ -105,7 +104,7 @@ class Infos extends PureComponent {
                 }
             }
         }
-        if (this.props.host !== null && this.props.host !== undefined) {
+        if (this.props.host) {
             if (this.props.host.voted === 'skip') {
                 iconColor.color = constants.colors.skip;
             }

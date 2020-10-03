@@ -26,7 +26,7 @@ class DashboardSidebar extends Component {
 
     render() {
         return (<aside id='sidebar' className={`${styles.wrapper}`}>
-            <Profile profile={this.props.profile}/>
+            <Profile host={this.props.host}/>
             <Navbar/>
         </aside>);
     }

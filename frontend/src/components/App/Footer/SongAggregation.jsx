@@ -26,7 +26,7 @@ class SongAggregation extends PureComponent {
         let artistString = '';
         if (this.props.artists !==null && this.props.artists !==undefined) {
             for (var i = 0; i < this.props.artists.length; i++) {
-                artistString += this.props.artists[i].name;
+                artistString += this.props.artists[i];
                 if (i < this.props.artists.length - 1) {
                     artistString += ', ';
                 }

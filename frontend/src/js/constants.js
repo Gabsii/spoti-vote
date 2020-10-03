@@ -62,10 +62,50 @@ let iterateCardColors = function(index) {
     }
 };
 
+function insertObjectDifference(data, diff) {
+    if(!diff) {
+        return data;
+    }
+    let newData = {};
+    Object.keys(data).forEach(key => {
+        if (diff[key]) {
+            if (typeof(data[key]) !== 'object' || !data[key] || Array.isArray(data[key])) {
+                newData[key] = diff[key];
+            } else {
+                newData[key] = insertObjectDifference(data[key], diff[key]);
+            } 
+        } else {
+            newData[key] = data[key];
+        }
+    });
+    return newData;
+}
+
+const api = async (apiUrl, ...params) => {
+    let url = apiUrl;
+    let error;
+    let data;
+    if (apiUrl.startsWith('/')) {
+        url = `${config.url}/api${apiUrl}`;
+    }
+    const apiResponse = await fetch(url, ...params);
+
+    try {
+        data = await apiResponse.json();
+    } catch (err) {
+        console.error(err);
+        error = [err.message || err];
+    }
+
+    return [data, error];
+};
+
 module.exports = {
-    config: config,
-    colors: colors,
-    iterateCardColors: iterateCardColors,
-    codes: codes,
-    breakpoints: breakpoints
+    config,
+    colors,
+    iterateCardColors,
+    codes,
+    breakpoints,
+    insertObjectDifference,
+    api
 };

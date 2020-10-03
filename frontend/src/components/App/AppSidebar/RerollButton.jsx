@@ -33,27 +33,25 @@ class RerollButton extends PureComponent {
 
     render() {
         let users,
-            skips;
+            rerolls;
 
-        if (this.props.connectedUser !== null && this.props.connectedUser !== undefined) {
+        if (this.props.connectedUser) {
             users = this.props.connectedUser.length + 1;
-            skips = 0;
-            for (let j = 0; j < this.props.connectedUser.length; j++) {
-                if (this.props.connectedUser[j].voted === 'skip') {
-                    skips++;
-                }
+            rerolls = 0;
+            if (this.props.connectedUser.length > 0) {
+                rerolls = this.props.connectedUser.reduce((accumulator, currentValue) => {
+                    return currentValue.voted === 'reroll' ? accumulator++ : accumulator;
+                });
             }
         }
 
-        if (this.props.host !== null && this.props.host !== undefined) {
-            if (this.props.host.voted === 'skip') {
-                skips++;
-            }
+        if (this.props.host && this.props.host.voted === 'reroll') {
+            rerolls++;
         }
 
         return (<button className={`${styles.button}`} onClick={this.props.rerollHandler}>
             <FontAwesomeIcon icon={faDice} size='2x'/>
-            <div className={`${styles.count}`}>{skips + '/' + users}</div>
+            <div className={`${styles.count}`}>{rerolls + '/' + users}</div>
         </button>);
     }
 }
