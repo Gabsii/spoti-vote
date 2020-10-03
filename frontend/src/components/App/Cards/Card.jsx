@@ -65,7 +65,7 @@ class Card extends PureComponent {
             greenValue,
             blueValue;
 
-        if (this.props.color !== null && this.props.color !== undefined) {
+        if (this.props.color) {
             let tint = this.hexToRgb(this.props.color);
             redValue = tint.r;
             blueValue = tint.b;
@@ -81,7 +81,7 @@ class Card extends PureComponent {
             name,
             artistString = '';
 
-        if (this.props.randomTrack !== null && this.props.randomTrack !== undefined) {
+        if (this.props.randomTrack) {
             votes = this.props.randomTrack.votes || 0;
             albumUrl = this.props.randomTrack.img;
             id = this.props.randomTrack.id;

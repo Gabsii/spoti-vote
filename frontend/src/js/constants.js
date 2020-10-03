@@ -68,7 +68,7 @@ function insertObjectDifference(data, diff) {
     }
     let newData = {};
     Object.keys(data).forEach(key => {
-        if (diff[key] !== null && diff[key] !== undefined) {
+        if (diff[key]) {
             if (typeof(data[key]) !== 'object' || data[key] === null || Array.isArray(data[key])) {
                 newData[key] = diff[key];
             } else {

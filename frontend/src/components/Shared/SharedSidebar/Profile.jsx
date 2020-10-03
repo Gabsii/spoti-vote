@@ -32,7 +32,7 @@ class Profile extends Component {
         let img,
             name,
             id;
-        if (this.props.host !== null && this.props.host !== undefined) {
+        if (this.props.host) {
             img = this.props.host.img;
             name = this.props.host.name;
             id = this.props.host.id;

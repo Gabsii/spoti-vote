@@ -116,7 +116,7 @@ class CardContainer extends Component {
         // 'Notification closed tag:' + tag
     }
     componentWillReceiveProps(nextProps) {
-        if (this.props.activeTracks[0] !== undefined && this.props.activeTracks[1] !== undefined && this.props.activeTracks[2] !== undefined && this.props.activeTracks[3] !== undefined) {
+        if (this.props.activeTracks[0] && this.props.activeTracks[1] && this.props.activeTracks[2] && this.props.activeTracks[3]) {
             if (nextProps.activeTracks[0].id !== this.props.activeTracks[0].id && nextProps.activeTracks[1].id !== this.props.activeTracks[1].id && nextProps.activeTracks[2].id !== this.props.activeTracks[2].id && nextProps.activeTracks[3].id !== this.props.activeTracks[3].id) {
                 const buttons = window.document.getElementsByTagName('button');
                 for (var i = 0; i < buttons.length; i++) {

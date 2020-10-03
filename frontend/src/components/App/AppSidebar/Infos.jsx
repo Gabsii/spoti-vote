@@ -74,7 +74,7 @@ class Infos extends PureComponent {
             playlistImage,
             hostName,
             hostId;
-        if (this.props.activePlaylist !== null && this.props.activePlaylist !== undefined) {
+        if (this.props.activePlaylist) {
             option = <div>{this.props.activePlaylist.name}</div>;
             playlistUrl = this.props.activePlaylist.playlistUrl;
             playlistImage = this.props.activePlaylist.playlistImage;
@@ -93,11 +93,11 @@ class Infos extends PureComponent {
         if (this.props.host === null) {
             iconColor.color = constants.colors.font;
         }
-        if (this.props.host !== null && this.props.host !== undefined) {
+        if (this.props.host) {
             hostName = this.props.host.name;
             hostId = this.props.username;
         }
-        if (this.props.activeTracks !== null && this.props.activeTracks !== undefined) {
+        if (this.props.activeTracks) {
 
             for (var j = 0; j < this.props.activeTracks.length; j++) {
                 if (this.props.activeTracks[j].id === this.props.host.voted) {
@@ -105,7 +105,7 @@ class Infos extends PureComponent {
                 }
             }
         }
-        if (this.props.host !== null && this.props.host !== undefined) {
+        if (this.props.host) {
             if (this.props.host.voted === 'skip') {
                 iconColor.color = constants.colors.skip;
             }

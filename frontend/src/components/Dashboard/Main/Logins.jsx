@@ -78,20 +78,23 @@ class Logins extends Component {
     }
 
     createRoom() {
+
+        let defaultOptions = {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                myToken: this.props.host.myToken
+            })
+        }
+
         //Check if there is already a room
         fetch(constants.config.url + '/rooms/checkCreate' , 
-            {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    myToken: this.props.host.myToken
-                })
-            }
+            defaultOptions
         ).then((response) => response.json()).then((data) => {
             if (data.error) {
                 this.errorMsg(data.message);
             } else {
-                if (data.roomId !== null && data.roomId !== undefined) {        //If there is a room
+                if (data.roomId) {        //If there is a room
                     swal.fire({
                         title: 'You are already hosting a room.',
                         text: 'You are currently hosting room [' + data.roomId + ']. Do you want to delete it?',
@@ -102,22 +105,10 @@ class Logins extends Component {
                     }).then((result) => {
                         if (result.value) {                                     //If host wants to delete old / create new
                             fetch(constants.config.url + '/rooms/' + data.roomId + '/delete' , 
-                                {
-                                    method: 'post',
-                                    headers: {'Content-Type': 'application/json'},
-                                    body: JSON.stringify({
-                                        myToken: this.props.host.myToken
-                                    })
-                                }
+                                defaultOptions
                             );
                             fetch(constants.config.url + '/rooms/create' , 
-                                {
-                                    method: 'post',
-                                    headers: {'Content-Type': 'application/json'},
-                                    body: JSON.stringify({
-                                        myToken: this.props.host.myToken
-                                    })
-                                }
+                                defaultOptions
                             ).then((response2) => response2.json()).then((data2) => {
                                 if (data2.error) {
                                     this.errorMsg(data2.message);
@@ -131,13 +122,7 @@ class Logins extends Component {
                     });
                 } else {                                                        //If there is no old Roomd
                     fetch(constants.config.url + '/rooms/create' , 
-                        {
-                            method: 'post',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({
-                                myToken: this.props.host.myToken
-                            })
-                        }
+                        defaultOptions
                     ).then((response2) => response2.json()).then((data2) => {
                         if (data2.error) {
                             this.errorMsg(data2.message);
@@ -154,7 +139,7 @@ class Logins extends Component {
         return (<div className={`${styles.wrapper}`}>
             <h1 className={`${styles.heading}`}>Create a Room:</h1>
             {
-                this.props.host !== null && this.props.host !== undefined
+                this.props.host
                     ? this.props.host.premium
                         ? <button id='loginbutton' className={`${styles.button}`} onClick={this.createRoom.bind(this)} tabIndex='0'>
                                 Host

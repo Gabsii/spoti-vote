@@ -106,7 +106,7 @@ class App extends Component {
                                     clientName: result.value
                                 })
                             }).then((response) => response.json()).then((data) =>{
-                                if (data.myToken !== null && data.myToken !== undefined) {
+                                if (data.myToken) {
                                     this.setState({
                                         myToken: data.myToken,
                                         clientName: result.value
@@ -163,7 +163,7 @@ class App extends Component {
     
     selectPlaylist(event) {
         let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
-        if (playlistId !== null && playlistId !== 'none') {
+        if (playlistId && playlistId !== 'none') {
             fetch(constants.config.url + '/rooms/' + this.state.roomId + '/selectPlaylist', {
                 method: 'post',
                 headers: {'Content-Type':'application/json'},
