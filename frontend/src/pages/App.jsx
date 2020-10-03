@@ -71,100 +71,95 @@ class App extends Component {
         };
     }
 
-    componentDidMount() {
-        fetch(constants.config.url + '/rooms/' + this.state.roomId + '/checkToken' , {
+    async componentDidMount() {
+        let [data, error] = await constants.api('/rooms/' + this.state.roomId + '/checkToken', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 myToken: this.state.myToken
             })
-        }).then((response) => response.json()).then((data) =>{
-            if (data.error) {
-                clearInterval(this.timer);
-                this.errorMessage(data.message);
-            } else {
-                if (!data.isHost) {
-                    if (data.name === '') {
-                        swal.fire({
-                            title: 'Whats your name?',
-                            type: 'question',
-                            allowOutsideClick: false,
-                            allowEscapeKey: false,
-                            input: 'text',
-                            inputPlaceholder: 'Enter your name or nickname',
-                            inputValidator: () => {
-                                return new Promise((resolve) => {
-                                    return resolve();
-                                });
-                            }
-                        }).then((result) => {
-                            fetch(constants.config.url + '/rooms/' + this.state.roomId + '/connectUser' , {
-                                method: 'post',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify({
-                                    myToken: this.state.myToken,
-                                    clientName: result.value
-                                })
-                            }).then((response) => response.json()).then((data) =>{
-                                if (data.myToken) {
-                                    this.setState({
-                                        myToken: data.myToken,
-                                        clientName: result.value
-                                    });
-                                } else {
-                                    this.setState({
-                                        clientName: result.value
-                                    });
-                                }
-                                cookies.set('myToken', this.state.myToken);
-                                this.timer = setInterval(()=> this.getData(), 1000);
+        });
+        if (data.error) {
+            clearInterval(this.timer);
+            this.errorMessage(data.message);
+        } else {
+            if (!data.isHost) {
+                if (data.name === '') {
+                    swal.fire({
+                        title: 'Whats your name?',
+                        type: 'question',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        input: 'text',
+                        inputPlaceholder: 'Enter your name or nickname',
+                        inputValidator: () => {
+                            return new Promise((resolve) => {
+                                return resolve();
                             });
+                        }
+                    }).then(async (result) => {
+                        let [data2, error2] = await constants.api('/rooms/' + this.state.roomId + '/connectUser' , {
+                            method: 'post',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                myToken: this.state.myToken,
+                                clientName: result.value
+                            })
                         });
-                    } else {
-                        this.setState({
-                            myToken: cookies.get('myToken')
-                        });
+                        if (data2.myToken) {
+                            this.setState({
+                                myToken: data2.myToken,
+                                clientName: result.value
+                            });
+                        } else {
+                            this.setState({
+                                clientName: result.value
+                            });
+                        }
+                        cookies.set('myToken', this.state.myToken);
                         this.timer = setInterval(()=> this.getData(), 1000);
-                    }
+                    });
                 } else {
+                    this.setState({
+                        myToken: cookies.get('myToken')
+                    });
                     this.timer = setInterval(()=> this.getData(), 1000);
                 }
+            } else {
+                this.timer = setInterval(()=> this.getData(), 1000);
             }
-        });
+        }
     }
 
-    getData() {
-        fetch(constants.config.url + '/rooms/' + this.state.roomId + '/update' , {
+    async getData() {
+        let [data, error] = await constants.api('/rooms/' + this.state.roomId + '/update' , {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 myToken: this.state.myToken
             })
-        }).then((response) => response.json()).then((data) =>{
-            if (data.error) {
-                clearInterval(this.timer);
-                this.errorMessage(data.message);
-            } else {
-                let newState = constants.insertObjectDifference(this.state, data);
-                this.setState({
-                    playlists: newState.playlists,
-                    isHost: newState.isHost,
-                    host: newState.host,
-                    activeTracks: newState.activeTracks,
-                    activePlaylist: newState.activePlaylist,
-                    connectedUser: newState.connectedUser,
-                    activePlayer: newState.activePlayer
-                });
-            }
-        }).catch((error) => {
-            console.error(error);
         });
+        if (data.error) {
+            clearInterval(this.timer);
+            this.errorMessage(data.message);
+        } else {
+            let newState = constants.insertObjectDifference(this.state, data);
+            this.setState({
+                playlists: newState.playlists,
+                isHost: newState.isHost,
+                host: newState.host,
+                activeTracks: newState.activeTracks,
+                activePlaylist: newState.activePlaylist,
+                connectedUser: newState.connectedUser,
+                activePlayer: newState.activePlayer
+            });
+        }
     }
     
     selectPlaylist(event) {
         let playlistId = event.target.options[event.target.selectedIndex].getAttribute('id');
         if (playlistId && playlistId !== 'none') {
-            fetch(constants.config.url + '/rooms/' + this.state.roomId + '/selectPlaylist', {
+            constants.api('/rooms/' + this.state.roomId + '/selectPlaylist', {
                 method: 'post',
                 headers: {'Content-Type':'application/json'},
                 body: JSON.stringify({
@@ -201,7 +196,7 @@ class App extends Component {
         if (this.state.voted !== trackId) {
             this.setState({voted: trackId});
 
-            fetch(constants.config.url + '/rooms/' + window.location.pathname.split('/')[2] + '/vote' , {
+            constants.api('/rooms/' + window.location.pathname.split('/')[2] + '/vote' , {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -217,7 +212,7 @@ class App extends Component {
         if (cards.length > 0) {
             this.setState({voted: null});
 
-            fetch(constants.config.url + '/rooms/' + window.location.pathname.split('/')[2] + '/vote' , {
+            constants.api('/rooms/' + window.location.pathname.split('/')[2] + '/vote' , {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -233,7 +228,7 @@ class App extends Component {
     }
 
     skipHandler() {
-        fetch(constants.config.url + '/rooms/' + this.state.roomId + '/skip', {
+        constants.api('/rooms/' + this.state.roomId + '/skip', {
             method: 'post',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
@@ -243,7 +238,7 @@ class App extends Component {
     }
 
     playHandler() {
-        fetch(constants.config.url + '/rooms/' + this.state.roomId + '/pause', {
+        constants.api('/rooms/' + this.state.roomId + '/pause', {
             method: 'post',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({

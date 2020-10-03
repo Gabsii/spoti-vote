@@ -30,16 +30,14 @@ class VolumeBar extends PureComponent {
     volumeHandler(event) {
         if (this.props.activePlayer !==null && this.props.activePlayer !==undefined) {
             if (event.target.value !== this.props.activePlayer.volume) {
-                fetch(constants.config.url + '/rooms/' + window.location.pathname.split('/')[2] + '/volume' , 
-                    {
-                        method: 'post',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            myToken: this.props.myToken,
-                            volume: event.target.value
-                        })
-                    }
-                );
+                constants.api('/rooms/' + window.location.pathname.split('/')[2] + '/volume', {
+                    method: 'post',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        myToken: this.props.myToken,
+                        volume: event.target.value
+                    })
+                });
             }
         }
     }

@@ -39,15 +39,13 @@ class SettingsBar extends PureComponent {
                 cancelButtonText: 'No, dont do it!'
             }).then((result) => {
                 if (!result.dismiss) {
-                    fetch(constants.config.url + '/rooms/' + window.location.pathname.split('/')[2] + '/delete' , 
-                        {
-                            method: 'post',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({
-                                id: this.props.username
-                            })
-                        }
-                    );
+                    constants.api('/rooms/' + window.location.pathname.split('/')[2] + '/delete', {
+                        method: 'post',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            id: this.props.username
+                        })
+                    });
                     window.location.pathname = '/dashboard';
                 }
             });

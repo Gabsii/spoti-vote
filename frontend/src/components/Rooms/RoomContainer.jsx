@@ -68,13 +68,9 @@ class RoomContainer extends Component {
 
     }
 
-    fetchRoomData() {
-        return new Promise((resolve, reject) => {
-            fetch(constants.config.url + '/rooms').then(response => response.json()).then(response => {
-                this.setState({rooms: response});
-                resolve();
-            }).catch((err) => reject(err));
-        });
+    async fetchRoomData() {
+        let [data, error] = await constants.api('/rooms');
+        this.setState({rooms: data});
     }
 
     render() {

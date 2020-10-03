@@ -77,7 +77,7 @@ class Logins extends Component {
         });
     }
 
-    createRoom() {
+    async createRoom() {
 
         let defaultOptions = {
             method: 'post',
@@ -88,51 +88,40 @@ class Logins extends Component {
         };
 
         //Check if there is already a room
-        fetch(constants.config.url + '/rooms/checkCreate' , 
-            defaultOptions
-        ).then((response) => response.json()).then((data) => {
-            if (data.error) {
-                this.errorMsg(data.message);
-            } else {
-                if (data.roomId) {        //If there is a room
-                    swal.fire({
-                        title: 'You are already hosting a room.',
-                        text: 'You are currently hosting room [' + data.roomId + ']. Do you want to delete it?',
-                        type: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes, delete it!',
-                        cancelButtonText: 'No, dont do it!'
-                    }).then((result) => {
-                        if (result.value) {                                     //If host wants to delete old / create new
-                            fetch(constants.config.url + '/rooms/' + data.roomId + '/delete' , 
-                                defaultOptions
-                            );
-                            fetch(constants.config.url + '/rooms/create' , 
-                                defaultOptions
-                            ).then((response2) => response2.json()).then((data2) => {
-                                if (data2.error) {
-                                    this.errorMsg(data2.message);
-                                } else {
-                                    window.location = '/app/' + data2.roomId;
-                                }
-                            });
-                        } else {                                                // If host wants to keep the old
-                            window.location = '/app/' + data.roomId;
-                        }
-                    });
-                } else {                                                        //If there is no old Roomd
-                    fetch(constants.config.url + '/rooms/create' , 
-                        defaultOptions
-                    ).then((response2) => response2.json()).then((data2) => {
+        let [data, error] = await constants.api('/rooms/checkCreate', defaultOptions);
+        if (data.error) {
+            this.errorMsg(data.message);
+        } else {
+            if (data.roomId) {        //If there is a room
+                swal.fire({
+                    title: 'You are already hosting a room.',
+                    text: 'You are currently hosting room [' + data.roomId + ']. Do you want to delete it?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, dont do it!'
+                }).then(async (result) => {
+                    if (result.value) {                                     //If host wants to delete old / create new
+                        constants.api('/rooms/' + data.roomId + '/delete', defaultOptions);
+                        let [data2, error2] = await constants.api('/rooms/create', defaultOptions);
                         if (data2.error) {
                             this.errorMsg(data2.message);
                         } else {
                             window.location = '/app/' + data2.roomId;
                         }
-                    });
+                    } else {                                                // If host wants to keep the old
+                        window.location = '/app/' + data.roomId;
+                    }
+                });
+            } else {                                                        //If there is no old Roomd
+                let [data2, error2] = await constants.api('/rooms/create', defaultOptions);
+                if (data2.error) {
+                    this.errorMsg(data2.message);
+                } else {
+                    window.location = '/app/' + data2.roomId;
                 }
             }
-        });
+        }
     }
 
     render() {

@@ -62,25 +62,24 @@ class LoginCode extends PureComponent {
         }
     }
 
-    checkRoom(event) {
+    async checkRoom(event) {
         if (event.target.value.length === 5) {
             let str = event.target.value.toUpperCase();
             let exists = false;
-            fetch(constants.config.url + '/rooms').then((response) => response.json().then(data => {
-                for (var i = 0; i < data.length; i++) {
-                    if (data[i].roomName === str) {
-                        exists = true;
-                        this.setState({room: str, roomExists: true});
-                    }
+            let [data, error] = await constants.api('/rooms');
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].roomName === str) {
+                    exists = true;
+                    this.setState({room: str, roomExists: true});
                 }
-                if (this.state.room && this.props.isPhone) {
-                    window.location.href = window.location.origin + '/app/' + this.state.room;
-                }
-                if (!exists) {
-                    this.setState({roomExists: false});
-                }
-                return exists;
-            }));
+            }
+            if (this.state.room && this.props.isPhone) {
+                window.location.href = window.location.origin + '/app/' + this.state.room;
+            }
+            if (!exists) {
+                this.setState({roomExists: false});
+            }
+            return exists;
         } else {
             this.setState({roomExists: '', room: false});
         }

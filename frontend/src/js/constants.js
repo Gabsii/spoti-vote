@@ -7,7 +7,7 @@ if (process.env.PORTBACK === 443) {
     config.url = 'http://';
 }
 if (process.env.NODE_ENV !== 'production') {
-    config.url += (process.env.ADDRESS || 'localhost') + ':' + (process.env.PORTBACK || 8888) + '/api';
+    config.url += (process.env.ADDRESS || 'localhost') + ':' + (process.env.PORTBACK || 8888);
 }else{
     config.url = 'https://backend.spoti-vote.com:443';
 }
@@ -81,11 +81,31 @@ function insertObjectDifference(data, diff) {
     return newData;
 }
 
+const api = async (apiUrl, ...params) => {
+    let url = apiUrl;
+    let error;
+    let data;
+    if (apiUrl.startsWith('/')) {
+      url = `${config.url}/api${apiUrl}`;
+    }
+    const apiResponse = await fetch(url, ...params);
+  
+    try {
+      data = await apiResponse.json();
+    } catch (err) {
+      console.error(err);
+      error = [err.message || err];
+    }
+  
+    return [data, error];
+};
+
 module.exports = {
     config,
     colors,
     iterateCardColors,
     codes,
     breakpoints,
-    insertObjectDifference
+    insertObjectDifference,
+    api
 };

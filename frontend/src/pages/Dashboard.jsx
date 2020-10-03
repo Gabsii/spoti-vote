@@ -60,28 +60,28 @@ class Dashboard extends Component {
         this.fetchProfile(myToken);
     }
 
-    fetchProfile(myToken) {
-        fetch(constants.config.url + '/profile', {
+    async fetchProfile(myToken) {
+        console.log(constants.api)
+        let [data, error] = await constants.api('/profile', {
             method: 'POST',
             headers: {'content-type': 'application/json'},
             body: JSON.stringify({
                 myToken: myToken
             })
-        }).then(response => response.json().then(data => {
-            if (data.error) {
-                this.errorMessage(data.message);
-            } else {
-                this.setState({
-                    host: {
-                        name: data.host.name,
-                        myToken: data.host.myToken,
-                        img: data.host.img || 'https://via.placeholder.com/152x152',
-                        premium: data.host.premium
-                    },
-                    topTracks: data.host.topTracks
-                });
-            }
-        }));
+        });
+        if (data.error) {
+            this.errorMessage(data.message);
+        } else {
+            this.setState({
+                host: {
+                    name: data.host.name,
+                    myToken: data.host.myToken,
+                    img: data.host.img || 'https://via.placeholder.com/152x152',
+                    premium: data.host.premium
+                },
+                topTracks: data.host.topTracks
+            });
+        }
     }
 
     render() {
