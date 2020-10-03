@@ -22,14 +22,11 @@ const selectPlaylist = async (req, res) => {
 
     let response;
 
-    if (req.body.myToken === null || req.body.myToken === undefined) {
-        response = {error: true, message: 'Authorization failed. No or expired token.'};
-        res.status(400);
-    } else {
+    if (req.body.myToken) {
         let room = Room.getRoomById(req.query.roomId, data.rooms);
-        if (room !== null) {
+        if (room) {
             if (req.body.myToken === room.host.myToken) {
-                if (req.body.playlistId !== null && req.body.playlistId !== undefined) {
+                if (req.body.playlistId) {
                     await room.changePlaylist(req.body.playlistId);
                     response = {error: false};
                     res.status(200);
@@ -39,6 +36,9 @@ const selectPlaylist = async (req, res) => {
             response = {error: true, message: 'Room has not been found'};
             res.status(400);
         }
+    } else {
+        response = {error: true, message: 'Authorization failed. No or expired token.'};
+        res.status(400);
     }
 
 

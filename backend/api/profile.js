@@ -24,18 +24,18 @@ const profile = (req, res) => {
 
     let data = handler.getData();
     
-    if (req.body.myToken === null || req.body.myToken === undefined) {
-        response = {error: true, message: 'Authorization failed. No or expired token.'};
-        res.status(400);
-    } else {
+    if (req.body.myToken) {
         let myHost = Host.getHostByToken(req.body.myToken, data.hosts);
-        if (myHost == null) {
-            response = {error: true, message: 'Authorization failed. No or expired token.'};
-            res.status(400);
-        } else {
+        if (myHost) {
             response = {error: false, host: myHost.getData()};
             res.status(200);
-        }
+        } else {
+            response = {error: true, message: 'Authorization failed. No or expired token.'};
+            res.status(400);
+        }    
+    } else {
+        response = {error: true, message: 'Authorization failed. No or expired token.'};
+        res.status(400);
     }
 
     res.send(JSON.stringify(response));

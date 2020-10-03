@@ -12,7 +12,7 @@ const fetch = require('node-fetch');
 * @return {Room} The new room
 */
 function Host(token, refreshToken, clientId, clientSecret, spotifyApiAddress, spotifyAccountAddress) {
-    if (typeof(token) !== 'string' || spotifyApiAddress === undefined) {
+    if (typeof(token) !== 'string' || !spotifyApiAddress) {
         for(var prop in token){
             // for safety you can use the hasOwnProperty function
             this[prop] = token[prop];
@@ -64,11 +64,11 @@ method.fetchData = async function() {
     });
     let data = await request.json();
 
-    if (data.error !== undefined){
+    if (data.error){
         return false;
     }
 
-    if (data.images[0] !== undefined && data.images[0] !== null) {
+    if (data.images[0]) {
         this.img = data.images[0].url;
     }
 
@@ -102,7 +102,7 @@ method.fetchPlaylists = async function() {
 
     let playlists = data.items;
 
-    while (next !== null && next !== undefined) {
+    while (next) {
         request = await fetch(next, {
             headers: {
                 'Authorization': 'Bearer ' + this.token
@@ -117,7 +117,7 @@ method.fetchPlaylists = async function() {
 
     let returnPlaylists = [];
 
-    if (playlists !== null && playlists !== undefined) {
+    if (playlists) {
         for (var i = 0; i < playlists.length; i++) {
             if (playlists[i].tracks.total > 5) {
                 returnPlaylists.push(playlists[i]);
@@ -139,7 +139,7 @@ method.fetchPlaylistTracks = async function(playlist) {
 
     let tracks = data.items;
 
-    while (next !== null && next !== undefined) {
+    while (next) {
         request = await fetch(next, {
             headers: {
                 'Authorization': 'Bearer ' + this.token

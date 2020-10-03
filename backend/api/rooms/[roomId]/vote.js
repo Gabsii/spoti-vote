@@ -22,16 +22,16 @@ const vote = async (req, res) => {
 
     let response;
 
-    if (req.body.myToken === null || req.body.myToken === undefined) {
-        response = {error: true, message: 'Authorization failed. No or expired token.'};
-        res.status(400);
-    } else {
+    if (req.body.myToken) {
         let room = Room.getRoomById(req.query.roomId, data.rooms);
         // eslint-disable-next-line no-console
         console.log('INFO-[ROOM: ' + room.id + ']: [' + req.body.myToken + '] voted for [' + req.body.trackId + '].');
         room.vote(req.body.trackId, req.body.myToken);
         response = {error: false};
         res.status(200);
+    } else {
+        response = {error: true, message: 'Authorization failed. No or expired token.'};
+        res.status(400);
     }
 
     handler.setData(data);

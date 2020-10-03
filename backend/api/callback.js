@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     let searchParams = new URLSearchParams();
     for (let prop in data) {
         searchParams.set(prop, data[prop]);
-    };
+    }
 
     let request;
     try {
@@ -48,7 +48,7 @@ module.exports = async (req, res) => {
         let data = handler.getData();
 
         let oldHost = Host.getHostByToken(host.myToken, data.hosts);
-        if (oldHost !== null && oldHost !== undefined) {
+        if (oldHost) {
             let oldRoom = Room.getRoomByHost(oldHost, data.rooms);
             data.rooms.splice(data.rooms.indexOf(oldRoom), 1);
             data.hosts.splice(data.hosts.indexOf(oldHost), 1);

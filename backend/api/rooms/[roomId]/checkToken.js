@@ -23,17 +23,14 @@ const checkToken = (req, res) => {
     let response;
 
     let room = Room.getRoomById(req.query.roomId, data.rooms);
-    if (room === null) {
-        response = {error: true, message: 'Room not found'};
-        res.status(400);
-    } else {
+    if (room) {
         if (req.body.myToken === room.host.myToken) {
             room.host.lastUpdate = null;
             response = {error: false, isHost: true};
             res.status(200);
         } else {
             let user = room.getUserByToken(req.body.myToken);
-            if (user !== null) {
+            if (user) {
                 response = {error: false, isHost: false, name: user.name};
                 user.lastUpdate = null;
             } else {
@@ -42,6 +39,9 @@ const checkToken = (req, res) => {
             
             res.status(200);
         }
+    } else {  
+        response = {error: true, message: 'Room not found'};
+        res.status(400);
     }
 
     handler.setData(data);

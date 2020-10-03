@@ -22,10 +22,7 @@ const volume = async (req, res) => {
 
     let response;
 
-    if (req.body.myToken === null || req.body.myToken === undefined) {
-        response = {error: true, message: 'Authorization failed. No or expired token.'};
-        res.status(400);
-    } else {
+    if (req.body.myToken) {
         let room = Room.getRoomById(req.query.roomId, data.rooms);
         if (req.body.myToken === room.host.myToken) {
             // eslint-disable-next-line no-console
@@ -37,6 +34,9 @@ const volume = async (req, res) => {
             response = {error: true, message: 'Authorization failed. Expired token.'};
             res.status(400);
         }
+    } else {
+        response = {error: true, message: 'Authorization failed. No or expired token.'};
+        res.status(400);
     }
 
     handler.setData(data);

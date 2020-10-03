@@ -22,7 +22,7 @@ module.exports = (req, res) => {
                 break;
             }
         }
-        if (roomI.roomCover === null || roomI.roomCover === undefined) {
+        if (!roomI.roomCover) {
             roomI.roomCover = data.rooms[i].host.img;
         }
         returnRooms.push(roomI);

@@ -24,15 +24,12 @@ const connectUser = async (req, res) => {
     let response;
 
     let room = Room.getRoomById(req.query.roomId, data.rooms);
-    if (room === null) {
-        response = {error: true, message: 'Room not found'};
-        res.status(400);
-    } else {
+    if (room) {
         if (req.body.myToken === room.host.myToken) {
             response = {error: false};
             res.status(200);
         } else {
-            if (req.body.myToken !== null) {
+            if (req.body.myToken) {
                 room.addUser(req.body.clientName, req.body.myToken);
                 response = {error: false};
             } else {
@@ -42,6 +39,9 @@ const connectUser = async (req, res) => {
 
             res.status(200);
         }
+    } else {
+        response = {error: true, message: 'Room not found'};
+        res.status(400);
     }
 
     handler.setData(data);

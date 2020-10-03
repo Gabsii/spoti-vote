@@ -22,21 +22,23 @@ const create = (req, res) => {
     let data = handler.getData();
 
     let response;
-    if (req.body.myToken === null || req.body.myToken === undefined) {
-        response = {error: true, message: 'Authorization failed. No or expired token.'};
-        res.status(400);
-    } else {
+    if (req.body.myToken) {
         let host = Host.getHostByToken(req.body.myToken, data.hosts);
-        if (host === null) {
-            response = {error: true, message: 'Authorization failed. No or expired token.'};
-            res.status(400);
-        } else {
+        if (host) {
             let room = new Room.Room(host, data.rooms);
             data.rooms.push(room);
             res.status(200);
             
             response = {error: false, roomId: room.id};
+            
+        } else {
+            response = {error: true, message: 'Authorization failed. No or expired token.'};
+            res.status(400);
         }
+    } else {
+        
+        response = {error: true, message: 'Authorization failed. No or expired token.'};
+        res.status(400);
     }
 
     handler.setData(data);

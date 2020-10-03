@@ -21,15 +21,9 @@ const update = async (req, res) => {
     let data = handler.getData();
 
     let response = {};
-    if (req.body.myToken === null || req.body.myToken === undefined) {
-        response = {error: true, message: 'Authorization failed. No or expired token.'};
-        res.status(400);
-    } else {
+    if (req.body.myToken) {
         let room = Room.getRoomById(req.query.roomId, data.rooms);
-        if (room === null) {
-            response = {error: true, message: 'Room not found'};
-            res.status(400);
-        } else {
+        if (room) {
             await room.update();
             if (req.body.myToken === room.host.myToken) {
                 response = room.getData(true, room.host);
@@ -39,7 +33,13 @@ const update = async (req, res) => {
                 response = room.getData(false, user);
                 res.status(200);
             }
+        } else {
+            response = {error: true, message: 'Room not found'};
+            res.status(400);
         }
+    } else {
+        response = {error: true, message: 'Authorization failed. No or expired token.'};
+        res.status(400);
     }
 
     handler.setData(data);

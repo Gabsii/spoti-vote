@@ -12,12 +12,8 @@ const _ = require('lodash');
 * @param {string} rooms The list of all rooms, to make sure no duplicate id
 * @return {Room} The new room
 */
-function Room(host, rooms, spotifyAccountAddress) {
-    if (rooms === undefined) {
-        for(var prop in host){
-            this[prop] = host[prop];
-        }
-    } else {
+function Room(host, rooms) {
+    if (rooms) {
         this.host = host;
         this.activeTracks = [];
         this.activePlaylist = null;
@@ -30,7 +26,11 @@ function Room(host, rooms, spotifyAccountAddress) {
         //Makes sure the id is unique
         do {
             this.id = makeid(5);
-        } while (getRoomById(this.id, rooms) !== null);
+        } while (getRoomById(this.id, rooms));
+    } else {
+        for(var prop in host){
+            this[prop] = host[prop];
+        }
     }
 }
 
@@ -48,7 +48,7 @@ method.getConnectedUsers = function() {
 };
 
 method.getTrack = function(track) {
-    if (track !== null && track !== undefined) {
+    if (track) {
         let artists = [];
         track.artists.forEach(artist => {
             artists.push(artist.name);
@@ -78,13 +78,13 @@ method.getData = function (isHost, user) {
         voted: this.host.voted
     };
     data.activeTracks = [];
-    if (this.activeTracks !== null && this.activeTracks !== undefined && this.activeTracks.length > 0) {
+    if (this.activeTracks && this.activeTracks.length > 0) {
         this.activeTracks.forEach(track => {
             data.activeTracks.push(this.getTrack(track)); 
         });
     }
     data.activePlaylist = null;
-    if (this.activePlaylist !== null && this.activePlaylist !== undefined) {
+    if (this.activePlaylist) {
         data.activePlaylist = {
             name: this.activePlaylist.name,
             playlistUrl: this.activePlaylist.external_urls.spotify,
@@ -92,7 +92,7 @@ method.getData = function (isHost, user) {
         };
     }
     data.activePlayer = null;
-    if (this.activePlayer !== null && this.activePlayer !== undefined) {
+    if (this.activePlayer) {
         data.activePlayer = {
             volume: this.activePlayer.volume,
             timeLeft: this.activePlayer.timeLeft,
@@ -104,7 +104,7 @@ method.getData = function (isHost, user) {
     }
     if (isHost) {
         data.playlists = null;
-        if (this.host.playlists !== null && this.host.playlists !== undefined) {
+        if (this.host.playlists) {
             data.playlists = [];
             this.host.playlists.forEach(playlist => {
                 data.playlists.push({
@@ -123,37 +123,37 @@ method.getData = function (isHost, user) {
 };
 
 function getObjectDifference(oldData, data) {
-    if(oldData === null || oldData === undefined) {
+    if(!oldData) {
         return data;
     }
     let diff = {};
     Object.keys(data).forEach(key => {
-        if (data[key] !== null) {
-            if (typeof(data[key]) !== 'object' || data[key] === null) {
-                if (oldData[key] === null) {
-                    diff[key] = data[key];
-                } else {
+        if (data[key]) {
+            if (typeof(data[key]) !== 'object' || !data[key]) {
+                if (oldData[key]) {
                     if (data[key] !== oldData[key]) {
                         diff[key] = data[key];
                     }
+                } else {
+                    diff[key] = data[key];
                 }
             } else if (Array.isArray(data[key])) {
-                if (oldData[key] === null) {
-                    diff[key] = data[key];
-                } else {
+                if (oldData[key]) {
                     let nextData = getObjectDifference(oldData[key], data[key]);
-                    if (nextData !== null && nextData !== undefined && Object.entries(nextData).length > 0) {
+                    if (nextData && Object.entries(nextData).length > 0) {
                         diff[key] = data[key];
                     }
+                } else {
+                    diff[key] = data[key];
                 }
             } else {
-                if (oldData[key] === null) {
-                    diff[key] = data[key];
-                } else {
+                if (oldData[key]) {
                     var nextData = getObjectDifference(oldData[key], data[key]);
-                    if (nextData !== null && nextData !== undefined && Object.entries(nextData).length > 0) {
+                    if (nextData && Object.entries(nextData).length > 0) {
                         diff[key] = nextData;
                     }
+                } else {
+                    diff[key] = data[key];
                 }
             }
         }
@@ -241,10 +241,10 @@ method.addUser = function(name, myToken) {
 */
 method.removeUser = function(name) {
     let user = this.getUserByName(name);
-    if (user !== null) {
+    if (user) {
         let i = this.connectedUser.indexOf(user);
         if (i >= 0) {
-            if (user.voted !== null && user.voted !== 'reroll') {
+            if (user.voted && user.voted !== 'reroll') {
                 let track = this.getActiveTrackById(user.voted);
                 track.votes -= 1;
             }
@@ -280,10 +280,7 @@ method.getPlaylistById = function(playlistId) {
 method.changePlaylist = async function(playlistId) {
     let playlist = this.getPlaylistById(playlistId);
 
-    if (playlist === null || playlist === undefined) {
-        console.error('[ERROR] Playlist: ' + playlistId + ' does not exist');
-        return false;
-    } else {
+    if (playlist) {
         //Generate 4 new songs if the playlist changed
         if (playlist !== this.activePlaylist) {
             // eslint-disable-next-line no-console
@@ -296,6 +293,9 @@ method.changePlaylist = async function(playlistId) {
             return this.getRandomTracks(playlist);
         }
         return true;
+    } else {
+        console.error('[ERROR] Playlist: ' + playlistId + ' does not exist');
+        return false;
     }
 };
 
@@ -311,11 +311,7 @@ method.updatePlaylists = async function() {
 
     for (let i = 0; i < newPlaylists.length; i++) {
         let playlist = this.getPlaylistById(newPlaylists[i].id);
-        if (playlist === null) {
-            this.host.playlists.push(newPlaylists[i]);
-            // eslint-disable-next-line no-console
-            console.log('INFO-[ROOM: '+this.id+']: Added new Playlist: ['+newPlaylists[i].name+'].');
-        } else {
+        if (playlist) {
             toBeRemoved[this.host.playlists.indexOf(playlist)] = null;
             //LOGIC FOR CHANGING A PLAYLIST
             if (Array.isArray(playlist.tracks) === false) {
@@ -331,10 +327,14 @@ method.updatePlaylists = async function() {
                     console.log('INFO-[ROOM: '+this.id+']: Changed Playlist: ['+newPlaylists[i].name+'].');
                 }
             }
+        } else {
+            this.host.playlists.push(newPlaylists[i]);
+            // eslint-disable-next-line no-console
+            console.log('INFO-[ROOM: '+this.id+']: Added new Playlist: ['+newPlaylists[i].name+'].');
         }
     }
     for (let i = 0; i < toBeRemoved.length; i++) {
-        if (toBeRemoved[i] !== null) {
+        if (toBeRemoved[i]) {
             let playlist = this.getPlaylistById(toBeRemoved[i].id);
             if (playlist.id !== this.activePlaylist.id) {
                 this.host.playlists.splice(this.host.playlists.indexOf(playlist),1);
@@ -355,23 +355,23 @@ method.updatePlaylists = async function() {
 */
 method.getRandomTracks = function(playlist, activeTrack) {
     
-    if (activeTrack === null || activeTrack === undefined) {
-        if (this.activePlayer !== null && this.activePlayer !== undefined) {
+    if (activeTrack) {
+        activeTrack = null;
+    } else {
+        if (this.activePlayer) {
             activeTrack = this.activePlayer.track;
         } else {
             activeTrack = null;
         }
-    } else {
-        activeTrack = null;
     }
 
     //Reset all the votes
     let removeUsers = [];
     this.connectedUser.forEach(user => {
-        if (user.voted === null) {
-            user.timer += 1;
-        } else {
+        if (user.voted) {
             user.timer = 0;
+        } else {
+            user.timer += 1;
         }
         user.voted = null;
     });
@@ -392,7 +392,7 @@ method.getRandomTracks = function(playlist, activeTrack) {
         do {
             reroll = false;
             track = playlist.tracks[Math.floor(Math.random() * playlist.tracks.length)].track;
-            if (activeTrack !== null && activeTrack !== undefined) {
+            if (activeTrack) {
                 if (track.id === activeTrack.id) {
                     reroll = true;
                 }
@@ -460,7 +460,7 @@ method.refreshToken = async function() {
     let searchParams = new URLSearchParams();
     for (let prop in data) {
         searchParams.set(prop, data[prop]);
-    };
+    }
 
     let request;
     try {
@@ -521,8 +521,8 @@ method.update = async function() {
         fetchData = null;
     }
     this.activePlayer = null;
-    if (fetchData !== null) {
-        if (fetchData.device !== undefined && fetchData.item !== undefined && fetchData.item !== null) {
+    if (fetchData) {
+        if (fetchData.device && fetchData.item) {
             this.activePlayer = {
                 volume: fetchData.device.volume_percent,
                 timeLeft: fetchData.item.duration_ms - fetchData.progress_ms,
@@ -540,7 +540,7 @@ method.update = async function() {
         }
     }
 
-    if (this.activePlayer !== null && this.activePlaylist !== null) {
+    if (this.activePlayer && this.activePlaylist) {
         if (this.activePlayer.timeLeft < 3000 && !this.isChanging) {
             this.isChanging = true;
             await this.play();
@@ -564,7 +564,7 @@ method.update = async function() {
 method.vote = async function(trackId, myToken) {
     let user = this.getUserByToken(myToken);
 
-    if (user !== null && user !== undefined) {
+    if (user) {
         user.timer = 0;
         let oldVote = user.voted;
         user.voted = trackId;
@@ -572,24 +572,24 @@ method.vote = async function(trackId, myToken) {
         let oldTrack = this.getActiveTrackById(oldVote);
         let newTrack = this.getActiveTrackById(trackId);
 
-        if (oldTrack !== null) {
+        if (oldTrack) {
             if (oldTrack.votes > 0) {
                 oldTrack.votes = oldTrack.votes - 1;
             } else {
                 oldTrack.votes = 0;
             }
         }
-        if (newTrack !== null) {
-            if (newTrack.votes === undefined) {
-                newTrack.votes = 1;
+        if (newTrack) {
+            if (newTrack.votes) {
+                newTrack.votes += 1;
             } else {
-                newTrack.votes = newTrack.votes + 1;
+                newTrack.votes = 1;
             }
 
         }
 
         if (trackId === 'reroll') {
-            if (this.activePlayer !== null) {
+            if (this.activePlayer) {
                 if (this.activePlayer.progress <= 90) {
                     await this.reroll();
                 }
@@ -611,12 +611,12 @@ method.vote = async function(trackId, myToken) {
 * @return {boolean} True if the request to the spotify API was successfully changed
 */
 method.play = async function() {
-    if (this.activePlayer === null || this.activePlayer === undefined) {
+    if (!this.activePlayer) {
         return false;
     }
     let track = this.activeTracks[0];
 
-    if (this.activePlaylist !== undefined && this.activePlaylist !== null) {
+    if (this.activePlaylist) {
         for (let i = 1; i < this.activeTracks.length; i++) {
             if (this.activeTracks[i].votes > track.votes || (track.votes === (null||undefined) && this.activeTracks[i].votes >= 1)) {
                 track = this.activeTracks[i];
@@ -671,9 +671,9 @@ method.play = async function() {
 * @return {boolean} True if new tracks were chosen
 */
 method.reroll = async function() {
-    if (this.activePlaylist !== null && this.activePlaylist !== undefined) {
+    if (this.activePlaylist) {
         let track = null;
-        if (this.activePlayer !== null && this.activePlayer !== undefined) {
+        if (this.activePlayer) {
             track = this.activePlayer.track;
         }
 
@@ -728,7 +728,7 @@ method.changeVolume = async function(volume) {
 * @return {boolean} True if swapped
 */
 method.togglePlaystate = async function() {
-    if (this.activePlayer !== null && this.activePlayer !== undefined) {
+    if (this.activePlayer) {
         if (this.activePlayer.isPlaying) {
             await fetch(this.host.spotifyApiAddress + '/v1/me/player/pause',{
                 headers: {
