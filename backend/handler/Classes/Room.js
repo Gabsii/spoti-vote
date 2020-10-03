@@ -1,6 +1,6 @@
 let method = Room.prototype; //This is used when programming object oriented in js to make everything a bit more organised
-const request = require('request');
 const fetch = require('node-fetch');
+const URLSearchParams = require('url').URLSearchParams;
 const _ = require('lodash');
 
 /**
@@ -451,25 +451,44 @@ method.refreshToken = async function() {
     console.log('Before REFRESH:');
     // eslint-disable-next-line no-console
     console.log('  - Access Token: ' + this.host.token);
-    let authOptions = {
-        url: this.host.spotifyAccountAddress + '/api/token',
-        form: {
-            grant_type: 'refresh_token',
-            refresh_token: this.host.refreshToken
-        },
-        headers: {
-            'Authorization': 'Basic ' + (new Buffer(this.host.clientId + ':' + this.host.clientSecret).toString('base64'))
-        },
-        json: true
+
+    let data = {
+        grant_type: 'refresh_token',
+        refresh_token: this.host.refreshToken
     };
-    request.post(authOptions, async (error, response, body) => {
-        this.host.token = body.access_token;
+
+    let searchParams = new URLSearchParams();
+    for (let prop in data) {
+        searchParams.set(prop, data[prop]);
+    };
+
+    let request;
+    try {
+        request = await fetch(this.host.spotifyAccountAddress + '/api/token', {
+            method: 'post',
+            body: searchParams,
+            headers: { 
+                'Authorization': 'Basic ' + (new Buffer(this.host.clientId + ':' + this.host.clientSecret).toString('base64'))
+            }
+        });
+    } catch (e) {
         // eslint-disable-next-line no-console
-        console.log('After REFRESH:');
-        // eslint-disable-next-line no-console
-        console.log('  - Access Token: ' + this.host.token);
-        return true;
-    });
+        console.error('ERROR-[ROOM: '+this.id+']: THERE WAS AN ERROR UPDATING THE TOKEN.\n' + e);
+    }
+
+    let fetchData;
+    try {
+        fetchData = await request.json();
+    } catch (e) {
+        fetchData = null;
+    }
+
+    this.host.token = fetchData.access_token;
+    // eslint-disable-next-line no-console
+    console.log('After REFRESH:');
+    // eslint-disable-next-line no-console
+    console.log('  - Access Token: ' + this.host.token);
+    return true;
 };
 
 /**

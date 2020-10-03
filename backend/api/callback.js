@@ -1,50 +1,66 @@
 const handler = require('../handler/handler');
 const Room = require('../handler/Classes/Room');
 const Host = require('../handler/Classes/Host');
-const request = require('request');
+const fetch = require('node-fetch');
+const URLSearchParams = require('url').URLSearchParams;
 const env = handler.getEnv();
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
 
     let code = req.query.code || null;
-    let authOptions = {
-        url: env.spotifyAccountAddress +'/api/token',
-        form: {
-            code: code,
-            redirect_uri: env.redirectUri,
-            grant_type: 'authorization_code'
-        },
-        headers: {
-            'Authorization': 'Basic ' + (new Buffer(env.spotifyClientId + ':' + env.spotifyClientSecret).toString('base64'))
-        },
-        json: true
+
+    let data = {
+        code: code,
+        redirect_uri: env.redirectUri,
+        grant_type: 'authorization_code'
     };
-    request.post(authOptions, async (error, response, body) => {
-        if (response.statusCode === 200) {
-            let uri = env.frontendUri;
-            let host = new Host.Host(body.access_token, body.refresh_token, env.spotifyClientId, env.spotifyClientSecret, env.spotifyApiAddress, env.spotifyAccountAddress);
-            if (await host.fetchData() === true) {
 
-                let data = handler.getData();
+    let searchParams = new URLSearchParams();
+    for (let prop in data) {
+        searchParams.set(prop, data[prop]);
+    };
 
-                let oldHost = Host.getHostByToken(host.myToken, data.hosts);
-                if (oldHost !== null && oldHost !== undefined) {
-                    let oldRoom = Room.getRoomByHost(oldHost, data.rooms);
-                    data.rooms.splice(data.rooms.indexOf(oldRoom), 1);
-                    data.hosts.splice(data.hosts.indexOf(oldHost), 1);
-                }
-                data.hosts.push(host);
-                // eslint-disable-next-line no-console
-                console.log('INFO-[HOST: '+host.name+']: This host has logged in');
-
-                handler.setData(data);
-
-                res.redirect(uri + '?token=' + host.myToken);
-            } else {
-                res.status(400).send();
+    let request;
+    try {
+        request = await fetch(env.spotifyAccountAddress +'/api/token', {
+            method: 'post',
+            body: searchParams,
+            headers: { 
+                'Authorization': 'Basic ' + (new Buffer(env.spotifyClientId + ':' + env.spotifyClientSecret).toString('base64'))
             }
-        } else {
-            res.status(400).send();
+        });
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('ERROR-[ROOM: '+this.id+']: THERE WAS AN ERROR UPDATING THE TOKEN.\n' + e);
+    }
+
+    let fetchData;
+    try {
+        fetchData = await request.json();
+    } catch (e) {
+        fetchData = null;
+    }
+
+    let uri = env.frontendUri;
+    let host = new Host.Host(fetchData.access_token, fetchData.refresh_token, env.spotifyClientId, env.spotifyClientSecret, env.spotifyApiAddress, env.spotifyAccountAddress);
+    if (await host.fetchData() === true) {
+
+        let data = handler.getData();
+
+        let oldHost = Host.getHostByToken(host.myToken, data.hosts);
+        if (oldHost !== null && oldHost !== undefined) {
+            let oldRoom = Room.getRoomByHost(oldHost, data.rooms);
+            data.rooms.splice(data.rooms.indexOf(oldRoom), 1);
+            data.hosts.splice(data.hosts.indexOf(oldHost), 1);
         }
-    });
+        data.hosts.push(host);
+        // eslint-disable-next-line no-console
+        console.log('INFO-[HOST: '+host.name+']: This host has logged in');
+
+        handler.setData(data);
+
+        res.redirect(uri + '?token=' + host.myToken);
+    } else {
+        res.status(400).send();
+    }
 };
