@@ -33,6 +33,7 @@ class Rooms extends Component {
     }
 
     componentDidMount() {
+        /*
         let token = cookies.get('token');
 
         if (window.location.search) {
@@ -50,6 +51,7 @@ class Rooms extends Component {
         window.history.pushState({}, document.title, myNewURL);
 
         this.fetchProfileData(token);
+        */
     }
 
     // asynchronously fetch all the comments for the current post and add it to the comments array in the state
