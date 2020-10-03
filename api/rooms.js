@@ -1,4 +1,4 @@
-const handler = require('../handler/handler');
+const handler = require('../apiHandler/handler');
 
 const rooms = (req, res) => {
     // eslint-disable-next-line no-console

@@ -1,6 +1,6 @@
-const handler = require('../handler/handler');
-const Room = require('../handler/Classes/Room');
-const Host = require('../handler/Classes/Host');
+const handler = require('../apiHandler/handler');
+const Room = require('../apiHandler/Classes/Room');
+const Host = require('../apiHandler/Classes/Host');
 const fetch = require('node-fetch');
 const URLSearchParams = require('url').URLSearchParams;
 

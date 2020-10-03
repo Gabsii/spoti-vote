@@ -1,6 +1,6 @@
-const handler = require('../../handler/handler');
-const Host = require('../../handler/Classes/Host');
-const Room = require('../../handler/Classes/Room');
+const handler = require('../../apiHandler/handler');
+const Host = require('../../apiHandler/Classes/Host');
+const Room = require('../../apiHandler/Classes/Room');
 
 const checkCreate = (req, res) => {
 

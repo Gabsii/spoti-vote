@@ -1,5 +1,5 @@
-const handler = require('../handler/handler');
-const Host = require('../handler/Classes/Host');
+const handler = require('../apiHandler/handler');
+const Host = require('../apiHandler/Classes/Host');
 
 const profile = (req, res) => {
     let response;

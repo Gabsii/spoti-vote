@@ -1,5 +1,5 @@
-const handler = require('../../../handler/handler');
-const Room = require('../../../handler/Classes/Room');
+const handler = require('../../../apiHandler/handler');
+const Room = require('../../../apiHandler/Classes/Room');
 
 const pause = async (req, res) => {
 

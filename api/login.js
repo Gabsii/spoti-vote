@@ -1,5 +1,5 @@
 const querystring = require('querystring');
-const env = require('../handler/handler').getEnv();
+const env = require('../apiHandler/handler').getEnv();
 
 module.exports = (req, res) => {
     try {
