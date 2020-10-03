@@ -10,12 +10,10 @@ const selectPlaylist = async (req, res) => {
     if (req.body.myToken) {
         let room = Room.getRoomById(req.query.roomId, data.rooms);
         if (room) {
-            if (req.body.myToken === room.host.myToken) {
-                if (req.body.playlistId) {
-                    await room.changePlaylist(req.body.playlistId);
-                    response = {error: false};
-                    res.status(200);
-                }
+            if (req.body.myToken === room.host.myToken && req.body.playlistId) {
+                await room.changePlaylist(req.body.playlistId);
+                response = {error: false};
+                res.status(200);
             }
         } else {
             response = {error: true, message: 'Room has not been found'};

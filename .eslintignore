@@ -1,5 +1,5 @@
-
 node_modules/
 frontend/config/
 frontend/build/
 frontend/scripts/
+serviceWorker.js

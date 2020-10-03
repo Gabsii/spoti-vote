@@ -1,7 +1,6 @@
 import React, {Suspense} from 'react';
 import ReactDOM from 'react-dom';
-import {Route} from 'react-router-dom';
-import {BrowserRouter, Switch} from 'react-router-dom';
+import {BrowserRouter, Switch, Route} from 'react-router-dom';
 
 import Loading from './pages/Loading.jsx';
 import Login from './pages/Login.jsx';

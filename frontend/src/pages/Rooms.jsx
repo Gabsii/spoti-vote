@@ -6,7 +6,7 @@ import {Helmet} from 'react-helmet';
 import SharedSidebar from '../components/Shared/SharedSidebar.jsx';
 import RoomContainer from '../components/Rooms/RoomContainer.jsx';
 
-const cookies = new Cookies();
+//const cookies = new Cookies();
 const constants = require('../js/constants');
 const styles = {
     main: css({
