@@ -10,7 +10,7 @@
     "start-backend": "dotenv -- cross-var vercel dev ./backend -l %PORTBACK%",
     "build": "node frontend/scripts/build.js",
     "deploy": "now --prod",
-    "test": "node frontend/scripts/test.js",
+    "test": "node frontend/scripts/test.js"
   },
   "cacheDirectories": [
     "node_modules"
