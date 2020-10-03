@@ -23,31 +23,32 @@ const styles = {
 class Footer extends PureComponent {
 
     render() {
-        let track = {
-            img: '',
-            name: '',
-            artists: []
-        };
-        if (this.props.activePlayer !== null && this.props.activePlayer !== undefined) {
-
-            if (this.props.activePlayer.track !== null && this.props.activePlayer.track !== undefined) {
-                track = {
-                    img: this.props.activePlayer.track.album.images[this.props.activePlayer.track.album.images.length - 1].url,
-                    name: this.props.activePlayer.track.name,
-                    artists: this.props.activePlayer.track.artists
-                };
-            }
+        let { activePlayer } = this.props;
+        if (!activePlayer) {
+            activePlayer = {
+                volume: 0,
+                timeLeft: 0,
+                progressMS: 0,
+                progress: 0,
+                isPlaying: false,
+                track: {
+                    img: '',
+                    id: '',
+                    name: '',
+                    artists: []
+                }
+            };
         }
 
         return (<footer className={`${styles.wrapper}`}>
-            <SongIcon background={track.img}/>
-            <SongAggregation songName={track.name} artists={track.artists}/>
-            <ProgressBar activePlayer={this.props.activePlayer}/> {
+            <SongIcon background={activePlayer.track.img}/>
+            <SongAggregation songName={activePlayer.track.name} artists={activePlayer.track.artists}/>
+            <ProgressBar activePlayer={activePlayer}/> {
                 this.props.isHost
-                    ? <VolumeBar activePlayer={this.props.activePlayer} socket={this.props.socket}/>
+                    ? <VolumeBar activePlayer={activePlayer} myToken={this.props.myToken}/>
                     : ''
             }
-            <PlayButtons playHandler={this.props.playHandler} skipHandler={this.props.skipHandler} activePlayer={this.props.activePlayer} isHost={this.props.isHost} socket={this.props.socket}/>
+            <PlayButtons playHandler={this.props.playHandler} skipHandler={this.props.skipHandler} activePlayer={activePlayer} isHost={this.props.isHost}/>
         </footer>);
     }
 }

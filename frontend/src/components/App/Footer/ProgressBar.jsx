@@ -36,7 +36,7 @@ const styles = {
 class Progressbar extends Component {
 
     render() {
-        if (this.props.activePlayer !== null && this.props.activePlayer !== undefined) {
+        if (this.props.activePlayer) {
             progress.width = this.props.activePlayer.progress + '%';
         }
 

@@ -116,7 +116,7 @@ class CardContainer extends Component {
         // 'Notification closed tag:' + tag
     }
     componentWillReceiveProps(nextProps) {
-        if (this.props.activeTracks[0] !== undefined && this.props.activeTracks[1] !== undefined && this.props.activeTracks[2] !== undefined && this.props.activeTracks[3] !== undefined) {
+        if (this.props.activeTracks[0] && this.props.activeTracks[1] && this.props.activeTracks[2] && this.props.activeTracks[3]) {
             if (nextProps.activeTracks[0].id !== this.props.activeTracks[0].id && nextProps.activeTracks[1].id !== this.props.activeTracks[1].id && nextProps.activeTracks[2].id !== this.props.activeTracks[2].id && nextProps.activeTracks[3].id !== this.props.activeTracks[3].id) {
                 const buttons = window.document.getElementsByTagName('button');
                 for (var i = 0; i < buttons.length; i++) {
@@ -155,7 +155,7 @@ class CardContainer extends Component {
             return (<main className={`${styles.tracksMain}`}>
                 {
                     this.props.activeTracks.map((track, index) => {
-                        return (<Card isPhone={true} randomTrack={track} onClick={this.props.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>);
+                        return (<Card isPhone={this.props.isPhone} randomTrack={track} onClick={this.props.voteHandler.bind(this, track.id)} key={index} color={constants.iterateCardColors(index)}/>);
                     })
                 }
                 <Notification ignore={this.state.notification.ignore && this.state.notification.title !== ''} notSupported={this.handleNotSupported.bind(this)} onPermissionGranted={this.handlePermissionGranted.bind(this)} onPermissionDenied={this.handlePermissionDenied.bind(this)} timeout={5000} title={this.state.notification.title || ''} options={this.state.notification.options}/>
@@ -168,7 +168,7 @@ class CardContainer extends Component {
                         <b style={{
                             fontFamily: 'Circular Bold, Arial, Sans-Serif'
                         }}>
-                            {' ' + this.props.room + ' '}
+                            {' ' + this.props.roomId + ' '}
                         </b>
                         as Code!</h2>
                     <ShareButton/>

@@ -51,7 +51,7 @@ class RoomContainer extends Component {
     }
 
     displayRooms() {
-        if (this.state.search === '' || this.state.search === null || this.state.search === undefined) {
+        if (this.state.search === '' || !this.state.search) {
             this.setState({searchRooms: this.state.rooms});
         } else {
             let res = [];
@@ -68,13 +68,9 @@ class RoomContainer extends Component {
 
     }
 
-    fetchRoomData() {
-        return new Promise((resolve, reject) => {
-            fetch(constants.config.url + '/rooms').then(response => response.json()).then(response => {
-                this.setState({rooms: response});
-                resolve();
-            }).catch((err) => reject(err));
-        });
+    async fetchRoomData() {
+        let [data] = await constants.api('/rooms');
+        this.setState({rooms: data});
     }
 
     render() {

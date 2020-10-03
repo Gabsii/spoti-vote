@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {css} from 'glamor';
 import Cookies from 'universal-cookie';
 import {Helmet} from 'react-helmet';
+import swal from 'sweetalert2';
 
 import SharedSidebar from '../components/Shared/SharedSidebar.jsx';
 import Main from '../components/Dashboard/Main.jsx';
@@ -21,10 +22,16 @@ const styles = {
 
 class Dashboard extends Component {
 
+    errorMessage(message) {
+        swal.fire({type: 'error', title: 'Oops...', text: message}).then( () => {
+            window.location.pathname = '';
+        });
+    }
+
     constructor() {
         super();
         this.state = {
-            profile: {
+            host: {
                 name: null,
                 id: 0,
                 img: 'https://via.placeholder.com/152x152'
@@ -34,74 +41,46 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        let token = cookies.get('token');
+        let myToken = cookies.get('myToken');
 
         if (window.location.search) {
-            token = window.location.search.split('=')[1];
+            myToken = window.location.search.split('=')[1];
         }
 
-        if (token === undefined) {
-            window.location.pathname = '';
+        if (myToken) {
+            cookies.set('myToken', myToken);
         } else {
-            cookies.set('token', token);
+            window.location.pathname = '';
         }
 
         //Gets rid of the search in window.location
         var myNewURL = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + window.location.pathname;
         window.history.pushState({}, document.title, myNewURL);
 
-        this.fetchProfileData(token);
-        this.fetchTopTracks(token);
-        window.addEventListener('resize', this.fetchTopTracks.bind(this,token));
+        this.fetchProfile(myToken);
     }
 
-    // asynchronously fetch all the comments for the current post and add it to the comments array in the state
-    fetchProfileData(token) {
-        fetch('https://api.spotify.com/v1/me/', {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        }).then(response => response.json()).then(response => {
-            if (response.error === undefined) {
-                let premium;
-                if (response.product === 'premium') {
-                    premium = true;
-                } else {
-                    premium = false;
-                }
-                this.setState({
-                    profile: {
-                        name: response.display_name,
-                        id: response.id,
-                        img: response.images[0].url || 'https://via.placeholder.com/152x152',
-                        premium: premium
-                    }
-                });
-            } else if (response.error.status === 401) {
-                window.location.href = constants.config.url + '/login';
-            }
-        }).catch((err) => console.error(err));
-
-    }
-
-    // asynchronously fetch all the comments for the current post and add it to the comments array in the state
-    fetchTopTracks(token) {
-        let maxTracks = Math.floor((window.innerWidth - 221) / 200);
-        let amountTopTracks = (maxTracks > 0)
-            ? maxTracks
-            : 1;
-        fetch('https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=' + amountTopTracks, {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        }).then(response => response.json()).then(response => {
-            if (response.error === undefined) {
-                this.setState({topTracks: response});
-            } else if (response.error.status === 401) {
-                window.location.href = constants.config.url + '/login';
-            }
-        }).catch((err) => console.error(err));
-
+    async fetchProfile(myToken) {
+        let [data] = await constants.api('/profile', {
+            method: 'POST',
+            headers: {'content-type': 'application/json'},
+            body: JSON.stringify({
+                myToken: myToken
+            })
+        });
+        if (data.error) {
+            this.errorMessage(data.message);
+        } else {
+            this.setState({
+                host: {
+                    name: data.host.name,
+                    myToken: data.host.myToken,
+                    img: data.host.img || 'https://via.placeholder.com/152x152',
+                    premium: data.host.premium
+                },
+                topTracks: data.host.topTracks
+            });
+        }
     }
 
     render() {
@@ -111,8 +90,8 @@ class Dashboard extends Component {
                 <title>Dashboard | Spoti-Vote</title>
                 <meta name="author" content="Lukas Samir Gabsi, Michael Blank"></meta>
             </Helmet>
-            <Main topTracks={this.state.topTracks} profile={this.state.profile}/>
-            <SharedSidebar profile={this.state.profile}/>
+            <Main topTracks={this.state.topTracks} host={this.state.host}/>
+            <SharedSidebar host={this.state.host}/>
         </div>);
     }
 }

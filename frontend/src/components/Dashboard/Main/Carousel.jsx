@@ -76,23 +76,21 @@ class Carousel extends Component {
                         }}/>
                 }
 
-                Your Top Track{this.props.topTracks !== null && this.props.topTracks !== undefined && this.props.topTracks.length !== 0 ? this.props.topTracks.items.length > 1 ? 's' : '' : ''}:
+                Your Top Track{this.props.topTracks && this.props.topTracks.length > 1 ? 's' : ''}:
             </h2>
             <div className={`${styles.tracksWrapper}`}>
                 {
-                    this.props.topTracks !== null && this.props.topTracks !== undefined
-                        ? this.props.topTracks.length !== 0
-                            ? this.props.topTracks.items.map((track, index) => {
-                                let artistString = '';
-                                for (var i = 0; i < track.artists.length; i++) {
-                                    artistString += track.artists[i].name;
-                                    if (i < track.artists.length - 1) {
-                                        artistString += ', ';
-                                    }
+                    this.props.topTracks && this.props.topTracks.length !== 0
+                        ? this.props.topTracks.map((track, index) => {
+                            let artistString = '';
+                            for (var i = 0; i < track.artists.length; i++) {
+                                artistString += track.artists[i].name;
+                                if (i < track.artists.length - 1) {
+                                    artistString += ', ';
                                 }
-                                return (<TopType img={track.album.images[1].url} name={track.name} artist={artistString} key={index}/>);
-                            })
-                            : <Spinner/>
+                            }
+                            return (<TopType img={track.album.images[1].url} name={track.name} artist={artistString} key={index}/>);
+                        })
                         : <Spinner/>
                 }
             </div>

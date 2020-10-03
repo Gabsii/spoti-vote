@@ -31,7 +31,7 @@ const styles = {
 
 class LoginButton extends PureComponent {
     login() {
-        window.location.href = constants.config.url + '/login';
+        window.location.href = constants.config.url + '/api/login';
     }
 
     render() {
