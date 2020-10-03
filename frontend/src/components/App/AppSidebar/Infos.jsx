@@ -90,12 +90,11 @@ class Infos extends PureComponent {
         }
 
         let iconColor = {};
-        if (this.props.host === null) {
-            iconColor.color = constants.colors.font;
-        }
         if (this.props.host) {
             hostName = this.props.host.name;
             hostId = this.props.username;
+        } else {
+            iconColor.color = constants.colors.font;
         }
         if (this.props.activeTracks) {
 

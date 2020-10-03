@@ -40,10 +40,10 @@ class Rooms extends Component {
             token = window.location.search.split('=')[1];
         }
 
-        if (token === undefined) {
-            window.location.pathname = '';
-        } else {
+        if (token) {
             cookies.set('token', token);
+        } else {
+            window.location.pathname = '';
         }
 
         //Gets rid of the search in window.location
@@ -61,7 +61,7 @@ class Rooms extends Component {
                 'Authorization': 'Bearer ' + token
             }
         }).then(response => response.json()).then(response => {
-            if (response.error === undefined) {
+            if (!response.error) {
                 this.setState({
                     profile: {
                         name: response.display_name,

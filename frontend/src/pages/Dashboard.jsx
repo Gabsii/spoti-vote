@@ -47,10 +47,10 @@ class Dashboard extends Component {
             myToken = window.location.search.split('=')[1];
         }
 
-        if (myToken === undefined) {
-            window.location.pathname = '';
-        } else {
+        if (myToken) {
             cookies.set('myToken', myToken);
+        } else {
+            window.location.pathname = '';
         }
 
         //Gets rid of the search in window.location

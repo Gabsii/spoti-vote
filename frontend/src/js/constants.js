@@ -63,13 +63,13 @@ let iterateCardColors = function(index) {
 };
 
 function insertObjectDifference(data, diff) {
-    if(diff === null || diff === undefined) {
+    if(!diff) {
         return data;
     }
     let newData = {};
     Object.keys(data).forEach(key => {
         if (diff[key]) {
-            if (typeof(data[key]) !== 'object' || data[key] === null || Array.isArray(data[key])) {
+            if (typeof(data[key]) !== 'object' || !data[key] || Array.isArray(data[key])) {
                 newData[key] = diff[key];
             } else {
                 newData[key] = insertObjectDifference(data[key], diff[key]);

@@ -87,7 +87,7 @@ class Card extends PureComponent {
             id = this.props.randomTrack.id;
             name = this.props.randomTrack.name;
 
-            if (votes === undefined || votes === 0) {
+            if (!votes || votes === 0) {
                 votes = '-';
             }
 

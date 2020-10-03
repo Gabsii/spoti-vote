@@ -24,7 +24,7 @@ class Footer extends PureComponent {
 
     render() {
         let activePlayer = this.props.activePlayer;
-        if (activePlayer === null || activePlayer === undefined) {
+        if (!activePlayer) {
             activePlayer = {
                 volume: 0,
                 timeLeft: 0,

@@ -30,7 +30,7 @@ class App extends Component {
         super();
 
         let myToken = cookies.get('myToken');
-        if (myToken === undefined) {
+        if (!myToken) {
             myToken = null;
         }
 

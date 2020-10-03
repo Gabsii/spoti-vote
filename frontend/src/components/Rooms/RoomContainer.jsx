@@ -51,7 +51,7 @@ class RoomContainer extends Component {
     }
 
     displayRooms() {
-        if (this.state.search === '' || this.state.search === null || this.state.search === undefined) {
+        if (this.state.search === '' || !this.state.search) {
             this.setState({searchRooms: this.state.rooms});
         } else {
             let res = [];
