@@ -1,8 +1,6 @@
 const handler = require('../handler/handler');
 
 const rooms = (req, res) => {
-    console.time('test');
-
     handler.log('INFO: /rooms has been called.');
 
     let rooms = handler.requestRooms();
@@ -26,8 +24,6 @@ const rooms = (req, res) => {
     });
 
     res.status(200).send(returnRooms);
-
-    console.timeEnd('test');
 };
 
 module.exports = handler.allowCors(rooms);
