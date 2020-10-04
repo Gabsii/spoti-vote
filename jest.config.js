@@ -1,6 +1,6 @@
 module.exports = {
     watchPathIgnorePatterns: [
-        '<rootDir>/backend/handler/data/*'
+        '<rootDir>/node_modules'
     ],
     watchPlugins: [
         'jest-runner-eslint/watch-fix',
@@ -24,6 +24,9 @@ module.exports = {
         },
         {
             displayName: 'backend',
+            roots: [
+                '<rootDir>/backend/'
+            ],
             testMatch: [
                 '<rootDir>/backend/**/__tests__/**/*test.js'
             ]

@@ -31,7 +31,7 @@ function getEnv() {
     };
 }
 
-const dataLoc = __dirname + '/data';
+const dataLoc = __dirname + '/.data';
 
 function saveRooms(rooms) {
     let json = JSON.stringify(rooms);
@@ -103,11 +103,9 @@ function log(message, type) {
 
     let datetime = new Date();
 
-    if (process.env.SILENT !== 'true') {
-        fs.appendFile(dataLoc + '/logs.txt', `[${datetime.toISOString()}] ${type ? type : 'log'} : ${message} <br>`, function (err) {
-            if (err) throw err;
-        });
-    }    
+    fs.appendFile(dataLoc + '/logs.txt', `[${datetime.toISOString()}] ${type ? type : 'log'} : ${message} <br>`, function (err) {
+        if (err) throw err;
+    });  
 }
 
 function getLogs() {
