@@ -41,7 +41,7 @@ function saveRooms(rooms) {
     }
 
     if (!fs.existsSync(dataLoc + '/roomList.json')) {
-        fs.open(dataLoc + '/roomList.json', function (err, file) {
+        fs.appendFile(dataLoc + '/roomList.json', '', function (err) {
             if (err) log(err, 'error');
         });
     }
@@ -55,7 +55,7 @@ function requestRooms() {
     }
 
     if (!fs.existsSync(dataLoc + '/roomList.json')) {
-        fs.open(dataLoc + '/roomList.json', function (err, file) {
+        fs.appendFile(dataLoc + '/roomList.json', '[]', function (err) {
             if (err) log(err, 'error');
         });
     }
@@ -77,7 +77,7 @@ function saveHosts(hosts) {
     }
 
     if (!fs.existsSync(dataLoc + '/hostList.json')) {
-        fs.open(dataLoc + '/hostList.json', function (err, file) {
+        fs.appendFile(dataLoc + '/hostList.json', '', function (err) {
             if (err) log(err, 'error');
         });
     }
@@ -91,7 +91,7 @@ function requestHosts() {
     }
 
     if (!fs.existsSync(dataLoc + '/hostList.json')) {
-        fs.open(dataLoc + '/hostList.json', function (err, file) {
+        fs.appendFile(dataLoc + '/hostList.json', '[]', function (err) {
             if (err) log(err, 'error');
         });
     }
@@ -119,7 +119,7 @@ const allowCors = fn => async (req, res) => {
     return await fn(req, res);
 };
 
-function log(message, type) {
+function log(message, type = 'log') {
     dotenv.config();
 
     if (type === 'warn') {
@@ -139,7 +139,7 @@ function log(message, type) {
         fs.mkdirSync(dataLoc);
     }
     
-    fs.appendFile(dataLoc + '/logs.txt', `[${datetime.toISOString()}] ${type ? type : 'log'} : ${message} <br>`, function (err) {
+    fs.appendFile(dataLoc + '/logs.txt', `[${datetime.toISOString()}] ${type} : ${message} <br>`, function (err) {
         if (err) log(err, 'error');
     });  
 }
@@ -150,7 +150,7 @@ function getLogs() {
     }
 
     if (!fs.existsSync(dataLoc + '/logs.txt')) {
-        fs.open(dataLoc + '/logs.txt', function (err, file) {
+        fs.appendFile(dataLoc + '/logs.txt', '', function (err) {
             if (err) log(err, 'error');
         });
     }
