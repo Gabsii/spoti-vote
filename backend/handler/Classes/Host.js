@@ -31,6 +31,7 @@ function Host(token, refreshToken, clientId, clientSecret, spotifyApiAddress, sp
         this.img = '';
     
         this.premium = false;
+
         this.topTracks = [];
         
         this.lastUpdate = null;
@@ -79,8 +80,8 @@ method.fetchData = async function() {
 
     this.premium = (data.product !== 'free' && data.product !== 'open');
 
-    this.playlists = await this.fetchPlaylists();
-    this.topTracks = await this.fetchTopTracks(10);
+    this.playlists = minimizePlaylists(await this.fetchPlaylists());
+    this.topTracks = minimizeTopTracks(await this.fetchTopTracks(10));
     return true;
 };
 
@@ -193,6 +194,42 @@ function getHostById(id, hosts) {
         }
     }
     return null;
+}
+
+function minimizeTopTracks(topTracks) {
+    let newTracks = [];
+    topTracks.forEach(track => {
+        let newTrack = {};
+
+        newTrack.artists = track.artists;
+        newTrack.name = track.name;
+        newTrack.album = {
+            images: track.album.images
+        };
+
+        newTracks.push(newTrack);
+    });
+    return newTracks;
+}
+
+function minimizePlaylists(playlists) {
+    let newPlaylists = [];
+    playlists.forEach(playlist => {
+        let newPlaylist = {
+            id: playlist.id,
+            name: playlist.name,
+            href: playlist.href,
+            external_urls: {
+                spotify: playlist.external_urls.spotify
+            },
+            images: [{
+                url: playlist.images[0].url
+            }]
+        };
+
+        newPlaylists.push(newPlaylist);
+    });
+    return newPlaylists;
 }
 
 /**
