@@ -35,49 +35,73 @@ const dataLoc = __dirname + '/.data';
 
 function saveRooms(rooms) {
     let json = JSON.stringify(rooms);
-    try {
-        fs.writeFileSync(dataLoc + '/roomList.json', json);
-    } catch (error) {
-       log(error); 
+
+    if (!fs.existsSync(dataLoc)) {
+        fs.mkdirSync(dataLoc);
     }
+
+    if (!fs.existsSync(dataLoc + '/roomList.json')) {
+        fs.open(dataLoc + '/roomList.json', function (err, file) {
+            if (err) log(err, 'error');
+        });
+    }
+
+    fs.writeFileSync(dataLoc + '/roomList.json', json);
 }
 
 function requestRooms() {
-    try {
-        let parsed = JSON.parse(fs.readFileSync(dataLoc + '/roomList.json'));
-        let returnList = [];
-        parsed.forEach(room => {
-            room.host = new Host.Host(room.host);
-            returnList.push(new Room.Room(room));
-        });
-        return returnList;
-    } catch (error) {
-        log(error);
-        return [];
+    if (!fs.existsSync(dataLoc)) {
+        fs.mkdirSync(dataLoc);
     }
+
+    if (!fs.existsSync(dataLoc + '/roomList.json')) {
+        fs.open(dataLoc + '/roomList.json', function (err, file) {
+            if (err) log(err, 'error');
+        });
+    }
+
+    let parsed = JSON.parse(fs.readFileSync(dataLoc + '/roomList.json'));
+    let returnList = [];
+    parsed.forEach(room => {
+        room.host = new Host.Host(room.host);
+        returnList.push(new Room.Room(room));
+    });
+    return returnList;
 }
 
 function saveHosts(hosts) {
     let json = JSON.stringify(hosts);
-    try {
-        fs.writeFileSync(dataLoc + '/hostList.json', json);
-    } catch (error) {
-       log(error); 
+
+    if (!fs.existsSync(dataLoc)) {
+        fs.mkdirSync(dataLoc);
     }
+
+    if (!fs.existsSync(dataLoc + '/hostList.json')) {
+        fs.open(dataLoc + '/hostList.json', function (err, file) {
+            if (err) log(err, 'error');
+        });
+    }
+
+    fs.writeFileSync(dataLoc + '/hostList.json', json);
 }
 
 function requestHosts() {
-    try {
-        let parsed = JSON.parse(fs.readFileSync(dataLoc + '/hostList.json'));
-        let returnList = [];
-        parsed.forEach(host => {
-            returnList.push(new Host.Host(host));
-        });
-        return returnList;
-    } catch (error) {
-        log(error);
-        return [];
+    if (!fs.existsSync(dataLoc)) {
+        fs.mkdirSync(dataLoc);
     }
+
+    if (!fs.existsSync(dataLoc + '/hostList.json')) {
+        fs.open(dataLoc + '/hostList.json', function (err, file) {
+            if (err) log(err, 'error');
+        });
+    }
+
+    let parsed = JSON.parse(fs.readFileSync(dataLoc + '/hostList.json'));
+    let returnList = [];
+    parsed.forEach(host => {
+        returnList.push(new Host.Host(host));
+    });
+    return returnList;
 }
 
 const allowCors = fn => async (req, res) => {
@@ -110,13 +134,27 @@ function log(message, type) {
     }
 
     let datetime = new Date();
+
+    if (!fs.existsSync(dataLoc)) {
+        fs.mkdirSync(dataLoc);
+    }
     
     fs.appendFile(dataLoc + '/logs.txt', `[${datetime.toISOString()}] ${type ? type : 'log'} : ${message} <br>`, function (err) {
-        if (err) throw err;
+        if (err) log(err, 'error');
     });  
 }
 
 function getLogs() {
+    if (!fs.existsSync(dataLoc)) {
+        fs.mkdirSync(dataLoc);
+    }
+
+    if (!fs.existsSync(dataLoc + '/logs.txt')) {
+        fs.open(dataLoc + '/logs.txt', function (err, file) {
+            if (err) log(err, 'error');
+        });
+    }
+
     let data = fs.readFileSync(dataLoc + '/logs.txt', 'utf8');
     return data;
 }
