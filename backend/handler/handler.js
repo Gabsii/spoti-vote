@@ -35,7 +35,11 @@ const dataLoc = __dirname + '/.data';
 
 function saveRooms(rooms) {
     let json = JSON.stringify(rooms);
-    fs.writeFileSync(dataLoc + '/roomList.json', json);
+    try {
+        fs.writeFileSync(dataLoc + '/roomList.json', json);
+    } catch (error) {
+       log(error); 
+    }
 }
 
 function requestRooms() {
@@ -55,7 +59,11 @@ function requestRooms() {
 
 function saveHosts(hosts) {
     let json = JSON.stringify(hosts);
-    fs.writeFileSync(dataLoc + '/hostList.json', json);
+    try {
+        fs.writeFileSync(dataLoc + '/hostList.json', json);
+    } catch (error) {
+       log(error); 
+    }
 }
 
 function requestHosts() {
@@ -102,7 +110,7 @@ function log(message, type) {
     }
 
     let datetime = new Date();
-
+    
     fs.appendFile(dataLoc + '/logs.txt', `[${datetime.toISOString()}] ${type ? type : 'log'} : ${message} <br>`, function (err) {
         if (err) throw err;
     });  
