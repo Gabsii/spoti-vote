@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
             }
         });
     } catch (e) {
-        handler.log('ERROR-[ROOM: '+this.id+']: THERE WAS AN ERROR UPDATING THE TOKEN.\n' + e, 'error');
+        handler.log('ERROR: THERE WAS AN ERROR UPDATING THE TOKEN.\n' + e, 'error');
     }
 
     let fetchData;
@@ -40,8 +40,7 @@ module.exports = async (req, res) => {
     } catch (e) {
         fetchData = null;
     }
-
-
+    
     const host = new Host.Host(fetchData.access_token, fetchData.refresh_token, env.spotifyClientId, env.spotifyClientSecret, env.spotifyApiAddress, env.spotifyAccountAddress);
     if (await host.fetchData() === true) {
 

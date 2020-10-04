@@ -1,0 +1,19 @@
+{
+    "rooms": [
+        {
+            "host":{
+                "name": "Michiocre",
+                "img": "michiocre.img"
+            },
+            "activeTracks":[],
+            "activePlaylist":null,
+            "activePlayer":null,
+            "connectedUser":[],
+            "isChanging":false,
+            "isSkipping":false,
+            "lastUpdate":1601842747554,
+            "id":"VABVD",
+            "handler":{}
+        }
+    ]
+}
