@@ -1,7 +1,6 @@
 import { createServer } from 'vercel-node-server';
 import listen from 'test-listen';
 import fetch from 'node-fetch';
-import fs from 'fs';
 import handler from '../handler/handler';
 
 let server;
@@ -22,12 +21,12 @@ describe('ServerlessFunctions', function () {
         });
 
         it('Should return a emtpy ', async function () {
-            expect((await (await fetch(url)).json())).toStrictEqual([]);	
+            expect(await api(url)).toStrictEqual([]);	
         });
 
         it('Should return the same rooms as set with handler', async function () {
-            await handler.saveRooms(['test']);
-            expect((await (await fetch(url)).json())).toStrictEqual(['test']);	
+            await handler.saveRooms([]);
+            expect(await api(url)).toStrictEqual([]);	
         });
     });
 
@@ -42,7 +41,15 @@ describe('ServerlessFunctions', function () {
         });
 
         it('Should respond with a error message', async function () {
-            expect((await (await fetch(url)).text())).toBe('There was a error with the redirect');	
+            expect(await api(url)).toBe('There was a error with the redirect');	
         });
     });
 });
+
+async function api(url) {
+	try {
+		return await (await fetch(url)).json();
+	} catch (error) {
+		return await (await fetch(url)).text();
+	}
+}

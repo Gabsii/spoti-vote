@@ -88,6 +88,8 @@ const allowCors = fn => async (req, res) => {
 };
 
 function log(message, type) {
+    dotenv.config();
+
     if (type === 'warn') {
         // eslint-disable-next-line no-console
         console.warn(message);
@@ -101,9 +103,11 @@ function log(message, type) {
 
     let datetime = new Date();
 
-    fs.appendFile(dataLoc + '/logs.txt', `[${datetime.toISOString()}] ${type ? type : 'log'} : ${message} <br>`, function (err) {
-        if (err) throw err;
-    });
+    if (process.env.SILENT !== 'true') {
+        fs.appendFile(dataLoc + '/logs.txt', `[${datetime.toISOString()}] ${type ? type : 'log'} : ${message} <br>`, function (err) {
+            if (err) throw err;
+        });
+    }    
 }
 
 function getLogs() {
