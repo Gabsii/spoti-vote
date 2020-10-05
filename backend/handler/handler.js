@@ -1,7 +1,7 @@
-const dotenv = require('dotenv');
-const fs = require('fs');
-const Host = require('./Classes/Host');
-const Room = require('./Classes/Room');
+import dotenv from 'dotenv';
+import fs from 'fs';
+import Host from './Classes/Host';
+import Room from './Classes/Room';
 
 function getEnv() {
     dotenv.config();
@@ -14,6 +14,11 @@ function getEnv() {
 
     let spotifyAccountAddress= 'https://accounts.spotify.com';
     let spotifyApiAddress= 'https://api.spotify.com';
+
+    if (process.env.ENV && process.env.ENV === 'jest') {
+        spotifyAccountAddress = 'http://localhost:8001/accounts';
+        spotifyApiAddress = 'http://localhost:8001/api';
+    }
 
     let redirectUri = (backendPort === 443) ? 'https://': 'http://' + ipAddress + ':' + backendPort + '/api/callback';
     let frontendUri = (frontendPort === 443) ? 'https://': 'http://' + ipAddress + ':' + frontendPort;

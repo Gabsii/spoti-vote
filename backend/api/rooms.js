@@ -1,4 +1,4 @@
-const handler = require('../handler/handler');
+import handler from '../handler/handler';
 
 const rooms = (req, res) => {
     handler.log('INFO: /rooms has been called.');

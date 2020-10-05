@@ -1,5 +1,6 @@
-const querystring = require('querystring');
-const handler = require('../handler/handler');
+import querystring from 'querystring';
+import handler from '../handler/handler';
+
 const env = handler.getEnv();
 
 module.exports = (req, res) => {

@@ -1,5 +1,5 @@
-const handler = require('../handler/handler');
-const Host = require('../handler/Classes/Host');
+import handler from '../handler/handler';
+import Host from'../handler/Classes/Host';
 
 const profile = (req, res) => {
     let response;

@@ -1,8 +1,8 @@
-const handler = require('../handler/handler');
-const Room = require('../handler/Classes/Room');
-const Host = require('../handler/Classes/Host');
-const fetch = require('node-fetch');
-const URLSearchParams = require('url').URLSearchParams;
+import fetch from 'node-fetch';
+import { URLSearchParams } from 'url';
+import handler from '../handler/handler';
+import Room from'../handler/Classes/Room';
+import Host from'../handler/Classes/Host';
 
 const env = handler.getEnv();
 

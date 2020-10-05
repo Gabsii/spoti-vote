@@ -1,5 +1,5 @@
-const handler = require('../../../handler/handler');
-const Room = require('../../../handler/Classes/Room');
+import handler from '../../../handler/handler';
+import Room from'../../../handler/Classes/Room';
 
 const checkToken = (req, res) => {
 

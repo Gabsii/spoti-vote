@@ -1,6 +1,6 @@
-const handler = require('../../../handler/handler');
-const Host = require('../../../handler/Classes/Host');
-const Room = require('../../../handler/Classes/Room');
+import handler from '../../../handler/handler';
+import Room from'../../../handler/Classes/Room';
+import Host from'../../../handler/Classes/Host';
 
 const connectUser = async (req, res) => {
 
