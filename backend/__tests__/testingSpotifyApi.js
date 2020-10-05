@@ -1,11 +1,12 @@
 import express from 'express';
 import http from 'http';
-import handler from './testHandler';
+import testHandler from './testHandler';
+import handler from '../handler/handler';
 
 const app = express();
 const server = http.createServer(app);
 
-let data = handler.getTestData();
+let data = testHandler.getTestData();
 
 app.get('/accounts/authorize', (req, res) => {
     handler.log(req.query);
