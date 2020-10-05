@@ -2,10 +2,15 @@ import fetch from 'node-fetch';
 import testHandler from './testHandler';
 import handler from '../handler/handler';
 
+let backendPort = 8888;
+let spotifyPort = 8001;
+
 //Set testing enviroment
 process.env.ENV = 'jest';
 process.env.SPOTIFY_CLIENT_ID = 'testingSecret';
 process.env.SPOTIFY_CLIENT_SECRET = 'testingSecret';
+process.env.PORTBACK = backendPort;
+process.env.ADDRESS = 'localhost';
 
 //Prepare simulated api and variables
 let spotifyServer = require('./testingSpotifyApi').server;
@@ -13,11 +18,6 @@ let testServer = require('./testServer').getServer([
     {name: '/api/login', func: require('../api/login')},
     {name: '/api/callback', func: require('../api/callback')}
 ]);
-let backendPort = 8888;
-let spotifyPort = 8001;
-
-process.env.PORTBACK = backendPort;
-process.env.ADDRESS = 'localhost';
 
 let backendUri = 'http://localhost:' + backendPort;
 
