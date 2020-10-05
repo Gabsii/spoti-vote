@@ -1,5 +1,3 @@
-frontend:
-- any: ['frontend/*']
+frontend: 'frontend/**/*'
 
-backend:
-- any: ['backend/*']
+backend: 'backend/**/*'
