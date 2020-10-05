@@ -4,6 +4,8 @@ import handler from '../handler/handler';
 
 //Set testing enviroment
 process.env.ENV = 'jest';
+process.env.SPOTIFY_CLIENT_ID = 'testingSecret';
+process.env.SPOTIFY_CLIENT_SECRET = 'testingSecret';
 
 //Prepare simulated api and variables
 let spotifyServer = require('./testingSpotifyApi').server;
