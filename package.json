@@ -117,7 +117,7 @@
     "chalk": "^2.4.2",
     "cookie-parser": "^1.4.5",
     "create-react-app": "^3.4.1",
-    "deep-equal": "^1.1.1",
+    "deep-equal": "^2.0.4",
     "glamor": "^2.20.40",
     "lodash": "^4.17.20",
     "node-fetch": "^2.6.1",
