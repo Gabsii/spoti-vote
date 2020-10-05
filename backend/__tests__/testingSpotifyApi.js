@@ -10,6 +10,7 @@ let data = testHandler.getTestData();
 
 app.get('/accounts/authorize', (req, res) => {
     handler.log(req.query);
+    handler.log(process.env);
     if(req.query.response_type === 'code' && req.query.client_id === process.env.SPOTIFY_CLIENT_ID) {
         res.send(req.query.redirect_uri + '?code:' + data.tokens[0]);
     } else {

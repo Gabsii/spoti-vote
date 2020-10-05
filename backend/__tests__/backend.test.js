@@ -2,8 +2,6 @@ import fetch from 'node-fetch';
 import testHandler from './testHandler';
 import handler from '../handler/handler';
 
-jest.setTimeout(30000);
-
 //Set testing enviroment
 process.env.ENV = 'jest';
 
