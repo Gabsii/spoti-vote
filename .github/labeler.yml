@@ -1,0 +1,5 @@
+frontend:
+- any: ['frontend/*']
+
+backend:
+- any: ['backend/*']
