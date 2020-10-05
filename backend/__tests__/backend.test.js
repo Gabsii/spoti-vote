@@ -16,6 +16,9 @@ let testServer = require('./testServer').getServer([
 let backendPort = 8888;
 let spotifyPort = 8001;
 
+process.env.PORTBACK = backendPort;
+process.env.ADDRESS = 'localhost';
+
 let backendUri = 'http://localhost:' + backendPort;
 
 //Clear current data and load testData
