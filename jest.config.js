@@ -1,5 +1,4 @@
 module.exports = {
-    setupFilesAfterEnv: ['./jest.setup.js'],
     watchPathIgnorePatterns: [
         '<rootDir>/node_modules'
     ],

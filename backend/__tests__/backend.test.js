@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
-import handler from './testHandler';
+import testHandler from './testHandler';
+import handler from '../handler/handler';
 
 //Set testing enviroment
 process.env.ENV = 'jest';
@@ -16,12 +17,16 @@ let spotifyPort = 8001;
 let backendUri = 'http://localhost:' + backendPort;
 
 //Clear current data and load testData
-handler.clearData();
-let data = handler.getTestData();
+testHandler.clearData();
+let data = testHandler.getTestData();
 
 beforeAll(() => {
-    testServer.listen(backendPort);
-    spotifyServer.listen(spotifyPort);
+    testServer.listen(backendPort, () => {
+        handler.log('TestServer started successfully');
+    });
+    spotifyServer.listen(spotifyPort, () => {
+        handler.log('SpotifyServer started successfully');
+    });
 });
 
 afterAll(() => {
