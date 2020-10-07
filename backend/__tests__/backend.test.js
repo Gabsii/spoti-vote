@@ -45,6 +45,13 @@ describe('Full Testsuit', () => {
             expect(await api(backendUri + '/api/login')).toBe(backendUri + '/api/callback?code:' + data.tokens[0]);
         });
     });
+
+    describe('/api/callback', () => {
+        it('Should return a redirect link to spotify auth', async () => {
+            expect(await api(backendUri + '/api/callback')).toBe('Callback error');
+            expect(await api(backendUri + '/api/callback?code=' + data.tokens[0])).toBe();
+        });
+    });
 });
 
 async function api(url, ...params) {
