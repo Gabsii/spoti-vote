@@ -97,7 +97,6 @@ method.fetchPlaylists = async function() {
             'Authorization': 'Bearer ' + this.token
         }
     });
-
     let data = await request.json();
     let next = data.next;
 
@@ -165,7 +164,7 @@ method.fetchPlaylistTracks = async function(playlist) {
 };
 
 method.fetchTopTracks = async function(amount) {
-    let request = await fetch('https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=' + amount, {
+    let request = await fetch(this.spotifyApiAddress + '/v1/me/top/tracks?time_range=medium_term&limit=' + amount, {
         headers: {
             'Authorization': 'Bearer ' + this.token
         }
@@ -223,7 +222,7 @@ function minimizePlaylists(playlists) {
                 spotify: playlist.external_urls.spotify
             },
             images: [{
-                url: playlist.images[0].url
+                url: playlist.images[0] ? playlist.images[0].url : ''
             }]
         };
 

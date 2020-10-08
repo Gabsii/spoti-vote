@@ -11,6 +11,7 @@ process.env.SPOTIFY_CLIENT_ID = 'testingSecret';
 process.env.SPOTIFY_CLIENT_SECRET = 'testingSecret';
 process.env.PORTBACK = backendPort;
 process.env.ADDRESS = 'localhost';
+process.env.PORT = spotifyPort;
 
 //Prepare simulated api and variables
 let spotifyServer = require('./testingSpotifyApi').server;
@@ -41,15 +42,28 @@ afterAll(() => {
 
 describe('Full Testsuit', () => {
     describe('/api/login', () => {
+        it('Should return with a error message', async () => {
+            expect(await api(backendUri + '/api/login')).toBe('Declined');
+        });
         it('Should return a redirect link to spotify auth', async () => {
-            expect(await api(backendUri + '/api/login')).toBe(backendUri + '/api/callback?code:' + data.tokens[0]);
+            expect(await api(backendUri + '/api/login')).toBe(backendUri + '/api/callback?code:' + Object.keys(data.loginTokens)[0]);
+        });
+        it('Should return a second redirect link to spotify auth', async () => {
+            expect(await api(backendUri + '/api/login')).toBe(backendUri + '/api/callback?code:' + Object.keys(data.loginTokens)[1]);
         });
     });
-
+    
     describe('/api/callback', () => {
-        it('Should return a redirect link to spotify auth', async () => {
+        it('Should return with a error message', async () => {
             expect(await api(backendUri + '/api/callback')).toBe('Callback error');
-            expect(await api(backendUri + '/api/callback?code=' + data.tokens[0])).toBe();
+        });
+
+        it('Should create a new host in the hostList.json file', async () => {
+            expect(await api(backendUri + '/api/callback?code=' + Object.keys(data.loginTokens)[0])).toBe(handler.requestHosts()[0].myToken);
+        });
+
+        it('Should create a second new host in the hostList.json file', async () => {
+            expect(await api(backendUri + '/api/callback?code=' + Object.keys(data.loginTokens)[1])).toBe(handler.requestHosts()[1].myToken);
         });
     });
 });

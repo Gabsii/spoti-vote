@@ -8,7 +8,7 @@ const env = handler.getEnv();
 
 module.exports = async (req, res) => {
 
-    let code = req.query.code || null;
+    let code = req.query.code || undefined;
 
     let data = {
         code,
@@ -33,12 +33,16 @@ module.exports = async (req, res) => {
     } catch (e) {
         handler.log('ERROR: THERE WAS AN ERROR UPDATING THE TOKEN.\n' + e, 'error');
     }
+
     if (request.status === 401) {
         handler.log('ERROR: Spotify Api does not grant Authorization.', 'error');
         res.status(401).send('Something went wrong, please make sure the Servers ClientId/Secret are set.');
     } else if (request.status === 404) {
         handler.log('ERROR: Something went wrong on callback', 'error');
         res.status(404).send('Callback error');
+    } else if (request.status === 500) {
+        handler.log('ERROR: Spotify Api send internal server error', 'error');
+        res.status(500).send('Internal Server Error');
     } else {
         let fetchData;
         try {
