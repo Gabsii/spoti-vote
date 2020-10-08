@@ -145,7 +145,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^24.9.0",
+    "babel-jest": "^26.5.2",
     "babel-loader": "^8.1.0",
     "babel-plugin-named-asset-import": "^0.3.6",
     "babel-preset-react-app": "^9.1.2",
