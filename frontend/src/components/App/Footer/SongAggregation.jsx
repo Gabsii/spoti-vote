@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import Marquee from 'react-text-marquee';
 import {css} from 'glamor';
 
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 const styles = {
     wrapper: css({
         height: '75px',

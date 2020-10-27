@@ -4,7 +4,7 @@ import {css} from 'glamor';
 import Profile from './SharedSidebar/Profile.jsx';
 import Navbar from './SharedSidebar/Navbar.jsx';
 
-let constants = require('../../js/constants');
+let constants = require('../../js/constants').default;
 const styles = {
     wrapper: css({
         height: '75px',

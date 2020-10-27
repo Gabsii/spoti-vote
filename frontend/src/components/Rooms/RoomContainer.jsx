@@ -3,7 +3,7 @@ import {css} from 'glamor';
 
 import SearchRooms from './SearchRooms.jsx';
 import Room from './Room.jsx';
-const constants = require('../../js/constants');
+const constants = require('../../js/constants').default;
 const styles = {
     main: css({
         backgroundColor: constants.colors.background,

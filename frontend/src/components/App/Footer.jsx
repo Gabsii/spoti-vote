@@ -7,7 +7,7 @@ import VolumeBar from './Footer/VolumeBar.jsx';
 import ProgressBar from './Footer/ProgressBar.jsx';
 import PlayButtons from './Footer/PlayButtons.jsx';
 
-let constants = require('../../js/constants');
+let constants = require('../../js/constants').default;
 const styles = {
     wrapper: css({
         height: '75px',

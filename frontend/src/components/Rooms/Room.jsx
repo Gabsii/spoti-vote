@@ -1,7 +1,7 @@
 import React from 'react';
 import {css} from 'glamor';
 
-const constants = require('../../js/constants');
+const constants = require('../../js/constants').default;
 const styles = {
     wrapper: css({
         minHeight: '250px',

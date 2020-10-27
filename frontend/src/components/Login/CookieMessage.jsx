@@ -3,7 +3,7 @@ import Cookies from 'universal-cookie';
 import {css} from 'glamor';
 
 const cookies = new Cookies();
-const constants = require('../../js/constants');
+const constants = require('../../js/constants').default;
 const styles = {
     wrapper: css({
         padding: '25px',

@@ -6,7 +6,7 @@ import Card from './Card.jsx';
 import ShareButton from './ShareButton.jsx';
 
 import logo from '../../../img/spotiLogo.svg';
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 const styles = {
     tracksMain: css({
         position: 'absolute',

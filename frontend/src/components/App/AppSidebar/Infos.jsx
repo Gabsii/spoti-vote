@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faHeadphones} from '@fortawesome/free-solid-svg-icons/faHeadphones';
 import {css} from 'glamor';
 
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 const styles = {
     wrapper: css({
         position: 'absolute',
