@@ -9,7 +9,7 @@ import AppSidebar from '../components/App/AppSidebar.jsx';
 import CardContainer from '../components/App/Cards/CardContainer.jsx';
 import placeHolderImage from '../img/logos/Spotivote_Logo_svg.svg';
 
-const constants = require('../js/constants');
+const constants = require('../js/constants').default;
 const cookies = new Cookies();
 const styles = {
     main: css({backgroundColor: constants.colors.background, height: '100vh', width: '100vw'})

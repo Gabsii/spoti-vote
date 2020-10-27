@@ -4,7 +4,7 @@ import {css} from 'glamor';
 import Logins from './Main/Logins.jsx';
 import Carousel from './Main/Carousel.jsx';
 
-const constants = require('../../js/constants');
+const constants = require('../../js/constants').default;
 const styles = {
     main: css({
         backgroundColor: constants.colors.background,

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {css} from 'glamor';
 
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 const styles = {
     wrapper: css({
         width: '200px',

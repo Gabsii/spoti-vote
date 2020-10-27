@@ -5,7 +5,7 @@ import {css} from 'glamor';
 
 import Header from '../components/Login/Header.jsx';
 
-const constants = require('../js/constants');
+const constants = require('../js/constants').default;
 const styles = {
     main: css({width: '100%', height: '100vh', backgroundColor: constants.colors.backgroundLite, color: constants.colors.font}),
     wrapper: css({

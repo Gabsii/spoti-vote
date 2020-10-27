@@ -5,7 +5,7 @@ import {faVolumeUp} from '@fortawesome/free-solid-svg-icons/faVolumeUp';
 import {css} from 'glamor';
 
 import '../../../css/Volumebar.css';
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 const styles = {
     wrapper: css({
         height: '75px',

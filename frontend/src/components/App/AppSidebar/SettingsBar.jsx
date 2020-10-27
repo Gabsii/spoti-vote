@@ -6,7 +6,7 @@ import swal from 'sweetalert2';
 
 import RerollButton from './RerollButton.jsx';
 
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 const styles = {
     wrapper: css({
         width: '100%',

@@ -5,7 +5,7 @@ import {faPause} from '@fortawesome/free-solid-svg-icons/faPause';
 import {faStepForward} from '@fortawesome/free-solid-svg-icons/faStepForward';
 import {css} from 'glamor';
 
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 const styles = {
     wrapper: css({
         position: 'absolute',
