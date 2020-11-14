@@ -32,7 +32,7 @@ let imgStyle = { // TODO: rework whole page lmao im ashamed
     maxHeight: '50vh'
 };
 
-const constants = require('../js/constants');
+const constants = require('../js/constants').default;
 
 class Usage extends Component {
 

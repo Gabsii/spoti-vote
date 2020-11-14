@@ -8,7 +8,7 @@ import SharedSidebar from '../components/Shared/SharedSidebar.jsx';
 import Main from '../components/Dashboard/Main.jsx';
 
 const cookies = new Cookies();
-const constants = require('../js/constants');
+const constants = require('../js/constants').default;
 const styles = {
     main: css({
         backgroundColor: constants.colors.background,

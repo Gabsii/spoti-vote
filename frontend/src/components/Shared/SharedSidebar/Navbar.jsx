@@ -7,7 +7,7 @@ import Cookies from 'universal-cookie';
 import {css} from 'glamor';
 import swal from 'sweetalert2';
 
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 const cookies = new Cookies();
 const styles = {
     wrapper: css({

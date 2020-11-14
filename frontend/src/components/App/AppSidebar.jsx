@@ -5,7 +5,7 @@ import Infos from './AppSidebar/Infos.jsx';
 import UserContainer from './AppSidebar/UserContainer.jsx';
 import SettingsBar from './AppSidebar/SettingsBar.jsx';
 
-let constants = require('../../js/constants');
+let constants = require('../../js/constants').default;
 const styles = {
     wrapper: css({
         height: '75px',

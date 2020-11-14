@@ -2,7 +2,7 @@ import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {css} from 'glamor';
 
-let constants = require('../../js/constants');
+let constants = require('../../js/constants').default;
 const styles = {
     link: css({textDecoration: 'none', color: constants.colors.background}),
     wrapper: css({

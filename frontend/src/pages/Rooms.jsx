@@ -7,7 +7,7 @@ import SharedSidebar from '../components/Shared/SharedSidebar.jsx';
 import RoomContainer from '../components/Rooms/RoomContainer.jsx';
 
 //const cookies = new Cookies();
-const constants = require('../js/constants');
+const constants = require('../js/constants').default;
 const styles = {
     main: css({
         backgroundColor: constants.colors.greenCard,

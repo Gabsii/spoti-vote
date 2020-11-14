@@ -1,7 +1,7 @@
 import React from 'react';
 import {css} from 'glamor';
 
-let constants = require('../../js/constants');
+let constants = require('../../js/constants').default;
 const styles = {
     item: css({listStyle: 'none', margin: '0 0 0 1em', textShadow: '0 2px 0 darken(#fff, 50%)'}),
     link: css({

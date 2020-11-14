@@ -6,7 +6,7 @@ import {css} from 'glamor';
 import NavItem from './NavItem.jsx';
 import BarItem from './BarItem.jsx';
 import logo from '../../img/spotiLogo.svg';
-let constants = require('../../js/constants');
+let constants = require('../../js/constants').default;
 
 const styles = {
     header: css({backgroundColor: constants.colors.background, height: '90px', overflow: 'hidden', display: 'flex', alignItems: 'center'}),
