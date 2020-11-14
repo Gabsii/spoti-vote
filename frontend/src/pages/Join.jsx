@@ -6,7 +6,7 @@ import Header from '../components/Login/Header.jsx';
 import LoginCode from '../components/Login/LoginCode.jsx';
 import bg from '../img/mohammad-metri-421904-unsplash.jpg';
 
-const constants = require('../js/constants');
+const constants = require('../js/constants').default;
 const styles = {
     main: css({
         width: '100%',

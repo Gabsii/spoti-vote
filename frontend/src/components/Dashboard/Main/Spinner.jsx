@@ -3,7 +3,7 @@ import {css} from 'glamor';
 
 import '../../../css/Spinner.css';
 
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 
 const styles = {
     wrapper: css({

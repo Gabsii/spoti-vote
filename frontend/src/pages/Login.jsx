@@ -24,7 +24,7 @@ import Reason from '../components/Login/Reason.jsx';
 import CookieMessage from '../components/Login/CookieMessage.jsx';
 import SocialIcon from '../components/Login/SocialIcon.jsx';
 
-let constants = require('../js/constants');
+let constants = require('../js/constants').default;
 const styles = {
     heroWrapper: css({
         width: '100%',

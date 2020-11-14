@@ -4,7 +4,7 @@ import {Helmet} from 'react-helmet';
 
 import Header from '../components/Login/Header.jsx';
 
-const constants = require('../js/constants');
+const constants = require('../js/constants').default;
 const styles = {
     main: css({backgroundColor: constants.colors.background, height: '100%', maxWidth: '100vw'}),
     wrapper: css({color: 'white', margin: '50px 10%'}),

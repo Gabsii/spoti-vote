@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import {css} from 'glamor';
 
 import '../../css/selectors.css';
-let constants = require('../../js/constants');
+let constants = require('../../js/constants').default;
 
 const styles = {
     button: css({

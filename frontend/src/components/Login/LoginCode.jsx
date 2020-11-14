@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import {css} from 'glamor';
 
 import '../../css/selectors.css';
-let constants = require('../../js/constants.js');
+let constants = require('../../js/constants.js').default;
 
 const styles = {
     wrapper: css({display: 'flex', textAlign: 'center', justifyContent: 'center', alignItems: 'center'}),

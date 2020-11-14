@@ -99,7 +99,7 @@ const api = async (apiUrl, ...params) => {
     return [data, error];
 };
 
-module.exports = {
+export default {
     config,
     colors,
     iterateCardColors,

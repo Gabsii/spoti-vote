@@ -3,7 +3,7 @@ import {css} from 'glamor';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSearch} from '@fortawesome/free-solid-svg-icons/faSearch';
 
-const constants = require('../../js/constants');
+const constants = require('../../js/constants').default;
 const styles = {
     wrapper: css({
         minWidth: '250px',

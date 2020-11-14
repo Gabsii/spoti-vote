@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faDice} from '@fortawesome/free-solid-svg-icons/faDice';
 import {css} from 'glamor';
 
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 const styles = {
     button: css({
         border: 0,

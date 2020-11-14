@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Spinner from '../components/Dashboard/Main/Spinner.jsx';
 
-const constants = require('../js/constants');
+const constants = require('../js/constants').default;
 
 class Loading extends Component {
     render() {

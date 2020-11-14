@@ -7,7 +7,7 @@ import {faCaretRight} from '@fortawesome/free-solid-svg-icons/faCaretRight';
 import TopType from './TopType.jsx';
 import Spinner from './Spinner.jsx';
 
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 const styles = {
     wrapper: css({
         height: '340px',

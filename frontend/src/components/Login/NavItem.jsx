@@ -1,7 +1,7 @@
 import React from 'react';
 import {css} from 'glamor';
 
-let constants = require('../../js/constants');
+let constants = require('../../js/constants').default;
 const styles = {
     item: css({
         width: '100%',

@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import {css} from 'glamor';
 
 import User from './User.jsx';
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 const styles = {
     wrapper: css({
         height: 'calc(100% - 340px)',

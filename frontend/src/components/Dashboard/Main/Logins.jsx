@@ -4,7 +4,7 @@ import swal from 'sweetalert2';
 
 import LoginCode from '../../Login/LoginCode.jsx';
 
-let constants = require('../../../js/constants');
+let constants = require('../../../js/constants').default;
 
 const styles = {
     wrapper: css({
