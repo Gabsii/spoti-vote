@@ -42,7 +42,7 @@
     "fs-extra": "^8.1.0",
     "glamor": "^2.20.40",
     "lodash": "^4.17.20",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.1",
     "object-assign": "^4.1.1",
     "promise": "^8.1.0",
     "react": "^16.13.1",
