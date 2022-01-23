@@ -56,16 +56,12 @@
     "react-web-notification": "^0.7.0",
     "sweetalert2": "^8.19.0",
     "universal-cookie": "^4.0.4",
-<<<<<<< HEAD
-    "whatwg-fetch": "^3.4.1"
-=======
     "whatwg-fetch": "^3.4.1",
     "react": "^16.14.0",
     "react-dom": "^16.13.1",
     "cross-var": "^1.1.0",
     "fs-extra": "^8.1.0",
     "react-app-polyfill": "^1.0.6"
->>>>>>> 5eb45bd1dceb2ba0983508a5cfd7a6131dee85aa
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
