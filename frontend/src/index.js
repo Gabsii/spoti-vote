@@ -1,38 +1,17 @@
-import React, {Suspense} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 
-import Loading from './pages/Loading.jsx';
-import Login from './pages/Login.jsx';
-import * as serviceWorker from './serviceWorker';
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
 
-// preloads css => no render blocking
-import './css/reset.css'; /* webpackPrefetch: true */
-import './css/fonts.css'; /* webpackPrefetch: true */
-
-// dynamic imports for each route
-const App = React.lazy(()=> import('./pages/App.jsx'));
-const Dashboard = React.lazy(()=> import('./pages/Dashboard.jsx'));
-const Join = React.lazy(()=> import('./pages/Join.jsx'));
-const Usage = React.lazy(()=> import('./pages/Usage.jsx'));
-const Rooms = React.lazy(()=> import('./pages/Rooms.jsx'));
-const Policies = React.lazy(()=> import('./pages/Policies.jsx'));
-const NotFound = React.lazy(()=> import('./pages/NotFound.jsx'));
-
-ReactDOM.render((
-    <BrowserRouter>
-        <Suspense fallback={<Loading/>}>
-            <Switch>
-                <Route exact={true} path="/" component={Login}/>
-                <Route path="/app" component={App}/>
-                <Route path="/dashboard" component={Dashboard}/>
-                <Route path="/join" component={Join}/>
-                <Route path="/usage" component={Usage}/>
-                <Route path="/policies" component={Policies}/>
-                <Route path="/rooms" component={Rooms}/>
-                <Route component={NotFound}/>
-            </Switch>
-        </Suspense>
-    </BrowserRouter>
-), document.getElementById('root'));
-serviceWorker.register();
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
