@@ -54,6 +54,7 @@ class RoomContainer extends Component {
         if (this.state.search === '' || !this.state.search) {
             this.setState({searchRooms: this.state.rooms});
         } else {
+            console.log(this.state.rooms);
             let res = [];
             this.state.rooms.filter((room) => {
                 let roomName = room.roomName.toLowerCase();
@@ -70,7 +71,7 @@ class RoomContainer extends Component {
 
     async fetchRoomData() {
         let [data] = await constants.api('/rooms');
-        this.setState({rooms: data});
+        this.setState({rooms: data.content});
     }
 
     render() {

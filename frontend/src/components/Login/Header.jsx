@@ -108,7 +108,7 @@ class Header extends PureComponent {
                     <BarItem url='/#features' name='Features'/>
                     <BarItem url='/usage' name='Usage'/>
                     <li className={`${styles.divider}`}></li>
-                    <BarItem url={constants.config.url + '/login'} name='Start'/>
+                    <BarItem url={constants.config.url + '/api/login'} name='Start'/>
                     <BarItem url='/join' name='Join'/>
                 </ul>
             </nav>
@@ -121,7 +121,7 @@ class Header extends PureComponent {
                     ? <ul id='nav' className={`${styles.navList}`} ref={(node) => {
                         this.node = node;
                     }}>
-                        <NavItem name='Start' href={constants.config.url + '/login'}/>
+                        <NavItem name='Start' href={constants.config.url + '/api/login'}/>
                         <NavItem name='Join' href={'/join'}/>
                         <NavItem name='Features' href={'#features'}/>
                         <NavItem name='Usage' href={'/usage'}/>

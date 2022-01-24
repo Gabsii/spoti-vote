@@ -2,6 +2,7 @@ import fetch from 'node-fetch';
 import { URLSearchParams } from 'url';
 import _ from 'lodash';
 import lib from '../lib.js';
+import Host from './host.js';
 
 /**
  * Return a randomly generated string with a specified length, based on the possible symbols
@@ -17,7 +18,7 @@ function makeid(length) {
     return text;
 }
 
-class Room {
+export default class Room {
     constructor(host) {
         this.host = host;
         this.activeTracks = [];
@@ -32,6 +33,13 @@ class Room {
         do {
             this.id = makeid(5);
         } while (Room.getById(this.id));
+    }
+
+    static castToRoom(obj) {
+        let room = new Room();
+        Object.assign(room, obj);
+        room.host = Host.castToHost(room.host);
+        return room;
     }
 
     static list = [];
@@ -79,7 +87,7 @@ class Room {
         });
     }
 
-    #compressArtistNames(track) {
+    compressArtistNames(track) {
         if (track) {
             let artists = [];
             track.artists.forEach((artist) => {
@@ -193,15 +201,15 @@ class Room {
      * @return {object} The user object
      */
     getUserByToken(myToken) {
-        // if (myToken === this.host.myToken) {
-        //     return this.host;
-        // }
-        // for (let i = 0; i < this.connectedUser.length; i++) {
-        //     if (this.connectedUser[i].myToken === myToken) {
-        //         return this.connectedUser[i];
-        //     }
-        // }
-        // return null;
+        if (myToken === this.host.myToken) {
+            return this.host;
+        }
+        for (let i = 0; i < this.connectedUser.length; i++) {
+            if (this.connectedUser[i].myToken === myToken) {
+                return this.connectedUser[i];
+            }
+        }
+        return null;
     }
 
     /**
@@ -280,7 +288,7 @@ class Room {
                 }
 
                 this.activePlaylist = playlist;
-                return this.getRandomTracks(playlist);
+                return this.getRandomTracks(playlist, null);
             }
             return true;
         } else {
@@ -752,5 +760,3 @@ class Room {
         }
     }
 }
-
-export default Room;

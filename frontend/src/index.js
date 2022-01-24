@@ -24,7 +24,7 @@ ReactDOM.render(
         <Suspense fallback={<Loading />}>
             <Routes>
                 <Route exact={true} path="/" element={<Login />} />
-                <Route path="/app" element={<App />} />
+                <Route path="/app/:roomid" element={<App />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/join" element={<Join />} />
                 <Route path="/usage" element={<Usage />} />
