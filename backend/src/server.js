@@ -9,8 +9,8 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 
 //Import of used files
-import Room from './Classes/Room.js';
-import Host from './Classes/Host.js';
+import Room from './classes/room.js';
+import Host from './classes/host.js';
 import lib from './lib.js';
 
 //Setup of the server
