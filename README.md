@@ -12,8 +12,7 @@ The problem with it was that Spotify's shuffling feature didn't please the major
 To solve this problem I thought about creating a website where users could choose between four songs (depending on the settings). The song with the most votes would be added to the queue as next song.
 
 ## Requirements:
-* [Node v8.0 and higher](https://nodejs.org/en/)
-* [Zeit Account](https://zeit.co) for deploying
+* [Node v16.0 and higher](https://nodejs.org/en/)
 * [Spotify Premium Account](https://www.spotify.com/at/) for the DJ
 
 ## Usage
@@ -21,34 +20,34 @@ To solve this problem I thought about creating a website where users could choos
 ### Installation
 
 To use my webpage, you first want to download [NodeJS](https://nodejs.org/en/).
-Then clone my repository using:
+Then clone the repository using:
 ```
 git clone https://github.com/Gabsii/spoti-vote.git
 cd spoti-vote 
 ```
-Then you can install all the dependencies of the projekt using npm:
+Then you can install the dependencies of the projekt using npm in both the `frontend` and `backend` folders:
 ```
+cd frontend
+npm install
+```
+```
+cd backend
 npm install
 ```
 
-After that, copy the `.env.template` file and rename it to `.env`.
+After that, in the `backend` folder, copy the `.env.template` file and rename it to `.env`.
 Here you can configure ports and address.
 The SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET are provided by spotify after you sign up for their developer system.
 ```
-PORT=80
-PORTBACK=8888
-ADDRESS="localhost"
-SPOTIFY_CLIENT_ID="foo"
-SPOTIFY_CLIENT_SECRET="bar"
+PORT=8888
+ADDRESS=localhost
+SPOTIFY_CLIENT_ID=FOO
+SPOTIFY_CLIENT_SECRET=BAR
+SPOTIFY_ADDRESS=https://api.spotify.com
 ```
 Replace `foo` with your `SPOTIFY_CLIENT_ID` and `bar` with your `SPOTIFY_CLIENT_SECRET`.
 
-To setup the backend you need to start the backup process using npm and follow the creation of a new vercel project.
-```
-npm run start-backend
-```
-
-Then run `npm start` to get started
+Then run `npm start` in both folders to get started
 ### Info
 
 If you can't run a port below 1024 without root permission see [this](http://pm2.keymetrics.io/docs/usage/specifics/).
