@@ -1,6 +1,0 @@
-node_modules/
-frontend/config/
-frontend/build/
-frontend/scripts/
-backend/handler/.data/
-serviceWorker.js

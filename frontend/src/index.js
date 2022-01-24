@@ -1,17 +1,39 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import Loading from './pages/Loading.jsx';
+import Login from './pages/Login.jsx';
+import * as serviceWorker from './serviceWorker';
+
+// preloads css => no render blocking
+import './css/reset.css'; /* webpackPrefetch: true */
+import './css/fonts.css'; /* webpackPrefetch: true */
+
+// dynamic imports for each route
+const App = React.lazy(() => import('./pages/App.jsx'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard.jsx'));
+const Join = React.lazy(() => import('./pages/Join.jsx'));
+const Usage = React.lazy(() => import('./pages/Usage.jsx'));
+const Rooms = React.lazy(() => import('./pages/Rooms.jsx'));
+const Policies = React.lazy(() => import('./pages/Policies.jsx'));
+const NotFound = React.lazy(() => import('./pages/NotFound.jsx'));
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <BrowserRouter>
+        <Suspense fallback={<Loading />}>
+            <Routes>
+                <Route exact={true} path="/" element={<Login />} />
+                <Route path="/app" element={<App />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/join" element={<Join />} />
+                <Route path="/usage" element={<Usage />} />
+                <Route path="/policies" element={<Policies />} />
+                <Route path="/rooms" element={<Rooms />} />
+                <Route element={<NotFound />} />
+            </Routes>
+        </Suspense>
+    </BrowserRouter>,
+    document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+serviceWorker.register();
