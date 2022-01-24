@@ -1,19 +1,5 @@
 import fetch from 'node-fetch';
 
-/**
- * Return a randomly generated string with a specified length, based on the possible symbols
- *
- * @author: agustinhaller
- * @param {int} length The length of the string
- * @return {string} The random string
- */
-function createToken(length) {
-    let text = '';
-    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; //All possible symbols
-    for (let i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
-    return text;
-}
-
 export default class Host {
     /**
      * Constructor for a new host
@@ -25,7 +11,7 @@ export default class Host {
      * @return {Host} The new host
      */
     constructor(token, refreshToken) {
-        this.myToken = createToken(20);
+        this.myToken = Host.createToken(20);
         this.token = token;
         this.refreshToken = refreshToken;
         this.name = '';
@@ -39,6 +25,20 @@ export default class Host {
         this.topTracks = [];
 
         this.lastUpdate = null;
+    }
+
+    /**
+     * Return a randomly generated string with a specified length, based on the possible symbols
+     *
+     * @author: agustinhaller
+     * @param {int} length The length of the string
+     * @return {string} The random string
+     */
+    static createToken(length) {
+        let text = '';
+        let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; //All possible symbols
+        for (let i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+        return text;
     }
 
     static castToHost(obj) {

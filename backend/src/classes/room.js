@@ -105,11 +105,29 @@ export default class Room {
         }
     }
 
+    getTrack(track) {
+        if (track) {
+            let artists = [];
+            track.artists.forEach((artist) => {
+                artists.push(artist.name);
+            });
+            return {
+                name: track.name,
+                id: track.id,
+                artists: artists,
+                img: track.album.images[0].url,
+                votes: track.votes,
+            };
+        } else {
+            return null;
+        }
+    }
+
     getData(isHost, user) {
         let data = {};
         data.roomId = this.id;
         data.isHost = isHost;
-        data.connectedUser = this.getConnectedUsers();
+        data.connectedUser = this.getConnectedUser();
         data.host = {
             img: this.host.img,
             name: this.host.name,
@@ -473,7 +491,7 @@ export default class Room {
 
         let request;
         try {
-            request = await fetch(this.host.spotifyAccountAddress + '/api/token', {
+            request = await fetch(process.env.SPOTIFY_ADDRESS + '/api/token', {
                 method: 'post',
                 body: searchParams,
                 headers: {
@@ -513,14 +531,14 @@ export default class Room {
         this.lastUpdate = Date.now();
         let request;
         try {
-            request = await fetch(this.host.spotifyApiAddress + '/v1/me/player', {
+            request = await fetch(process.env.SPOTIFY_ADDRESS + '/v1/me/player', {
                 headers: {
                     Authorization: 'Bearer ' + this.host.token,
                 },
             });
         } catch (e) {
             // eslint-disable-next-line no-console
-            console.error('ERROR-[ROOM: ' + this.id + ']: THERE WAS AN ERROR GETTING THE ACTIVE PLAYER.\n' + e);
+            console.error('ERROR: [ROOM: ' + this.id + ']: THERE WAS AN ERROR GETTING THE ACTIVE PLAYER.\n' + e);
         }
 
         let fetchData;
@@ -647,7 +665,7 @@ export default class Room {
                 uris: ['spotify:track:' + track.id],
             };
 
-            await fetch(this.host.spotifyApiAddress + '/v1/me/player/play', {
+            await fetch(process.env.SPOTIFY_ADDRESS + '/v1/me/player/play', {
                 headers: {
                     Authorization: 'Bearer ' + this.host.token,
                 },
@@ -662,7 +680,7 @@ export default class Room {
             }
             return this.getRandomTracks(playlist, track);
         } else {
-            await fetch(this.host.spotifyApiAddress + '/v1/me/player/next', {
+            await fetch(process.env.SPOTIFY_ADDRESS + '/v1/me/player/next', {
                 headers: {
                     Authorization: 'Bearer ' + this.host.token,
                 },
@@ -720,7 +738,7 @@ export default class Room {
      * @return {boolean} True if completed
      */
     async changeVolume(volume) {
-        await fetch(this.host.spotifyApiAddress + '/v1/me/player/volume?volume_percent=' + volume, {
+        await fetch(process.env.SPOTIFY_ADDRESS + '/v1/me/player/volume?volume_percent=' + volume, {
             headers: {
                 Authorization: 'Bearer ' + this.host.token,
             },
@@ -738,7 +756,7 @@ export default class Room {
     async togglePlaystate() {
         if (this.activePlayer) {
             if (this.activePlayer.isPlaying) {
-                await fetch(this.host.spotifyApiAddress + '/v1/me/player/pause', {
+                await fetch(process.env.SPOTIFY_ADDRESS + '/v1/me/player/pause', {
                     headers: {
                         Authorization: 'Bearer ' + this.host.token,
                     },
@@ -747,7 +765,7 @@ export default class Room {
                 // eslint-disable-next-line no-console
                 console.log('INFO-[ROOM: ' + this.id + ']: Song is now Paused');
             } else {
-                await fetch(this.host.spotifyApiAddress + '/v1/me/player/play', {
+                await fetch(process.env.SPOTIFY_ADDRESS + '/v1/me/player/play', {
                     headers: {
                         Authorization: 'Bearer ' + this.host.token,
                     },

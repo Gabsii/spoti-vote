@@ -263,6 +263,33 @@ app.post('/api/rooms/:roomId/checkToken', (req, res) => {
     res.send(JSON.stringify(response));
 });
 
+app.post('/api/rooms/:roomId/connectUser', async (req, res) => {
+    let response;
+
+    let room = Room.getById(req.params.roomId);
+    if (room) {
+        if (req.body.myToken === room.host.myToken) {
+            response = { error: false };
+            res.status(200);
+        } else {
+            if (req.body.myToken) {
+                room.addUser(req.body.clientName, req.body.myToken);
+                response = { error: false };
+            } else {
+                let newUser = room.addUser(req.body.clientName, Host.createToken(20));
+                response = { error: false, myToken: newUser.myToken };
+            }
+
+            res.status(200);
+        }
+    } else {
+        response = { error: true, message: 'Room not found' };
+        res.status(400);
+    }
+
+    res.send(JSON.stringify(response));
+});
+
 app.post('/api/rooms/:roomId/delete', (req, res) => {
     let response;
 
@@ -273,6 +300,145 @@ app.post('/api/rooms/:roomId/delete', (req, res) => {
             console.log('INFO: [ROOM: ' + room.id + ']: This room has been deleted due to more then 1 room (Host choose the old room).');
             Room.list.splice(Room.list.indexOf(room), 1);
         }
+        response = { error: false };
+        res.status(200);
+    } else {
+        response = { error: true, message: 'Authorization failed. No or expired token.' };
+        res.status(401);
+    }
+
+    res.send(JSON.stringify(response));
+});
+
+app.post('/api/rooms/:roomId/pause', async (req, res) => {
+    let response;
+
+    if (req.body.myToken) {
+        let room = Room.getById(req.params.roomId);
+
+        if (req.body.myToken === room.host.myToken) {
+            console.log('INFO: [ROOM: ' + room.id + ']: Host skiped the song.');
+            await room.togglePlaystate();
+            response = { error: false };
+            res.status(200);
+        } else {
+            response = { error: true, message: 'Authorization failed. No or expired token.' };
+            res.status(401);
+        }
+    } else {
+        response = { error: true, message: 'Authorization failed. No or expired token.' };
+        res.status(401);
+    }
+
+    res.send(JSON.stringify(response));
+});
+
+app.post('/api/rooms/:roomId/selectPlaylist', async (req, res) => {
+    let response;
+
+    if (req.body.myToken) {
+        let room = Room.getById(req.params.roomId);
+        if (room) {
+            if (req.body.myToken === room.host.myToken && req.body.playlistId) {
+                await room.changePlaylist(req.body.playlistId);
+                response = { error: false };
+                res.status(200);
+            }
+        } else {
+            response = { error: true, message: 'Room has not been found' };
+            res.status(401);
+        }
+    } else {
+        response = { error: true, message: 'Authorization failed. No or expired token.' };
+        res.status(401);
+    }
+
+    res.send(JSON.stringify(response));
+});
+
+app.post('/api/rooms/:roomId/skip', async (req, res) => {
+    let response;
+
+    if (req.body.myToken) {
+        let room = Room.getById(req.params.roomId);
+
+        if (req.body.myToken === room.host.myToken) {
+            console.log('INFO: [ROOM: ' + room.id + ']: Host skiped the song.');
+            if (!(await room.play())) {
+                console.log('INFO: [ROOM: ' + room.id + ']: Skipping song did not work.');
+                response = { error: true, message: 'Cant skip, no song is playing.' };
+                res.status(400);
+            } else {
+                response = { error: false };
+                res.status(200);
+            }
+        } else {
+            response = { error: true, message: 'Authorization failed. No or expired token.' };
+            res.status(401);
+        }
+    } else {
+        response = { error: true, message: 'Authorization failed. No or expired token.' };
+        res.status(401);
+    }
+
+    res.send(JSON.stringify(response));
+});
+
+app.post('/api/rooms/:roomId/update', async (req, res) => {
+    let response = {};
+    if (req.body.myToken) {
+        let room = Room.getById(req.params.roomId);
+        if (room) {
+            await room.update();
+            if (req.body.myToken === room.host.myToken) {
+                response = room.getData(true, room.host);
+                res.status(200);
+            } else {
+                let user = room.getUserByToken(req.body.myToken);
+                response = room.getData(false, user);
+                res.status(200);
+            }
+        } else {
+            response = { error: true, message: 'Room not found' };
+            res.status(400);
+        }
+    } else {
+        response = { error: true, message: 'Authorization failed. No or expired token.' };
+        res.status(401);
+    }
+
+    res.send(JSON.stringify(response));
+});
+
+app.post('/api/rooms/:roomId/volume', async (req, res) => {
+    let response;
+
+    if (req.body.myToken) {
+        let room = Room.getById(req.params.roomId);
+        if (req.body.myToken === room.host.myToken) {
+            console.log('INFO: [ROOM: ' + room.id + ']: Volume changed to [' + req.body.volume + '].');
+            await room.changeVolume(req.body.volume);
+            response = { error: false };
+            res.status(200);
+        } else {
+            response = { error: true, message: 'Authorization failed. Expired token.' };
+            res.status(401);
+        }
+    } else {
+        response = { error: true, message: 'Authorization failed. No or expired token.' };
+        res.status(401);
+    }
+
+    res.send(JSON.stringify(response));
+});
+
+app.post('/api/rooms/:roomId/vote', async (req, res) => {
+    let response;
+
+    if (req.body.myToken) {
+        let room = Room.getById(req.params.roomId);
+        console.log('INFO: [ROOM: ' + room.id + ']: [' + req.body.myToken + '] voted for [' + req.body.trackId + '].');
+        room.vote(req.body.trackId, req.body.myToken);
         response = { error: false };
         res.status(200);
     } else {
