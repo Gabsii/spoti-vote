@@ -25,6 +25,16 @@ jobs:
                       - v1-dependencies-{{ checksum "package.json" }}
                       # fallback to using the latest cache if no exact match is found
                       - v1-dependencies-
+            - restore_cache:
+                  keys:
+                      - v1-dependencies-{{ checksum "frontend/package.json" }}
+                      # fallback to using the latest cache if no exact match is found
+                      - v1-dependencies-
+            - restore_cache:
+                  keys:
+                      - v1-dependencies-{{ checksum "backend/package.json" }}
+                      # fallback to using the latest cache if no exact match is found
+                      - v1-dependencies-
 
             - run: npm install --ignore-scripts
             - run:
@@ -38,11 +48,19 @@ jobs:
                   paths:
                       - node_modules
                   key: v1-dependencies-{{ checksum "package.json" }}
+            - save_cache:
+                  paths:
+                      - frontend/node_modules
+                  key: v1-dependencies-{{ checksum "frontend/package.json" }}
+            - save_cache:
+                  paths:
+                      - backend/node_modules
+                  key: v1-dependencies-{{ checksum "backend/package.json" }}
 
             # run tests!
             - run:
                   command: npm test -- --watchAll=false
-                  working_directory: /frontend
+                  working_directory: frontend
             - run:
                   command: npm test
-                  working_directory: /backend
+                  working_directory: backend
