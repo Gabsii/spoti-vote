@@ -16,7 +16,7 @@
     ],
     "scripts": {
         "start": "concurrently --kill-others-on-fail \"cd frontend & npm start\" \"cd backend & npm start\"",
-        "install": "cd frontend & npm install & cd ../backend & npm install",
+        "postinstall": "concurrently --kill-others-on-fail \"cd frontend & npm install\" \"cd backend & npm install\"",
         "test": "cd frontend & npm test -- --watchAll=false & cd ../backend & npm test"
     },
     "bugs": {
