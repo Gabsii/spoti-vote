@@ -7,7 +7,7 @@ jobs:
     build:
         docker:
             # specify the version you desire here
-            - image: circleci/node:10.6
+            - image: circleci/node:16.2.0
 
             # Specify service dependencies here if necessary
             # CircleCI maintains a library of pre-built images
@@ -61,7 +61,7 @@ jobs:
             - store_artifacts:
                   path: frontend/src/__tests__/constants.test.js
                   destination: constants.test.js
-             - store_artifacts:
+            - store_artifacts:
                   path: frontend/src/__tests__/frontend.test.js
                   destination: frontend.test.js
             - store_artifacts:
