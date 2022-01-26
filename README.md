@@ -25,13 +25,8 @@ Then clone the repository using:
 git clone https://github.com/Gabsii/spoti-vote.git
 cd spoti-vote 
 ```
-Then you can install the dependencies of the projekt using npm in both the `frontend` and `backend` folders:
+Then you can install the dependencies of the projekt using npm:
 ```
-cd frontend
-npm install
-```
-```
-cd backend
 npm install
 ```
 
@@ -47,7 +42,7 @@ SPOTIFY_ADDRESS=https://api.spotify.com
 ```
 Replace `foo` with your `SPOTIFY_CLIENT_ID` and `bar` with your `SPOTIFY_CLIENT_SECRET`.
 
-Then run `npm start` in both folders to get started
+Then run `npm start` in the root folder to get started.
 ### Info
 
 If you can't run a port below 1024 without root permission see [this](http://pm2.keymetrics.io/docs/usage/specifics/).
@@ -57,7 +52,7 @@ Congratulations! You now are able to use my webpage.
 
 ### Testing
 
-By running `npm test` you can start a jest testing environment respectively.
+By running `npm test` you can run all the tests using jest.
 
 # Credits
 
