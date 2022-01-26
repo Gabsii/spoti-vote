@@ -15,9 +15,8 @@
         "reactjs"
     ],
     "scripts": {
-        "start": "concurrently --kill-others-on-fail \"cd frontend & npm start\" \"cd backend & npm start\"",
-        "preinstall": "ls",
-        "postinstall": "concurrently --kill-others-on-fail \"cd frontend & npm install\" \"cd backend & npm install\"",
+        "start": "concurrently -n \"Frontend,Backend\" -c \"bgCyan.bold,bgMagenta.bold\" --kill-others-on-fail \"cd frontend & npm start\" \"cd backend & npm start\"",
+        "postinstall": "concurrently -n \"Frontend,Backend\" -c \"bgCyan.bold,bgMagenta.bold\" --kill-others-on-fail \"cd frontend & npm install\" \"cd backend & npm install\"",
         "test": "cd frontend & npm test -- --watchAll=false & cd ../backend & npm test"
     },
     "bugs": {
