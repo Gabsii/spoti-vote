@@ -59,8 +59,8 @@ jobs:
 
             # run tests!
             - run:
-                  command: npm test -- --watchAll=false
-                  working_directory: frontend
-            - run:
                   command: npm test
                   working_directory: backend
+            - run:
+                  command: npm test -- --watchAll=false
+                  working_directory: frontend

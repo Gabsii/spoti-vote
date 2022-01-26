@@ -5,7 +5,7 @@
     "main": "src/server.js",
     "scripts": {
         "build": "cross-env NODE_ENV=production npm start",
-        "start": "node server.js",
+        "start": "node src/server.js",
         "test": "jest"
     },
     "dependencies": {
