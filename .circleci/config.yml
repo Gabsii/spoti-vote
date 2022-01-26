@@ -58,15 +58,6 @@ jobs:
                   key: v1-dependencies-{{ checksum "backend/package.json" }}
 
             # run tests!
-            - store_artifacts:
-                  path: frontend/src/__tests__/constants.test.js
-                  destination: constants.test.js
-            - store_artifacts:
-                  path: frontend/src/__tests__/frontend.test.js
-                  destination: frontend.test.js
-            - store_artifacts:
-                  path: backend/src/__tests__/backend.test.js
-                  destination: backend.test.js
             - run:
                   command: npm test
                   working_directory: backend
