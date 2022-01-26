@@ -39,9 +39,9 @@ let colors = {
 let breakpoints = {
     //only focuses on width
     small: 375, // [0;375] 375x667 small Smartphones
-    medium: 760, // ]375;760] large Smartphones
-    large: 980, // ]760;980] Tablets
-    xlarge: 1280, // ]980;1280] Laptops (everything else is DESKTOP FIRST)
+    medium: 760, // [375;760] large Smartphones
+    large: 980, // [760;980] Tablets
+    xlarge: 1280, // [980;1280] Laptops (everything else is DESKTOP FIRST)
 };
 
 let iterateCardColors = function (index) {
@@ -67,7 +67,7 @@ function insertObjectDifference(data, diff) {
     }
     let newData = {};
     Object.keys(data).forEach((key) => {
-        if (diff[key]) {
+        if (diff[key] !== undefined) {
             if (typeof data[key] !== 'object' || !data[key] || Array.isArray(data[key])) {
                 newData[key] = diff[key];
             } else {
