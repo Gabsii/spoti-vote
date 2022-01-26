@@ -29,10 +29,10 @@ jobs:
             - run: npm install --ignore-scripts
             - run:
                   command: npm install
-                  working_directory: /frontend
+                  working_directory: frontend
             - run:
                   command: npm install
-                  working_directory: /backend
+                  working_directory: backend
 
             - save_cache:
                   paths:
