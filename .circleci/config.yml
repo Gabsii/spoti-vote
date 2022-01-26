@@ -27,6 +27,12 @@ jobs:
                       - v1-dependencies-
 
             - run: npm install --ignore-scripts
+            - run:
+                  command: npm install
+                  working_directory: /frontend
+            - run:
+                  command: npm install
+                  working_directory: /backend
 
             - save_cache:
                   paths:
@@ -34,4 +40,9 @@ jobs:
                   key: v1-dependencies-{{ checksum "package.json" }}
 
             # run tests!
-            - run: npm test
+            - run:
+                  command: npm test -- --watchAll=false
+                  working_directory: /frontend
+            - run:
+                  command: npm test
+                  working_directory: /backend
