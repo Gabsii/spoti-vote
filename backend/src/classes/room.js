@@ -1,8 +1,8 @@
-import fetch from 'node-fetch';
-import { URLSearchParams } from 'url';
-import _ from 'lodash';
-import lib from '../lib.js';
-import Host from './host.js';
+const fetch = require('cross-fetch');
+const { URLSearchParams } = require('url');
+const _ = require('lodash');
+const lib = require('../lib.js');
+const Host = require('./host.js');
 
 /**
  * Return a randomly generated string with a specified length, based on the possible symbols
@@ -18,7 +18,7 @@ function makeid(length) {
     return text;
 }
 
-export default class Room {
+module.exports = class Room {
     constructor(host) {
         this.host = host;
         this.activeTracks = [];
@@ -391,6 +391,8 @@ export default class Room {
             user.voted = null;
         });
 
+        this.host.voted = null;
+
         removeUsers.forEach((user) => {
             this.connectedUser.splice(this.connectedUser.indexOf(user), 1);
         });
@@ -713,10 +715,10 @@ export default class Room {
                 rerolls += 1;
             }
             // eslint-disable-next-line no-console
-            console.log('INFO-[ROOM: ' + this.id + ']: Reroll/NoReroll: [' + rerolls + '/' + (this.connectedUser.length + 1 - rerolls) + '].');
+            console.log('INFO: [ROOM: ' + this.id + ']: Reroll/NoReroll: [' + rerolls + '/' + (this.connectedUser.length + 1 - rerolls) + '].');
             if (rerolls >= (2 * (this.connectedUser.length + 1)) / 3) {
                 // eslint-disable-next-line no-console
-                console.log('INFO-[ROOM: ' + this.id + ']: Rerolled.');
+                console.log('INFO: [ROOM: ' + this.id + ']: Rerolled.');
 
                 let playlist = this.getPlaylistById(this.activePlaylist.id);
                 //Load tracks into Playlist if its empty
@@ -777,4 +779,4 @@ export default class Room {
             return true;
         }
     }
-}
+};

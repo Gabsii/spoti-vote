@@ -1,5 +1,4 @@
 import React, {PureComponent} from 'react';
-import Marquee from 'react-fast-marquee';
 import {css} from 'glamor';
 
 let constants = require('../../../js/constants').default;
@@ -34,10 +33,10 @@ class SongAggregation extends PureComponent {
         }
         return (<div className={`${styles.wrapper}`}>
             <div className={`${styles.track}`}>
-                <Marquee text={this.props.songName}/>
+                {this.props.songName}
             </div>
             <div className={`${styles.artist}`}>
-                <Marquee text={artistString}/>
+                {artistString}
             </div>
         </div>);
     }

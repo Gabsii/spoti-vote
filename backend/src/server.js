@@ -1,25 +1,25 @@
-import express from 'express';
-import http from 'http';
-import QueryString from 'qs';
-import request from 'request';
-import _ from 'lodash';
-import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
-import fs from 'fs';
+const express = require('express');
+const http = require('http');
+const QueryString = require('qs');
+const request = require('request');
+const _ = require('lodash');
+const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
+const fs = require('fs');
 
 //Import of used files
-import Room from './classes/room.js';
-import Host from './classes/host.js';
-import lib from './lib.js';
+const Room = require('./classes/room.js');
+const Host = require('./classes/host.js');
+const lib = require('./lib.js');
 
 //Setup of the server
 const app = express();
 const server = http.createServer(app);
 
 //Security
-import contentSecurityPolicy from 'helmet-csp';
-import cors from 'cors';
-import helmet from 'helmet';
+const contentSecurityPolicy = require('helmet-csp');
+const cors = require('cors');
+const helmet = require('helmet');
 
 app.disable('x-powered-by');
 app.use(cookieParser());

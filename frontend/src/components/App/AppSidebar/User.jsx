@@ -1,5 +1,4 @@
 import React, {PureComponent} from 'react';
-import Marquee from 'react-fast-marquee';
 import {css} from 'glamor';
 
 import icon from '../../../img/userIcon.svg';
@@ -23,7 +22,7 @@ class User extends PureComponent {
         return (<div className={`${styles.wrapper}`}>
             <img alt='icon' src={icon} className={`${styles.img}`}/>
             <div className={`${styles.name}`}>
-                <Marquee text={this.props.name}/>
+                {this.props.name}
             </div>
             <div className={`vote ${styles.vote}`} style={{
                 backgroundColor: this.props.voteColor

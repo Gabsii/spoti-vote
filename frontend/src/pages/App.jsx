@@ -245,6 +245,9 @@ class App extends Component {
                 myToken: this.state.myToken,
             })
         });
+        let state = this.state;
+        state.activePlayer.isPlaying = !state.activePlayer.isPlaying;
+        this.setState(state);
     }
     
     render() {

@@ -1,5 +1,4 @@
 import React, {PureComponent} from 'react';
-import Marquee from 'react-fast-marquee';
 import {css} from 'glamor';
 
 let constants = require('../../../js/constants').default;
@@ -107,8 +106,8 @@ class Card extends PureComponent {
                 backgroundColor: 'rgba(' + redValue + ',' + greenValue + ',' + blueValue + ',0.5)'
             }}>
                 <div className={`${styles.wrapper}`}>
-                    <div className={`${styles.track}`}><Marquee text={name || '-'}/></div>
-                    <div className={`${styles.artist}`}><Marquee text={artistString || '-'}/></div>
+                    <div className={`${styles.track}`}>{name || '-'}</div>
+                    <div className={`${styles.artist}`}>{artistString || '-'}</div>
                     <div className={`${styles.votes}`}>{votes + ' Votes'}</div>
                 </div>
             </div>

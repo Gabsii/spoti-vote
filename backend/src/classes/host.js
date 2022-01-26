@@ -1,6 +1,6 @@
-import fetch from 'node-fetch';
+const fetch = require('cross-fetch');
 
-export default class Host {
+module.exports = class Host {
     /**
      * Constructor for a new host
      *
@@ -216,4 +216,4 @@ export default class Host {
         let data = await request.json();
         return data.items;
     }
-}
+};
