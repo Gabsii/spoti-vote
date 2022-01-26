@@ -181,7 +181,7 @@ app.get('/api/rooms', async (req, res) => {
         returnRooms.push(roomI);
     }
 
-    res.send({ responseCode: lib.codes.SUCCESS, content: returnRooms });
+    res.send({ responseCode: 200, content: returnRooms });
 });
 
 app.post('/api/rooms/checkCreate', async (req, res) => {
